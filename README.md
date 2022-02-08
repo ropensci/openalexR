@@ -1,4 +1,4 @@
-# dimensionsR
+# openalexR
 
 
 ## An R-package to gather bibliographic data from DS Dimenions.ai
