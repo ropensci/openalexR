@@ -1,0 +1,27 @@
+Package: openalexR
+Type: Package
+Title: Getting  Bibliographic Records from 'OpenAlex' Database Using 'DSL' API
+Version: 0.0.1
+Authors@R: 
+    person(given = "Massimo",
+           family = "Aria",
+           role = c("aut", "cre"),
+           email = "massimo.aria@gmail.com",
+           comment = c(ORCID = "0000-0002-8517-9411"))
+Description: A set of tools to extract bibliographic content from 'OpenAlex' database using API <https://docs.openalex.org/api/>.
+License: GPL-3 
+URL: https://github.com/massimoaria/openalexR
+BugReports: https://github.com/massimoaria/openalexR/issues
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    dplyr,
+    httr,
+    jsonlite,
+    magrittr,
+    progress,
+    tibble,
+Suggests: 
+    bibliometrix, knitr, rmarkdown
+RoxygenNote: 7.1.1
+VignetteBuilder: knitr
