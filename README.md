@@ -1,7 +1,7 @@
 # openalexR
 
 
-## An R-package to gather bibliographic data from DS Dimenions.ai
+## An R-package to gather bibliographic data from OpenAlex database (https://openalex.org)
 
 &nbsp;
 
