@@ -1,3 +1,4 @@
+#library(progress)
 utils::globalVariables("progress_bar")
 #' Get bibliographic records from OpenAlex databases
 #' It gets bibliographic records from OpenAlex database \href{https://openalex.org/}{https://openalex.org/}.
@@ -5,6 +6,7 @@ utils::globalVariables("progress_bar")
 #'
 #' @param query_url is a character. It contains a search query formulated using the OpenAlex API language. A query can be automatically generated using the function \code{oaQueryBuild}.
 #' @param format is a character. It indicates the data format of the returned object. The argument can be \code{format=c("data.frame","list")}. Default is \code{format="data.frame"}.
+#' @param overview
 #' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=FALSE}.
 #'
 #' @return a data.frame or a list.
@@ -43,6 +45,7 @@ utils::globalVariables("progress_bar")
 #'
 oaApiRequest <- function(query_url,
                          format = "data.frame",
+                         overview = FALSE,
                          verbose=FALSE){
 
   format_list = c("data.frame", "list")
@@ -57,6 +60,7 @@ oaApiRequest <- function(query_url,
 
 
   res <- oa_request(query_url, ua)
+  if (isTRUE(overview)) return(res$meta)
   if (attr(query_url,"identifier")=="NoMissing"){ ## return of single item by identifier
     if (format=="data.frame") {
       data <- oaDataFrame(res)
@@ -79,7 +83,7 @@ oaApiRequest <- function(query_url,
     message("About to crawl a total of ", length(pages), " pages of results",
             " with a total of ", n_items, " records.")
 
-  pb <- progress_bar$new(
+  pb <- progress::progress_bar$new(
     format = "  open alex resolving [:bar] :percent eta: :eta",
     total = length(pages), clear = FALSE, width = 60)
 
@@ -92,7 +96,11 @@ oaApiRequest <- function(query_url,
     if (!is.null(res$results)) data[[i]] <- res$results
   }
 
-  if (format=="data.frame") data <- oaDataFrame(data)
+  if (format=="data.frame") {
+    data <- oaDataFrame(data)
+  }else{
+    data <- unlist(data, recursive = FALSE)
+  }
 
   return(data)
 

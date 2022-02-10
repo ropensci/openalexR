@@ -6,7 +6,12 @@
 It gets bibliographic records from OpenAlex database \href{https://openalex.org/}{https://openalex.org/}.
 The function \code{oaApiRequest} queries OpenAlex database using a query formulated through the function \code{oaQueryBuild}.}
 \usage{
-oaApiRequest(query_url, format = "data.frame", verbose = FALSE)
+oaApiRequest(
+  query_url,
+  format = "data.frame",
+  overview = FALSE,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{query_url}{is a character. It contains a search query formulated using the OpenAlex API language. A query can be automatically generated using the function \code{oaQueryBuild}.}
