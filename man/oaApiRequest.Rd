@@ -9,7 +9,7 @@ The function \code{oaApiRequest} queries OpenAlex database using a query formula
 oaApiRequest(
   query_url,
   format = "data.frame",
-  overview = FALSE,
+  total.count = FALSE,
   verbose = FALSE
 )
 }
@@ -17,6 +17,8 @@ oaApiRequest(
 \item{query_url}{is a character. It contains a search query formulated using the OpenAlex API language. A query can be automatically generated using the function \code{oaQueryBuild}.}
 
 \item{format}{is a character. It indicates the data format of the returned object. The argument can be \code{format=c("data.frame","list")}. Default is \code{format="data.frame"}.}
+
+\item{total.count}{is a logical. If TRUE, the function returns only the number of item matching the query. Default is \code{total.count=FALSE}.}
 
 \item{verbose}{is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=FALSE}.}
 }
@@ -34,27 +36,78 @@ The function \code{oaApiRequest} queries OpenAlex database using a query formula
 
 \dontrun{
 # Query to search all works citing the article:
-  Aria, M., & Cuccurullo, C. (2017). bibliometrix:
-  An R-tool for comprehensive science mapping analysis.
-  Journal of informetrics, 11(4), 959-975.
+#  Aria, M., & Cuccurullo, C. (2017). bibliometrix:
+#   An R-tool for comprehensive science mapping analysis.
+#   Journal of informetrics, 11(4), 959-975.
 
-  published in 2021.
-  The paper is associated to the OpenAlex id W2755950973.
+#  published in 2021.
+#  The paper is associated to the OpenAlex id W2755950973.
 
-  Results have to be sorted by relevance score in a descending order.
+#  Results have to be sorted by relevance score in a descending order.
 
-query <- oaQueryBuild(
+query1 <- oaQueryBuild(
 identifier=NULL,
 entity = "works",
-filter="cites:W2755950973,publication_year:2021",
+filter = "cites:W2755950973",
+date_from = "2021-01-01",
+date_to = "2021-12-31",
 search=NULL,
 sort="relevance_score:desc",
 endpoint = "https://api.openalex.org/")
 
-res <- oaApiRequest(query,
-               format = "data.frame",
-               verbose=T)
+res1 <- oaApiRequest(
+   query_url = query1,
+   format = "list",
+   total.count = FALSE,
+   verbose = FALSE
+   )
+
+### SECOND EXAMPLE
+# Query to search all works containing the exact string
+# "bibliometric analysis" OR "science mapping" in the title, published in 2020 or 2021.
+
+# Results have to be sorted by relevance score in a descending order.
+
+
+query2 <- oaQueryBuild(
+   identifier=NULL,
+   entity = "works",
+   filter = 'title.search:"bibliometric analysis"|"science mapping"',
+   date_from = "2020-01-01",
+   date_to = "2021-12-31",
+   search=NULL,
+   sort="relevance_score:desc",
+   endpoint = "https://api.openalex.org/")
+
+res2 <- oaApiRequest(
+   query_url = query2,
+   format = "list",
+   total.count = FALSE,
+   verbose = FALSE
+   )
+
+# Query to search all works containing the exact string
+# "bibliometric analysis" OR "science mapping" in the title, published in 2020 or 2021.
+
+# Quey only to know how many works could be retrieved (total.count=TRUE)
+
+query3 <- oaQueryBuild(
+   identifier=NULL,
+   entity = "works",
+   filter = 'title.search:"bibliometric analysis"|"science mapping"',
+   date_from = "2020-01-01",
+   date_to = "2021-12-31",
+   search=NULL,
+   sort="relevance_score:desc",
+   endpoint = "https://api.openalex.org/")
+
+res3 <- oaApiRequest(
+   query_url = query3,
+   format = "list",
+   total.count = TRUE,
+   verbose = FALSE
+   )
+
+res3$count #numebr of items retrieved by our query
 }
-
-
 }

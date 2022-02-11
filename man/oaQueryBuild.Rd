@@ -9,6 +9,8 @@ oaQueryBuild(
   identifier = NULL,
   entity = "works",
   filter = NULL,
+  date_from = NULL,
+  date_to = NULL,
   search = NULL,
   sort = NULL,
   endpoint = "https://api.openalex.org/"
@@ -23,6 +25,10 @@ entity = c("works", "authors", "venues", "institutions", "concepts"). The defaul
 \item{filter}{is a character. Filters narrow the list down to just entities that meet a particular condition--specifically, a particular value for a particular attribute.
 Filters are formatted thusly: attribute:value. The complete list of filter attributes for each entity can be found
 at \href{https://docs.openalex.org/api/get-lists-of-entities#filter}{https://docs.openalex.org/api/get-lists-of-entities#filter}}
+
+\item{date_from}{is a character. It indicates the starting date of the time-span. The format is YYYY-MM-DD. The default values is \code{date_from=NULL}.}
+
+\item{date_to}{is a character. It indicates the ending date of the time-span. The format is YYYY-MM-DD. The default values is \code{date_from=NULL}.}
 
 \item{search}{is a character. Search is just another kind of filter, one that all five endpoints support. But unlike the other filters, search doesn't require an exact match.
 To filter using search, append .search to the end of the property you're filtering for.}
@@ -44,24 +50,45 @@ It generates a valid query, written following the OpenAlex API Language, from a 
 \examples{
 
 \dontrun{
+### FIRST EXAMPLE
 # Query to search all works citing the article:
-  Aria, M., & Cuccurullo, C. (2017). bibliometrix:
-  An R-tool for comprehensive science mapping analysis.
-  Journal of informetrics, 11(4), 959-975.
+#  Aria, M., & Cuccurullo, C. (2017). bibliometrix:
+#   An R-tool for comprehensive science mapping analysis.
+#   Journal of informetrics, 11(4), 959-975.
 
-  published in 2021.
-  The paper is associated to the OpenAlex id W2755950973.
+#  published in 2021.
+#  The paper is associated to the OpenAlex id W2755950973.
 
-  Results have to be sorted by relevance score in a descending order.
+#  Results have to be sorted by relevance score in a descending order.
 
 query <- oaQueryBuild(
 identifier=NULL,
 entity = "works",
-filter="cites:W2755950973,publication_year:2021",
+filter = "cites:W2755950973",
+date_from = "2021-01-01",
+date_to = "2021-12-31",
 search=NULL,
 sort="relevance_score:desc",
 endpoint = "https://api.openalex.org/")
+
+
+### SECOND EXAMPLE
+# Query to search all works containing the exact string
+# "bibliometric analysis" OR "science mapping" in the title, published in 2020 or 2021.
+
+# Results have to be sorted by relevance score in a descending order.
+
+query <- oaQueryBuild(
+   identifier=NULL,
+   entity = "works",
+   filter = 'title.search:"bibliometric analysis"|"science mapping"',
+   date_from = "2020-01-01",
+   date_to = "2021-12-31",
+   search=NULL,
+   sort="relevance_score:desc",
+   endpoint = "https://api.openalex.org/")
 }
+
 
 
 }
