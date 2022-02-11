@@ -1,6 +1,7 @@
 #library(progress)
 utils::globalVariables("progress_bar")
 #' Get bibliographic records from OpenAlex databases
+#'
 #' It gets bibliographic records from OpenAlex database \href{https://openalex.org/}{https://openalex.org/}.
 #' The function \code{oaApiRequest} queries OpenAlex database using a query formulated through the function \code{oaQueryBuild}.
 #'

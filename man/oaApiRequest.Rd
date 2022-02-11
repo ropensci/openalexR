@@ -2,9 +2,7 @@
 % Please edit documentation in R/oaApiRequest.R
 \name{oaApiRequest}
 \alias{oaApiRequest}
-\title{Get bibliographic records from OpenAlex databases
-It gets bibliographic records from OpenAlex database \href{https://openalex.org/}{https://openalex.org/}.
-The function \code{oaApiRequest} queries OpenAlex database using a query formulated through the function \code{oaQueryBuild}.}
+\title{Get bibliographic records from OpenAlex databases}
 \usage{
 oaApiRequest(
   query_url,
@@ -28,7 +26,6 @@ a data.frame or a list.
 For more extensive information about OpenAlex API, please visit: \href{https://docs.openalex.org/api}{https://docs.openalex.org/api}
 }
 \description{
-Get bibliographic records from OpenAlex databases
 It gets bibliographic records from OpenAlex database \href{https://openalex.org/}{https://openalex.org/}.
 The function \code{oaApiRequest} queries OpenAlex database using a query formulated through the function \code{oaQueryBuild}.
 }

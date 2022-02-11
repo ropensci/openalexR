@@ -2,8 +2,7 @@
 % Please edit documentation in R/oaQueryBuild.R
 \name{oaQueryBuild}
 \alias{oaQueryBuild}
-\title{Generate an OpenAlex query from a set of parameters
-It generates a valid query, written following the OpenAlex API Language, from a set of parameters.}
+\title{Generate an OpenAlex query from a set of parameters}
 \usage{
 oaQueryBuild(
   identifier = NULL,
@@ -44,7 +43,6 @@ a character containing the query in OpenAlex format.
 For more extensive information about OpenAlex API, please visit: \href{https://docs.openalex.org/api}{https://docs.openalex.org/api}
 }
 \description{
-Generate an OpenAlex query from a set of parameters
 It generates a valid query, written following the OpenAlex API Language, from a set of parameters.
 }
 \examples{

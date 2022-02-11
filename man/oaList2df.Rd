@@ -2,9 +2,7 @@
 % Please edit documentation in R/oaList2df.R
 \name{oaList2df}
 \alias{oaList2df}
-\title{Convert OpenAlex data from a list to a data frame
-It converts bibliographic collection by OpenAlex database \href{https://openalex.org/}{https://openalex.org/} from a list to a data frame.
-The function converts a list obtained using \code{oaApiRequest} into a data frame/tibble.}
+\title{Convert OpenAlex data from a list to a data frame}
 \usage{
 oaList2df(data)
 }
@@ -17,7 +15,6 @@ a data.frame.
 For more extensive information about OpenAlex API, please visit: \href{https://docs.openalex.org/api}{https://docs.openalex.org/api}
 }
 \description{
-Convert OpenAlex data from a list to a data frame
 It converts bibliographic collection by OpenAlex database \href{https://openalex.org/}{https://openalex.org/} from a list to a data frame.
 The function converts a list obtained using \code{oaApiRequest} into a data frame/tibble.
 }

@@ -1,5 +1,6 @@
 utils::globalVariables("progress_bar")
 #' Convert OpenAlex data from a list to a data frame
+#' 
 #' It converts bibliographic collection by OpenAlex database \href{https://openalex.org/}{https://openalex.org/} from a list to a data frame.
 #' The function converts a list obtained using \code{oaApiRequest} into a data frame/tibble. 
 #' 
@@ -64,7 +65,7 @@ oaList2df <- function(data){
   
   for (i in 1:n){
     pb$tick()
-    print(i)
+    #print(i)
     paper <- data[[i]]
     
     

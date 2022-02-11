@@ -1,4 +1,5 @@
 #' Generate an OpenAlex query from a set of parameters
+#'
 #' It generates a valid query, written following the OpenAlex API Language, from a set of parameters.
 #'
 #' @param identifier is a character. It indicates an item identifier.
