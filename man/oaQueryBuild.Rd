@@ -48,7 +48,47 @@ It generates a valid query, written following the OpenAlex API Language, from a 
 \examples{
 
 \dontrun{
-### FIRST EXAMPLE
+
+### EXAMPLE 1: Full record about an entity.
+
+# Query to obtain allinformation about a particular work/author/institution/etc.:
+
+#  The following paper is associated to the OpenAlex-id W2755950973.
+
+#  Aria, M., & Cuccurullo, C. (2017). bibliometrix:
+#   An R-tool for comprehensive science mapping analysis.
+#   Journal of informetrics, 11(4), 959-975.
+
+
+query_work <- oaQueryBuild(
+identifier = "W2755950973",
+endpoint = "https://api.openalex.org/")
+
+res_work <- oaApiRequest(
+   query_url = query_work,
+   format = "list",
+   total.count = FALSE,
+   verbose = FALSE
+   )
+
+#  The author Massimo Aria is associated to the OpenAlex-id A923435168.
+
+
+query_author <- oaQueryBuild(
+identifier = "A923435168",
+endpoint = "https://api.openalex.org/")
+
+res_author <- oaApiRequest(
+   query_url = query_author,
+   format = "list",
+   total.count = FALSE,
+   verbose = FALSE
+   )
+
+
+
+### EXAMPLE 2: all works citing a particular work.
+
 # Query to search all works citing the article:
 #  Aria, M., & Cuccurullo, C. (2017). bibliometrix:
 #   An R-tool for comprehensive science mapping analysis.
@@ -59,7 +99,7 @@ It generates a valid query, written following the OpenAlex API Language, from a 
 
 #  Results have to be sorted by relevance score in a descending order.
 
-query <- oaQueryBuild(
+query1 <- oaQueryBuild(
 identifier=NULL,
 entity = "works",
 filter = "cites:W2755950973",
@@ -69,14 +109,22 @@ search=NULL,
 sort="relevance_score:desc",
 endpoint = "https://api.openalex.org/")
 
+res1 <- oaApiRequest(
+   query_url = query1,
+   format = "list",
+   total.count = FALSE,
+   verbose = FALSE
+   )
 
-### SECOND EXAMPLE
+### EXAMPLE 3: All works matching a string in their title
+
 # Query to search all works containing the exact string
 # "bibliometric analysis" OR "science mapping" in the title, published in 2020 or 2021.
 
 # Results have to be sorted by relevance score in a descending order.
 
-query <- oaQueryBuild(
+
+query2 <- oaQueryBuild(
    identifier=NULL,
    entity = "works",
    filter = 'title.search:"bibliometric analysis"|"science mapping"',
@@ -85,6 +133,38 @@ query <- oaQueryBuild(
    search=NULL,
    sort="relevance_score:desc",
    endpoint = "https://api.openalex.org/")
+
+res2 <- oaApiRequest(
+   query_url = query2,
+   format = "list",
+   total.count = FALSE,
+   verbose = FALSE
+   )
+
+### EXAMPLE 4: How to check how many works match a query
+# Query to search all works containing the exact string
+# "bibliometric analysis" OR "science mapping" in the title, published in 2020 or 2021.
+
+# Quey only to know how many works could be retrieved (total.count=TRUE)
+
+query3 <- oaQueryBuild(
+   identifier=NULL,
+   entity = "works",
+   filter = 'title.search:"bibliometric analysis"|"science mapping"',
+   date_from = "2020-01-01",
+   date_to = "2021-12-31",
+   search=NULL,
+   sort="relevance_score:desc",
+   endpoint = "https://api.openalex.org/")
+
+res3 <- oaApiRequest(
+   query_url = query3,
+   format = "list",
+   total.count = TRUE,
+   verbose = FALSE
+   )
+
+res3$count #numebr of items retrieved by our query
 }
 
 

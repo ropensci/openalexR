@@ -132,7 +132,7 @@ oaList2df <- function(data){
     related_works <- unlist(paper$related_works)
     
     # Abstract
-    if (!is.na(paper$abstract_inverted_index)){
+    if (!is.na(paper$abstract_inverted_index[1])){
       ab <- data.frame(term=names(unlist(paper$abstract_inverted_index)),pos=unlist(paper$abstract_inverted_index))
       
       if (nrow(ab)>0){

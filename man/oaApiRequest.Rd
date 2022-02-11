@@ -32,6 +32,47 @@ The function \code{oaApiRequest} queries OpenAlex database using a query formula
 \examples{
 
 \dontrun{
+
+### EXAMPLE 1: Full record about an entity.
+
+# Query to obtain allinformation about a particular work/author/institution/etc.:
+
+#  The following paper is associated to the OpenAlex-id W2755950973.
+
+#  Aria, M., & Cuccurullo, C. (2017). bibliometrix:
+#   An R-tool for comprehensive science mapping analysis.
+#   Journal of informetrics, 11(4), 959-975.
+
+
+query_work <- oaQueryBuild(
+identifier = "W2755950973",
+endpoint = "https://api.openalex.org/")
+
+res <- oaApiRequest(
+   query_url = query_work,
+   format = "list",
+   total.count = FALSE,
+   verbose = FALSE
+   )
+
+#  The author Massimo Aria is associated to the OpenAlex-id A923435168.
+
+
+query_author <- oaQueryBuild(
+identifier = "A923435168",
+endpoint = "https://api.openalex.org/")
+
+res <- oaApiRequest(
+   query_url = query_author,
+   format = "list",
+   total.count = FALSE,
+   verbose = FALSE
+   )
+
+
+
+### EXAMPLE 2: all works citing a particular work.
+
 # Query to search all works citing the article:
 #  Aria, M., & Cuccurullo, C. (2017). bibliometrix:
 #   An R-tool for comprehensive science mapping analysis.
@@ -59,7 +100,8 @@ res1 <- oaApiRequest(
    verbose = FALSE
    )
 
-### SECOND EXAMPLE
+### EXAMPLE 3: All works matching a string in their title
+
 # Query to search all works containing the exact string
 # "bibliometric analysis" OR "science mapping" in the title, published in 2020 or 2021.
 
@@ -83,6 +125,7 @@ res2 <- oaApiRequest(
    verbose = FALSE
    )
 
+### EXAMPLE 4: How to check how many works match a query
 # Query to search all works containing the exact string
 # "bibliometric analysis" OR "science mapping" in the title, published in 2020 or 2021.
 
