@@ -1,10 +1,10 @@
 utils::globalVariables("progress_bar")
-#' Convert OpenAlex data from a list to a data frame
-#' 
-#' It converts bibliographic collection by OpenAlex database \href{https://openalex.org/}{https://openalex.org/} from a list to a data frame.
-#' The function converts a list obtained using \code{oaApiRequest} into a data frame/tibble. 
-#' 
-#' @param data is a list. data is the output of the function \code{oaApiRequest}. 
+#' Convert OpenAlex collection of works from list format to data frame
+#'
+#' It converts bibliographic collection of works gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
+#' The function converts a list of works obtained using \code{oaApiRequest} into a data frame/tibble.
+#'
+#' @param data is a list. data is the output of the function \code{oaApiRequest}.
 #'
 #' @return a data.frame.
 #'
@@ -12,9 +12,9 @@ utils::globalVariables("progress_bar")
 #'
 #'
 #' @examples
-#' 
+#'
 #' \dontrun{
-#' 
+#'
 #' # Query to search all works citing the article:
 #' #  Aria, M., & Cuccurullo, C. (2017). bibliometrix:
 #' #   An R-tool for comprehensive science mapping analysis.
@@ -41,34 +41,41 @@ utils::globalVariables("progress_bar")
 #'    total.count = FALSE,
 #'    verbose = FALSE
 #'    )
-#' 
-#' df <- oaList2df(res)   
-#' 
+#'
+#' df <- oaWorks2df(res)
+#'
 #' df
-#'    
+#'
 #' }
-#' 
+#'
 #' @export
-oaList2df <- function(data){
-  
+oaWorks2df <- function(data){
+
   # replace NULL with NA
   data <- simple_rapply(data, function(x) if(is.null(x)) NA else x)
-  
+
+  if (!is.null(data$id)){data <- list(data)}
+
+  if (is.null(data[[1]]$id)) {
+    message("the list does not contain a valid OpenAlex collection")
+    return()
+  }
+
   n <- length(data)
-  
+
   list_df<- vector(mode = "list", length = n)
-  
+
   pb <- progress::progress_bar$new(
-    format = "  data frame converting [:bar] :percent eta: :eta",
+    format = "  from list to data frame converting [:bar] :percent eta: :eta",
     total = n, clear = FALSE, width = 60)
-  
-  
+
+
   for (i in 1:n){
     pb$tick()
     #print(i)
     paper <- data[[i]]
-    
-    
+
+
     id <- paper$id
     title <- paper$display_name
     pubdate <- paper$publication_date
@@ -80,10 +87,10 @@ oaList2df <- function(data){
     issn <- list(unlist(paper$host_venue$issn))
     url <- paper$host_venue$url
     oa <- paper$host_venue$is_oa
-    
+
     # authorships and affilitation
     author <- list(do.call(rbind,lapply(paper$authorships, function(l){
-      
+
       if (length(l[["institutions"]])>0){
         institution_id <- l[["institutions"]][[1]]$id
         institution_name <- l[["institutions"]][[1]]$display_name
@@ -97,7 +104,7 @@ oaList2df <- function(data){
         institution_country <- NA
         institution_type <- NA
       }
-      L <- data.frame( 
+      L <- data.frame(
         au_id=l[["author"]]$id,
         au_name=l[["author"]]$display_name,
         au_orcid=l[["author"]]$orcid,
@@ -110,10 +117,10 @@ oaList2df <- function(data){
           institution_type = institution_type
       )
     })))
-    
+
     # concepts
     concept <- list(do.call(rbind,lapply(paper$concepts, function(l){
-      L <- data.frame( 
+      L <- data.frame(
         concept_id=l$id,
         concept_name=l$display_name,
         concept_score=l$score,
@@ -121,7 +128,7 @@ oaList2df <- function(data){
         concept_url=l$wikidata
       )
     })))
-    
+
     TC <- paper$cited_by_count
     PY <- paper$publication_year
     cited_by_url <- paper$cited_by_api_url
@@ -130,22 +137,22 @@ oaList2df <- function(data){
     DT <- paper$type
     CR <- unlist(paper$referenced_works)
     related_works <- unlist(paper$related_works)
-    
+
     # Abstract
     if (!is.na(paper$abstract_inverted_index[1])){
       ab <- data.frame(term=names(unlist(paper$abstract_inverted_index)),pos=unlist(paper$abstract_inverted_index))
-      
+
       if (nrow(ab)>0){
         ab$term2=gsub("[0-9]*$","",ab$term)
         ### rimuove numeri al termine delle parole dell'abstract, e ne ordina i temrini
-        ab <- ab %>% 
-          group_by(.data$term2) %>% 
+        ab <- ab %>%
+          group_by(.data$term2) %>%
           mutate(number = seq.int(length(.data$term2)),
                  number = nchar(as.character(.data$number)),
                  len = length(.data$term2))
-        ab2 <- ab %>% 
+        ab2 <- ab %>%
           filter(.data$len==1)
-        
+
         ab <- ab %>%
           filter(.data$len>1) %>%
           mutate(term = substr(.data$term,1,nchar(.data$term)-.data$number)) %>%
@@ -154,10 +161,10 @@ oaList2df <- function(data){
         ab <- paste(ab$term, collapse=" ")
       } else {ab <- ""}
     } else {ab <- ""}
-    
-    list_df[[i]] <- tibble(id=id, TI=title, author=author, AB=ab, pubdata=pubdate, 
+
+    list_df[[i]] <- tibble(id=id, TI=title, author=author, AB=ab, pubdata=pubdate,
                            relscore=relscore, SO=so, SO_ID=so_id, PU=publisher, IS=issn, URL=url,
-                           OA=oa, TC=TC, PY=PY, cited_by_url=cited_by_url, 
+                           OA=oa, TC=TC, PY=PY, cited_by_url=cited_by_url,
                            ids=list(ids), DI=DI, DT=DT, CR=list(CR), related_works=list(related_works),
                            concept=concept)
   }

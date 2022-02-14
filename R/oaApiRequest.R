@@ -6,7 +6,6 @@ utils::globalVariables("progress_bar")
 #' The function \code{oaApiRequest} queries OpenAlex database using a query formulated through the function \code{oaQueryBuild}.
 #'
 #' @param query_url is a character. It contains a search query formulated using the OpenAlex API language. A query can be automatically generated using the function \code{oaQueryBuild}.
-#' @param format is a character. It indicates the data format of the returned object. The argument can be \code{format=c("data.frame","list")}. Default is \code{format="data.frame"}.
 #' @param total.count is a logical. If TRUE, the function returns only the number of item matching the query. Default is \code{total.count=FALSE}.
 #' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=FALSE}.
 #'
@@ -36,7 +35,6 @@ utils::globalVariables("progress_bar")
 #'
 #' res <- oaApiRequest(
 #'    query_url = query_work,
-#'    format = "list",
 #'    total.count = FALSE,
 #'    verbose = FALSE
 #'    )
@@ -50,7 +48,6 @@ utils::globalVariables("progress_bar")
 #'
 #' res <- oaApiRequest(
 #'    query_url = query_author,
-#'    format = "list",
 #'    total.count = FALSE,
 #'    verbose = FALSE
 #'    )
@@ -81,7 +78,6 @@ utils::globalVariables("progress_bar")
 #'
 #' res1 <- oaApiRequest(
 #'    query_url = query1,
-#'    format = "list",
 #'    total.count = FALSE,
 #'    verbose = FALSE
 #'    )
@@ -106,7 +102,6 @@ utils::globalVariables("progress_bar")
 #'
 #' res2 <- oaApiRequest(
 #'    query_url = query2,
-#'    format = "list",
 #'    total.count = FALSE,
 #'    verbose = FALSE
 #'    )
@@ -129,7 +124,6 @@ utils::globalVariables("progress_bar")
 #'
 #' res3 <- oaApiRequest(
 #'    query_url = query3,
-#'    format = "list",
 #'    total.count = TRUE,
 #'    verbose = FALSE
 #'    )
@@ -139,15 +133,9 @@ utils::globalVariables("progress_bar")
 #' @export
 #'
 oaApiRequest <- function(query_url,
-                         format = "data.frame",
+                         #format = "data.frame",
                          total.count = FALSE,
                          verbose=FALSE){
-
-  format_list = c("data.frame", "list")
-
-  if (!(format[1] %in% format_list) | length(format)>1){
-    cat("\nYou have selected an incorrect format.\nDefault value (format='data.frame' will be used)")
-  }
 
   ua <- httr::user_agent(cfg()$user_agent)
 
@@ -155,27 +143,28 @@ oaApiRequest <- function(query_url,
 
 
   res <- oa_request(query_url, ua)
-  if (isTRUE(total.count)) return(res$meta)
-  if (attr(query_url,"identifier")=="NoMissing"){ ## return of single item by identifier
-    if (format=="data.frame") {
-      data <- oaDataFrame(res)
-      return(data)
-      } else {return(res)}
+  if (!is.null(res$meta)){
+    ## return only item counting
+    if (isTRUE(total.count)){
+      return(res$meta)
+    }
+  } else {
+    return(res)
   }
 
   ## count number of pages
-  n_pages <- ceiling(res$meta$count / res$meta$per_page)
   n_items <- res$meta$count
+  n_pages <- ceiling(res$meta$count / res$meta$per_page)
   pages <- 1:n_pages
   ##
 
   if (n_items <= 0) return (list())
 
   if (n_items > 1e4)
-    stop("A maximum of 10000 results can be paged, this query exceeds that.")
+    stop("A maximum of 10000 results can be paged, this query exceeds this limit.")
 
   if (verbose)
-    message("About to crawl a total of ", length(pages), " pages of results",
+    message("About to get a total of ", length(pages), " pages of results",
             " with a total of ", n_items, " records.")
 
   pb <- progress::progress_bar$new(
@@ -191,11 +180,8 @@ oaApiRequest <- function(query_url,
     if (!is.null(res$results)) data[[i]] <- res$results
   }
 
-  if (format=="data.frame") {
-    data <- oaDataFrame(data)
-  }else{
-    data <- unlist(data, recursive = FALSE)
-  }
+  data <- unlist(data, recursive = FALSE)
+
 
   return(data)
 
@@ -249,9 +235,9 @@ cfg <- function(){
 
 
 oaDataFrame <- function(res){
-    name <- NULL
-    data <-
-      tibble::enframe(unlist(res)) %>%
-      dplyr::mutate(name = gsub(".", "_", name, fixed = TRUE))
+  name <- NULL
+  data <-
+    tibble::enframe(unlist(res)) %>%
+    dplyr::mutate(name = gsub(".", "_", name, fixed = TRUE))
   return(data)
 }

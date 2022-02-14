@@ -2,8 +2,8 @@
 
 export("%>%")
 export(oaApiRequest)
-export(oaList2df)
 export(oaQueryBuild)
+export(oaWorks2df)
 import(dplyr)
 import(httr)
 import(jsonlite)

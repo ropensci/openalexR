@@ -4,17 +4,10 @@
 \alias{oaApiRequest}
 \title{Get bibliographic records from OpenAlex databases}
 \usage{
-oaApiRequest(
-  query_url,
-  format = "data.frame",
-  total.count = FALSE,
-  verbose = FALSE
-)
+oaApiRequest(query_url, total.count = FALSE, verbose = FALSE)
 }
 \arguments{
 \item{query_url}{is a character. It contains a search query formulated using the OpenAlex API language. A query can be automatically generated using the function \code{oaQueryBuild}.}
-
-\item{format}{is a character. It indicates the data format of the returned object. The argument can be \code{format=c("data.frame","list")}. Default is \code{format="data.frame"}.}
 
 \item{total.count}{is a logical. If TRUE, the function returns only the number of item matching the query. Default is \code{total.count=FALSE}.}
 
@@ -50,7 +43,6 @@ endpoint = "https://api.openalex.org/")
 
 res <- oaApiRequest(
    query_url = query_work,
-   format = "list",
    total.count = FALSE,
    verbose = FALSE
    )
@@ -64,7 +56,6 @@ endpoint = "https://api.openalex.org/")
 
 res <- oaApiRequest(
    query_url = query_author,
-   format = "list",
    total.count = FALSE,
    verbose = FALSE
    )
@@ -95,7 +86,6 @@ endpoint = "https://api.openalex.org/")
 
 res1 <- oaApiRequest(
    query_url = query1,
-   format = "list",
    total.count = FALSE,
    verbose = FALSE
    )
@@ -120,7 +110,6 @@ query2 <- oaQueryBuild(
 
 res2 <- oaApiRequest(
    query_url = query2,
-   format = "list",
    total.count = FALSE,
    verbose = FALSE
    )
@@ -143,7 +132,6 @@ query3 <- oaQueryBuild(
 
 res3 <- oaApiRequest(
    query_url = query3,
-   format = "list",
    total.count = TRUE,
    verbose = FALSE
    )

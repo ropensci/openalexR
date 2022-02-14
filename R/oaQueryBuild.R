@@ -47,7 +47,7 @@
 #'    verbose = FALSE
 #'    )
 #'
-#' #  The author Massimo Aria is associated to the OpenAlex-id A923435168.
+#' #  The author Massimo Aria is associated to the OpenAlex-id A923435168:
 #'
 #'
 #' query_author <- oaQueryBuild(
@@ -193,7 +193,7 @@ oaQueryBuild <- function(
            )
          },
          NoMissing={
-           path <- sprintf("%s", identifier)
+           path <- paste(entity,identifier, sep="/")
            query = NULL
          }
   )
@@ -208,7 +208,7 @@ oaQueryBuild <- function(
     query_url <- paste(query_url,"&per-page=50",sep="")
   }
 
-  attr(query_url,"identifier") <- id
+  #attr(query_url,"identifier") <- id
 
   return(query_url)
 

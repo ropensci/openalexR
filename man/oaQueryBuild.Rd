@@ -71,7 +71,7 @@ res_work <- oaApiRequest(
    verbose = FALSE
    )
 
-#  The author Massimo Aria is associated to the OpenAlex-id A923435168.
+#  The author Massimo Aria is associated to the OpenAlex-id A923435168:
 
 
 query_author <- oaQueryBuild(
