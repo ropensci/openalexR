@@ -146,6 +146,7 @@ cat("\nSecond Author's name ", res$authorships[[2]][["author"]][["display_name"]
 OpenAlex endpoint accepts an OpenAlex ID, but many external IDs (eg DOI, ISSN) are accepted as well, in several formats.
 
 **DOI (Digital Object Identifier)**
+
 We can get a publication record through its DOI using the format **doi:***doi identifier*. Example:
 ```{r}
 query_work <- oaQueryBuild(
@@ -170,6 +171,7 @@ cat("\nPublication Title ", res[["title"]])
 
 
 **Persistent Identifiers (PIDs)**
+
 Many persistent identifiers (PIDs) are canonically expressed as a URL that will take you to the thing being identified. Where these URL formats exist, OpenAlex treats them as the canonical ID, and also accepts them as valid IDs. Example:
 ```{r}
 query_work <- oaQueryBuild(
@@ -367,6 +369,8 @@ Below we show some examples of filters in use.
 
 **We want to download all works, cited more than 50 times, published between 2020 and 2021, which include the strings "bibliometric analysis" or "science mapping" in the title.**
 
+&nbsp;
+
 To do that, we have to set filters about three attributes: title content (*"title.search"*), starting date for publication (*"from_publication_date"*), and ending date for publication (*"to_publication_date"*).
 
 Starting and ending dates can be passed to the function **oaQueryBuild** using the arguments *date_from* and *date_to*. The format is YYYY-MM-DD.
@@ -428,7 +432,7 @@ Setting the argument total.count=TRUE, the function **oaApiRequest** returns the
 res$count
 ```
 
-Then we can download the collection:
+Then, we can download the collection:
 
 ```{r}
  res <- oaApiRequest(
@@ -457,7 +461,7 @@ For example, if we want to download all publications citing the article Aria and
 
 **filter = "cites:W2755950973"**
 
-where *"W2755950973"* is the OA id for the article by Aria and Cuccurullo.
+where *"W2755950973"* is the OA id for the article by Aria and Cuccurullo (2017).
 
 ```{r}
 query1 <- oaQueryBuild(

@@ -1,39 +1,12 @@
 openalexR
 ====================================
 
-## An R package to get bibliographic data from OpenAlex. 
-
-*https://github.com/massimoaria/openalexR*
-
-*Latest version: `r packageVersion("openalexR")`, `r Sys.Date()`*
-
-&nbsp; 
-
-**by Massimo Aria**
-
-Full Professor in Social Statistics 
-
-PhD in Computational Statistics
-
-Laboratory and Research Group STAD Statistics, Technology, Data Analysis
-
-Department of Economics and Statistics 
-
-University of Naples Federico II
-
-email aria@unina.it
-
-http://www.massimoaria.com
-
-&nbsp; 
-
 # An R-package to gather bibliographic data from OpenAlex. 
-
-## Introduction 
 
 &nbsp;
 
-    The goal of openalexR is to gather bibliographic metadata about publications, authors, venues, institutions and concepts from OpenAlex using API.
+    The goal of openalexR is to gather bibliographic metadata about publications, 
+    authors, venues, institutions and concepts from OpenAlex using API.
     
 OpenAlex is a fully open catalog of the global research system. It's named after the ancient Library of Alexandria.
 The OpenAlex dataset describes scholarly entities and how those entities are connected to each other. There are five types of entities:
@@ -50,9 +23,7 @@ The OpenAlex dataset describes scholarly entities and how those entities are con
 
 (source:  [OpenAlex website](https://CRAN.R-project.org))
 
-
-
-
+&nbsp; 
 
 ## Installation
 
@@ -68,12 +39,7 @@ You can install the released version of openalexR from [CRAN](https://CRAN.R-pro
 
     install.packages("openalexR")
 
-
-
 &nbsp; 
-
-&nbsp; 
-
 
 ## Load the package
 
@@ -88,19 +54,27 @@ You can install the released version of openalexR from [CRAN](https://CRAN.R-pro
 &nbsp; 
 
 
-# Some Brief Examples
+# How to downalod items from OpenAlex endpoijnt
+
+OpenAlex defined a custom query language based on entity type. You can choose to write a valid query using that language or, in alternative, using the function **oaQueryBuild**.
+
+**oaQueryBuild** generates a valid query, written following the OpenAlex API language, from a set of arguments provided by the user.
+
+&nbsp; 
 
 ## Get full records through entity IDs.
+
+&nbsp; 
 
 ### Query to obtain all information about a single publications
 
 The following paper:
 
-    Aria, M., & Cuccurullo, C. (2017). bibliometrix: An R-tool for comprehensive science mapping analysis. Journal of informetrics, 11(4), 959-975.
+    Aria, M., & Cuccurullo, C. (2017). bibliometrix: 
+    An R-tool for comprehensive science mapping analysis. 
+    Journal of informetrics, 11(4), 959-975.
 
-is associated to the OpenAlex-id W2755950973.
-
-The function **oaQueryBuild** supports the query creation by providing a set of arguments.
+is associated to the OpenAlex-id **W2755950973**.
 
 In this example, we need to pass a single argument to the function, that is, the identifier of the entity to download: identifier = "W2755950973".
 
@@ -148,7 +122,9 @@ cat("\nSecond Author's name ", res$authorships[[2]][["author"]][["display_name"]
 
 OpenAlex endpoint accepts an OpenAlex ID, but many external IDs (eg DOI, ISSN) are accepted as well, in several formats.
 
+
 **DOI (Digital Object Identifier)**
+
 We can get a publication record through its DOI using the format **doi:***doi identifier*. Example:
 ```{r}
 query_work <- oaQueryBuild(
@@ -179,10 +155,39 @@ cat("\nPublication Title ", res[["title"]])
 
 
 
+**Persistent Identifiers (PIDs)**
+
+Many persistent identifiers (PIDs) are canonically expressed as a URL that will take you to the thing being identified. Where these URL formats exist, OpenAlex treats them as the canonical ID, and also accepts them as valid IDs. Example:
+```{r}
+query_work <- oaQueryBuild(
+  identifier = "doi:https://doi.org/10.1016/j.joi.2017.08.007",
+  entity = "works"
+  )
+
+cat(query_work)
+
+## https://api.openalex.org/works/doi:https://doi.org/10.1016/j.joi.2017.08.007
+```
+
+```{r}
+ res <- oaApiRequest(
+    query_url = query_work
+    )
+```
+
+```{r}
+cat("\nID ", res[["id"]])
+cat("\nDOI ",res[["doi"]])
+cat("\nPublication Title ", res[["title"]])
+
+## ID  https://openalex.org/W2755950973
+## DOI  https://doi.org/10.1016/j.joi.2017.08.007
+## Publication Title  bibliometrix: An R-tool for comprehensive science mapping analysis
+```
 
 ### Query to obtain all information about a two o more publications
 
-To download the records of two o more identifiers through a single query, we can recursively apply oaApiRequest to each id using the function lapply.
+To download the records of two o more identifiers through a single query, we can recursively apply **oaApiRequest** to each id using the function **lapply**.
 
 ```{r}
 ids <- c("W2755950973","W3005144120")
@@ -236,11 +241,13 @@ cat("\n Author's Publication Count ",res_author[["works_count"]])
 
 &nbsp;
 
-&nbsp;
+©
 
 ## Get all works matching a set of inclusion/exclusion criteria (filters) 
 
 In most cases, we are interested in downloading a collection of items that meet one or more inclusion/exclusion criteria (filters).
+
+&nbsp;
 
 In this case, the query definition will not be based on a single identifier but the choice of the entity type (usually "works") and one or more filters about this entity.
 
