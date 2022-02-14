@@ -85,9 +85,10 @@ query_work <- oaQueryBuild(
   )
 
 cat(query_work)
-```
 
 ## https://api.openalex.org/works/W2755950973
+```
+
 
 As results, **oaQueryBuild** returns the query string including the OpenAlex endpoint API server address. You should change it by using the argument "endpoint = *address*"
 
@@ -238,10 +239,9 @@ cat("\n Author's Publication Count ",res_author[["works_count"]])
 ## Author's Publication Count  102
 ```
 
-
 &nbsp;
 
-©
+&nbsp;
 
 ## Get all works matching a set of inclusion/exclusion criteria (filters) 
 
@@ -397,7 +397,8 @@ The whole filter **'title.search:"bibliometric analysis"|"science mapping",cited
 
 can be read as:
 
-    *"all works containing the string "bibliometric analysis" OR "science mapping" in the publication title AND cited more than 50 times"*.
+    *"all works containing the string "bibliometric analysis" OR "science mapping" 
+    in the publication title AND cited more than 50 times"*.
 
 
 
