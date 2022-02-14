@@ -195,17 +195,19 @@ cat("\nPublication Title ", res[["title"]])
 
 ### Query to obtain all information about a two o more publications
 
-To download the records of two o more identifiers through a single query, we can recursively apply oaApiRequest to each id using the function map by purrr package.
+To download the records of two o more identifiers through a single query, we can recursively apply oaApiRequest to each id using the function lapply.
 
 ```{r}
 ids <- c("W2755950973","W3005144120")
 
-res <- purrr::map(ids, function(x){oaApiRequest(
+res <- lapply(ids, function(x){
+  oaApiRequest(
     query_url = oaQueryBuild(
-  identifier = x,
-  entity = "works"
+      identifier = x,
+      entity = "works"
+    )
   )
-    )})
+})
 ```
 
 
@@ -359,6 +361,7 @@ You can find more documentation about each attribute on the [OA Documentation Co
 
 Below we show some examples of filters in use.
 
+&nbsp;
 
 ### Filters based on string matching
 
@@ -438,65 +441,42 @@ Then we can download the collection:
 and transform it into a data frame:
 
 ```{r}
-df <- oaList2df(res)
+df <- oaWorks2df(res)
 ```
 ```{r}
 dplyr::glimpse(df)
 ```
 
+&nbsp;
 
+### Get all works citing a particular work.
 
-## EXAMPLE 2: Get all works citing a particular work.
- # Query to search all works citing the article:
- #  Aria, M., & Cuccurullo, C. (2017). bibliometrix:
- #   An R-tool for comprehensive science mapping analysis.
- #   Journal of informetrics, 11(4), 959-975.
+We can download all publications citing another publication by using the filter attribute **cites:***id*.
 
- #  published in 2021.
- #  The paper is associated to the OpenAlex id W2755950973.
+For example, if we want to download all publications citing the article Aria and Cuccurullo (2017), we have just to set the argument filter as:
 
- #  Results have to be sorted by relevance score in a descending order.
+**filter = "cites:W2755950973"**
 
- query1 <- oaQueryBuild(
+where *"W2755950973"* is the OA id for the article by Aria and Cuccurullo.
+
+```{r}
+query1 <- oaQueryBuild(
  identifier=NULL,
  entity = "works",
  filter = "cites:W2755950973",
- date_from = "2021-01-01",
- date_to = "2021-12-31",
- search=NULL,
- sort="relevance_score:desc",
- endpoint = "https://api.openalex.org/")
+ date_from = NULL,
+ date_to = NULL,
+ sort=NULL)
 
- res1 <- oaApiRequest(
+res1 <- oaApiRequest(
     query_url = query1,
-    format = "list",
-    total.count = FALSE,
-    verbose = FALSE
-    )
-
- 
-
- ### EXAMPLE 4: How to check how many works match a query
- # Query to search all works containing the exact string
- # "bibliometric analysis" OR "science mapping" in the title, published in 2020 or 2021.
-
- # Quey only to know how many works could be retrieved (total.count=TRUE)
-
- query3 <- oaQueryBuild(
-    identifier=NULL,
-    entity = "works",
-    filter = 'title.search:"bibliometric analysis"|"science mapping"',
-    date_from = "2020-01-01",
-    date_to = "2021-12-31",
-    search=NULL,
-    sort="relevance_score:desc",
-    endpoint = "https://api.openalex.org/")
-
- res3 <- oaApiRequest(
-    query_url = query3,
-    format = "list",
     total.count = TRUE,
     verbose = FALSE
     )
+```
 
- res3$count #numebr of items retrieved by our query
+This query will return a collection of:
+```{r}
+cat(res1$count, "publications")
+```
+

@@ -39,6 +39,7 @@ The function \code{oaApiRequest} queries OpenAlex database using a query formula
 
 query_work <- oaQueryBuild(
 identifier = "W2755950973",
+entity = "works",
 endpoint = "https://api.openalex.org/")
 
 res <- oaApiRequest(
@@ -52,6 +53,7 @@ res <- oaApiRequest(
 
 query_author <- oaQueryBuild(
 identifier = "A923435168",
+entity = "authors",
 endpoint = "https://api.openalex.org/")
 
 res <- oaApiRequest(
@@ -74,7 +76,7 @@ res <- oaApiRequest(
 
 #  Results have to be sorted by relevance score in a descending order.
 
-query1 <- oaQueryBuild(
+query2 <- oaQueryBuild(
 identifier=NULL,
 entity = "works",
 filter = "cites:W2755950973",
@@ -84,8 +86,8 @@ search=NULL,
 sort="relevance_score:desc",
 endpoint = "https://api.openalex.org/")
 
-res1 <- oaApiRequest(
-   query_url = query1,
+res2 <- oaApiRequest(
+   query_url = query2,
    total.count = FALSE,
    verbose = FALSE
    )
@@ -97,28 +99,6 @@ res1 <- oaApiRequest(
 
 # Results have to be sorted by relevance score in a descending order.
 
-
-query2 <- oaQueryBuild(
-   identifier=NULL,
-   entity = "works",
-   filter = 'title.search:"bibliometric analysis"|"science mapping"',
-   date_from = "2020-01-01",
-   date_to = "2021-12-31",
-   search=NULL,
-   sort="relevance_score:desc",
-   endpoint = "https://api.openalex.org/")
-
-res2 <- oaApiRequest(
-   query_url = query2,
-   total.count = FALSE,
-   verbose = FALSE
-   )
-
-### EXAMPLE 4: How to check how many works match a query
-# Query to search all works containing the exact string
-# "bibliometric analysis" OR "science mapping" in the title, published in 2020 or 2021.
-
-# Quey only to know how many works could be retrieved (total.count=TRUE)
 
 query3 <- oaQueryBuild(
    identifier=NULL,
@@ -132,10 +112,32 @@ query3 <- oaQueryBuild(
 
 res3 <- oaApiRequest(
    query_url = query3,
+   total.count = FALSE,
+   verbose = FALSE
+   )
+
+### EXAMPLE 4: How to check how many works match a query
+# Query to search all works containing the exact string
+# "bibliometric analysis" OR "science mapping" in the title, published in 2020 or 2021.
+
+# Quey only to know how many works could be retrieved (total.count=TRUE)
+
+query4 <- oaQueryBuild(
+   identifier=NULL,
+   entity = "works",
+   filter = 'title.search:"bibliometric analysis"|"science mapping"',
+   date_from = "2020-01-01",
+   date_to = "2021-12-31",
+   search=NULL,
+   sort="relevance_score:desc",
+   endpoint = "https://api.openalex.org/")
+
+res4 <- oaApiRequest(
+   query_url = query4,
    total.count = TRUE,
    verbose = FALSE
    )
 
-res3$count #numebr of items retrieved by our query
+res4$count #number of items retrieved by our query
 }
 }
