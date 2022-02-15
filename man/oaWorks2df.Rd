@@ -44,7 +44,6 @@ endpoint = "https://api.openalex.org/")
 
 res <- oaApiRequest(
    query_url = query,
-   format = "list",
    total.count = FALSE,
    verbose = FALSE
    )

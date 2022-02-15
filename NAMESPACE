@@ -2,6 +2,7 @@
 
 export("%>%")
 export(oaApiRequest)
+export(oaAuthors2df)
 export(oaQueryBuild)
 export(oaWorks2df)
 import(dplyr)
