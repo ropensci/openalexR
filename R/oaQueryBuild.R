@@ -161,9 +161,6 @@ oaQueryBuild <- function(
   entity_list = c("works", "authors", "venues", "institutions", "concepts")
   format_list = c("table", "object")
 
-  # if (!(format[1] %in% format_list) | length(format)>1){
-  #   cat("\nYou have selected an incorrect format.\nDefault value (format='table' will be used)")
-  # }
   id <- c("NoMissing","Missing")
   id <- id[(is.null(identifier))+1]
 

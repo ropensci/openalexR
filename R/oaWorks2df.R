@@ -47,7 +47,7 @@ utils::globalVariables("progress_bar")
 #'
 #' }
 #'
-#' @export
+# @export
 oaWorks2df <- function(data){
 
   # replace NULL with NA
@@ -65,7 +65,7 @@ oaWorks2df <- function(data){
   list_df<- vector(mode = "list", length = n)
 
   pb <- progress::progress_bar$new(
-    format = "  from list to data frame converting [:bar] :percent eta: :eta",
+    format = "  converting [:bar] :percent eta: :eta",
     total = n, clear = FALSE, width = 60)
 
 
@@ -129,9 +129,23 @@ oaWorks2df <- function(data){
     })))
 
     TC <- paper$cited_by_count
+
+    # Total Citations per Year
+    if(!is.null(item$counts_by_year)){
+      TCperYear <- unlist(item$counts_by_year)
+      lab <- names(TCperYear)
+      TCperYear <- list(data.frame(year=TCperYear[lab=="year"], works_count=TCperYear[lab=="works_count"],
+                                   TC=TCperYear[lab=="cited_by_count"]))
+    }else{TCperYear=NA}
+
     PY <- paper$publication_year
     cited_by_url <- paper$cited_by_api_url
-    ids <- unlist(paper$ids)
+    if (length(paper$ids)>0){
+      ids <- unlist(paper$ids)
+      ids <- list(data.frame(item=names(ids), value=ids))
+    }else{
+      ids <- NA
+    }
     DI <- paper$doi
     DT <- paper$type
     CR <- unlist(paper$referenced_works)
@@ -163,7 +177,7 @@ oaWorks2df <- function(data){
 
     list_df[[i]] <- tibble(id=id, TI=title, author=author, AB=ab, pubdata=pubdate,
                            relscore=relscore, SO=so, SO_ID=so_id, PU=publisher, IS=issn, URL=url,
-                           OA=oa, TC=TC, PY=PY, cited_by_url=cited_by_url,
+                           OA=oa, TC=TC, TCperYear=TCperYear, PY=PY, cited_by_url=cited_by_url,
                            ids=list(ids), DI=DI, DT=DT, CR=list(CR), related_works=list(related_works),
                            concept=concept)
   }

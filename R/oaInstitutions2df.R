@@ -1,8 +1,8 @@
 utils::globalVariables("progress_bar")
-#' Convert OpenAlex collection of authors' records from list format to data frame
+#' Convert OpenAlex collection of institutions' records from list format to data frame
 #'
-#' It converts bibliographic collection of authors' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
-#' The function converts a list of authors' records obtained using \code{oaApiRequest} into a data frame/tibble.
+#' It converts bibliographic collection of institutions' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
+#' The function converts a list of institutions' records obtained using \code{oaApiRequest} into a data frame/tibble.
 #'
 #' @param data is a list. data is the output of the function \code{oaApiRequest}.
 #'
@@ -15,31 +15,27 @@ utils::globalVariables("progress_bar")
 #'
 #' \dontrun{
 #'
-#' # Query to search information about all authors affiliated to the University of Naples Federico II
-#' # which have authored at least 100 publications:
-#'
-#' # University of Naples Federico II is associated to the OpenAlex id I71267560.
+#' # Query to search information about all Italian educational institutions
 #'
 #'
-#' query_author <- oaQueryBuild(
-#'  identifier = NULL,
-#'  entity = "authors",
-#'  filter = "last_known_institution.id:I71267560,works_count:>99")
+#' query_inst <- oaQueryBuild(
+#'   entity = "institutions",
+#'  filter = "country_code:it,type:education")
 #'
 #' res <- oaApiRequest(
-#'    query_url = query_author,
+#'    query_url = query_inst,
 #'    total.count = FALSE,
 #'    verbose = FALSE
 #'    )
 #'
-#' df <- oaAuthors2df(res)
+#' df <- oaInstitutions2df(res)
 #'
 #' df
 #'
 #' }
 #'
 # @export
-oaAuthors2df <- function(data){
+oaInstitutions2df <- function(data){
 
   # replace NULL with NA
   data <- simple_rapply(data, function(x) if(is.null(x)) NA else x)
@@ -59,11 +55,10 @@ oaAuthors2df <- function(data){
     format = "  converting [:bar] :percent eta: :eta",
     total = n, clear = FALSE, width = 60)
 
-
   for (i in 1:n){
+
     pb$tick()
     item <- data[[i]]
-
 
     id <- item$id
     name <- item$display_name
@@ -72,23 +67,42 @@ oaAuthors2df <- function(data){
     }else{
       name_alternatives <- NA
     }
+    if (length(item$display_name_acronyms)>0){
+      name_acronyms <- list(unlist(item$display_name_acronyms))
+    }else{
+      name_acronyms <- NA
+    }
+    if (length(item$international)>0){
+      name_international <- list(as.data.frame(item$international))
+    }else{
+      name_international <- NA
+    }
     #
+    ror <- item$ror
+    rel_score <- item$relevance_score
+    country <- item$country_code
+    type <- item$type
+    homepage <- item$homepage_url
+    image <- item$image_url
+    thumbnail <- item$image_thumbnail_url
+    works_count <- item$works_count
+    TC <- item$cited_by_count
     if (length(item$ids)>0){
       ids <- unlist(item$ids)
       ids <- list(data.frame(item=names(ids), value=ids))
     }else{
       ids <- NA
     }
-
-    rel_score <- item$relevance_score
-    orcid <- item$orcid
-    works_count <- item$works_count
-    TC <- item$cited_by_count
-    affiliation_id <- item$last_known_institution$id
-    affiliation_ror <- item$last_known_institution$ror
-    affiliation_name <- item$last_known_institution$display_name
-    affiliation_country <- item$last_known_institution$country_code
-    affiliation_type <- item$last_known_institution$type
+    if (length(item$geo)>0){
+      geo <- list(as.data.frame(item$geo))
+    }else{
+      geo <- NA
+    }
+    if (length(item$associated_institutions)>0){
+      associated_inst <- list(as.data.frame(item$associated_institutions))
+    }else{
+      associated_inst <- NA
+    }
 
     # Total Citations per Year
     TCperYear <- unlist(item$counts_by_year)
@@ -107,24 +121,13 @@ oaAuthors2df <- function(data){
     })))
     works_api_url <- item$works_api_url
 
-    list_df[[i]] <- tibble(id=id, name=name, name_alternatives=name_alternatives, rel_score=rel_score, ids=ids,
-                           orcid=orcid, works_count=works_count, TC=TC, TCperYear=TCperYear, affiliation_name=affiliation_name,
-                           affiliation_id=affiliation_id, affiliation_ror=affiliation_ror,
-                           affiliation_country=affiliation_country, affiliation_type=affiliation_type,
+    list_df[[i]] <- tibble(id=id, name=name, name_alternatives=name_alternatives, name_acronyms=name_acronyms,
+                           name_international=name_international, ror=ror, ids=ids, country=country, geo=geo,
+                           type=type, homepage=homepage, image=image, thumbnail=thumbnail, associated_inst=associated_inst,
+                           rel_score=rel_score,works_count=works_count, TC=TC, TCperYear=TCperYear,
                            concept=concept, works_api_url=works_api_url)
   }
   df <- do.call(rbind,list_df)
 }
 
 
-# replace NULL with NA
-simple_rapply <- function(x, fn)
-{
-  if(is.list(x))
-  {
-    lapply(x, simple_rapply, fn)
-  } else
-  {
-    fn(x)
-  }
-}
