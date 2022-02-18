@@ -102,19 +102,34 @@ The function **oaApiRequest** downloads the bibliographic records matching the q
 ```
 
 ```{r}
-cat("\nID ", res[["id"]])
-cat("\nDOI ",res[["doi"]])
-cat("\nPublication Title ", res[["title"]])
-cat("\nFirst Author's name ",res$authorships[[1]][["author"]][["display_name"]])
-cat("\nFirst Author's affiliation ",res$authorships[[1]][["institutions"]][[1]][["display_name"]])
-cat("\nSecond Author's name ", res$authorships[[2]][["author"]][["display_name"]])
+df <- oa2df(res, entity = "works")
 
-## ID  https://openalex.org/W2755950973
-## DOI  https://doi.org/10.1016/j.joi.2017.08.007
-## Publication Title  bibliometrix: An R-tool for comprehensive science mapping analysis
-## First Author's name  Massimo Aria
-## First Author's affiliation  University of Naples Federico II
-## Second Author's name  Corrado Cuccurullo
+dplyr::glimpse(df)
+
+# Rows: 1
+# Columns: 22
+# $ id            <chr> "https://openalex.org/W2755950973"
+# $ TI            <chr> "bibliometrix: An R-tool for comprehensive science mapping analysis"
+# $ author        <list> [<data.frame[2 x 10]>]
+# $ AB            <chr> ""
+# $ pubdata       <chr> "2017-11-01"
+# $ relscore      <dbl> 15.8851
+# $ SO            <chr> "Journal of Informetrics"
+# $ SO_ID         <chr> "https://openalex.org/V205292342"
+# $ PU            <chr> "Elsevier"
+# $ IS            <list> <"1875-5879", "1751-1577">
+# $ URL           <chr> "https://doi.org/10.1016/j.joi.2017.08.007"
+# $ OA            <lgl> FALSE
+# $ TC            <int> 1120
+# $ TCperYear     <lgl> NA
+# $ PY            <int> 2017
+# $ cited_by_url  <chr> "https://api.openalex.org/works?filter=cites:W2755950973"
+# $ ids           <list> [[<data.frame[4 x 2]>]]
+# $ DI            <chr> "https://doi.org/10.1016/j.joi.2017.08.007"
+# $ DT            <chr> "journal-article"
+# $ CR            <list> <"https://openalex.org/W192816456", "https://openalex.org/W2132948308", "https://openalex.org/W349374990", "https://openalex.org/W767067438", "https://openalex.org/W2002117998", "https://openalex.org/W2034800299", "https://o…
+# $ related_works <list> <"https://openalex.org/W2408216567", "https://openalex.org/W3125505924", "https://openalex.org/W2150220236", "https://openalex.org/W3125707221", "https://openalex.org/W2135455887", "https://openalex.org/W2128438887", "https:…
+# $ concept       <list> [<data.frame[4 x 5]>]
 ```
 
 &nbsp; 
@@ -145,13 +160,34 @@ cat(query_work)
 ```
 
 ```{r}
-cat("\nID ", res[["id"]])
-cat("\nDOI ",res[["doi"]])
-cat("\nPublication Title ", res[["title"]])
+df <- oa2df(res, entity = "works")
 
-## ID  https://openalex.org/W2755950973
-## DOI  https://doi.org/10.1016/j.joi.2017.08.007
-## Publication Title  bibliometrix: An R-tool for comprehensive science mapping analysis
+dplyr::glimpse(df)
+
+# Rows: 1
+# Columns: 22
+# $ id            <chr> "https://openalex.org/W2755950973"
+# $ TI            <chr> "bibliometrix: An R-tool for comprehensive science mapping analysis"
+# $ author        <list> [<data.frame[2 x 10]>]
+# $ AB            <chr> ""
+# $ pubdata       <chr> "2017-11-01"
+# $ relscore      <dbl> 15.26293
+# $ SO            <chr> "Journal of Informetrics"
+# $ SO_ID         <chr> "https://openalex.org/V205292342"
+# $ PU            <chr> "Elsevier"
+# $ IS            <list> <"1875-5879", "1751-1577">
+# $ URL           <chr> "https://doi.org/10.1016/j.joi.2017.08.007"
+# $ OA            <lgl> FALSE
+# $ TC            <int> 1120
+# $ TCperYear     <lgl> NA
+# $ PY            <int> 2017
+# $ cited_by_url  <chr> "https://api.openalex.org/works?filter=cites:W2755950973"
+# $ ids           <list> [[<data.frame[4 x 2]>]]
+# $ DI            <chr> "https://doi.org/10.1016/j.joi.2017.08.007"
+# $ DT            <chr> "journal-article"
+# $ CR            <list> <"https://openalex.org/W192816456", "https://openalex.org/W2132948308", "…
+# $ related_works <list> <"https://openalex.org/W2408216567", "https://openalex.org/W3125505924", …
+# $ concept       <list> [<data.frame[4 x 5]>]
 ```
 
 
@@ -177,13 +213,34 @@ cat(query_work)
 ```
 
 ```{r}
-cat("\nID ", res[["id"]])
-cat("\nDOI ",res[["doi"]])
-cat("\nPublication Title ", res[["title"]])
+df <- oa2df(res, entity = "works")
 
-## ID  https://openalex.org/W2755950973
-## DOI  https://doi.org/10.1016/j.joi.2017.08.007
-## Publication Title  bibliometrix: An R-tool for comprehensive science mapping analysis
+dplyr::glimpse(df)
+
+# Rows: 1
+# Columns: 22
+# $ id            <chr> "https://openalex.org/W2755950973"
+# $ TI            <chr> "bibliometrix: An R-tool for comprehensive science mapping analysis"
+# $ author        <list> [<data.frame[2 x 10]>]
+# $ AB            <chr> ""
+# $ pubdata       <chr> "2017-11-01"
+# $ relscore      <dbl> 15.26293
+# $ SO            <chr> "Journal of Informetrics"
+# $ SO_ID         <chr> "https://openalex.org/V205292342"
+# $ PU            <chr> "Elsevier"
+# $ IS            <list> <"1875-5879", "1751-1577">
+# $ URL           <chr> "https://doi.org/10.1016/j.joi.2017.08.007"
+# $ OA            <lgl> FALSE
+# $ TC            <int> 1120
+# $ TCperYear     <lgl> NA
+# $ PY            <int> 2017
+# $ cited_by_url  <chr> "https://api.openalex.org/works?filter=cites:W2755950973"
+# $ ids           <list> [[<data.frame[4 x 2]>]]
+# $ DI            <chr> "https://doi.org/10.1016/j.joi.2017.08.007"
+# $ DT            <chr> "journal-article"
+# $ CR            <list> <"https://openalex.org/W192816456", "https://openalex.org/W2132948308", "…
+# $ related_works <list> <"https://openalex.org/W2408216567", "https://openalex.org/W3125505924", …
+# $ concept       <list> [<data.frame[4 x 5]>]
 ```
 
 ### Query to obtain all information about a two o more publications
@@ -203,6 +260,36 @@ res <- lapply(ids, function(x){
 })
 ```
 
+```{r}
+df <- oa2df(res, entity = "works")
+
+dplyr::glimpse(df)
+
+# Rows: 2
+# Columns: 22
+# $ id            <chr> "https://openalex.org/W2755950973", "https://openalex.org/W3005144120"
+# $ TI            <chr> "bibliometrix: An R-tool for comprehensive science mapping analysis", "Mapping the Evolution of Social Research and Data Scien…
+# $ author        <list> [<data.frame[2 x 10]>], [<data.frame[3 x 10]>]
+# $ AB            <chr> "", "Social Indicators Research (SIR) year by year has consolidated its preeminent position in the debate concerning the study…
+# $ pubdata       <chr> "2017-11-01", "2020-06-01"
+# $ relscore      <dbl> 15.88510, 15.72882
+# $ SO            <chr> "Journal of Informetrics", "Social Indicators Research"
+# $ SO_ID         <chr> "https://openalex.org/V205292342", "https://openalex.org/V112952035"
+# $ PU            <chr> "Elsevier", "Springer Nature"
+# $ IS            <list> <"1875-5879", "1751-1577">, <"1573-0921", "0303-8300">
+# $ URL           <chr> "https://doi.org/10.1016/j.joi.2017.08.007", "https://doi.org/10.1007/s11205-020-02281-3"
+# $ OA            <lgl> FALSE, FALSE
+# $ TC            <int> 1120, 32
+# $ TCperYear     <lgl> NA, NA
+# $ PY            <int> 2017, 2020
+# $ cited_by_url  <chr> "https://api.openalex.org/works?filter=cites:W2755950973", "https://api.openalex.org/works?filter=cites:W3005144120"
+# $ ids           <list> [[<data.frame[4 x 2]>]], [[<data.frame[4 x 2]>]]
+# $ DI            <chr> "https://doi.org/10.1016/j.joi.2017.08.007", "https://doi.org/10.1007/s11205-020-02281-3"
+# $ DT            <chr> "journal-article", "journal-article"
+# $ CR            <list> <"https://openalex.org/W192816456", "https://openalex.org/W2132948308", "https://openalex.org/W349374990", "https://openalex.…
+# $ related_works <list> <"https://openalex.org/W2408216567", "https://openalex.org/W3125505924", "https://openalex.org/W2150220236", "https://openalex…
+# $ concept       <list> [<data.frame[4 x 5]>], [<data.frame[8 x 5]>]
+```
 
 ### Query to obtain all information about a single author
 
@@ -228,15 +315,28 @@ cat(query_author)
 ```
 
 ```{r}
-cat("\n Author's Name ", res_author[["display_name"]])
-cat("\n Author's ORCID ",res_author[["orcid"]])
-cat("\n Author's Total Citations ", res_author[["cited_by_count"]])
-cat("\n Author's Publication Count ",res_author[["works_count"]])
+df <- oa2df(res_author, entity = "authors")
 
-## Author's Name  Massimo Aria
-## Author's ORCID  https://orcid.org/0000-0002-8517-9411
-## Author's Total Citations  2525
-## Author's Publication Count  102
+dplyr::glimpse(df)
+
+# Rows: 1
+# Columns: 16
+# $ id                  <chr> "https://openalex.org/A923435168"
+# $ name                <chr> "Massimo Aria"
+# $ name_alternatives   <lgl> NA
+# $ rel_score           <dbl> 16.74535
+# $ ids                 <list> [<data.frame[4 x 2]>]
+# $ orcid               <chr> "https://orcid.org/0000-0002-8517-9411"
+# $ works_count         <int> 102
+# $ TC                  <int> 2525
+# $ TCperYear           <list> [<data.frame[11 x 3]>]
+# $ affiliation_name    <chr> "University of Naples Federico II"
+# $ affiliation_id      <chr> "https://openalex.org/I71267560"
+# $ affiliation_ror     <chr> "https://ror.org/05290cv24"
+# $ affiliation_country <chr> "IT"
+# $ affiliation_type    <chr> "education"
+# $ concept             <list> [<data.frame[17 x 5]>]
+# $ works_api_url       <chr> "https://api.openalex.org/works?filter=author.id:A923435168"
 ```
 
 &nbsp;
@@ -430,7 +530,7 @@ Setting the argument total.count=TRUE, the function **oaApiRequest** returns the
 
 res$count
 
-## 19
+## 235
 ```
 
 Then, we can download the collection:
@@ -441,42 +541,45 @@ Then, we can download the collection:
     total.count = FALSE,
     verbose = FALSE
     )
+    
+## OpenAlex downloading [======================] 100% eta:  0s
 ```
 
 and transform it into a data frame:
 
 ```{r}
-df <- oaWorks2df(res)
+df <- oa2df(res, entity = "works")
 
-## from list to data frame converting [=======] 100% eta:  0s
+## converting [===============================] 100% eta:  0s
 ```
 
 ```{r}
 dplyr::glimpse(df)
 
-# Rows: 19
-# Columns: 21
-# $ id            <chr> "https://openalex.org/W3011866596", "https://openalex.org/W2…
-# $ TI            <chr> "A Bibliometric Analysis of COVID-19 Research Activity: A Ca…
-# $ author        <list> [<data.frame[7 x 10]>], [<data.frame[3 x 10]>], [<data.fram…
-# $ AB            <chr> "BACKGROUND: The novel coronavirus disease 2019 (COVID-19) h…
-# $ pubdata       <chr> "2020-03-21", "2020-03-01", "2020-09-01", "2020-03-01", "202…
-# $ relscore      <dbl> 139.28250, 138.93117, 134.48438, 131.31546, 120.48048, 119.8…
-# $ SO            <chr> "Cureus", "Journal of Business Research", "Journal of Busine…
-# $ SO_ID         <chr> "https://openalex.org/V2738950867", "https://openalex.org/V9…
-# $ PU            <chr> "Cureus, Inc.", "Elsevier", "Elsevier", "Eur Rev Med Pharmac…
-# $ IS            <list> "2168-8184", <"1873-7978", "0148-2963">, <"1873-7978", "014…
-# $ URL           <chr> "https://doi.org/10.7759/cureus.7357", "https://doi.org/10.1…
-# $ OA            <lgl> TRUE, FALSE, NA, NA, TRUE, NA, FALSE, TRUE, FALSE, TRUE, TRU…
-# $ TC            <int> 136, 119, 169, 86, 94, 100, 66, 82, 66, 65, 56, 67, 63, 58, …
-# $ PY            <int> 2020, 2020, 2020, 2020, 2021, 2020, 2020, 2020, 2021, 2020, …
-# $ cited_by_url  <chr> "https://api.openalex.org/works?filter=cites:W3011866596", "…
-# $ ids           <list> <"https://doi.org/10.7759/cureus.7357", "3011866596", "http…
-# $ DI            <chr> "https://doi.org/10.7759/cureus.7357", "https://doi.org/10.1…
-# $ DT            <chr> "journal-article", "journal-article", "journal-article", "jo…
-# $ CR            <list> <"https://openalex.org/W3008827533", "https://openalex.org/…
-# $ related_works <list> <"https://openalex.org/W3001118548", "https://openalex.org/…
-# $ concept       <list> [<data.frame[9 x 5]>], [<data.frame[8 x 5]>], [<data.frame[…
+# Rows: 235
+# Columns: 22
+# $ id            <chr> "https://openalex.org/W2755950973", "https://openalex.org/W1965746216", "https://openalex.org/W2108680868", "ht…
+# $ TI            <chr> "bibliometrix: An R-tool for comprehensive science mapping analysis", "Green supply chain management: A review …
+# $ author        <list> [<data.frame[2 x 10]>], [<data.frame[3 x 10]>], [<data.frame[4 x 10]>], [<data.frame[3 x 10]>], [<data.frame[2…
+# $ AB            <chr> "", "", "", "Social responsibilities of businesses and their managers have been discussed since the 1950s. Yet …
+# $ pubdata       <chr> "2017-11-01", "2015-04-01", "2011-07-01", "2005-09-01", "2007-07-11", "2015-11-01", "2012-08-01", "2015-12-01",…
+# $ relscore      <dbl> 454.6580, 398.4448, 373.5673, 314.2572, 303.1636, 295.9913, 279.6742, 278.5277, 251.8241, 249.3967, 243.1842, 2…
+# $ SO            <chr> "Journal of Informetrics", "International Journal of Production Economics", "Journal of the Association for Inf…
+# $ SO_ID         <chr> "https://openalex.org/V205292342", "https://openalex.org/V184816971", "https://openalex.org/V80113298", "https:…
+# $ PU            <chr> "Elsevier", "Elsevier", "Wiley", "SAGE", "Springer Nature", "Wiley", "Wiley", "Springer Nature", "Journal of Da…
+# $ IS            <list> <"1875-5879", "1751-1577">, <"0925-5273", "1873-7579">, <"1532-2882", "1532-2890">, <"0007-6503", "1552-4205">…
+# $ URL           <chr> "https://doi.org/10.1016/j.joi.2017.08.007", "https://doi.org/10.1016/j.ijpe.2015.01.003", "https://doi.org/10.…
+# $ OA            <lgl> FALSE, FALSE, FALSE, NA, FALSE, TRUE, FALSE, TRUE, TRUE, NA, FALSE, FALSE, FALSE, NA, FALSE, FALSE, TRUE, FALSE…
+# $ TC            <int> 1120, 720, 829, 656, 272, 652, 377, 401, 316, 280, 209, 136, 76, 209, 300, 313, 227, 164, 179, 172, 115, 125, 1…
+# $ TCperYear     <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…
+# $ PY            <int> 2017, 2015, 2011, 2005, 2007, 2015, 2012, 2015, 2017, 2009, 2016, 2005, 2014, 2004, 2011, 2007, 2017, 2008, 201…
+# $ cited_by_url  <chr> "https://api.openalex.org/works?filter=cites:W2755950973", "https://api.openalex.org/works?filter=cites:W196574…
+# $ ids           <list> [[<data.frame[4 x 2]>]], [[<data.frame[4 x 2]>]], [[<data.frame[4 x 2]>]], [[<data.frame[4 x 2]>]], [[<data.fr…
+# $ DI            <chr> "https://doi.org/10.1016/j.joi.2017.08.007", "https://doi.org/10.1016/j.ijpe.2015.01.003", "https://doi.org/10.…
+# $ DT            <chr> "journal-article", "journal-article", "journal-article", "journal-article", "journal-article", "journal-article…
+# $ CR            <list> <"https://openalex.org/W192816456", "https://openalex.org/W2132948308", "https://openalex.org/W349374990", "ht…
+# $ related_works <list> <"https://openalex.org/W2408216567", "https://openalex.org/W3125505924", "https://openalex.org/W2150220236", "…
+# $ concept       <list> [<data.frame[4 x 5]>], [<data.frame[8 x 5]>], [<data.frame[4 x 5]>], [<data.frame[8 x 5]>], [<data.frame[9 x 5…
 ```
 
 &nbsp;

@@ -131,12 +131,14 @@ oaWorks2df <- function(data){
     TC <- paper$cited_by_count
 
     # Total Citations per Year
-    if(!is.null(item$counts_by_year)){
-      TCperYear <- unlist(item$counts_by_year)
-      lab <- names(TCperYear)
-      TCperYear <- list(data.frame(year=TCperYear[lab=="year"], works_count=TCperYear[lab=="works_count"],
-                                   TC=TCperYear[lab=="cited_by_count"]))
-    }else{TCperYear=NA}
+    # if(length(paper$counts_by_year)>0){
+    #   TCperYear <- unlist(paper$counts_by_year)
+    #   lab <- names(TCperYear)
+    #   TCperYear <- list(data.frame(year=TCperYear[lab=="year"], works_count=TCperYear[lab=="works_count"],
+    #                                TC=TCperYear[lab=="cited_by_count"]))
+    # }else{
+    TCperYear=NA
+    #}
 
     PY <- paper$publication_year
     cited_by_url <- paper$cited_by_api_url

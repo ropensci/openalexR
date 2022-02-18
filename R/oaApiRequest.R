@@ -170,7 +170,7 @@ oaApiRequest <- function(query_url,
             " with a total of ", n_items, " records.")
 
   pb <- progress::progress_bar$new(
-    format = "  open alex resolving [:bar] :percent eta: :eta",
+    format = "  OpenAlex downloading [:bar] :percent eta: :eta",
     total = length(pages), clear = FALSE, width = 60)
 
   data <- vector("list", length = length(pages))
