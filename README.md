@@ -343,7 +343,7 @@ dplyr::glimpse(df)
 
 &nbsp;
 
-## Get all works matching a set of inclusion/exclusion criteria (filters) 
+## Get all entities matching a set of inclusion/exclusion criteria (filters) 
 
 In most cases, we are interested in downloading a collection of items that meet one or more inclusion/exclusion criteria (filters).
 
@@ -584,7 +584,7 @@ dplyr::glimpse(df)
 
 &nbsp;
 
-### Get all works citing a particular work.
+### Get all workss citing a particular work.
 
 We can download all publications citing another publication by using the filter attribute **cites:***id*.
 
