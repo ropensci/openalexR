@@ -7,6 +7,7 @@ utils::globalVariables("progress_bar")
 #'
 #' @param query_url is a character. It contains a search query formulated using the OpenAlex API language. A query can be automatically generated using the function \code{oaQueryBuild}.
 #' @param total.count is a logical. If TRUE, the function returns only the number of item matching the query. Default is \code{total.count=FALSE}.
+#' @param mailto is a character. To get into the polite pool, the arguments mailto have to give OpenAlex an email where they can contact you.
 #' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=FALSE}.
 #'
 #' @return a data.frame or a list.
@@ -20,7 +21,7 @@ utils::globalVariables("progress_bar")
 #'
 #' ### EXAMPLE 1: Full record about an entity.
 #'
-#' # Query to obtain allinformation about a particular work/author/institution/etc.:
+#' # Query to obtain all information about a particular work/author/institution/etc.:
 #'
 #' #  The following paper is associated to the OpenAlex-id W2755950973.
 #'
@@ -135,11 +136,19 @@ utils::globalVariables("progress_bar")
 #' @export
 #'
 oaApiRequest <- function(query_url,
-                         #format = "data.frame",
                          total.count = FALSE,
+                         mailto = NULL,
                          verbose=FALSE){
 
   ua <- httr::user_agent(cfg()$user_agent)
+
+  if (!is.null(mailto)){
+    if (isValidEmail(mailto)) {
+    paste(query_url,"?mailto:",mailto,sep="")
+    } else {
+    message(mailto, " is not a valid email address")}
+  }
+
 
   if (verbose == TRUE) message("Requesting url: ", query_url)
 
@@ -242,4 +251,8 @@ oaDataFrame <- function(res){
     tibble::enframe(unlist(res)) %>%
     dplyr::mutate(name = gsub(".", "_", name, fixed = TRUE))
   return(data)
+}
+
+isValidEmail <- function(x) {
+  grepl("\\<[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}\\>", as.character(x), ignore.case=TRUE)
 }

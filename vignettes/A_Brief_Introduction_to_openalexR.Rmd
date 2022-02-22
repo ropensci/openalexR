@@ -54,7 +54,7 @@ The OpenAlex dataset describes scholarly entities and how those entities are con
 
 * **Concepts** *tag* Works with a topic
 
-(source:  [OpenAlex website](https://CRAN.R-project.org))
+(source:  [OpenAlex website](https://openalex.org))
 
 
 
@@ -81,7 +81,7 @@ You can install the released version of openalexR from [CRAN](https://CRAN.R-pro
 &nbsp; 
 
 
-## Load the package
+## Package loading
 
 ```{r}
    library(openalexR)
@@ -94,9 +94,32 @@ You can install the released version of openalexR from [CRAN](https://CRAN.R-pro
 &nbsp; 
 
 
-# Some Brief Examples
+# openalexR overview
+
+The basic idea of openalexR is to provide three main functions helping the user to:
+
+* Create a query by passing one or more arguments to a function (function **oaQueryBuild**)
+
+* Gather a collection of entities in JSON format (function **oaApiRequest**)
+
+* Transform the JSON in a data frame (similar to an excel sheet) can be used as input in a bibliometric or science mapping analysis (e.g. using the bibliometrix package) (function **oa2df**)
+
+&nbsp;
+
+OpenAlex defined a custom query language based on entity type. You can choose to write a valid query using that language or, in alternative, using the function **oaQueryBuild**.
+
+**oaQueryBuild** generates a valid query, written following the OpenAlex API language, from a set of arguments provided by the user.
+
+The function **oaApiRequest** downloads a collection of entities matching the query created by **oaQueryBuild** or manually written by the user. The function will return a JSON object in a list format.
+
+Finally, the function **oa2df** converts  the JSON object in classical bibliographic data frame.
+
+
+&nbsp; 
 
 ## Get full records through entity IDs.
+
+&nbsp; 
 
 ### Query to obtain all information about a single publications
 
@@ -131,12 +154,9 @@ The function **oaApiRequest** downloads the bibliographic records matching the q
 ```
 
 ```{r}
-cat("\nID ", res[["id"]])
-cat("\nDOI ",res[["doi"]])
-cat("\nPublication Title ", res[["title"]])
-cat("\nFirst Author's name ",res$authorships[[1]][["author"]][["display_name"]])
-cat("\nFirst Author's affiliation ",res$authorships[[1]][["institutions"]][[1]][["display_name"]])
-cat("\nSecond Author's name ", res$authorships[[2]][["author"]][["display_name"]])
+df <- oa2df(res, entity = "works")
+
+dplyr::glimpse(df)
 ```
 
 &nbsp; 
@@ -164,9 +184,9 @@ cat(query_work)
 ```
 
 ```{r}
-cat("\nID ", res[["id"]])
-cat("\nDOI ",res[["doi"]])
-cat("\nPublication Title ", res[["title"]])
+df <- oa2df(res, entity = "works")
+
+dplyr::glimpse(df)
 ```
 
 
@@ -188,9 +208,9 @@ cat(query_work)
 ```
 
 ```{r}
-cat("\nID ", res[["id"]])
-cat("\nDOI ",res[["doi"]])
-cat("\nPublication Title ", res[["title"]])
+df <- oa2df(res, entity = "works")
+
+dplyr::glimpse(df)
 ```
 
 
@@ -211,6 +231,14 @@ res <- lapply(ids, function(x){
   )
 })
 ```
+
+
+```{r}
+df <- oa2df(res, entity = "works")
+
+dplyr::glimpse(df)
+```
+
 
 
 ### Query to obtain all information about a single author
@@ -235,21 +263,20 @@ cat(query_author)
 ```
 
 ```{r}
-cat("\n Author's Name ", res_author[["display_name"]])
-cat("\n Author's ORCID ",res_author[["orcid"]])
-cat("\n Author's Total Citations ", res_author[["cited_by_count"]])
-cat("\n Author's Publication Count ",res_author[["works_count"]])
+df <- oa2df(res_author, entity = "authors")
+
+dplyr::glimpse(df)
 ```
 
 &nbsp;
 
 &nbsp;
 
-## Get all works matching a set of inclusion/exclusion criteria (filters) 
+## Get all entities matching a set of inclusion/exclusion criteria (filters) 
 
 In most cases, we are interested in downloading a collection of items that meet one or more inclusion/exclusion criteria (filters).
 
-In this case, the query definition will not be based on a single identifier but the choice of the entity type (usually "works") and one or more filters about this entity.
+In this case, the query definition will not be based on a single identifier but the choice of the entity type (usually "works", but also "authors", "venues", etc.) and one or more filters about this entity.
 
 Filters narrow the list down to just entities that meet a particular condition--specifically, a particular value for a particular attribute. Supported attributes for each endpoints are listed on [OpenAlex API Documentation Website](https://docs.openalex.org/api/get-lists-of-entities#filter).
 
@@ -408,7 +435,7 @@ query <- oaQueryBuild(
     identifier=NULL,
     entity = "works",
     filter = 'title.search:"bibliometric analysis"|"science mapping",cited_by_count:>50',
-    date_from = "2020-01-01",
+    date_from = "2000-01-01",
     date_to = "2021-12-31",
     search=NULL,
     sort="relevance_score:desc",
@@ -445,7 +472,7 @@ Then, we can download the collection:
 and transform it into a data frame:
 
 ```{r}
-df <- oaWorks2df(res)
+df <- oa2df(res, entity = "works")
 ```
 ```{r}
 dplyr::glimpse(df)
@@ -483,4 +510,159 @@ This query will return a collection of:
 ```{r}
 cat(res1$count, "publications")
 ```
+
+Let's to download it:
+
+```{r}
+res1 <- oaApiRequest(
+    query_url = query1,
+    total.count = FALSE,
+    verbose = FALSE
+    )
+```
+
+And then to convert it into a data frame:
+
+```{r}
+df <- oa2df(res1, entity = "works")
+```
+
+```{r}
+dplyr::glimpse(df)
+```
+
+&nbsp;
+
+### Get all authors matching a set of filters
+
+We want download all authors' records of scholars who work at the University of Naples Federico II (OpenAlex ID: I71267560) and who have published more than 499 works:
+
+```{r}
+query_author <- oaQueryBuild(
+  identifier = NULL,
+  entity = "authors",
+  filter = "last_known_institution.id:I71267560,works_count:>499")
+
+```
+
+We check how many records match the query:
+
+```{r}
+res <- oaApiRequest(query_url = query_author,
+                    total.count = TRUE,
+                    verbose=FALSE)
+res$count
+```
+
+Then we download and convert the collection:
+
+```{r}
+res <- oaApiRequest(query_url = query_author,
+                    total.count = FALSE,
+                    verbose=FALSE)
+df <- oa2df(res, entity = "authors")
+
+dplyr::glimpse(df)
+```
+
+&nbsp;
+
+### Get all institutions matching a set of filters
+
+We want download all records regarding Italian institutions (country_code:it) that are classified as educational (type:education):
+
+```{r}
+query_inst <- oaQueryBuild(
+  entity = "institutions",
+  filter = "country_code:it,type:education")
+
+```
+
+We check how many records match the query:
+
+```{r}
+res <- oaApiRequest(query_url = query_inst,
+                    total.count = TRUE,
+                    verbose=TRUE)
+res$count
+```
+
+Then we download and convert the collection:
+
+```{r}
+res <- oaApiRequest(query_url = query_inst,
+                    total.count = FALSE,
+                    verbose=TRUE)
+df <- oa2df(res, entity = "institutions")
+
+dplyr::glimpse(df)
+```
+
+&nbsp;
+
+### Get all venues matching a set of filters
+
+We want download all records regarding journals that have published more than 100,000 works:
+
+```{r}
+query_venue <- oaQueryBuild(
+  entity = "venues",
+  filter = "works_count:>100000")
+
+```
+
+We check how many records match the query:
+
+```{r}
+res <- oaApiRequest(query_url = query_venue,
+                    total.count = TRUE,
+                    verbose=TRUE)
+res$count
+```
+
+Then we download and convert the collection:
+
+```{r}
+res <- oaApiRequest(query_url = query_venue,
+                    total.count = FALSE,
+                    verbose=TRUE)
+
+df <- oa2df(res, entity="venues")
+
+dplyr::glimpse(df)
+```
+
+&nbsp;
+
+### Get all concepts matching a set of filters
+
+We want to download the records of all the concepts that concern at least one million works:
+
+```{r}
+query_concept <- oaQueryBuild(
+  entity = "concepts",
+  filter = "works_count:>1000000")
+```
+
+We check how many records match the query:
+
+```{r}
+res <- oaApiRequest(query_url = query_concept,
+                    total.count = TRUE,
+                    verbose=TRUE)
+res$count
+```
+
+Then we download and convert the collection:
+
+```{r}
+res <- oaApiRequest(query_url = query_concept,
+                    total.count = FALSE,
+                    verbose=TRUE)
+
+df <- oa2df(res, entity="concepts")
+
+dplyr::glimpse(df)
+```
+
 
