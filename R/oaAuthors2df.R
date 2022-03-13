@@ -63,7 +63,7 @@ oaAuthors2df <- function(data){
   for (i in 1:n){
     pb$tick()
     item <- data[[i]]
-
+    #print(i)
 
     id <- item$id
     name <- item$display_name
@@ -84,11 +84,20 @@ oaAuthors2df <- function(data){
     orcid <- item$orcid
     works_count <- item$works_count
     TC <- item$cited_by_count
-    affiliation_id <- item$last_known_institution$id
-    affiliation_ror <- item$last_known_institution$ror
-    affiliation_name <- item$last_known_institution$display_name
-    affiliation_country <- item$last_known_institution$country_code
-    affiliation_type <- item$last_known_institution$type
+    if (!is.na(item$last_known_institution[[1]])){
+      affiliation_id <- item$last_known_institution$id
+      affiliation_ror <- item$last_known_institution$ror
+      affiliation_name <- item$last_known_institution$display_name
+      affiliation_country <- item$last_known_institution$country_code
+      affiliation_type <- item$last_known_institution$type
+    }else{
+      affiliation_id <- NA
+      affiliation_ror <- NA
+      affiliation_name <- NA
+      affiliation_country <- NA
+      affiliation_type <- NA
+    }
+
 
     # Total Citations per Year
     TCperYear <- unlist(item$counts_by_year)

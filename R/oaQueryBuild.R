@@ -202,7 +202,7 @@ oaQueryBuild <- function(
   )
 
   if (id=="Missing") {
-    query_url <- paste(query_url,"&per-page=50",sep="")
+    query_url <- paste(query_url,"&per-page=200",sep="")
   }
 
   #attr(query_url,"identifier") <- id
