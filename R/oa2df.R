@@ -1,6 +1,6 @@
 #' Convert OpenAlex collection from list to data frame
 #'
-#' It converts bibliographic collection gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
+#' It converts bibliographic collections gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
 #' The function converts a collection of records about works, authors, institutions, venues or concepts obtained using \code{oaApiRequest} into a data frame/tibble.
 #'
 #' @param data is a list. data is the output of the function \code{oaApiRequest}.
