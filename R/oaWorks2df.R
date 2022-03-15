@@ -86,6 +86,17 @@ oaWorks2df <- function(data){
     issn <- list(unlist(paper$host_venue$issn))
     url <- paper$host_venue$url
     oa <- paper$host_venue$is_oa
+    if (!is.na(paper$biblio[1])){
+      first_page <- paper$biblio$first_page[1]
+      last_page <- paper$biblio$last_page[1]
+      volume <- paper$biblio$volume[1]
+      issue <- paper$biblio$issue[1]
+    } else{
+      first_page <- NA
+      last_page <- NA
+      volume <- NA
+      issue <- NA
+    }
 
     # authorships and affilitation
     author <- list(do.call(rbind,lapply(paper$authorships, function(l){
@@ -131,14 +142,14 @@ oaWorks2df <- function(data){
     TC <- paper$cited_by_count
 
     # Total Citations per Year
-    # if(length(paper$counts_by_year)>0){
-    #   TCperYear <- unlist(paper$counts_by_year)
-    #   lab <- names(TCperYear)
-    #   TCperYear <- list(data.frame(year=TCperYear[lab=="year"], works_count=TCperYear[lab=="works_count"],
-    #                                TC=TCperYear[lab=="cited_by_count"]))
-    # }else{
-    TCperYear=NA
-    #}
+    if(length(paper$counts_by_year)>0){
+      TCperYear <- unlist(paper$counts_by_year)
+      lab <- names(TCperYear)
+      TCperYear <- list(data.frame(year=TCperYear[lab=="year"],
+                                   TC=TCperYear[lab=="cited_by_count"]))
+    }else{
+      TCperYear=NA
+    }
 
     PY <- paper$publication_year
     cited_by_url <- paper$cited_by_api_url
@@ -179,6 +190,7 @@ oaWorks2df <- function(data){
 
     list_df[[i]] <- tibble(id=id, TI=title, author=author, AB=ab, pubdata=pubdate,
                            relscore=relscore, SO=so, SO_ID=so_id, PU=publisher, IS=issn, URL=url,
+                           first_page=first_page, last_page=last_page, volume=volume, issue=issue,
                            OA=oa, TC=TC, TCperYear=TCperYear, PY=PY, cited_by_url=cited_by_url,
                            ids=list(ids), DI=DI, DT=DT, CR=list(CR), related_works=list(related_works),
                            concept=concept)
