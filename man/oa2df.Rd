@@ -18,7 +18,7 @@ a data.frame.
 For more extensive information about OpenAlex API, please visit: \href{https://docs.openalex.org/api}{https://docs.openalex.org/api}
 }
 \description{
-It converts bibliographic collection gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
+It converts bibliographic collections gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
 The function converts a collection of records about works, authors, institutions, venues or concepts obtained using \code{oaApiRequest} into a data frame/tibble.
 }
 \examples{
@@ -41,7 +41,7 @@ entity = "works",
 filter = "cites:W2755950973",
 date_from = "2021-01-01",
 date_to = "2021-12-31",
-search=NULL,
+search = NULL,
 sort="relevance_score:desc",
 endpoint = "https://api.openalex.org/")
 
