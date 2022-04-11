@@ -64,8 +64,9 @@ oa2bibliometrix <- function(df){
   AU_info <- lapply(df$author, function(l){
     AU <- paste(l$au_name, collapse=";")
     C1 <- paste(l$au_affiliation_raw, collapse=";")
-    RP <- l$au_affiliation_raw[1]
+    RP <- paste(l$au_affiliation_raw[1], collapse=";")
     AU_UN <- paste(l$institution_name, collapse=";")
+    l$institution_country[is.na(l$institution_country)] <- "Not available"
     AU_CO <- paste(countrycode[l$institution_country,1], collapse = ";")
     data.frame(AU=AU,RP=RP,C1=C1, AU_UN=AU_UN,AU_CO=AU_CO)
   })

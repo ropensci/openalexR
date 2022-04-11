@@ -4,7 +4,7 @@
 \alias{countrycode}
 \title{Index of Countries and their alpha-2 and aplha-3 codes.}
 \format{
-A data frame with 249 rows and 3 variables:
+A data frame with 250 rows and 3 variables:
  \describe{
     \item{Country}{country names}
     \item{Alpha2}{countries' alpha-2 codes}
