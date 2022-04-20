@@ -113,7 +113,6 @@ endpoint = "https://api.openalex.org/")
 
 res1 <- oaApiRequest(
    query_url = query1,
-   format = "list",
    total.count = FALSE,
    verbose = FALSE
    )
