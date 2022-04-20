@@ -4,13 +4,15 @@
 \alias{oa2df}
 \title{Convert OpenAlex collection from list to data frame}
 \usage{
-oa2df(data, entity = "works")
+oa2df(data, entity = "works", verbose = TRUE)
 }
 \arguments{
 \item{data}{is a list. data is the output of the function \code{oaApiRequest}.}
 
 \item{entity}{is a character. It indicates the scholarly entity of the search. The argument can be equal to
 entity = c("works", "authors", "venues", "institutions", "concepts"). The default value is entity = works".}
+
+\item{verbose}{is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.}
 }
 \value{
 a data.frame.

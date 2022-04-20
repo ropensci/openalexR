@@ -5,6 +5,7 @@ utils::globalVariables("progress_bar")
 #' The function converts a list of works obtained using \code{oaApiRequest} into a data frame/tibble.
 #'
 #' @param data is a list. data is the output of the function \code{oaApiRequest}.
+#' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.
 #'
 #' @return a data.frame.
 #'
@@ -32,7 +33,6 @@ utils::globalVariables("progress_bar")
 #' date_from = "2021-01-01",
 #' date_to = "2021-12-31",
 #' search=NULL,
-#' sort="relevance_score:desc",
 #' endpoint = "https://api.openalex.org/")
 #'
 #' res <- oaApiRequest(
@@ -41,14 +41,14 @@ utils::globalVariables("progress_bar")
 #'    verbose = FALSE
 #'    )
 #'
-#' df <- oaWorks2df(res)
+#' df <- oa2df(res, entity = "works")
 #'
 #' df
 #'
 #' }
 #'
 # @export
-oaWorks2df <- function(data){
+oaWorks2df <- function(data, verbose = TRUE){
 
   # replace NULL with NA
   data <- simple_rapply(data, function(x) if(is.null(x)) NA else x)
@@ -70,10 +70,9 @@ oaWorks2df <- function(data){
 
 
   for (i in 1:n){
-    pb$tick()
-    #print(i)
-    paper <- data[[i]]
+    if (isTRUE(verbose)) pb$tick()
 
+    paper <- data[[i]]
 
     id <- paper$id
     title <- paper$display_name
@@ -199,14 +198,3 @@ oaWorks2df <- function(data){
 }
 
 
-# replace NULL with NA
-simple_rapply <- function(x, fn)
-{
-  if(is.list(x))
-  {
-    lapply(x, simple_rapply, fn)
-  } else
-  {
-    fn(x)
-  }
-}

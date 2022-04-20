@@ -4,10 +4,12 @@
 \alias{oaVenues2df}
 \title{Convert OpenAlex collection of venues' records from list format to data frame}
 \usage{
-oaVenues2df(data)
+oaVenues2df(data, verbose = TRUE)
 }
 \arguments{
 \item{data}{is a list. data is the output of the function \code{oaApiRequest}.}
+
+\item{verbose}{is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.}
 }
 \value{
 a data.frame.
@@ -22,12 +24,13 @@ The function converts a list of venues' records obtained using \code{oaApiReques
 
 \dontrun{
 
-# Query to search information about all Italian educational institutions
+# Query to search information about the Journal of Informetrics (OA id:V205292342)
 
 
 query_inst <- oaQueryBuild(
-  entity = "institutions",
- filter = "country_code:it,type:education")
+  identifier = "V205292342",
+  entity = "venues",
+  )
 
 res <- oaApiRequest(
    query_url = query_inst,
@@ -35,7 +38,7 @@ res <- oaApiRequest(
    verbose = FALSE
    )
 
-df <- oaInstitutions2df(res)
+df <- oa2df(res, entity = "venues")
 
 df
 

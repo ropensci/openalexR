@@ -14,7 +14,8 @@
 #' To filter using search, append .search to the end of the property you're filtering for.
 #' @param sort is character. Use the sort parameter to specify the property you want your list sorted by.
 #' You can sort by these properties, where they exist:display_name, cited_by_count, works_count, publication_date, relevance_score.
-#' @param endpoint is character. It indicates the url of the OpenAlex Endpoint API server. The default value is endpoint = "https://api.openalex.org/"
+#' @param endpoint is character. It indicates the url of the OpenAlex Endpoint API server. The default value is endpoint = "https://api.openalex.org/".
+#' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=FALSE}.
 #'
 #' @return a character containing the query in OpenAlex format.
 #'
@@ -82,7 +83,6 @@
 #' date_from = "2021-01-01",
 #' date_to = "2021-12-31",
 #' search=NULL,
-#' sort="relevance_score:desc",
 #' endpoint = "https://api.openalex.org/")
 #'
 #' res1 <- oaApiRequest(
@@ -107,7 +107,6 @@
 #'    date_from = "2020-01-01",
 #'    date_to = "2021-12-31",
 #'    search=NULL,
-#'    sort="relevance_score:desc",
 #'    endpoint = "https://api.openalex.org/")
 #'
 #' res2 <- oaApiRequest(
@@ -130,7 +129,6 @@
 #'    date_from = "2020-01-01",
 #'    date_to = "2021-12-31",
 #'    search=NULL,
-#'    sort="relevance_score:desc",
 #'    endpoint = "https://api.openalex.org/")
 #'
 #' res3 <- oaApiRequest(
@@ -140,7 +138,7 @@
 #'    verbose = FALSE
 #'    )
 #'
-#' res3$count #numebr of items retrieved by our query
+#' res3$count #number of items retrieved by our query
 #'}
 #'
 #'
@@ -156,7 +154,8 @@ oaQueryBuild <- function(
   date_to=NULL,
   search=NULL,
   sort=NULL,
-  endpoint = "https://api.openalex.org/") {
+  endpoint = "https://api.openalex.org/",
+  verbose = FALSE) {
 
   entity_list = c("works", "authors", "venues", "institutions", "concepts")
   format_list = c("table", "object")
@@ -166,8 +165,8 @@ oaQueryBuild <- function(
 
   if (is.null(identifier)) {
     if (!(entity[1] %in% entity_list)|length(entity)>1){
-      cat("\nPlease choose a single entity value from the following list:\n",
-          entity_list)
+      message("\nPlease choose a single entity value from the following list:\n",
+          paste(entity_list,collapse=", "))
       return("error")
     }
   }
@@ -205,7 +204,7 @@ oaQueryBuild <- function(
     query_url <- paste(query_url,"&per-page=200",sep="")
   }
 
-  #attr(query_url,"identifier") <- id
+  if (isTRUE(verbose)) print(query_url)
 
   return(query_url)
 

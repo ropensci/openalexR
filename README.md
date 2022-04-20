@@ -525,14 +525,14 @@ query <- oaQueryBuild(
     date_from = "2020-01-01",
     date_to = "2021-12-31",
     search=NULL,
-    sort="relevance_score:desc",
+    sort="cited_by_count:desc",
     endpoint = "https://api.openalex.org/")
 ```
 
 
 The **sort** argument indicates how results have to be sorted. 
 
-In this example results are sorted by relevance score in a descending order.
+In this example results are sorted by total citations in a descending order.
 
 Setting the argument total.count=TRUE, the function **oaApiRequest** returns the number of items matching the query without downloading the collection. 
 

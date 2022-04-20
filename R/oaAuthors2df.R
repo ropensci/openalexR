@@ -5,6 +5,7 @@ utils::globalVariables("progress_bar")
 #' The function converts a list of authors' records obtained using \code{oaApiRequest} into a data frame/tibble.
 #'
 #' @param data is a list. data is the output of the function \code{oaApiRequest}.
+#' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.
 #'
 #' @return a data.frame.
 #'
@@ -32,14 +33,14 @@ utils::globalVariables("progress_bar")
 #'    verbose = FALSE
 #'    )
 #'
-#' df <- oaAuthors2df(res)
+#' df <- oa2df(res, entity = "authors")
 #'
 #' df
 #'
 #' }
 #'
 # @export
-oaAuthors2df <- function(data){
+oaAuthors2df <- function(data, verbose = TRUE){
 
   # replace NULL with NA
   data <- simple_rapply(data, function(x) if(is.null(x)) NA else x)
@@ -61,9 +62,9 @@ oaAuthors2df <- function(data){
 
 
   for (i in 1:n){
-    pb$tick()
+    if (isTRUE(verbose)) pb$tick()
+
     item <- data[[i]]
-    #print(i)
 
     id <- item$id
     name <- item$display_name
@@ -125,15 +126,3 @@ oaAuthors2df <- function(data){
   df <- do.call(rbind,list_df)
 }
 
-
-# replace NULL with NA
-simple_rapply <- function(x, fn)
-{
-  if(is.list(x))
-  {
-    lapply(x, simple_rapply, fn)
-  } else
-  {
-    fn(x)
-  }
-}

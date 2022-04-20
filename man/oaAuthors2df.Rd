@@ -4,10 +4,12 @@
 \alias{oaAuthors2df}
 \title{Convert OpenAlex collection of authors' records from list format to data frame}
 \usage{
-oaAuthors2df(data)
+oaAuthors2df(data, verbose = TRUE)
 }
 \arguments{
 \item{data}{is a list. data is the output of the function \code{oaApiRequest}.}
+
+\item{verbose}{is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.}
 }
 \value{
 a data.frame.
@@ -39,7 +41,7 @@ res <- oaApiRequest(
    verbose = FALSE
    )
 
-df <- oaAuthors2df(res)
+df <- oa2df(res, entity = "authors")
 
 df
 

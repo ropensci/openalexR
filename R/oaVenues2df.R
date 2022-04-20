@@ -5,6 +5,7 @@ utils::globalVariables("progress_bar")
 #' The function converts a list of venues' records obtained using \code{oaApiRequest} into a data frame/tibble.
 #'
 #' @param data is a list. data is the output of the function \code{oaApiRequest}.
+#' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.
 #'
 #' @return a data.frame.
 #'
@@ -15,12 +16,13 @@ utils::globalVariables("progress_bar")
 #'
 #' \dontrun{
 #'
-#' # Query to search information about all Italian educational institutions
+#' # Query to search information about the Journal of Informetrics (OA id:V205292342)
 #'
 #'
 #' query_inst <- oaQueryBuild(
-#'   entity = "institutions",
-#'  filter = "country_code:it,type:education")
+#'   identifier = "V205292342",
+#'   entity = "venues",
+#'   )
 #'
 #' res <- oaApiRequest(
 #'    query_url = query_inst,
@@ -28,14 +30,14 @@ utils::globalVariables("progress_bar")
 #'    verbose = FALSE
 #'    )
 #'
-#' df <- oaInstitutions2df(res)
+#' df <- oa2df(res, entity = "venues")
 #'
 #' df
 #'
 #' }
 #'
 # @export
-oaVenues2df <- function(data){
+oaVenues2df <- function(data, verbose = TRUE){
 
   # replace NULL with NA
   data <- simple_rapply(data, function(x) if(is.null(x)) NA else x)
@@ -57,7 +59,8 @@ oaVenues2df <- function(data){
 
   for (i in 1:n){
 
-    pb$tick()
+    if (isTRUE(verbose)) pb$tick()
+
     item <- data[[i]]
 
     id <- item$id

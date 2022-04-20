@@ -5,6 +5,7 @@ utils::globalVariables("progress_bar")
 #' The function converts a list of concepts' records obtained using \code{oaApiRequest} into a data frame/tibble.
 #'
 #' @param data is a list. data is the output of the function \code{oaApiRequest}.
+#' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.
 #'
 #' @return a data.frame.
 #'
@@ -28,14 +29,14 @@ utils::globalVariables("progress_bar")
 #'    verbose = FALSE
 #'    )
 #'
-#' df <- oaInstitutions2df(res)
+#' df <- oa2df(res, entity = "concepts")
 #'
 #' df
 #'
 #' }
 #'
 # @export
-oaConcepts2df <- function(data){
+oaConcepts2df <- function(data, verbose = TRUE){
 
   # replace NULL with NA
   data <- simple_rapply(data, function(x) if(is.null(x)) NA else x)
@@ -57,7 +58,8 @@ oaConcepts2df <- function(data){
 
   for (i in 1:n){
 
-    pb$tick()
+    if (isTRUE(verbose)) pb$tick()
+
     item <- data[[i]]
 
     id <- item$id

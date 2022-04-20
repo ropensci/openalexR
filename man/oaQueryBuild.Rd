@@ -12,7 +12,8 @@ oaQueryBuild(
   date_to = NULL,
   search = NULL,
   sort = NULL,
-  endpoint = "https://api.openalex.org/"
+  endpoint = "https://api.openalex.org/",
+  verbose = FALSE
 )
 }
 \arguments{
@@ -35,7 +36,9 @@ To filter using search, append .search to the end of the property you're filteri
 \item{sort}{is character. Use the sort parameter to specify the property you want your list sorted by.
 You can sort by these properties, where they exist:display_name, cited_by_count, works_count, publication_date, relevance_score.}
 
-\item{endpoint}{is character. It indicates the url of the OpenAlex Endpoint API server. The default value is endpoint = "https://api.openalex.org/"}
+\item{endpoint}{is character. It indicates the url of the OpenAlex Endpoint API server. The default value is endpoint = "https://api.openalex.org/".}
+
+\item{verbose}{is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=FALSE}.}
 }
 \value{
 a character containing the query in OpenAlex format.
@@ -106,7 +109,6 @@ filter = "cites:W2755950973",
 date_from = "2021-01-01",
 date_to = "2021-12-31",
 search=NULL,
-sort="relevance_score:desc",
 endpoint = "https://api.openalex.org/")
 
 res1 <- oaApiRequest(
@@ -131,7 +133,6 @@ query2 <- oaQueryBuild(
    date_from = "2020-01-01",
    date_to = "2021-12-31",
    search=NULL,
-   sort="relevance_score:desc",
    endpoint = "https://api.openalex.org/")
 
 res2 <- oaApiRequest(
@@ -154,7 +155,6 @@ query3 <- oaQueryBuild(
    date_from = "2020-01-01",
    date_to = "2021-12-31",
    search=NULL,
-   sort="relevance_score:desc",
    endpoint = "https://api.openalex.org/")
 
 res3 <- oaApiRequest(
@@ -164,7 +164,7 @@ res3 <- oaApiRequest(
    verbose = FALSE
    )
 
-res3$count #numebr of items retrieved by our query
+res3$count #number of items retrieved by our query
 }
 
 

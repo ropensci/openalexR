@@ -76,7 +76,7 @@ utils::globalVariables("progress_bar")
 #' date_from = "2021-01-01",
 #' date_to = "2021-12-31",
 #' search=NULL,
-#' sort="relevance_score:desc",
+#' sort="cited_by_count:desc",
 #' endpoint = "https://api.openalex.org/")
 #'
 #' res2 <- oaApiRequest(
@@ -100,7 +100,7 @@ utils::globalVariables("progress_bar")
 #'    date_from = "2020-01-01",
 #'    date_to = "2021-12-31",
 #'    search=NULL,
-#'    sort="relevance_score:desc",
+#'    sort="cited_by_count:desc",
 #'    endpoint = "https://api.openalex.org/")
 #'
 #' res3 <- oaApiRequest(
@@ -122,7 +122,7 @@ utils::globalVariables("progress_bar")
 #'    date_from = "2020-01-01",
 #'    date_to = "2021-12-31",
 #'    search=NULL,
-#'    sort="relevance_score:desc",
+#'    sort="cited_by_count:desc",
 #'    endpoint = "https://api.openalex.org/")
 #'
 #' res4 <- oaApiRequest(
@@ -182,9 +182,10 @@ oaApiRequest <- function(query_url,
     format = "  OpenAlex downloading [:bar] :percent eta: :eta",
     total = length(pages), clear = FALSE, width = 60)
 
+
   data <- vector("list", length = length(pages))
   for (i in pages){
-    pb$tick()
+    if (isTRUE(verbose)) pb$tick()
     Sys.sleep(1 / 100)
     query_url2 <- paste(query_url,"&page=",page=i, sep ="")
     res <- oa_request(query_url2, ua)

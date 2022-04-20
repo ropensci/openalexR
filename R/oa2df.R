@@ -6,6 +6,7 @@
 #' @param data is a list. data is the output of the function \code{oaApiRequest}.
 #' @param entity is a character. It indicates the scholarly entity of the search. The argument can be equal to
 #' entity = c("works", "authors", "venues", "institutions", "concepts"). The default value is entity = works".
+#' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.
 #' @return a data.frame.
 #'
 #' For more extensive information about OpenAlex API, please visit: \href{https://docs.openalex.org/api}{https://docs.openalex.org/api}
@@ -48,7 +49,7 @@
 #' }
 #'
 #' @export
-oa2df <- function(data, entity="works"){
+oa2df <- function(data, entity="works", verbose = TRUE){
   entity_list = c("works", "authors", "venues", "institutions", "concepts")
   if (!(entity %in% entity_list)){
     message('Please choose one of the following entity type: "works", "authors", "venues", "institutions", "concepts"')
@@ -56,19 +57,19 @@ oa2df <- function(data, entity="works"){
   }
   switch(entity,
          works={
-           df <- oaWorks2df(data)
+           df <- oaWorks2df(data, verbose)
          },
          authors={
-           df <- oaAuthors2df(data)
+           df <- oaAuthors2df(data, verbose)
          },
          institutions={
-           df <- oaInstitutions2df(data)
+           df <- oaInstitutions2df(data, verbose)
          },
          venues={
-           df <- oaVenues2df(data)
+           df <- oaVenues2df(data, verbose)
          },
          concepts={
-           df <- oaConcepts2df(data)
+           df <- oaConcepts2df(data, verbose)
          }
   )
 

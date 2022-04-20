@@ -4,10 +4,12 @@
 \alias{oaWorks2df}
 \title{Convert OpenAlex collection of works from list format to data frame}
 \usage{
-oaWorks2df(data)
+oaWorks2df(data, verbose = TRUE)
 }
 \arguments{
 \item{data}{is a list. data is the output of the function \code{oaApiRequest}.}
+
+\item{verbose}{is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.}
 }
 \value{
 a data.frame.
@@ -39,7 +41,6 @@ filter = "cites:W2755950973",
 date_from = "2021-01-01",
 date_to = "2021-12-31",
 search=NULL,
-sort="relevance_score:desc",
 endpoint = "https://api.openalex.org/")
 
 res <- oaApiRequest(
@@ -48,7 +49,7 @@ res <- oaApiRequest(
    verbose = FALSE
    )
 
-df <- oaWorks2df(res)
+df <- oa2df(res, entity = "works")
 
 df
 

@@ -85,7 +85,7 @@ filter = "cites:W2755950973",
 date_from = "2021-01-01",
 date_to = "2021-12-31",
 search=NULL,
-sort="relevance_score:desc",
+sort="cited_by_count:desc",
 endpoint = "https://api.openalex.org/")
 
 res2 <- oaApiRequest(
@@ -109,7 +109,7 @@ query3 <- oaQueryBuild(
    date_from = "2020-01-01",
    date_to = "2021-12-31",
    search=NULL,
-   sort="relevance_score:desc",
+   sort="cited_by_count:desc",
    endpoint = "https://api.openalex.org/")
 
 res3 <- oaApiRequest(
@@ -131,7 +131,7 @@ query4 <- oaQueryBuild(
    date_from = "2020-01-01",
    date_to = "2021-12-31",
    search=NULL,
-   sort="relevance_score:desc",
+   sort="cited_by_count:desc",
    endpoint = "https://api.openalex.org/")
 
 res4 <- oaApiRequest(
