@@ -165,26 +165,7 @@ oaWorks2df <- function(data, verbose = TRUE){
 
     # Abstract
     if (!is.na(paper$abstract_inverted_index[1])){
-      ab <- data.frame(term=names(unlist(paper$abstract_inverted_index)),pos=unlist(paper$abstract_inverted_index))
-
-      if (nrow(ab)>0){
-        ab$term2=gsub("[0-9]*$","",ab$term)
-        ### rimuove numeri al termine delle parole dell'abstract, e ne ordina i temrini
-        ab <- ab %>%
-          group_by(.data$term2) %>%
-          mutate(number = seq.int(length(.data$term2)),
-                 number = nchar(as.character(.data$number)),
-                 len = length(.data$term2))
-        ab2 <- ab %>%
-          filter(.data$len==1)
-
-        ab <- ab %>%
-          filter(.data$len>1) %>%
-          mutate(term = substr(.data$term,1,nchar(.data$term)-.data$number)) %>%
-          bind_rows(ab2) %>%
-          arrange(as.numeric(.data$pos))
-        ab <- paste(ab$term, collapse=" ")
-      } else {ab <- ""}
+      ab <- abstract_build(paper$abstract_inverted_index)
     } else {ab <- ""}
 
     list_df[[i]] <- tibble(id=id, TI=title, author=author, AB=ab, pubdata=pubdate,
@@ -197,4 +178,8 @@ oaWorks2df <- function(data, verbose = TRUE){
   df <- do.call(rbind,list_df)
 }
 
-
+abstract_build <- function(ab){
+  w <- rep(names(ab),lengths(ab))
+  ind <- unlist(ab)
+  ab <- paste(w[order(ind)],collapse=" ",sep="")
+}

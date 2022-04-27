@@ -144,9 +144,9 @@ oaApiRequest <- function(query_url,
 
   if (!is.null(mailto)){
     if (isValidEmail(mailto)) {
-    paste(query_url,"?mailto:",mailto,sep="")
+      paste(query_url,"?mailto:",mailto,sep="")
     } else {
-    message(mailto, " is not a valid email address")}
+      message(mailto, " is not a valid email address")}
   }
 
 
@@ -246,14 +246,7 @@ cfg <- function(){
 }
 
 
-oaDataFrame <- function(res){
-  name <- NULL
-  data <-
-    tibble::enframe(unlist(res)) %>%
-    dplyr::mutate(name = gsub(".", "_", name, fixed = TRUE))
-  return(data)
-}
-
 isValidEmail <- function(x) {
   grepl("\\<[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}\\>", as.character(x), ignore.case=TRUE)
 }
+
