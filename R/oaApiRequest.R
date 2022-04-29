@@ -149,11 +149,12 @@ oaApiRequest <- function(query_url,
       message(mailto, " is not a valid email address")}
   }
 
-
   if (verbose == TRUE) message("Requesting url: ", query_url)
 
+  # Activation of cursor pagination
+  query_url_cursor <- paste(query_url,"&cursor=*", sep="")
 
-  res <- oa_request(query_url, ua)
+  res <- oa_request(query_url_cursor, ua)
   if (!is.null(res$meta)){
     ## return only item counting
     if (isTRUE(total.count)){
@@ -171,7 +172,7 @@ oaApiRequest <- function(query_url,
 
   if (n_items <= 0) return (list())
 
-  if (n_items > 1e4)
+  if (n_items > 1e6)
     stop("A maximum of 10000 results can be paged, this query exceeds this limit.")
 
   if (verbose)
@@ -187,7 +188,9 @@ oaApiRequest <- function(query_url,
   for (i in pages){
     if (isTRUE(verbose)) pb$tick()
     Sys.sleep(1 / 100)
-    query_url2 <- paste(query_url,"&page=",page=i, sep ="")
+    cursor <- res$meta$next_cursor
+    #query_url2 <- paste(query_url,"&page=",page=i, sep ="")
+    query_url2 <- paste(query_url,"&cursor=",cursor, sep ="")
     res <- oa_request(query_url2, ua)
     if (!is.null(res$results)) data[[i]] <- res$results
   }

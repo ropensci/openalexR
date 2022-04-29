@@ -51,7 +51,7 @@ utils::globalVariables("progress_bar")
 oaWorks2df <- function(data, verbose = TRUE){
 
   # replace NULL with NA
-  data <- simple_rapply(data, function(x) if(is.null(x)) NA else x)
+  #data <- simple_rapply(data, function(x) if(is.null(x)) NA else x)
 
   if (!is.null(data$id)){data <- list(data)}
 
@@ -71,8 +71,9 @@ oaWorks2df <- function(data, verbose = TRUE){
 
   for (i in 1:n){
     if (isTRUE(verbose)) pb$tick()
-
+    #print(i)
     paper <- data[[i]]
+    paper <- simple_rapply(paper, function(x) if(is.null(x)) NA else x)
 
     id <- paper$id
     title <- paper$display_name
@@ -100,7 +101,7 @@ oaWorks2df <- function(data, verbose = TRUE){
     # authorships and affilitation
     author <- list(do.call(rbind,lapply(paper$authorships, function(l){
 
-      if (length(l[["institutions"]])>0){
+      if (sum(lengths(l[["institutions"]]))>0){
         institution_id <- l[["institutions"]][[1]]$id
         institution_name <- l[["institutions"]][[1]]$display_name
         institution_ror <- l[["institutions"]][[1]]$ror
