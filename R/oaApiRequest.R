@@ -172,8 +172,8 @@ oaApiRequest <- function(query_url,
 
   if (n_items <= 0) return (list())
 
-  if (n_items > 1e6)
-    stop("A maximum of 10000 results can be paged, this query exceeds this limit.")
+  # if (n_items > 1e6)
+  #   stop("A maximum of 10000 results can be paged, this query exceeds this limit.")
 
   if (verbose)
     message("About to get a total of ", length(pages), " pages of results",
