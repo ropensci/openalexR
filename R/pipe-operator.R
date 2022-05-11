@@ -10,6 +10,7 @@
 #' @import dplyr
 #' @import httr
 #' @import jsonlite
+#' @importFrom curl curl_version
 #' @import tibble
 #' @import utils
 #' @usage lhs \%>\% rhs

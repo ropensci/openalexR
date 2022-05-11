@@ -15,6 +15,7 @@ BugReports: https://github.com/massimoaria/openalexR/issues
 Encoding: UTF-8
 LazyData: true
 Imports: 
+    curl,
     dplyr,
     httr,
     jsonlite,
@@ -23,5 +24,5 @@ Imports:
     tibble,
 Suggests: 
     bibliometrix, knitr, rmarkdown
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 VignetteBuilder: knitr

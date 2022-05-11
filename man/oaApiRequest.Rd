@@ -4,10 +4,18 @@
 \alias{oaApiRequest}
 \title{Get bibliographic records from OpenAlex databases}
 \usage{
-oaApiRequest(query_url, total.count = FALSE, mailto = NULL, verbose = FALSE)
+oaApiRequest(
+  query_url,
+  per_page = 200,
+  total.count = FALSE,
+  mailto = NULL,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{query_url}{is a character. It contains a search query formulated using the OpenAlex API language. A query can be automatically generated using the function \code{oaQueryBuild}.}
+
+\item{per_page}{is a numeric. It indicates how many items to download per page. The per-page argument can assume any number between 1 and 200. Default is \code{per_page=200}.}
 
 \item{total.count}{is a logical. If TRUE, the function returns only the number of item matching the query. Default is \code{total.count=FALSE}.}
 
@@ -85,7 +93,6 @@ filter = "cites:W2755950973",
 date_from = "2021-01-01",
 date_to = "2021-12-31",
 search=NULL,
-sort="cited_by_count:desc",
 endpoint = "https://api.openalex.org/")
 
 res2 <- oaApiRequest(
@@ -109,7 +116,6 @@ query3 <- oaQueryBuild(
    date_from = "2020-01-01",
    date_to = "2021-12-31",
    search=NULL,
-   sort="cited_by_count:desc",
    endpoint = "https://api.openalex.org/")
 
 res3 <- oaApiRequest(
@@ -122,7 +128,7 @@ res3 <- oaApiRequest(
 # Query to search all works containing the exact string
 # "bibliometric analysis" OR "science mapping" in the title, published in 2020 or 2021.
 
-# Quey only to know how many works could be retrieved (total.count=TRUE)
+# Query only to know how many works could be retrieved (total.count=TRUE)
 
 query4 <- oaQueryBuild(
    identifier=NULL,
@@ -131,7 +137,6 @@ query4 <- oaQueryBuild(
    date_from = "2020-01-01",
    date_to = "2021-12-31",
    search=NULL,
-   sort="cited_by_count:desc",
    endpoint = "https://api.openalex.org/")
 
 res4 <- oaApiRequest(

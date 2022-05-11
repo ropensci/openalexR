@@ -11,7 +11,6 @@ oaQueryBuild(
   date_from = NULL,
   date_to = NULL,
   search = NULL,
-  sort = NULL,
   endpoint = "https://api.openalex.org/",
   verbose = FALSE
 )
@@ -32,9 +31,6 @@ at \href{https://docs.openalex.org/api/get-lists-of-entities#filter}{https://doc
 
 \item{search}{is a character. Search is just another kind of filter, one that all five endpoints support. But unlike the other filters, search doesn't require an exact match.
 To filter using search, append .search to the end of the property you're filtering for.}
-
-\item{sort}{is character. Use the sort parameter to specify the property you want your list sorted by.
-You can sort by these properties, where they exist:display_name, cited_by_count, works_count, publication_date, relevance_score.}
 
 \item{endpoint}{is character. It indicates the url of the OpenAlex Endpoint API server. The default value is endpoint = "https://api.openalex.org/".}
 

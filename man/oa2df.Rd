@@ -44,7 +44,6 @@ filter = "cites:W2755950973",
 date_from = "2021-01-01",
 date_to = "2021-12-31",
 search = NULL,
-sort="relevance_score:desc",
 endpoint = "https://api.openalex.org/")
 
 res <- oaApiRequest(

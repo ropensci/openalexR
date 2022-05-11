@@ -440,14 +440,8 @@ query <- oaQueryBuild(
     date_from = "2000-01-01",
     date_to = "2021-12-31",
     search=NULL,
-    sort="cited_by_count:desc",
     endpoint = "https://api.openalex.org/")
 ```
-
-
-The **sort** argument indicates how results have to be sorted. 
-
-In this example results are sorted by total citations in a descending order.
 
 Setting the argument total.count=TRUE, the function **oaApiRequest** returns the number of items matching the query without downloading the collection. 
 
@@ -502,8 +496,7 @@ query1 <- oaQueryBuild(
  entity = "works",
  filter = "cites:W2755950973",
  date_from = "2022-01-01",
- date_to = "2022-03-31",
- sort=NULL)
+ date_to = "2022-03-31")
 
 res1 <- oaApiRequest(
     query_url = query1,
@@ -687,8 +680,7 @@ query1 <- oaQueryBuild(
  entity = "works",
  filter = "cites:W2755950973",
  date_from = "2022-01-01",
- date_to = "2022-03-31",
- sort=NULL)
+ date_to = "2022-03-31")
 
 res1 <- oaApiRequest(
     query_url = query1,
