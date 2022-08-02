@@ -16,36 +16,35 @@ knitr::opts_chunk$set(
 # openalexR
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
 The goal of openalexR is to gather bibliographic metadata about publications, authors, venues, institutions and concepts from OpenAlex using API.
 
-OpenAlex is a fully open catalog of the global research system. 
+OpenAlex is a fully open catalog of the global research system.
 It's named after the ancient [Library of Alexandria](https://en.wikipedia.org/wiki/Library_of_Alexandria).
 The OpenAlex dataset describes scholarly entities and how those entities are connected to each other.
 There are five types of entities:
 
-* **Works** are papers, books, datasets, etc; they cite other works
+-   **Works** are papers, books, datasets, etc; they cite other works
 
-* **Authors** are people who create works
+-   **Authors** are people who create works
 
-* **Venues** are journals and repositories that host works
+-   **Venues** are journals and repositories that host works
 
-* **Institutions** are universities and other orgs that are affiliated with works (via authors)
+-   **Institutions** are universities and other orgs that are affiliated with works (via authors)
 
-* **Concepts** *tag* Works with a topic
+-   **Concepts** *tag* Works with a topic
 
-(source:  [OpenAlex website](https://openalex.org))
-
-&nbsp; 
+(source: [OpenAlex website](https://openalex.org))
 
 ## Installation
 
 You can install the developer version of the openalexR from [GitHub](https://github.com) with:
 
 ```{r eval=FALSE}
-install.packages("devtools")
-devtools::install_github("massimoaria/openalexR")
+install.packages("remotes")
+remotes::install_github("massimoaria/openalexR")
 ```
 
 You can install the released version of openalexR from [CRAN](https://CRAN.R-project.org) with:
@@ -64,27 +63,23 @@ library(openalexR)
 
 The basic idea of openalexR is to provide three main functions helping the user to:
 
-* Create a query by passing one or more arguments to a function (function **oaQueryBuild**)
+-   Create a query by passing one or more arguments to a function (function **oaQueryBuild**)
 
-* Gather a collection of entities in JSON format (function **oaApiRequest**)
+-   Gather a collection of entities in JSON format (function **oaApiRequest**)
 
-* Transform the JSON in a data frame (similar to an excel sheet) can be used as input in a bibliometric or science mapping analysis (e.g. using the bibliometrix package) (function **oa2df**)
+-   Transform the JSON in a data frame (similar to an excel sheet) can be used as input in a bibliometric or science mapping analysis (e.g. using the bibliometrix package) (function **oa2df**)
 
-&nbsp;
-
-OpenAlex defined a custom query language based on entity type. You can choose to write a valid query using that language or, in alternative, using the function **oaQueryBuild**.
+OpenAlex defined a custom query language based on entity type.
+You can choose to write a valid query using that language or, in alternative, using the function **oaQueryBuild**.
 
 **oaQueryBuild** generates a valid query, written following the OpenAlex API language, from a set of arguments provided by the user.
 
-The function **oaApiRequest** downloads a collection of entities matching the query created by **oaQueryBuild** or manually written by the user. The function will return a JSON object in a list format.
+The function **oaApiRequest** downloads a collection of entities matching the query created by **oaQueryBuild** or manually written by the user.
+The function will return a JSON object in a list format.
 
-Finally, the function **oa2df** converts  the JSON object in classical bibliographic data frame.
-
-&nbsp; 
+Finally, the function **oa2df** converts the JSON object in classical bibliographic data frame.
 
 ## Get full records through entity IDs.
-
-&nbsp; 
 
 ### Query to obtain all information about a single publications
 
@@ -107,11 +102,10 @@ query_work <- oaQueryBuild(
 cat(query_work)
 ```
 
-
-As results, **oaQueryBuild** returns the query string including the OpenAlex endpoint API server address. You should change it by using the argument "endpoint = *address*"
+As results, **oaQueryBuild** returns the query string including the OpenAlex endpoint API server address.
+You should change it by using the argument "endpoint = *address*"
 
 The function **oaApiRequest** downloads the bibliographic records matching the query.
-
 
 ```{r}
 res <- oaApiRequest(
@@ -123,16 +117,14 @@ df <- oa2df(res, entity = "works")
 dplyr::glimpse(df)
 ```
 
-&nbsp; 
 
 ### Query to obtain all information about a single publications using external id formats
 
 OpenAlex endpoint accepts an OpenAlex ID, but many external IDs (*e.g.*, DOI, ISSN) are accepted as well, in several formats.
 
+#### DOI (Digital Object Identifier)
 
-**DOI (Digital Object Identifier)**
-
-We can get a publication record through its DOI using the format **doi:***doi identifier*. 
+We can get a publication record through its DOI using the format **doi:***doi identifier*.
 Example:
 
 ```{r}
@@ -153,11 +145,10 @@ df <- oa2df(res, entity = "works")
 dplyr::glimpse(df)
 ```
 
+#### Persistent Identifiers (PIDs)
 
-
-**Persistent Identifiers (PIDs)**
-
-Many persistent identifiers (PIDs) are canonically expressed as a URL that will take you to the thing being identified. Where these URL formats exist, OpenAlex treats them as the canonical ID, and also accepts them as valid IDs.
+Many persistent identifiers (PIDs) are canonically expressed as a URL that will take you to the thing being identified.
+Where these URL formats exist, OpenAlex treats them as the canonical ID, and also accepts them as valid IDs.
 Example:
 
 ```{r}
@@ -225,131 +216,116 @@ df <- oa2df(res_author, entity = "authors")
 dplyr::glimpse(df)
 ```
 
-&nbsp;
 
-&nbsp;
-
-## Get all entities matching a set of inclusion/exclusion criteria (filters) 
+## Get all entities matching a set of inclusion/exclusion criteria (filters)
 
 In most cases, we are interested in downloading a collection of items that meet one or more inclusion/exclusion criteria (filters).
 
-&nbsp;
-
 In this case, the query definition will not be based on a single identifier but the choice of the entity type (usually "works") and one or more filters about this entity.
 
-Filters narrow the list down to just entities that meet a particular condition--specifically, a particular value for a particular attribute. Supported attributes for each endpoints are listed on [OpenAlex API Documentation Website](https://docs.openalex.org/api/get-lists-of-entities#filter).
+Filters narrow the list down to just entities that meet a particular condition--specifically, a particular value for a particular attribute.
+Supported attributes for each endpoints are listed on [OpenAlex API Documentation Website](https://docs.openalex.org/api/get-lists-of-entities#filter).
 
-Filters are formatted thusly: **attribute:***value*. You set them using the *?filter* query parameter. Filters are case-insensitive.
+Filters are formatted thusly: **attribute:***value*.
+You set them using the *?filter* query parameter.
+Filters are case-insensitive.
 
-&nbsp;
+Each endpoint supports its own list of filters.
+Here they are, by endpoint:
 
-Each endpoint supports its own list of filters. Here they are, by endpoint:
+### /works filters
 
-&nbsp;
+You can filter using these attributes of the Works object.
 
-**/works filters**
+-   display_name.search (alias: title.search)
 
-You can filter using these attributes of the Works object. 
+-   publication_year
 
-* display_name.search (alias: title.search)
+-   publication_date
 
-* publication_year
+-   from_publication_date
 
-* publication_date
+-   to_publication_date
 
-* from_publication_date
+-   host_venue.issn
 
-* to_publication_date
+-   authorships.author.id (alias: author.id)
 
-* host_venue.issn
-
-* authorships.author.id (alias: author.id)
-
-* type
+-   type
 
 etc.
 
 You can find more documentation about each attribute on the [OA Documentation Work page](https://docs.openalex.org/about-the-data/work).
 
-&nbsp;
 
-**/authors filters**
+### /authors filters
 
-You can filter using these attributes of the Authors object. 
+You can filter using these attributes of the Authors object.
 
-* display_name.search
+-   display_name.search
 
-* works_count
+-   works_count
 
-* cited_by_count
+-   cited_by_count
 
-* last_known_institution.id
+-   last_known_institution.id
 
 etc.
 
 You can find more documentation about each attribute on the [OA Documentation Author page](https://docs.openalex.org/about-the-data/author).
 
-&nbsp;
+### /venues filters
 
-**/venues filters**
+You can filter using these attributes of the Venue object.
 
-You can filter using these attributes of the Venue object. 
+-   display_name.search
 
-* display_name.search
+-   issn
 
-* issn
+-   works_count
 
-* works_count
+-   cited_by_count
 
-* cited_by_count
-
-etc. 
+etc.
 
 You can find more documentation about each attribute on the [OA Documentation Venue page](https://docs.openalex.org/about-the-data/venue).
 
-&nbsp;
+### /institutions filters
 
-**/institutions filters**
+You can filter using these attributes of the Institution object.
 
-You can filter using these attributes of the Institution object. 
+-   display_name.search
 
-* display_name.search
+-   country_code
 
-* country_code
+-   type
 
-* type
+-   works_count
 
-* works_count
- 
-* cited_by_count
+-   cited_by_count
 
-* x_concepts.id
+-   x_concepts.id
 
-You can find more documentation about each attribute on the  [OA Documentation Institution page](https://docs.openalex.org/about-the-data/institution).
+You can find more documentation about each attribute on the [OA Documentation Institution page](https://docs.openalex.org/about-the-data/institution).
 
-&nbsp;
+### /concepts filters
 
-**/concepts filters**
+You can filter using these attributes of the Concept object.
+You can find more documentation about each attribute on the Concept page.
 
-You can filter using these attributes of the Concept object. You can find more documentation about each attribute on the Concept page.
+-   display_name.search
 
-* display_name.search
+-   level
 
-* level
+-   works_count
 
-* works_count
+-   cited_by_count
 
-* cited_by_count
-
-* ancestors.id
+-   ancestors.id
 
 You can find more documentation about each attribute on the [OA Documentation Concept page](https://docs.openalex.org/about-the-data/concept).
 
-&nbsp;
-
 Below we show some examples of filters in use.
-
-&nbsp;
 
 ### Filters based on string matching
 
@@ -357,36 +333,35 @@ Below we show some examples of filters in use.
 
 To do that, we have to set filters about three attributes: title content (*"title.search"*), starting date for publication (*"from_publication_date"*), and ending date for publication (*"to_publication_date"*).
 
-Starting and ending dates can be passed to the function **oaQueryBuild** using the arguments *date_from* and *date_to*. The format is YYYY-MM-DD.
+Starting and ending dates can be passed to the function **oaQueryBuild** using the arguments *date_from* and *date_to*.
+The format is YYYY-MM-DD.
 
-The other attributes can be passed to the function through the argument *filter*.  
+The other attributes can be passed to the function through the argument *filter*.
 
-When an attribute has more than one item, these can be separated by the boolean operator OR represented by the symbol **|** .
+When an attribute has more than one item, these can be separated by the boolean operator OR represented by the symbol **\|** .
 
 On the contrary, different attributes have to be separated by commas.
 
-e.g. **filter = 'title.search:"bibliometric analysis"|"science mapping", cited_by_count:>50'**
+e.g. **filter = 'title.search:"bibliometric analysis"\|"science mapping", cited_by_count:\>50'**
 
 where:
 
-* 'title.search:"bibliometric analysis"|"science mapping'
+-   'title.search:"bibliometric analysis"\|"science mapping'
 
 means all works containing the string "bibliometric analysis" OR "science mapping" in the publication title.
 
 and:
 
-* cited_by_count:>50
+-   cited_by_count:\>50
 
 means all works cited more than 10 times.
 
-The whole filter **'title.search:"bibliometric analysis"|"science mapping",cited_by_count:>50'** 
+The whole filter **'title.search:"bibliometric analysis"\|"science mapping",cited_by_count:\>50'**
 
 can be read as:
 
     *"all works containing the string "bibliometric analysis" OR "science mapping" 
     in the publication title AND cited more than 50 times"*.
-
-
 
 ```{r}
 query <- oaQueryBuild(
@@ -401,12 +376,11 @@ query <- oaQueryBuild(
 )
 ```
 
-
-The **sort** argument indicates how results have to be sorted. 
+The **sort** argument indicates how results have to be sorted.
 
 In this example results are sorted by total citations in a descending order.
 
-Setting the argument total.count=TRUE, the function **oaApiRequest** returns the number of items matching the query without downloading the collection. 
+Setting the argument total.count=TRUE, the function **oaApiRequest** returns the number of items matching the query without downloading the collection.
 
 ```{r}
 res <- oaApiRequest(
@@ -437,8 +411,6 @@ df <- oa2df(res, entity = "works")
 dplyr::glimpse(df)
 ```
 
-&nbsp;
-
 ### Get all works citing a particular work.
 
 We can download all publications citing another publication by using the filter attribute **cites:***id*.
@@ -467,27 +439,21 @@ res1 <- oaApiRequest(
 ```
 
 This query will return a collection of `r res1$count` publications.
-Let's to download it:
+Let's to download it and then to convert it into a data frame:
+
 
 ```{r}
-res1 <- oaApiRequest(
+res <- oaApiRequest(
   query_url = query1,
   total.count = FALSE,
   verbose = FALSE
 )
 
 # OpenAlex downloading [=====================] 100% eta:  0s
-```
 
-And then to convert it into a data frame:
-
-```{r}
 df <- oa2df(res, entity = "works")
-
 dplyr::glimpse(df)
 ```
-
-&nbsp;
 
 ### Get all authors matching a set of filters
 
@@ -528,8 +494,6 @@ dplyr::glimpse(df)
 
 ```
 
-&nbsp;
-
 ### Get all institutions matching a set of filters
 
 We want download all records regarding Italian institutions (country_code:it) that are classified as educational (type:education):
@@ -564,8 +528,6 @@ df <- oa2df(res, entity = "institutions")
 
 dplyr::glimpse(df)
 ```
-
-&nbsp;
 
 ### Get all venues matching a set of filters
 
@@ -603,8 +565,6 @@ df <- oa2df(res, entity = "venues")
 dplyr::glimpse(df)
 
 ```
-
-&nbsp;
 
 ### Get all concepts matching a set of filters
 
@@ -646,12 +606,14 @@ dplyr::glimpse(df)
 
 ## Convert an OpenAlex data frame to a bibliometrix object
 
-The bibliometrix R-package (https://www.bibliometrix.org) provides a set of tools for quantitative research in bibliometrics and scientometrics. It is written in the R language, which is an open-source environment and ecosystem. 
+The bibliometrix R-package (<https://www.bibliometrix.org>) provides a set of tools for quantitative research in bibliometrics and scientometrics.
+It is written in the R language, which is an open-source environment and ecosystem.
 
-Today it represents one of the most used science mapping software in the world. In a recent survey on bibliometric analysis tools, Moral-Muñoz et al. (2020) wrote: “At this moment, maybe Bibliometrix and its Shiny platform contain the more extensive set of techniques implemented, and together with the easiness of its interface, could be a great software for practitioners”.
+Today it represents one of the most used science mapping software in the world.
+In a recent survey on bibliometric analysis tools, Moral-Muñoz et al. (2020) wrote: “At this moment, maybe Bibliometrix and its Shiny platform contain the more extensive set of techniques implemented, and together with the easiness of its interface, could be a great software for practitioners”.
 
-The function **oa2bibliometrix** converts a bibliographic data frame of works into a bibliometrix object. This object can be used as input collection of a science mapping workflow.
-
+The function **oa2bibliometrix** converts a bibliographic data frame of works into a bibliometrix object.
+This object can be used as input collection of a science mapping workflow.
 
 ```{r}
 query1 <- oaQueryBuild(

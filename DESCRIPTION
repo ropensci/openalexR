@@ -16,13 +16,15 @@ Encoding: UTF-8
 LazyData: true
 Imports: 
     curl,
-    dplyr,
     httr,
     jsonlite,
     magrittr,
     progress,
     tibble,
 Suggests: 
-    bibliometrix, knitr, rmarkdown
+    bibliometrix, 
+    knitr, 
+    rmarkdown,
+    dplyr,
 RoxygenNote: 7.1.2
 VignetteBuilder: knitr

@@ -250,9 +250,9 @@ cfg <- function(.ua =  base::getOption("HTTPUserAgent")) {
         "curl/",
         curl::curl_version()[[1]],
         " RCurl/",
-        packageVersion("RCurl"),
+        utils::packageVersion("RCurl"),
         " httr/",
-        packageVersion("httr")
+        utils::packageVersion("httr")
       )
   }
 

@@ -45,18 +45,15 @@
 #' @export
 #'
 oa2bibliometrix <- function(df){
-
-
-    df <- df %>%
-      mutate(id_oa = gsub("https://openalex.org/","",.data$id)) %>%
-      rename(id_url = .data$id)
-
+    df$id_oa <- gsub("https://openalex.org/", "", df$id)
+    names(df)[names(df) == 'id'] <- 'id_url'
+    
     if (substr(df$id_oa[1],1,1)!="W"){
       message("oa2bibliometrix accepts only OpenAlex data frames containing 'works' (entity = 'works')")
       return()
     }
 
-  data("countrycode",envir=environment())
+  utils::data("countrycode",envir=environment())
   countrycode$Country <- as.character(countrycode$Country)
 
   # Authors

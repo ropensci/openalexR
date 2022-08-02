@@ -29,16 +29,14 @@ connected to each other. There are five types of entities:
 
 (source: [OpenAlex website](https://openalex.org))
 
- 
-
 ## Installation
 
 You can install the developer version of the openalexR from
 [GitHub](https://github.com) with:
 
 ``` r
-install.packages("devtools")
-devtools::install_github("massimoaria/openalexR")
+install.packages("remotes")
+remotes::install_github("massimoaria/openalexR")
 ```
 
 You can install the released version of openalexR from
@@ -69,8 +67,6 @@ the user to:
     be used as input in a bibliometric or science mapping analysis
     (e.g. using the bibliometrix package) (function **oa2df**)
 
- 
-
 OpenAlex defined a custom query language based on entity type. You can
 choose to write a valid query using that language or, in alternative,
 using the function **oaQueryBuild**.
@@ -85,11 +81,7 @@ the user. The function will return a JSON object in a list format.
 Finally, the function **oa2df** converts the JSON object in classical
 bibliographic data frame.
 
- 
-
 ## Get full records through entity IDs.
-
- 
 
 ### Query to obtain all information about a single publications
 
@@ -159,14 +151,12 @@ dplyr::glimpse(df)
 #> $ concept       <list> [<data.frame[8 x 5]>]
 ```
 
- 
-
 ### Query to obtain all information about a single publications using external id formats
 
 OpenAlex endpoint accepts an OpenAlex ID, but many external IDs (*e.g.*,
 DOI, ISSN) are accepted as well, in several formats.
 
-**DOI (Digital Object Identifier)**
+#### DOI (Digital Object Identifier)
 
 We can get a publication record through its DOI using the format
 **doi:***doi identifier*. Example:
@@ -217,7 +207,7 @@ dplyr::glimpse(df)
 #> $ concept       <list> [<data.frame[8 x 5]>]
 ```
 
-**Persistent Identifiers (PIDs)**
+#### Persistent Identifiers (PIDs)
 
 Many persistent identifiers (PIDs) are canonically expressed as a URL
 that will take you to the thing being identified. Where these URL
@@ -364,16 +354,10 @@ dplyr::glimpse(df)
 #> $ works_api_url       <chr> "https://api.openalex.org/works?filter=author.id:A…
 ```
 
- 
-
- 
-
 ## Get all entities matching a set of inclusion/exclusion criteria (filters)
 
 In most cases, we are interested in downloading a collection of items
 that meet one or more inclusion/exclusion criteria (filters).
-
- 
 
 In this case, the query definition will not be based on a single
 identifier but the choice of the entity type (usually “works”) and one
@@ -388,14 +372,10 @@ Website](https://docs.openalex.org/api/get-lists-of-entities#filter).
 Filters are formatted thusly: **attribute:***value*. You set them using
 the *?filter* query parameter. Filters are case-insensitive.
 
- 
-
 Each endpoint supports its own list of filters. Here they are, by
 endpoint:
 
- 
-
-**/works filters**
+### /works filters
 
 You can filter using these attributes of the Works object.
 
@@ -420,9 +400,7 @@ etc.
 You can find more documentation about each attribute on the [OA
 Documentation Work page](https://docs.openalex.org/about-the-data/work).
 
- 
-
-**/authors filters**
+### /authors filters
 
 You can filter using these attributes of the Authors object.
 
@@ -440,9 +418,7 @@ You can find more documentation about each attribute on the [OA
 Documentation Author
 page](https://docs.openalex.org/about-the-data/author).
 
- 
-
-**/venues filters**
+### /venues filters
 
 You can filter using these attributes of the Venue object.
 
@@ -460,9 +436,7 @@ You can find more documentation about each attribute on the [OA
 Documentation Venue
 page](https://docs.openalex.org/about-the-data/venue).
 
- 
-
-**/institutions filters**
+### /institutions filters
 
 You can filter using these attributes of the Institution object.
 
@@ -482,9 +456,7 @@ You can find more documentation about each attribute on the [OA
 Documentation Institution
 page](https://docs.openalex.org/about-the-data/institution).
 
- 
-
-**/concepts filters**
+### /concepts filters
 
 You can filter using these attributes of the Concept object. You can
 find more documentation about each attribute on the Concept page.
@@ -503,11 +475,7 @@ You can find more documentation about each attribute on the [OA
 Documentation Concept
 page](https://docs.openalex.org/about-the-data/concept).
 
- 
-
 Below we show some examples of filters in use.
-
- 
 
 ### Filters based on string matching
 
@@ -635,8 +603,6 @@ dplyr::glimpse(df)
 #> $ concept       <list> [<data.frame[7 x 5]>], [<data.frame[7 x 5]>], [<data.fr…
 ```
 
- 
-
 ### Get all works citing a particular work.
 
 We can download all publications citing another publication by using the
@@ -668,55 +634,47 @@ res1 <- oaApiRequest(
 ```
 
 This query will return a collection of 1422 publications. Let’s to
-download it:
+download it and then to convert it into a data frame:
 
 ``` r
-res1 <- oaApiRequest(
+res <- oaApiRequest(
   query_url = query1,
   total.count = FALSE,
   verbose = FALSE
 )
 
 # OpenAlex downloading [=====================] 100% eta:  0s
-```
 
-And then to convert it into a data frame:
-
-``` r
 df <- oa2df(res, entity = "works")
-
 dplyr::glimpse(df)
-#> Rows: 21
-#> Columns: 26
-#> $ id            <chr> "https://openalex.org/W3160856016", "https://openalex.or…
-#> $ TI            <chr> "How to conduct a bibliometric analysis: An overview and…
-#> $ author        <list> [<data.frame[5 x 10]>], [<data.frame[2 x 10]>], [<data.…
-#> $ AB            <chr> "Bibliometric analysis is a popular and rigorous method …
-#> $ pubdata       <chr> "2021-09-01", "2020-09-01", "2020-03-01", "2020-01-19", …
-#> $ relscore      <dbl> 212.59715, 166.90810, 164.94908, 133.21031, 132.68163, 1…
-#> $ SO            <chr> "Journal of Business Research", "Journal of Business Res…
-#> $ SO_ID         <chr> "https://openalex.org/V93284759", "https://openalex.org/…
-#> $ PU            <chr> "Elsevier", "Elsevier", "Elsevier", "Ediciones Profesion…
-#> $ IS            <list> <"1873-7978", "0148-2963">, <"1873-7978", "0148-2963">,…
-#> $ URL           <chr> "https://doi.org/10.1016/j.jbusres.2021.04.070", "https:…
-#> $ first_page    <chr> "285", "253", "1", NA, "80", NA, "136776", "3508", "816"…
-#> $ last_page     <chr> "296", "261", "14", NA, "105", NA, "136776", "3526", "81…
-#> $ volume        <chr> "133", "118", "109", "29", "45", NA, "714", "58", "8", "…
-#> $ issue         <chr> NA, NA, NA, "1", "1", NA, NA, "11", "13", "1", NA, "7", …
-#> $ OA            <lgl> TRUE, TRUE, FALSE, TRUE, FALSE, TRUE, FALSE, TRUE, TRUE,…
-#> $ TC            <int> 256, 232, 163, 115, 98, 114, 84, 100, 73, 87, 89, 61, 55…
-#> $ TCperYear     <list> [<data.frame[2 x 2]>], [<data.frame[3 x 2]>], [<data.fr…
-#> $ PY            <int> 2021, 2020, 2020, 2020, 2021, 2020, 2020, 2020, 2020, 20…
-#> $ cited_by_url  <chr> "https://api.openalex.org/works?filter=cites:W3160856016…
-#> $ ids           <list> [[<data.frame[3 x 2]>]], [[<data.frame[5 x 2]>]], [[<da…
-#> $ DI            <chr> "https://doi.org/10.1016/j.jbusres.2021.04.070", "https:…
+#> Rows: 1,422
+#> Columns: 25
+#> $ id            <chr> "https://openalex.org/W4288801103", "https://openalex.or…
+#> $ TI            <chr> "Anaerobic digestion of sewage sludge for biogas &amp; b…
+#> $ author        <list> [<data.frame[7 x 10]>], [<data.frame[2 x 10]>], [<data.…
+#> $ AB            <chr> "• A critical review on anaerobic digestion of sewage sl…
+#> $ pubdata       <chr> "2022-12-01", "2022-11-01", "2022-11-01", "2022-11-01", …
+#> $ SO            <chr> "Fuel", "Energy Reports", "Annals of tourism research em…
+#> $ SO_ID         <chr> "https://openalex.org/V164770093", "https://openalex.org…
+#> $ PU            <chr> "Elsevier", "Elsevier", "Elsevier", "Elsevier", "Elsevie…
+#> $ IS            <list> <"0016-2361", "1873-7153">, "2352-4847", "2666-9579", <…
+#> $ URL           <chr> "https://doi.org/10.1016/j.fuel.2022.125416", "https://d…
+#> $ first_page    <chr> "125416", "2699", "100054", "417", "399", "567", "100399…
+#> $ last_page     <chr> "125416", "2711", "100054", "436", "416", "584", "100399…
+#> $ volume        <chr> "329", "8", "3", "150", "150", "150", "31", "149", "215"…
+#> $ issue         <chr> NA, NA, "2", NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…
+#> $ OA            <lgl> FALSE, TRUE, TRUE, FALSE, TRUE, FALSE, FALSE, FALSE, FAL…
+#> $ TC            <int> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,…
+#> $ TCperYear     <list> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, [<d…
+#> $ PY            <int> 2022, 2022, 2022, 2022, 2022, 2022, 2022, 2022, 2022, 20…
+#> $ cited_by_url  <chr> "https://api.openalex.org/works?filter=cites:W4288801103…
+#> $ ids           <list> [[<data.frame[2 x 2]>]], [[<data.frame[2 x 2]>]], [[<da…
+#> $ DI            <chr> "https://doi.org/10.1016/j.fuel.2022.125416", "https://d…
 #> $ DT            <chr> "journal-article", "journal-article", "journal-article",…
-#> $ CR            <list> <"https://openalex.org/W1021000864", "https://openalex.…
-#> $ related_works <list> <"https://openalex.org/W9427990", "https://openalex.org…
-#> $ concept       <list> [<data.frame[7 x 5]>], [<data.frame[7 x 5]>], [<data.fr…
+#> $ CR            <list> <"https://openalex.org/W1963772285", "https://openalex.…
+#> $ related_works <list> <"https://openalex.org/W1249074", "https://openalex.org…
+#> $ concept       <list> [<data.frame[11 x 5]>], [<data.frame[6 x 5]>], [<data.f…
 ```
-
- 
 
 ### Get all authors matching a set of filters
 
@@ -775,8 +733,6 @@ dplyr::glimpse(df)
 #> $ concept             <list> [<data.frame[35 x 5]>], [<data.frame[49 x 5]>], […
 #> $ works_api_url       <chr> "https://api.openalex.org/works?filter=author.id:A…
 ```
-
- 
 
 ### Get all institutions matching a set of filters
 
@@ -839,8 +795,6 @@ dplyr::glimpse(df)
 #> $ works_api_url      <chr> "https://api.openalex.org/works?filter=institutions…
 ```
 
- 
-
 ### Get all venues matching a set of filters
 
 We want download all records regarding journals that have published more
@@ -897,8 +851,6 @@ dplyr::glimpse(df)
 #> $ concept       <list> [<data.frame[20 x 5]>], [<data.frame[21 x 5]>], [<data.…
 #> $ works_api_url <chr> "https://api.openalex.org/works?filter=host_venue.id:V27…
 ```
-
- 
 
 ### Get all concepts matching a set of filters
 
