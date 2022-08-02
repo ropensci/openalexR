@@ -3,8 +3,8 @@
 #' It generates a valid query, written following the OpenAlex API Language, from a set of parameters.
 #'
 #' @param identifier is a character. It indicates an item identifier.
-#' @param entity is a character. It indicates the scholarly entity of the search. The argument can be equal to
-#' entity = c("works", "authors", "venues", "institutions", "concepts"). The default value is entity = works".
+#' @param entity is a character. It indicates the scholarly entity of the search. The argument can be one of
+#' c("works", "authors", "venues", "institutions", "concepts"). The default value is entity = works".
 #' @param filter is a character. Filters narrow the list down to just entities that meet a particular condition--specifically, a particular value for a particular attribute.
 #' Filters are formatted thusly: attribute:value. The complete list of filter attributes for each entity can be found
 #' at \href{https://docs.openalex.org/api/get-lists-of-entities#filter}{https://docs.openalex.org/api/get-lists-of-entities#filter}
@@ -146,28 +146,17 @@
 #'
 
 oaQueryBuild <- function(identifier = NULL, ## identifier of a work, author, venue, etc.
-                         entity = "works",
+                         entity = c("works", "authors", "venues", "institutions", "concepts"),
                          filter = NULL,
                          date_from = NULL,
                          date_to = NULL,
                          search = NULL,
                          endpoint = "https://api.openalex.org/",
                          verbose = FALSE) {
-  entity_list <- c("works", "authors", "venues", "institutions", "concepts")
-  format_list <- c("table", "object")
+  entity <- match.arg(entity)
 
   id <- c("NoMissing", "Missing")
-  id <- id[(is.null(identifier)) + 1]
-
-  if (is.null(identifier)) {
-    if (!(entity[1] %in% entity_list) | length(entity) > 1) {
-      message(
-        "\nPlease choose a single entity value from the following list:\n",
-        paste(entity_list, collapse = ", ")
-      )
-      return("error")
-    }
-  }
+  id <- id[is.null(identifier) + 1]
 
   switch(id,
     Missing = {

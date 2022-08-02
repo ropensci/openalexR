@@ -111,7 +111,8 @@ oaInstitutions2df <- function(data, verbose = TRUE) {
     TCperYear <- unlist(item$counts_by_year)
     lab <- names(TCperYear)
     TCperYear <- list(data.frame(
-      year = TCperYear[lab == "year"], works_count = TCperYear[lab == "works_count"],
+      year = TCperYear[lab == "year"],
+      works_count = TCperYear[lab == "works_count"],
       TC = TCperYear[lab == "cited_by_count"]
     ))
     # concepts

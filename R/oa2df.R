@@ -47,12 +47,9 @@
 #' }
 #'
 #' @export
-oa2df <- function(data, entity = "works", verbose = TRUE) {
-  entity_list <- c("works", "authors", "venues", "institutions", "concepts")
-  if (!(entity %in% entity_list)) {
-    message('Please choose one of the following entity type: "works", "authors", "venues", "institutions", "concepts"')
-    return()
-  }
+oa2df <- function(data, entity = c("works", "authors", "venues", "institutions", "concepts"), verbose = TRUE) {
+  entity <- match.arg(entity)
+
   switch(entity,
     works = {
       df <- oaWorks2df(data, verbose)

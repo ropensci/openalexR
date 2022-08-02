@@ -175,7 +175,7 @@ oaApiRequest <- function(query_url,
   ## number of pages
   n_items <- res$meta$count
   n_pages <- ceiling(res$meta$count / per_page)
-  pages <- 1:n_pages
+  pages <- seq.int(n_pages)
   ##
 
   if (n_items <= 0) {
