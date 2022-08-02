@@ -99,7 +99,7 @@ oaVenues2df <- function(data, verbose = TRUE){
     })))
     works_api_url <- item$works_api_url
 
-    list_df[[i]] <- tibble(id=id, name=name, publisher=publisher, issn=issn, issn_l=issn_l, is_oa=is_oa, is_in_doaj=is_in_doaj,
+    list_df[[i]] <- tibble::tibble(id=id, name=name, publisher=publisher, issn=issn, issn_l=issn_l, is_oa=is_oa, is_in_doaj=is_in_doaj,
                            ids=ids, homepage=homepage, rel_score=rel_score,works_count=works_count, TC=TC, TCperYear=TCperYear,
                            concept=concept, works_api_url=works_api_url)
   }

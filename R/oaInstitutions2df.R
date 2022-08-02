@@ -123,7 +123,7 @@ oaInstitutions2df <- function(data, verbose = TRUE){
     })))
     works_api_url <- item$works_api_url
 
-    list_df[[i]] <- tibble(id=id, name=name, name_alternatives=name_alternatives, name_acronyms=name_acronyms,
+    list_df[[i]] <- tibble::tibble(id=id, name=name, name_alternatives=name_alternatives, name_acronyms=name_acronyms,
                            name_international=name_international, ror=ror, ids=ids, country=country, geo=geo,
                            type=type, homepage=homepage, image=image, thumbnail=thumbnail, associated_inst=associated_inst,
                            rel_score=rel_score,works_count=works_count, TC=TC, TCperYear=TCperYear,

@@ -169,7 +169,7 @@ oaWorks2df <- function(data, verbose = TRUE){
       ab <- abstract_build(paper$abstract_inverted_index)
     } else {ab <- ""}
 
-    list_df[[i]] <- tibble(id=id, TI=title, author=author, AB=ab, pubdata=pubdate,
+    list_df[[i]] <- tibble::tibble(id=id, TI=title, author=author, AB=ab, pubdata=pubdate,
                            relscore=relscore, SO=so, SO_ID=so_id, PU=publisher, IS=issn, URL=url,
                            first_page=first_page, last_page=last_page, volume=volume, issue=issue,
                            OA=oa, TC=TC, TCperYear=TCperYear, PY=PY, cited_by_url=cited_by_url,

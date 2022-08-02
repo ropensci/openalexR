@@ -114,7 +114,7 @@ oaConcepts2df <- function(data, verbose = TRUE){
 
     works_api_url <- item$works_api_url
 
-    list_df[[i]] <- tibble(id=id, name=name, name_international=name_international, description=description,
+    list_df[[i]] <- tibble::tibble(id=id, name=name, name_international=name_international, description=description,
                            description_international=description_international, wikidata=wikidata, level=level,
                            ids=ids, image=image, thumbnail=thumbnail,
                            ancestors=ancestors, rel_concepts=rel_concepts,

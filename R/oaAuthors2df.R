@@ -117,7 +117,7 @@ oaAuthors2df <- function(data, verbose = TRUE){
     })))
     works_api_url <- item$works_api_url
 
-    list_df[[i]] <- tibble(id=id, name=name, name_alternatives=name_alternatives, rel_score=rel_score, ids=ids,
+    list_df[[i]] <- tibble::tibble(id=id, name=name, name_alternatives=name_alternatives, rel_score=rel_score, ids=ids,
                            orcid=orcid, works_count=works_count, TC=TC, TCperYear=TCperYear, affiliation_name=affiliation_name,
                            affiliation_id=affiliation_id, affiliation_ror=affiliation_ror,
                            affiliation_country=affiliation_country, affiliation_type=affiliation_type,
