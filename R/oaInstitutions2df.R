@@ -38,7 +38,7 @@ utils::globalVariables("progress_bar")
 oaInstitutions2df <- function(data, verbose = TRUE) {
 
   # replace NULL with NA
-  data <- simple_rapply(data, function(x) if (is.null(x)) NA else x)
+  data <- simple_rapply(data, `%||%`, y = NA)
 
   if (!is.null(data$id)) {
     data <- list(data)
@@ -108,23 +108,18 @@ oaInstitutions2df <- function(data, verbose = TRUE) {
     }
 
     # Total Citations per Year
-    TCperYear <- unlist(item$counts_by_year)
-    lab <- names(TCperYear)
-    TCperYear <- list(data.frame(
-      year = TCperYear[lab == "year"],
-      works_count = TCperYear[lab == "works_count"],
-      TC = TCperYear[lab == "cited_by_count"]
-    ))
-    # concepts
-    concept <- list(do.call(rbind, lapply(item$x_concepts, function(l) {
-      L <- data.frame(
-        concept_id = l$id,
-        concept_name = l$display_name,
-        concept_score = l$score,
-        concept_lecel = l$level,
-        concept_url = l$wikidata
-      )
-    })))
+    # TODO
+    # Do we need to change these names?
+    # there was a typo here earlier: lecel should be level
+    c_tcs <- do.call(rbind.data.frame, item$counts_by_year)
+    names(c_tcs)[names(c_tcs) == "cited_by_count"] <- "TC"
+    TCperYear <- list(c_tcs)
+
+    c_concepts <- do.call(rbind.data.frame, item$x_concepts)
+    c_concepts <- c_concepts[, c("id", "display_name", "score", "level", "wikidata")]
+    names(c_concepts) <- c("concept_id", "concept_name", "concept_score", "concept_level", "concept_url")
+    concept <- list(c_concepts)
+
     works_api_url <- item$works_api_url
 
     list_df[[i]] <- tibble::tibble(
