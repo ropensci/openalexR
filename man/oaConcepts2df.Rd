@@ -21,7 +21,6 @@ It converts bibliographic collection of concepts' records gathered from OpenAlex
 The function converts a list of concepts' records obtained using \code{oaApiRequest} into a data frame/tibble.
 }
 \examples{
-
 \dontrun{
 
 # Query to search information about all Italian educational institutions
@@ -29,18 +28,19 @@ The function converts a list of concepts' records obtained using \code{oaApiRequ
 
 query_inst <- oaQueryBuild(
   entity = "institutions",
- filter = "country_code:it,type:education")
+  filter = "country_code:it,type:education"
+)
 
 res <- oaApiRequest(
-   query_url = query_inst,
-   total.count = FALSE,
-   verbose = FALSE
-   )
+  query_url = query_inst,
+  total.count = FALSE,
+  verbose = FALSE
+)
 
 df <- oa2df(res, entity = "concepts")
 
 df
-
 }
 
+# @export
 }

@@ -21,7 +21,6 @@ It converts bibliographic collection of works gathered from OpenAlex database \h
 The function converts a list of works obtained using \code{oaApiRequest} into a data frame/tibble.
 }
 \examples{
-
 \dontrun{
 
 # Query to search all works citing the article:
@@ -35,24 +34,25 @@ The function converts a list of works obtained using \code{oaApiRequest} into a 
 #  Results have to be sorted by relevance score in a descending order.
 
 query <- oaQueryBuild(
-identifier=NULL,
-entity = "works",
-filter = "cites:W2755950973",
-date_from = "2021-01-01",
-date_to = "2021-12-31",
-search=NULL,
-endpoint = "https://api.openalex.org/")
+  identifier = NULL,
+  entity = "works",
+  filter = "cites:W2755950973",
+  date_from = "2021-01-01",
+  date_to = "2021-12-31",
+  search = NULL,
+  endpoint = "https://api.openalex.org/"
+)
 
 res <- oaApiRequest(
-   query_url = query,
-   total.count = FALSE,
-   verbose = FALSE
-   )
+  query_url = query,
+  total.count = FALSE,
+  verbose = FALSE
+)
 
 df <- oa2df(res, entity = "works")
 
 df
-
 }
 
+# @export
 }

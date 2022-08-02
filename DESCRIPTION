@@ -18,7 +18,6 @@ Imports:
     curl,
     httr,
     jsonlite,
-    magrittr,
     progress,
     tibble
 Suggests: 

@@ -21,7 +21,6 @@ It converts bibliographic collection of venues' records gathered from OpenAlex d
 The function converts a list of venues' records obtained using \code{oaApiRequest} into a data frame/tibble.
 }
 \examples{
-
 \dontrun{
 
 # Query to search information about the Journal of Informetrics (OA id:V205292342)
@@ -30,18 +29,18 @@ The function converts a list of venues' records obtained using \code{oaApiReques
 query_inst <- oaQueryBuild(
   identifier = "V205292342",
   entity = "venues",
-  )
+)
 
 res <- oaApiRequest(
-   query_url = query_inst,
-   total.count = FALSE,
-   verbose = FALSE
-   )
+  query_url = query_inst,
+  total.count = FALSE,
+  verbose = FALSE
+)
 
 df <- oa2df(res, entity = "venues")
 
 df
-
 }
 
+# @export
 }

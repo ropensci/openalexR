@@ -21,7 +21,6 @@ It converts bibliographic collection of authors' records gathered from OpenAlex 
 The function converts a list of authors' records obtained using \code{oaApiRequest} into a data frame/tibble.
 }
 \examples{
-
 \dontrun{
 
 # Query to search information about all authors affiliated to the University of Naples Federico II
@@ -31,20 +30,21 @@ The function converts a list of authors' records obtained using \code{oaApiReque
 
 
 query_author <- oaQueryBuild(
- identifier = NULL,
- entity = "authors",
- filter = "last_known_institution.id:I71267560,works_count:>99")
+  identifier = NULL,
+  entity = "authors",
+  filter = "last_known_institution.id:I71267560,works_count:>99"
+)
 
 res <- oaApiRequest(
-   query_url = query_author,
-   total.count = FALSE,
-   verbose = FALSE
-   )
+  query_url = query_author,
+  total.count = FALSE,
+  verbose = FALSE
+)
 
 df <- oa2df(res, entity = "authors")
 
 df
-
 }
 
+# @export
 }
