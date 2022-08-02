@@ -13,7 +13,6 @@ utils::globalVariables("progress_bar")
 #'
 #'
 #' @examples
-#'
 #' \dontrun{
 #'
 #' # Query to search information about all Italian educational institutions
@@ -21,27 +20,29 @@ utils::globalVariables("progress_bar")
 #'
 #' query_inst <- oaQueryBuild(
 #'   entity = "institutions",
-#'  filter = "country_code:it,type:education")
+#'   filter = "country_code:it,type:education"
+#' )
 #'
 #' res <- oaApiRequest(
-#'    query_url = query_inst,
-#'    total.count = FALSE,
-#'    verbose = FALSE
-#'    )
+#'   query_url = query_inst,
+#'   total.count = FALSE,
+#'   verbose = FALSE
+#' )
 #'
 #' df <- oa2df(res, entity = "institutions")
 #'
 #' df
-#'
 #' }
 #'
-# @export
-oaInstitutions2df <- function(data, verbose = TRUE){
+#' # @export
+oaInstitutions2df <- function(data, verbose = TRUE) {
 
   # replace NULL with NA
-  data <- simple_rapply(data, function(x) if(is.null(x)) NA else x)
+  data <- simple_rapply(data, function(x) if (is.null(x)) NA else x)
 
-  if (!is.null(data$id)){data <- list(data)}
+  if (!is.null(data$id)) {
+    data <- list(data)
+  }
 
   if (is.null(data[[1]]$id)) {
     message("the list does not contain a valid OpenAlex collection")
@@ -50,33 +51,33 @@ oaInstitutions2df <- function(data, verbose = TRUE){
 
   n <- length(data)
 
-  list_df<- vector(mode = "list", length = n)
+  list_df <- vector(mode = "list", length = n)
 
   pb <- progress::progress_bar$new(
     format = "  converting [:bar] :percent eta: :eta",
-    total = n, clear = FALSE, width = 60)
+    total = n, clear = FALSE, width = 60
+  )
 
-  for (i in 1:n){
-
+  for (i in 1:n) {
     if (isTRUE(verbose)) pb$tick()
 
     item <- data[[i]]
 
     id <- item$id
     name <- item$display_name
-    if (length(item$display_name_alternatives)>0){
+    if (length(item$display_name_alternatives) > 0) {
       name_alternatives <- list(unlist(item$display_name_alternatives))
-    }else{
+    } else {
       name_alternatives <- NA
     }
-    if (length(item$display_name_acronyms)>0){
+    if (length(item$display_name_acronyms) > 0) {
       name_acronyms <- list(unlist(item$display_name_acronyms))
-    }else{
+    } else {
       name_acronyms <- NA
     }
-    if (length(item$international)>0){
+    if (length(item$international) > 0) {
       name_international <- list(as.data.frame(item$international))
-    }else{
+    } else {
       name_international <- NA
     }
     #
@@ -89,47 +90,49 @@ oaInstitutions2df <- function(data, verbose = TRUE){
     thumbnail <- item$image_thumbnail_url
     works_count <- item$works_count
     TC <- item$cited_by_count
-    if (length(item$ids)>0){
+    if (length(item$ids) > 0) {
       ids <- unlist(item$ids)
-      ids <- list(data.frame(item=names(ids), value=ids))
-    }else{
+      ids <- list(data.frame(item = names(ids), value = ids))
+    } else {
       ids <- NA
     }
-    if (length(item$geo)>0){
+    if (length(item$geo) > 0) {
       geo <- list(as.data.frame(item$geo))
-    }else{
+    } else {
       geo <- NA
     }
-    if (length(item$associated_institutions)>0){
+    if (length(item$associated_institutions) > 0) {
       associated_inst <- list(as.data.frame(item$associated_institutions))
-    }else{
+    } else {
       associated_inst <- NA
     }
 
     # Total Citations per Year
     TCperYear <- unlist(item$counts_by_year)
     lab <- names(TCperYear)
-    TCperYear <- list(data.frame(year=TCperYear[lab=="year"], works_count=TCperYear[lab=="works_count"],
-                                 TC=TCperYear[lab=="cited_by_count"]))
+    TCperYear <- list(data.frame(
+      year = TCperYear[lab == "year"], works_count = TCperYear[lab == "works_count"],
+      TC = TCperYear[lab == "cited_by_count"]
+    ))
     # concepts
-    concept <- list(do.call(rbind,lapply(item$x_concepts, function(l){
+    concept <- list(do.call(rbind, lapply(item$x_concepts, function(l) {
       L <- data.frame(
-        concept_id=l$id,
-        concept_name=l$display_name,
-        concept_score=l$score,
-        concept_lecel=l$level,
-        concept_url=l$wikidata
+        concept_id = l$id,
+        concept_name = l$display_name,
+        concept_score = l$score,
+        concept_lecel = l$level,
+        concept_url = l$wikidata
       )
     })))
     works_api_url <- item$works_api_url
 
-    list_df[[i]] <- tibble::tibble(id=id, name=name, name_alternatives=name_alternatives, name_acronyms=name_acronyms,
-                           name_international=name_international, ror=ror, ids=ids, country=country, geo=geo,
-                           type=type, homepage=homepage, image=image, thumbnail=thumbnail, associated_inst=associated_inst,
-                           rel_score=rel_score,works_count=works_count, TC=TC, TCperYear=TCperYear,
-                           concept=concept, works_api_url=works_api_url)
+    list_df[[i]] <- tibble::tibble(
+      id = id, name = name, name_alternatives = name_alternatives, name_acronyms = name_acronyms,
+      name_international = name_international, ror = ror, ids = ids, country = country, geo = geo,
+      type = type, homepage = homepage, image = image, thumbnail = thumbnail, associated_inst = associated_inst,
+      rel_score = rel_score, works_count = works_count, TC = TC, TCperYear = TCperYear,
+      concept = concept, works_api_url = works_api_url
+    )
   }
-  df <- do.call(rbind,list_df)
+  df <- do.call(rbind, list_df)
 }
-
-

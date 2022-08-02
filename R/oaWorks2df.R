@@ -13,7 +13,6 @@ utils::globalVariables("progress_bar")
 #'
 #'
 #' @examples
-#'
 #' \dontrun{
 #'
 #' # Query to search all works citing the article:
@@ -27,33 +26,35 @@ utils::globalVariables("progress_bar")
 #' #  Results have to be sorted by relevance score in a descending order.
 #'
 #' query <- oaQueryBuild(
-#' identifier=NULL,
-#' entity = "works",
-#' filter = "cites:W2755950973",
-#' date_from = "2021-01-01",
-#' date_to = "2021-12-31",
-#' search=NULL,
-#' endpoint = "https://api.openalex.org/")
+#'   identifier = NULL,
+#'   entity = "works",
+#'   filter = "cites:W2755950973",
+#'   date_from = "2021-01-01",
+#'   date_to = "2021-12-31",
+#'   search = NULL,
+#'   endpoint = "https://api.openalex.org/"
+#' )
 #'
 #' res <- oaApiRequest(
-#'    query_url = query,
-#'    total.count = FALSE,
-#'    verbose = FALSE
-#'    )
+#'   query_url = query,
+#'   total.count = FALSE,
+#'   verbose = FALSE
+#' )
 #'
 #' df <- oa2df(res, entity = "works")
 #'
 #' df
-#'
 #' }
 #'
-# @export
-oaWorks2df <- function(data, verbose = TRUE){
+#' # @export
+oaWorks2df <- function(data, verbose = TRUE) {
 
   # replace NULL with NA
-  #data <- simple_rapply(data, function(x) if(is.null(x)) NA else x)
+  # data <- simple_rapply(data, function(x) if(is.null(x)) NA else x)
 
-  if (!is.null(data$id)){data <- list(data)}
+  if (!is.null(data$id)) {
+    data <- list(data)
+  }
 
   if (is.null(data[[1]]$id)) {
     message("the list does not contain a valid OpenAlex collection")
@@ -62,18 +63,19 @@ oaWorks2df <- function(data, verbose = TRUE){
 
   n <- length(data)
 
-  list_df<- vector(mode = "list", length = n)
+  list_df <- vector(mode = "list", length = n)
 
   pb <- progress::progress_bar$new(
     format = "  converting [:bar] :percent eta: :eta",
-    total = n, clear = FALSE, width = 60)
+    total = n, clear = FALSE, width = 60
+  )
 
 
-  for (i in 1:n){
+  for (i in 1:n) {
     if (isTRUE(verbose)) pb$tick()
-    #print(i)
+    # print(i)
     paper <- data[[i]]
-    paper <- simple_rapply(paper, function(x) if(is.null(x)) NA else x)
+    paper <- simple_rapply(paper, function(x) if (is.null(x)) NA else x)
 
     id <- paper$id
     title <- paper$display_name
@@ -86,12 +88,12 @@ oaWorks2df <- function(data, verbose = TRUE){
     issn <- list(unlist(paper$host_venue$issn))
     url <- paper$host_venue$url
     oa <- paper$host_venue$is_oa
-    if (!is.na(paper$biblio[1])){
+    if (!is.na(paper$biblio[1])) {
       first_page <- paper$biblio$first_page[1]
       last_page <- paper$biblio$last_page[1]
       volume <- paper$biblio$volume[1]
       issue <- paper$biblio$issue[1]
-    } else{
+    } else {
       first_page <- NA
       last_page <- NA
       volume <- NA
@@ -99,9 +101,8 @@ oaWorks2df <- function(data, verbose = TRUE){
     }
 
     # authorships and affilitation
-    author <- list(do.call(rbind,lapply(paper$authorships, function(l){
-
-      if (sum(lengths(l[["institutions"]]))>0){
+    author <- list(do.call(rbind, lapply(paper$authorships, function(l) {
+      if (sum(lengths(l[["institutions"]])) > 0) {
         institution_id <- l[["institutions"]][[1]]$id
         institution_name <- l[["institutions"]][[1]]$display_name
         institution_ror <- l[["institutions"]][[1]]$ror
@@ -115,48 +116,50 @@ oaWorks2df <- function(data, verbose = TRUE){
         institution_type <- NA
       }
       L <- data.frame(
-        au_id=l[["author"]]$id,
-        au_name=l[["author"]]$display_name,
-        au_orcid=l[["author"]]$orcid,
-        au_position=l$author_position,
-        au_affiliation_raw=l$raw_affiliation_string,
-          institution_id = institution_id,
-          institution_name = institution_name,
-          institution_ror = institution_ror,
-          institution_country = institution_country,
-          institution_type = institution_type
+        au_id = l[["author"]]$id,
+        au_name = l[["author"]]$display_name,
+        au_orcid = l[["author"]]$orcid,
+        au_position = l$author_position,
+        au_affiliation_raw = l$raw_affiliation_string,
+        institution_id = institution_id,
+        institution_name = institution_name,
+        institution_ror = institution_ror,
+        institution_country = institution_country,
+        institution_type = institution_type
       )
     })))
 
     # concepts
-    concept <- list(do.call(rbind,lapply(paper$concepts, function(l){
+    concept <- list(do.call(rbind, lapply(paper$concepts, function(l) {
       L <- data.frame(
-        concept_id=l$id,
-        concept_name=l$display_name,
-        concept_score=l$score,
-        concept_lecel=l$level,
-        concept_url=l$wikidata
+        concept_id = l$id,
+        concept_name = l$display_name,
+        concept_score = l$score,
+        concept_lecel = l$level,
+        concept_url = l$wikidata
       )
     })))
 
     TC <- paper$cited_by_count
 
     # Total Citations per Year
-    if(length(paper$counts_by_year)>0){
+    if (length(paper$counts_by_year) > 0) {
       TCperYear <- unlist(paper$counts_by_year)
       lab <- names(TCperYear)
-      TCperYear <- list(data.frame(year=TCperYear[lab=="year"],
-                                   TC=TCperYear[lab=="cited_by_count"]))
-    }else{
-      TCperYear=NA
+      TCperYear <- list(data.frame(
+        year = TCperYear[lab == "year"],
+        TC = TCperYear[lab == "cited_by_count"]
+      ))
+    } else {
+      TCperYear <- NA
     }
 
     PY <- paper$publication_year
     cited_by_url <- paper$cited_by_api_url
-    if (length(paper$ids)>0){
+    if (length(paper$ids) > 0) {
       ids <- unlist(paper$ids)
-      ids <- list(data.frame(item=names(ids), value=ids))
-    }else{
+      ids <- list(data.frame(item = names(ids), value = ids))
+    } else {
       ids <- NA
     }
     DI <- paper$doi
@@ -165,22 +168,26 @@ oaWorks2df <- function(data, verbose = TRUE){
     related_works <- unlist(paper$related_works)
 
     # Abstract
-    if (!is.na(paper$abstract_inverted_index[1])){
+    if (!is.na(paper$abstract_inverted_index[1])) {
       ab <- abstract_build(paper$abstract_inverted_index)
-    } else {ab <- ""}
+    } else {
+      ab <- ""
+    }
 
-    list_df[[i]] <- tibble::tibble(id=id, TI=title, author=author, AB=ab, pubdata=pubdate,
-                           relscore=relscore, SO=so, SO_ID=so_id, PU=publisher, IS=issn, URL=url,
-                           first_page=first_page, last_page=last_page, volume=volume, issue=issue,
-                           OA=oa, TC=TC, TCperYear=TCperYear, PY=PY, cited_by_url=cited_by_url,
-                           ids=list(ids), DI=DI, DT=DT, CR=list(CR), related_works=list(related_works),
-                           concept=concept)
+    list_df[[i]] <- tibble::tibble(
+      id = id, TI = title, author = author, AB = ab, pubdata = pubdate,
+      relscore = relscore, SO = so, SO_ID = so_id, PU = publisher, IS = issn, URL = url,
+      first_page = first_page, last_page = last_page, volume = volume, issue = issue,
+      OA = oa, TC = TC, TCperYear = TCperYear, PY = PY, cited_by_url = cited_by_url,
+      ids = list(ids), DI = DI, DT = DT, CR = list(CR), related_works = list(related_works),
+      concept = concept
+    )
   }
-  df <- do.call(rbind,list_df)
+  df <- do.call(rbind, list_df)
 }
 
-abstract_build <- function(ab){
-  w <- rep(names(ab),lengths(ab))
+abstract_build <- function(ab) {
+  w <- rep(names(ab), lengths(ab))
   ind <- unlist(ab)
-  ab <- paste(w[order(ind)],collapse=" ",sep="")
+  ab <- paste(w[order(ind)], collapse = " ", sep = "")
 }
