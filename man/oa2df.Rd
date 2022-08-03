@@ -4,7 +4,11 @@
 \alias{oa2df}
 \title{Convert OpenAlex collection from list to data frame}
 \usage{
-oa2df(data, entity = "works", verbose = TRUE)
+oa2df(
+  data,
+  entity = c("works", "authors", "venues", "institutions", "concepts"),
+  verbose = TRUE
+)
 }
 \arguments{
 \item{data}{is a list. data is the output of the function \code{oaApiRequest}.}

@@ -6,7 +6,7 @@
 \usage{
 oaQueryBuild(
   identifier = NULL,
-  entity = "works",
+  entity = c("works", "authors", "venues", "institutions", "concepts"),
   filter = NULL,
   date_from = NULL,
   date_to = NULL,
@@ -18,8 +18,8 @@ oaQueryBuild(
 \arguments{
 \item{identifier}{is a character. It indicates an item identifier.}
 
-\item{entity}{is a character. It indicates the scholarly entity of the search. The argument can be equal to
-entity = c("works", "authors", "venues", "institutions", "concepts"). The default value is entity = works".}
+\item{entity}{is a character. It indicates the scholarly entity of the search. The argument can be one of
+c("works", "authors", "venues", "institutions", "concepts"). The default value is entity = works".}
 
 \item{filter}{is a character. Filters narrow the list down to just entities that meet a particular condition--specifically, a particular value for a particular attribute.
 Filters are formatted thusly: attribute:value. The complete list of filter attributes for each entity can be found
