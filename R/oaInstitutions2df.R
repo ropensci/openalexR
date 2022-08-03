@@ -65,21 +65,32 @@ oaInstitutions2df <- function(data, verbose = TRUE) {
 
     id <- item$id
     name <- item$display_name
-    if (length(item$display_name_alternatives) > 0) {
-      name_alternatives <- list(unlist(item$display_name_alternatives))
-    } else {
-      name_alternatives <- NA
-    }
-    if (length(item$display_name_acronyms) > 0) {
-      name_acronyms <- list(unlist(item$display_name_acronyms))
-    } else {
-      name_acronyms <- NA
-    }
-    if (length(item$international) > 0) {
-      name_international <- list(as.data.frame(item$international))
-    } else {
-      name_international <- NA
-    }
+    sub_unlist <- `names<-`(tibble::as_tibble(lapply(
+      item[c("display_name_alternatives", "display_name_acronyms")], 
+      subs_na)),
+      c("name_alternatives", "name_acronyms"))
+    
+    sub_df <- `names<-`(tibble::as_tibble(lapply(
+      item[c("international", "geo","associated_institutions")],
+      subs_na, df = TRUE)), 
+      c("name_international", "geo", "associated_inst"))
+    tibble::tibble(sub_unlist, sub_df)
+    
+    # if (length(item$display_name_alternatives) > 0) {
+    #   name_alternatives <- list(unlist(item$display_name_alternatives))
+    # } else {
+    #   name_alternatives <- NA
+    # }
+    # if (length(item$display_name_acronyms) > 0) {
+    #   name_acronyms <- list(unlist(item$display_name_acronyms))
+    # } else {
+    #   name_acronyms <- NA
+    # }
+    # if (length(item$international) > 0) {
+    #   name_international <- list(as.data.frame(item$international))
+    # } else {
+    #   name_international <- NA
+    # }
     #
     ror <- item$ror
     rel_score <- item$relevance_score
@@ -96,16 +107,16 @@ oaInstitutions2df <- function(data, verbose = TRUE) {
     } else {
       ids <- NA
     }
-    if (length(item$geo) > 0) {
-      geo <- list(as.data.frame(item$geo))
-    } else {
-      geo <- NA
-    }
-    if (length(item$associated_institutions) > 0) {
-      associated_inst <- list(as.data.frame(item$associated_institutions))
-    } else {
-      associated_inst <- NA
-    }
+    # if (length(item$geo) > 0) {
+    #   geo <- list(as.data.frame(item$geo))
+    # } else {
+    #   geo <- NA
+    # }
+    # if (length(item$associated_institutions) > 0) {
+    #   associated_inst <- list(as.data.frame(item$associated_institutions))
+    # } else {
+    #   associated_inst <- NA
+    # }
 
     # Total Citations per Year
     # TODO
@@ -132,3 +143,4 @@ oaInstitutions2df <- function(data, verbose = TRUE) {
   }
   df <- do.call(rbind, list_df)
 }
+
