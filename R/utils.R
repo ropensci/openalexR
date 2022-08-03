@@ -10,13 +10,16 @@ simple_rapply <- function(x, fn, ...) {
 
 `%||%` <- function(x, y) if (is.null(x)) y else x
 
-subs_na <- function(x, df = FALSE){
-  if (length(x) > 0) {
-    if (df){
-      return(list(as.data.frame(x)))
-    }
-    return(list(unlist(x)))
-  } else {
+subs_na <- function(x, type = c("row_df", "col_df", "flat")) {
+  type <- match.arg(type)
+
+  if (length(x) == 0) {
     return(NA)
   }
+
+  switch(type,
+    row_df = list(as.data.frame(x)),
+    col_df = list(tibble::enframe(unlist(x))),
+    flat = list(unlist(x))
+  )
 }

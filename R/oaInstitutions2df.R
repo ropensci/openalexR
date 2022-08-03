@@ -50,7 +50,6 @@ oaInstitutions2df <- function(data, verbose = TRUE) {
   }
 
   n <- length(data)
-
   list_df <- vector(mode = "list", length = n)
 
   pb <- progress::progress_bar$new(
@@ -60,63 +59,41 @@ oaInstitutions2df <- function(data, verbose = TRUE) {
 
   for (i in 1:n) {
     if (isTRUE(verbose)) pb$tick()
-
+    # print(i)
     item <- data[[i]]
 
-    id <- item$id
-    name <- item$display_name
-    sub_unlist <- `names<-`(tibble::as_tibble(lapply(
-      item[c("display_name_alternatives", "display_name_acronyms")], 
-      subs_na)),
-      c("name_alternatives", "name_acronyms"))
-    
-    sub_df <- `names<-`(tibble::as_tibble(lapply(
-      item[c("international", "geo","associated_institutions")],
-      subs_na, df = TRUE)), 
-      c("name_international", "geo", "associated_inst"))
-    tibble::tibble(sub_unlist, sub_df)
-    
-    # if (length(item$display_name_alternatives) > 0) {
-    #   name_alternatives <- list(unlist(item$display_name_alternatives))
-    # } else {
-    #   name_alternatives <- NA
-    # }
-    # if (length(item$display_name_acronyms) > 0) {
-    #   name_acronyms <- list(unlist(item$display_name_acronyms))
-    # } else {
-    #   name_acronyms <- NA
-    # }
-    # if (length(item$international) > 0) {
-    #   name_international <- list(as.data.frame(item$international))
-    # } else {
-    #   name_international <- NA
-    # }
-    #
-    ror <- item$ror
+    sub_unlist <- `names<-`(
+      tibble::as_tibble(lapply(
+        item[c("display_name_alternatives", "display_name_acronyms")],
+        subs_na,
+        type = "flat"
+      )),
+      c("name_alternatives", "name_acronyms")
+    )
+
+    sub_df <- `names<-`(
+      tibble::as_tibble(lapply(
+        item[c("international", "geo", "associated_institutions")],
+        subs_na,
+        type = "row_df"
+      )),
+      c("name_international", "geo", "associated_inst")
+    )
+    sub_identical <- tibble::as_tibble(
+      item[c("id", "ror", "works_api_url", "type", "works_count")]
+    )
+    ids <- subs_na(item$ids, type = "col_df") # TODO is tibble ok? (no rownames)
+      
+    # TODO changing the name is not very robust here
+    # TODO check rel_score
     rel_score <- item$relevance_score
-    country <- item$country_code
-    type <- item$type
-    homepage <- item$homepage_url
-    image <- item$image_url
-    thumbnail <- item$image_thumbnail_url
-    works_count <- item$works_count
-    TC <- item$cited_by_count
-    if (length(item$ids) > 0) {
-      ids <- unlist(item$ids)
-      ids <- list(data.frame(item = names(ids), value = ids))
-    } else {
-      ids <- NA
-    }
-    # if (length(item$geo) > 0) {
-    #   geo <- list(as.data.frame(item$geo))
-    # } else {
-    #   geo <- NA
-    # }
-    # if (length(item$associated_institutions) > 0) {
-    #   associated_inst <- list(as.data.frame(item$associated_institutions))
-    # } else {
-    #   associated_inst <- NA
-    # }
+    sub_modified <- `names<-`(
+      tibble::as_tibble(item[c(
+        "display_name", "country_code", "homepage_url",
+        "image_url", "image_thumbnail_url", "cited_by_count"
+      )]),
+      c("name", "country", "homepage", "image", "thumbnail", "TC")
+    )
 
     # Total Citations per Year
     # TODO
@@ -126,21 +103,35 @@ oaInstitutions2df <- function(data, verbose = TRUE) {
     names(c_tcs)[names(c_tcs) == "cited_by_count"] <- "TC"
     TCperYear <- list(c_tcs)
 
-    c_concepts <- do.call(rbind.data.frame, item$x_concepts)
-    c_concepts <- c_concepts[, c("id", "display_name", "score", "level", "wikidata")]
-    names(c_concepts) <- c("concept_id", "concept_name", "concept_score", "concept_level", "concept_url")
-    concept <- list(c_concepts)
+    if (length(item$x_concept) == 0){
+      concept <- NA
+    } else {
+      c_concepts <- do.call(rbind.data.frame, item$x_concepts)
+      c_concepts <- c_concepts[, c("id", "display_name", "score", "level", "wikidata")]
+      names(c_concepts) <- c("concept_id", "concept_name", "concept_score", "concept_level", "concept_url")
+      concept <- list(c_concepts)
+    }
 
-    works_api_url <- item$works_api_url
-
-    list_df[[i]] <- tibble::tibble(
-      id = id, name = name, name_alternatives = name_alternatives, name_acronyms = name_acronyms,
-      name_international = name_international, ror = ror, ids = ids, country = country, geo = geo,
-      type = type, homepage = homepage, image = image, thumbnail = thumbnail, associated_inst = associated_inst,
-      rel_score = rel_score, works_count = works_count, TC = TC, TCperYear = TCperYear,
-      concept = concept, works_api_url = works_api_url
+    # list_df_old <- tibble::tibble(
+    #   id = id, name = name, name_alternatives = name_alternatives, name_acronyms = name_acronyms,
+    #   name_international = name_international, ror = ror, ids = ids, country = country, geo = geo,
+    #   type = type, homepage = homepage, image = image, thumbnail = thumbnail, associated_inst = associated_inst,
+    #   rel_score = rel_score, works_count = works_count, TC = TC, TCperYear = TCperYear,
+    #   concept = concept, works_api_url = works_api_url
+    # )
+    item_organized <- tibble::tibble(
+      sub_unlist, sub_df, sub_identical, sub_modified, ids = ids,
+      rel_score = rel_score, TCperYear = TCperYear, concept = concept
     )
+
+    col_order <- c(
+      "id", "name", "name_alternatives", "name_acronyms", "name_international",
+      "ror", "ids", "country", "geo", "type", "homepage", "image", "thumbnail",
+      "associated_inst", # "rel_score", 
+      "works_count", "TC", "TCperYear", "concept",
+      "works_api_url"
+    )
+    list_df[[i]] <- item_organized[, col_order]
   }
   df <- do.call(rbind, list_df)
 }
-
