@@ -8,7 +8,7 @@
     API}
 \description{
 A set of tools to extract bibliographic content from
-    'OpenAlex' database using API <https://docs.openalex.org/api/>.
+    'OpenAlex' database using API \url{https://docs.openalex.org/api/}.
 }
 \seealso{
 Useful links:
