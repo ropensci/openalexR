@@ -186,9 +186,9 @@ oaQueryBuild <- function(identifier = NULL, ## identifier of a work, author, ven
     query = query
   )
 
-  if (id == "Missing") {
+  # if (id == "Missing") {
     # query_url <- paste(query_url,"&per-page=200",sep="")
-  }
+  # }
 
   if (isTRUE(verbose)) print(query_url)
 

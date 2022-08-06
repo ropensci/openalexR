@@ -51,20 +51,10 @@ oa2df <- function(data, entity = c("works", "authors", "venues", "institutions",
   entity <- match.arg(entity)
 
   switch(entity,
-    works = {
-      df <- oaWorks2df(data, verbose)
-    },
-    authors = {
-      df <- oaAuthors2df(data, verbose)
-    },
-    institutions = {
-      df <- oaInstitutions2df(data, verbose)
-    },
-    venues = {
-      df <- oaVenues2df(data, verbose)
-    },
-    concepts = {
-      df <- oaConcepts2df(data, verbose)
-    }
+    works = oaWorks2df(data, verbose),
+    authors = oaAuthors2df(data, verbose),
+    institutions = oaInstitutions2df(data, verbose),
+    venues = oaVenues2df(data, verbose),
+    concepts = oaConcepts2df(data, verbose)
   )
 }

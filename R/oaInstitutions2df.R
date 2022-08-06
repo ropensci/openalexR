@@ -112,13 +112,6 @@ oaInstitutions2df <- function(data, verbose = TRUE) {
       concept <- list(c_concepts)
     }
 
-    # list_df_old <- tibble::tibble(
-    #   id = id, name = name, name_alternatives = name_alternatives, name_acronyms = name_acronyms,
-    #   name_international = name_international, ror = ror, ids = ids, country = country, geo = geo,
-    #   type = type, homepage = homepage, image = image, thumbnail = thumbnail, associated_inst = associated_inst,
-    #   rel_score = rel_score, works_count = works_count, TC = TC, TCperYear = TCperYear,
-    #   concept = concept, works_api_url = works_api_url
-    # )
     item_organized <- tibble::tibble(
       sub_unlist, sub_df, sub_identical, sub_modified, ids = ids,
       rel_score = rel_score, TCperYear = TCperYear, concept = concept
@@ -127,7 +120,7 @@ oaInstitutions2df <- function(data, verbose = TRUE) {
     col_order <- c(
       "id", "name", "name_alternatives", "name_acronyms", "name_international",
       "ror", "ids", "country", "geo", "type", "homepage", "image", "thumbnail",
-      "associated_inst", # "rel_score", 
+      "associated_inst", # "rel_score", # TODO
       "works_count", "TC", "TCperYear", "concept",
       "works_api_url"
     )
