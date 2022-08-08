@@ -101,12 +101,13 @@ oaWorks2df <- function(data, verbose = TRUE){
     # authorships and affilitation
     author <- list(do.call(rbind,lapply(paper$authorships, function(l){
 
-      if (sum(lengths(l[["institutions"]]))>0){
-        institution_id <- l[["institutions"]][[1]]$id
-        institution_name <- l[["institutions"]][[1]]$display_name
-        institution_ror <- l[["institutions"]][[1]]$ror
-        institution_country <- l[["institutions"]][[1]]$country_code
-        institution_type <- l[["institutions"]][[1]]$type
+      ind <- which(lengths(l[["institutions"]])>0)[1]
+      if (!is.na(ind)){
+        institution_id <- l[["institutions"]][[ind]]$id
+        institution_name <- l[["institutions"]][[ind]]$display_name
+        institution_ror <- l[["institutions"]][[ind]]$ror
+        institution_country <- l[["institutions"]][[ind]]$country_code
+        institution_type <- l[["institutions"]][[ind]]$type
       } else {
         institution_id <- NA
         institution_name <- NA
@@ -114,17 +115,29 @@ oaWorks2df <- function(data, verbose = TRUE){
         institution_country <- NA
         institution_type <- NA
       }
+      if (length(l[["author"]])==0){
+        au_id <- NA
+        au_name <- NA
+        au_orcid <- NA
+        au_position <- NA
+      }else{
+        au_id <- l[["author"]]$id[1]
+        au_name <- l[["author"]]$display_name[1]
+        au_orcid <- l[["author"]]$orcid[1]
+        au_position <- l$author_position[1]
+      }
+      #print(l[["author"]]$id)
       L <- data.frame(
-        au_id=l[["author"]]$id,
-        au_name=l[["author"]]$display_name,
-        au_orcid=l[["author"]]$orcid,
-        au_position=l$author_position,
-        au_affiliation_raw=l$raw_affiliation_string,
-          institution_id = institution_id,
-          institution_name = institution_name,
-          institution_ror = institution_ror,
-          institution_country = institution_country,
-          institution_type = institution_type
+        au_id=au_id,
+        au_name=au_name,
+        au_orcid=au_orcid,
+        au_position=au_position,
+        au_affiliation_raw=l$raw_affiliation_string[1],
+          institution_id = institution_id[1],
+          institution_name = institution_name[1],
+          institution_ror = institution_ror[1],
+          institution_country = institution_country[1],
+          institution_type = institution_type[1]
       )
     })))
 
@@ -165,9 +178,10 @@ oaWorks2df <- function(data, verbose = TRUE){
     related_works <- unlist(paper$related_works)
 
     # Abstract
-    if (!is.na(paper$abstract_inverted_index[1])){
-      ab <- abstract_build(paper$abstract_inverted_index)
-    } else {ab <- ""}
+    ab <- ""
+    # if (!is.na(paper$abstract_inverted_index[1])){
+    #   ab <- abstract_build(paper$abstract_inverted_index)
+    # } else {ab <- ""}
 
     list_df[[i]] <- tibble(id=id, TI=title, author=author, AB=ab, pubdata=pubdate,
                            relscore=relscore, SO=so, SO_ID=so_id, PU=publisher, IS=issn, URL=url,
