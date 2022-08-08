@@ -12,7 +12,6 @@ Encoding: UTF-8
 RnwWeave: Sweave
 LaTeX: pdfLaTeX
 
-<<<<<<< HEAD
 AutoAppendNewline: Yes
 StripTrailingWhitespace: Yes
 
@@ -21,9 +20,3 @@ PackageUseDevtools: Yes
 PackageInstallArgs: --no-multiarch --with-keep.source
 PackageCheckArgs: --as-cran
 PackageRoxygenize: rd,collate,namespace,vignette
-=======
-BuildType: Package
-PackageUseDevtools: Yes
-PackageInstallArgs: --no-multiarch --with-keep.source
-PackageRoxygenize: rd,collate,namespace
->>>>>>> 1c8a2f77b7bc0c59d912e9324b35584ec9825f2c

@@ -6,7 +6,7 @@ Version: 0.0.2
 Authors@R: 
     person(given = "Massimo",
            family = "Aria",
-           role = c("aut", "cre", "chp"),
+           role = c("aut", "cre", "cph"),
            email = "massimo.aria@gmail.com",
            comment = c(ORCID = "0000-0002-8517-9411"))
 Description: A set of tools to extract bibliographic content from
