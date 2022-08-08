@@ -33,7 +33,6 @@ It gets bibliographic records from OpenAlex database \href{https://openalex.org/
 The function \code{oaApiRequest} queries OpenAlex database using a query formulated through the function \code{oaQueryBuild}.
 }
 \examples{
-
 \dontrun{
 
 ### EXAMPLE 1: Full record about an entity.
@@ -48,29 +47,31 @@ The function \code{oaApiRequest} queries OpenAlex database using a query formula
 
 
 query_work <- oaQueryBuild(
-identifier = "W2755950973",
-entity = "works",
-endpoint = "https://api.openalex.org/")
+  identifier = "W2755950973",
+  entity = "works",
+  endpoint = "https://api.openalex.org/"
+)
 
 res <- oaApiRequest(
-   query_url = query_work,
-   total.count = FALSE,
-   verbose = FALSE
-   )
+  query_url = query_work,
+  total.count = FALSE,
+  verbose = FALSE
+)
 
 #  The author Massimo Aria is associated to the OpenAlex-id A923435168.
 
 
 query_author <- oaQueryBuild(
-identifier = "A923435168",
-entity = "authors",
-endpoint = "https://api.openalex.org/")
+  identifier = "A923435168",
+  entity = "authors",
+  endpoint = "https://api.openalex.org/"
+)
 
 res <- oaApiRequest(
-   query_url = query_author,
-   total.count = FALSE,
-   verbose = FALSE
-   )
+  query_url = query_author,
+  total.count = FALSE,
+  verbose = FALSE
+)
 
 
 
@@ -87,19 +88,20 @@ res <- oaApiRequest(
 #  Results have to be sorted by relevance score in a descending order.
 
 query2 <- oaQueryBuild(
-identifier=NULL,
-entity = "works",
-filter = "cites:W2755950973",
-date_from = "2021-01-01",
-date_to = "2021-12-31",
-search=NULL,
-endpoint = "https://api.openalex.org/")
+  identifier = NULL,
+  entity = "works",
+  filter = "cites:W2755950973",
+  date_from = "2021-01-01",
+  date_to = "2021-12-31",
+  search = NULL,
+  endpoint = "https://api.openalex.org/"
+)
 
 res2 <- oaApiRequest(
-   query_url = query2,
-   total.count = FALSE,
-   verbose = FALSE
-   )
+  query_url = query2,
+  total.count = FALSE,
+  verbose = FALSE
+)
 
 ### EXAMPLE 3: All works matching a string in their title
 
@@ -110,19 +112,20 @@ res2 <- oaApiRequest(
 
 
 query3 <- oaQueryBuild(
-   identifier=NULL,
-   entity = "works",
-   filter = 'title.search:"bibliometric analysis"|"science mapping"',
-   date_from = "2020-01-01",
-   date_to = "2021-12-31",
-   search=NULL,
-   endpoint = "https://api.openalex.org/")
+  identifier = NULL,
+  entity = "works",
+  filter = 'title.search:"bibliometric analysis"|"science mapping"',
+  date_from = "2020-01-01",
+  date_to = "2021-12-31",
+  search = NULL,
+  endpoint = "https://api.openalex.org/"
+)
 
 res3 <- oaApiRequest(
-   query_url = query3,
-   total.count = FALSE,
-   verbose = FALSE
-   )
+  query_url = query3,
+  total.count = FALSE,
+  verbose = FALSE
+)
 
 ### EXAMPLE 4: How to check how many works match a query
 # Query to search all works containing the exact string
@@ -131,20 +134,21 @@ res3 <- oaApiRequest(
 # Query only to know how many works could be retrieved (total.count=TRUE)
 
 query4 <- oaQueryBuild(
-   identifier=NULL,
-   entity = "works",
-   filter = 'title.search:"bibliometric analysis"|"science mapping"',
-   date_from = "2020-01-01",
-   date_to = "2021-12-31",
-   search=NULL,
-   endpoint = "https://api.openalex.org/")
+  identifier = NULL,
+  entity = "works",
+  filter = 'title.search:"bibliometric analysis"|"science mapping"',
+  date_from = "2020-01-01",
+  date_to = "2021-12-31",
+  search = NULL,
+  endpoint = "https://api.openalex.org/"
+)
 
 res4 <- oaApiRequest(
-   query_url = query4,
-   total.count = TRUE,
-   verbose = FALSE
-   )
+  query_url = query4,
+  total.count = TRUE,
+  verbose = FALSE
+)
 
-res4$count #number of items retrieved by our query
+res4$count # number of items retrieved by our query
 }
 }

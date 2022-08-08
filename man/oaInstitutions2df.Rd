@@ -21,7 +21,6 @@ It converts bibliographic collection of institutions' records gathered from Open
 The function converts a list of institutions' records obtained using \code{oaApiRequest} into a data frame/tibble.
 }
 \examples{
-
 \dontrun{
 
 # Query to search information about all Italian educational institutions
@@ -29,18 +28,19 @@ The function converts a list of institutions' records obtained using \code{oaApi
 
 query_inst <- oaQueryBuild(
   entity = "institutions",
- filter = "country_code:it,type:education")
+  filter = "country_code:it,type:education"
+)
 
 res <- oaApiRequest(
-   query_url = query_inst,
-   total.count = FALSE,
-   verbose = FALSE
-   )
+  query_url = query_inst,
+  total.count = FALSE,
+  verbose = FALSE
+)
 
 df <- oa2df(res, entity = "institutions")
 
 df
-
 }
 
+# @export
 }

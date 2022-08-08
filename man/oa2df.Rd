@@ -4,7 +4,11 @@
 \alias{oa2df}
 \title{Convert OpenAlex collection from list to data frame}
 \usage{
-oa2df(data, entity = "works", verbose = TRUE)
+oa2df(
+  data,
+  entity = c("works", "authors", "venues", "institutions", "concepts"),
+  verbose = TRUE
+)
 }
 \arguments{
 \item{data}{is a list. data is the output of the function \code{oaApiRequest}.}
@@ -24,7 +28,6 @@ It converts bibliographic collections gathered from OpenAlex database \href{http
 The function converts a collection of records about works, authors, institutions, venues or concepts obtained using \code{oaApiRequest} into a data frame/tibble.
 }
 \examples{
-
 \dontrun{
 
 # Query to search all works citing the article:
@@ -38,24 +41,24 @@ The function converts a collection of records about works, authors, institutions
 #  Results have to be sorted by relevance score in a descending order.
 
 query <- oaQueryBuild(
-identifier=NULL,
-entity = "works",
-filter = "cites:W2755950973",
-date_from = "2021-01-01",
-date_to = "2021-12-31",
-search = NULL,
-endpoint = "https://api.openalex.org/")
+  identifier = NULL,
+  entity = "works",
+  filter = "cites:W2755950973",
+  date_from = "2021-01-01",
+  date_to = "2021-12-31",
+  search = NULL,
+  endpoint = "https://api.openalex.org/"
+)
 
 res <- oaApiRequest(
-   query_url = query,
-   total.count = FALSE,
-   verbose = FALSE
-   )
+  query_url = query,
+  total.count = FALSE,
+  verbose = FALSE
+)
 
-df <- oa2df(res, entity="works")
+df <- oa2df(res, entity = "works")
 
 df
-
 }
 
 }
