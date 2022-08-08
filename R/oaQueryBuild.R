@@ -3,8 +3,8 @@
 #' It generates a valid query, written following the OpenAlex API Language, from a set of parameters.
 #'
 #' @param identifier is a character. It indicates an item identifier.
-#' @param entity is a character. It indicates the scholarly entity of the search. The argument can be equal to
-#' entity = c("works", "authors", "venues", "institutions", "concepts"). The default value is entity = works".
+#' @param entity is a character. It indicates the scholarly entity of the search. The argument can be one of
+#' c("works", "authors", "venues", "institutions", "concepts"). The default value is entity = works".
 #' @param filter is a character. Filters narrow the list down to just entities that meet a particular condition--specifically, a particular value for a particular attribute.
 #' Filters are formatted thusly: attribute:value. The complete list of filter attributes for each entity can be found
 #' at \href{https://docs.openalex.org/api/get-lists-of-entities#filter}{https://docs.openalex.org/api/get-lists-of-entities#filter}
@@ -21,7 +21,6 @@
 #'
 #'
 #' @examples
-#'
 #' \dontrun{
 #'
 #' ### EXAMPLE 1: Full record about an entity.
@@ -36,29 +35,31 @@
 #'
 #'
 #' query_work <- oaQueryBuild(
-#' identifier = "W2755950973",
-#' endpoint = "https://api.openalex.org/")
+#'   identifier = "W2755950973",
+#'   endpoint = "https://api.openalex.org/"
+#' )
 #'
 #' res_work <- oaApiRequest(
-#'    query_url = query_work,
-#'    format = "list",
-#'    total.count = FALSE,
-#'    verbose = FALSE
-#'    )
+#'   query_url = query_work,
+#'   format = "list",
+#'   total.count = FALSE,
+#'   verbose = FALSE
+#' )
 #'
 #' #  The author Massimo Aria is associated to the OpenAlex-id A923435168:
 #'
 #'
 #' query_author <- oaQueryBuild(
-#' identifier = "A923435168",
-#' endpoint = "https://api.openalex.org/")
+#'   identifier = "A923435168",
+#'   endpoint = "https://api.openalex.org/"
+#' )
 #'
 #' res_author <- oaApiRequest(
-#'    query_url = query_author,
-#'    format = "list",
-#'    total.count = FALSE,
-#'    verbose = FALSE
-#'    )
+#'   query_url = query_author,
+#'   format = "list",
+#'   total.count = FALSE,
+#'   verbose = FALSE
+#' )
 #'
 #'
 #'
@@ -75,19 +76,20 @@
 #' #  Results have to be sorted by relevance score in a descending order.
 #'
 #' query1 <- oaQueryBuild(
-#' identifier=NULL,
-#' entity = "works",
-#' filter = "cites:W2755950973",
-#' date_from = "2021-01-01",
-#' date_to = "2021-12-31",
-#' search=NULL,
-#' endpoint = "https://api.openalex.org/")
+#'   identifier = NULL,
+#'   entity = "works",
+#'   filter = "cites:W2755950973",
+#'   date_from = "2021-01-01",
+#'   date_to = "2021-12-31",
+#'   search = NULL,
+#'   endpoint = "https://api.openalex.org/"
+#' )
 #'
 #' res1 <- oaApiRequest(
-#'    query_url = query1,
-#'    total.count = FALSE,
-#'    verbose = FALSE
-#'    )
+#'   query_url = query1,
+#'   total.count = FALSE,
+#'   verbose = FALSE
+#' )
 #'
 #' ### EXAMPLE 3: All works matching a string in their title
 #'
@@ -98,20 +100,21 @@
 #'
 #'
 #' query2 <- oaQueryBuild(
-#'    identifier=NULL,
-#'    entity = "works",
-#'    filter = 'title.search:"bibliometric analysis"|"science mapping"',
-#'    date_from = "2020-01-01",
-#'    date_to = "2021-12-31",
-#'    search=NULL,
-#'    endpoint = "https://api.openalex.org/")
+#'   identifier = NULL,
+#'   entity = "works",
+#'   filter = 'title.search:"bibliometric analysis"|"science mapping"',
+#'   date_from = "2020-01-01",
+#'   date_to = "2021-12-31",
+#'   search = NULL,
+#'   endpoint = "https://api.openalex.org/"
+#' )
 #'
 #' res2 <- oaApiRequest(
-#'    query_url = query2,
-#'    format = "list",
-#'    total.count = FALSE,
-#'    verbose = FALSE
-#'    )
+#'   query_url = query2,
+#'   format = "list",
+#'   total.count = FALSE,
+#'   verbose = FALSE
+#' )
 #'
 #' ### EXAMPLE 4: How to check how many works match a query
 #' # Query to search all works containing the exact string
@@ -120,73 +123,61 @@
 #' # Quey only to know how many works could be retrieved (total.count=TRUE)
 #'
 #' query3 <- oaQueryBuild(
-#'    identifier=NULL,
-#'    entity = "works",
-#'    filter = 'title.search:"bibliometric analysis"|"science mapping"',
-#'    date_from = "2020-01-01",
-#'    date_to = "2021-12-31",
-#'    search=NULL,
-#'    endpoint = "https://api.openalex.org/")
+#'   identifier = NULL,
+#'   entity = "works",
+#'   filter = 'title.search:"bibliometric analysis"|"science mapping"',
+#'   date_from = "2020-01-01",
+#'   date_to = "2021-12-31",
+#'   search = NULL,
+#'   endpoint = "https://api.openalex.org/"
+#' )
 #'
 #' res3 <- oaApiRequest(
-#'    query_url = query3,
-#'    format = "list",
-#'    total.count = TRUE,
-#'    verbose = FALSE
-#'    )
+#'   query_url = query3,
+#'   format = "list",
+#'   total.count = TRUE,
+#'   verbose = FALSE
+#' )
 #'
-#' res3$count #number of items retrieved by our query
-#'}
-#'
-#'
+#' res3$count # number of items retrieved by our query
+#' }
 #'
 #' @export
 #'
 
-oaQueryBuild <- function(
-  identifier = NULL, ## identifier of a work, author, venue, etc.
-  entity = "works",
-  filter=NULL,
-  date_from=NULL,
-  date_to=NULL,
-  search=NULL,
-  endpoint = "https://api.openalex.org/",
-  verbose = FALSE) {
+oaQueryBuild <- function(identifier = NULL, ## identifier of a work, author, venue, etc.
+                         entity = c("works", "authors", "venues", "institutions", "concepts"),
+                         filter = NULL,
+                         date_from = NULL,
+                         date_to = NULL,
+                         search = NULL,
+                         endpoint = "https://api.openalex.org/",
+                         verbose = FALSE) {
+  entity <- match.arg(entity)
 
-  entity_list = c("works", "authors", "venues", "institutions", "concepts")
-  format_list = c("table", "object")
-
-  id <- c("NoMissing","Missing")
-  id <- id[(is.null(identifier))+1]
-
-  if (is.null(identifier)) {
-    if (!(entity[1] %in% entity_list)|length(entity)>1){
-      message("\nPlease choose a single entity value from the following list:\n",
-          paste(entity_list,collapse=", "))
-      return("error")
-    }
-  }
+  id <- c("NoMissing", "Missing")
+  id <- id[is.null(identifier) + 1]
 
   switch(id,
-         Missing={
-           if (is.null(filter) & (is.null(search))) {
-             message("Identifier is missing, please specify filter or search argument.")
-             return()
-           }
-           if (!is.null(date_from)) date_from = paste(",from_publication_date:",date_from,sep="")
-           if (!is.null(date_to)) date_to = paste(",to_publication_date:",date_to,sep="")
-           filter <- paste(filter,date_from,date_to,sep="")
-           path = entity
+    Missing = {
+      if (is.null(filter) & (is.null(search))) {
+        message("Identifier is missing, please specify filter or search argument.")
+        return()
+      }
+      if (!is.null(date_from)) date_from <- paste(",from_publication_date:", date_from, sep = "")
+      if (!is.null(date_to)) date_to <- paste(",to_publication_date:", date_to, sep = "")
+      filter <- paste(filter, date_from, date_to, sep = "")
+      path <- entity
 
-           query <- list(
-             filter = filter,
-             search = search
-           )
-         },
-         NoMissing={
-           path <- paste(entity,identifier, sep="/")
-           query = NULL
-         }
+      query <- list(
+        filter = filter,
+        search = search
+      )
+    },
+    NoMissing = {
+      path <- paste(entity, identifier, sep = "/")
+      query <- NULL
+    }
   )
 
   query_url <- httr::modify_url(
@@ -195,12 +186,11 @@ oaQueryBuild <- function(
     query = query
   )
 
-  if (id=="Missing") {
-    #query_url <- paste(query_url,"&per-page=200",sep="")
-  }
+  # if (id == "Missing") {
+    # query_url <- paste(query_url,"&per-page=200",sep="")
+  # }
 
   if (isTRUE(verbose)) print(query_url)
 
   return(query_url)
-
 }

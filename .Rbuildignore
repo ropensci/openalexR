@@ -1,4 +1,9 @@
 ^.*\.Rproj$
+<<<<<<< HEAD
 ^.*\.xlsx$
 ^.*\.rdata$
 ^\.Rproj\.user$
+=======
+^\.Rproj\.user$
+^README\.Rmd$
+>>>>>>> 1c8a2f77b7bc0c59d912e9324b35584ec9825f2c

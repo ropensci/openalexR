@@ -85,6 +85,7 @@ You can install the released version of openalexR from [CRAN](https://CRAN.R-pro
 
 ```{r}
    library(openalexR)
+library(tibble)
 ```
 
    

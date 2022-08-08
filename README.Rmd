@@ -1,0 +1,652 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# openalexR
+
+<!-- badges: start -->
+
+<!-- badges: end -->
+
+The goal of openalexR is to gather bibliographic metadata about publications, authors, venues, institutions and concepts from OpenAlex using API.
+
+OpenAlex is a fully open catalog of the global research system.
+It's named after the ancient [Library of Alexandria](https://en.wikipedia.org/wiki/Library_of_Alexandria).
+The OpenAlex dataset describes scholarly entities and how those entities are connected to each other.
+There are five types of entities:
+
+-   **Works** are papers, books, datasets, etc; they cite other works
+
+-   **Authors** are people who create works
+
+-   **Venues** are journals and repositories that host works
+
+-   **Institutions** are universities and other orgs that are affiliated with works (via authors)
+
+-   **Concepts** *tag* Works with a topic
+
+(source: [OpenAlex website](https://openalex.org))
+
+## Installation
+
+You can install the developer version of the openalexR from [GitHub](https://github.com) with:
+
+```{r eval=FALSE}
+install.packages("remotes")
+remotes::install_github("massimoaria/openalexR")
+```
+
+You can install the released version of openalexR from [CRAN](https://CRAN.R-project.org) with:
+
+```{r eval=FALSE}
+install.packages("openalexR")
+```
+
+## Package loading
+
+```{r}
+library(openalexR)
+```
+
+# openalexR overview
+
+The basic idea of openalexR is to provide three main functions helping the user to:
+
+-   Create a query by passing one or more arguments to a function (function **oaQueryBuild**)
+
+-   Gather a collection of entities in JSON format (function **oaApiRequest**)
+
+-   Transform the JSON in a data frame (similar to an excel sheet) can be used as input in a bibliometric or science mapping analysis (e.g. using the bibliometrix package) (function **oa2df**)
+
+OpenAlex defined a custom query language based on entity type.
+You can choose to write a valid query using that language or, in alternative, using the function **oaQueryBuild**.
+
+**oaQueryBuild** generates a valid query, written following the OpenAlex API language, from a set of arguments provided by the user.
+
+The function **oaApiRequest** downloads a collection of entities matching the query created by **oaQueryBuild** or manually written by the user.
+The function will return a JSON object in a list format.
+
+Finally, the function **oa2df** converts the JSON object in classical bibliographic data frame.
+
+## Get full records through entity IDs.
+
+### Query to obtain all information about a single publications
+
+The following paper:
+
+    Aria, M., & Cuccurullo, C. (2017). bibliometrix: 
+    An R-tool for comprehensive science mapping analysis. 
+    Journal of informetrics, 11(4), 959-975.
+
+is associated to the OpenAlex-id **W2755950973**.
+
+In this example, we need to pass a single argument to the function, that is, the identifier of the entity to download: identifier = "W2755950973".
+
+```{r}
+query_work <- oaQueryBuild(
+  identifier = "W2755950973",
+  entity = "works"
+)
+
+cat(query_work)
+```
+
+As results, **oaQueryBuild** returns the query string including the OpenAlex endpoint API server address.
+You should change it by using the argument "endpoint = *address*"
+
+The function **oaApiRequest** downloads the bibliographic records matching the query.
+
+```{r}
+res <- oaApiRequest(
+  query_url = query_work
+)
+
+df <- oa2df(res, entity = "works")
+
+dplyr::glimpse(df)
+```
+
+
+### Query to obtain all information about a single publications using external id formats
+
+OpenAlex endpoint accepts an OpenAlex ID, but many external IDs (*e.g.*, DOI, ISSN) are accepted as well, in several formats.
+
+#### DOI (Digital Object Identifier)
+
+We can get a publication record through its DOI using the format **doi:***doi identifier*.
+Example:
+
+```{r}
+query_work <- oaQueryBuild(
+  identifier = "doi:10.1016/j.joi.2017.08.007",
+  entity = "works"
+)
+
+cat(query_work)
+```
+
+```{r}
+res <- oaApiRequest(
+  query_url = query_work
+)
+df <- oa2df(res, entity = "works")
+
+dplyr::glimpse(df)
+```
+
+#### Persistent Identifiers (PIDs)
+
+Many persistent identifiers (PIDs) are canonically expressed as a URL that will take you to the thing being identified.
+Where these URL formats exist, OpenAlex treats them as the canonical ID, and also accepts them as valid IDs.
+Example:
+
+```{r}
+query_work <- oaQueryBuild(
+  identifier = "doi:https://doi.org/10.1016/j.joi.2017.08.007",
+  entity = "works"
+)
+
+cat(query_work)
+
+res <- oaApiRequest(
+  query_url = query_work
+)
+
+df <- oa2df(res, entity = "works")
+
+dplyr::glimpse(df)
+```
+
+### Query to obtain all information about a two o more publications
+
+To download the records of two o more identifiers through a single query, we can recursively apply **oaApiRequest** to each id using the function **lapply**.
+
+```{r}
+ids <- c("W2755950973", "W3005144120")
+
+res <- lapply(ids, function(x) {
+  oaApiRequest(
+    query_url = oaQueryBuild(
+      identifier = x,
+      entity = "works"
+    )
+  )
+})
+
+df <- oa2df(res, entity = "works")
+
+dplyr::glimpse(df)
+```
+
+### Query to obtain all information about a single author
+
+The author Massimo Aria is associated to the OpenAlex-id A923435168.
+
+```{r}
+query_author <- oaQueryBuild(
+  identifier = "A923435168",
+  entity = "authors"
+)
+
+cat(query_author)
+```
+
+```{r}
+res_author <- oaApiRequest(
+  query_url = query_author,
+  total.count = FALSE,
+  verbose = FALSE
+)
+```
+
+```{r}
+df <- oa2df(res_author, entity = "authors")
+
+dplyr::glimpse(df)
+```
+
+
+## Get all entities matching a set of inclusion/exclusion criteria (filters)
+
+In most cases, we are interested in downloading a collection of items that meet one or more inclusion/exclusion criteria (filters).
+
+In this case, the query definition will not be based on a single identifier but the choice of the entity type (usually "works") and one or more filters about this entity.
+
+Filters narrow the list down to just entities that meet a particular condition--specifically, a particular value for a particular attribute.
+Supported attributes for each endpoints are listed on [OpenAlex API Documentation Website](https://docs.openalex.org/api/get-lists-of-entities#filter).
+
+Filters are formatted thusly: **attribute:***value*.
+You set them using the *?filter* query parameter.
+Filters are case-insensitive.
+
+Each endpoint supports its own list of filters.
+Here they are, by endpoint:
+
+### /works filters
+
+You can filter using these attributes of the Works object.
+
+-   display_name.search (alias: title.search)
+
+-   publication_year
+
+-   publication_date
+
+-   from_publication_date
+
+-   to_publication_date
+
+-   host_venue.issn
+
+-   authorships.author.id (alias: author.id)
+
+-   type
+
+etc.
+
+You can find more documentation about each attribute on the [OA Documentation Work page](https://docs.openalex.org/about-the-data/work).
+
+
+### /authors filters
+
+You can filter using these attributes of the Authors object.
+
+-   display_name.search
+
+-   works_count
+
+-   cited_by_count
+
+-   last_known_institution.id
+
+etc.
+
+You can find more documentation about each attribute on the [OA Documentation Author page](https://docs.openalex.org/about-the-data/author).
+
+### /venues filters
+
+You can filter using these attributes of the Venue object.
+
+-   display_name.search
+
+-   issn
+
+-   works_count
+
+-   cited_by_count
+
+etc.
+
+You can find more documentation about each attribute on the [OA Documentation Venue page](https://docs.openalex.org/about-the-data/venue).
+
+### /institutions filters
+
+You can filter using these attributes of the Institution object.
+
+-   display_name.search
+
+-   country_code
+
+-   type
+
+-   works_count
+
+-   cited_by_count
+
+-   x_concepts.id
+
+You can find more documentation about each attribute on the [OA Documentation Institution page](https://docs.openalex.org/about-the-data/institution).
+
+### /concepts filters
+
+You can filter using these attributes of the Concept object.
+You can find more documentation about each attribute on the Concept page.
+
+-   display_name.search
+
+-   level
+
+-   works_count
+
+-   cited_by_count
+
+-   ancestors.id
+
+You can find more documentation about each attribute on the [OA Documentation Concept page](https://docs.openalex.org/about-the-data/concept).
+
+Below we show some examples of filters in use.
+
+### Filters based on string matching
+
+**We want to download all works, cited more than 50 times, published between 2020 and 2021, which include the strings "bibliometric analysis" or "science mapping" in the title.**
+
+To do that, we have to set filters about three attributes: title content (*"title.search"*), starting date for publication (*"from_publication_date"*), and ending date for publication (*"to_publication_date"*).
+
+Starting and ending dates can be passed to the function **oaQueryBuild** using the arguments *date_from* and *date_to*.
+The format is YYYY-MM-DD.
+
+The other attributes can be passed to the function through the argument *filter*.
+
+When an attribute has more than one item, these can be separated by the boolean operator OR represented by the symbol **\|** .
+
+On the contrary, different attributes have to be separated by commas.
+
+e.g. **filter = 'title.search:"bibliometric analysis"\|"science mapping", cited_by_count:\>50'**
+
+where:
+
+-   'title.search:"bibliometric analysis"\|"science mapping'
+
+means all works containing the string "bibliometric analysis" OR "science mapping" in the publication title.
+
+and:
+
+-   cited_by_count:\>50
+
+means all works cited more than 10 times.
+
+The whole filter **'title.search:"bibliometric analysis"\|"science mapping",cited_by_count:\>50'**
+
+can be read as:
+
+    *"all works containing the string "bibliometric analysis" OR "science mapping" 
+    in the publication title AND cited more than 50 times"*.
+
+```{r}
+query <- oaQueryBuild(
+  identifier = NULL,
+  entity = "works",
+  filter = 'title.search:"bibliometric analysis"|"science mapping",cited_by_count:>50',
+  date_from = "2020-01-01",
+  date_to = "2021-12-31",
+  search = NULL,
+  # sort = "cited_by_count:desc",
+  endpoint = "https://api.openalex.org/"
+)
+```
+
+The **sort** argument indicates how results have to be sorted.
+
+In this example results are sorted by total citations in a descending order.
+
+Setting the argument total.count=TRUE, the function **oaApiRequest** returns the number of items matching the query without downloading the collection.
+
+```{r}
+res <- oaApiRequest(
+  query_url = query,
+  total.count = TRUE,
+  verbose = FALSE
+)
+
+res$count
+```
+
+Then, we can download the collection:
+
+```{r}
+res <- oaApiRequest(
+  query_url = query,
+  total.count = FALSE,
+  verbose = FALSE
+)
+
+## OpenAlex downloading [======================] 100% eta:  0s
+```
+
+and transform it into a data frame:
+
+```{r}
+df <- oa2df(res, entity = "works")
+dplyr::glimpse(df)
+```
+
+### Get all works citing a particular work.
+
+We can download all publications citing another publication by using the filter attribute **cites:***id*.
+
+For example, if we want to download all publications citing the article Aria and Cuccurullo (2017), we have just to set the argument filter as:
+
+**filter = "cites:W2755950973"**
+
+where *"W2755950973"* is the OA id for the article by Aria and Cuccurullo.
+
+```{r}
+query1 <- oaQueryBuild(
+  identifier = NULL,
+  entity = "works",
+  filter = "cites:W2755950973",
+  date_from = NULL,
+  date_to = NULL,
+  # sort = NULL
+)
+
+res1 <- oaApiRequest(
+  query_url = query1,
+  total.count = TRUE,
+  verbose = FALSE
+)
+```
+
+This query will return a collection of `r res1$count` publications.
+Let's to download it and then to convert it into a data frame:
+
+
+```{r}
+res <- oaApiRequest(
+  query_url = query1,
+  total.count = FALSE,
+  verbose = FALSE
+)
+
+# OpenAlex downloading [=====================] 100% eta:  0s
+
+df <- oa2df(res, entity = "works")
+dplyr::glimpse(df)
+```
+
+### Get all authors matching a set of filters
+
+We want download all authors' records of scholars who work at the University of Naples Federico II (OpenAlex ID: I71267560) and who have published more than 499 works:
+
+```{r}
+query_author <- oaQueryBuild(
+  identifier = NULL,
+  entity = "authors",
+  filter = "last_known_institution.id:I71267560,works_count:>499"
+)
+```
+
+Check how many records match the query:
+
+```{r}
+res <- oaApiRequest(
+  query_url = query_author,
+  total.count = TRUE,
+  verbose = FALSE
+)
+res$count
+
+## 34
+```
+
+Then, we download and convert the collection:
+
+```{r}
+res <- oaApiRequest(
+  query_url = query_author,
+  total.count = FALSE,
+  verbose = FALSE
+)
+df <- oa2df(res, entity = "authors")
+
+dplyr::glimpse(df)
+
+```
+
+### Get all institutions matching a set of filters
+
+We want download all records regarding Italian institutions (country_code:it) that are classified as educational (type:education):
+
+```{r}
+query_inst <- oaQueryBuild(
+  entity = "institutions",
+  filter = "country_code:it,type:education"
+)
+```
+
+We check how many records match the query:
+
+```{r}
+res <- oaApiRequest(
+  query_url = query_inst,
+  total.count = TRUE,
+  verbose = TRUE
+)
+res$count
+```
+
+Then we download and convert the collection:
+
+```{r}
+res <- oaApiRequest(
+  query_url = query_inst,
+  total.count = FALSE,
+  verbose = TRUE
+)
+df <- oa2df(res, entity = "institutions")
+
+dplyr::glimpse(df)
+```
+
+### Get all venues matching a set of filters
+
+We want download all records regarding journals that have published more than 100,000 works:
+
+```{r}
+query_venue <- oaQueryBuild(
+  entity = "venues",
+  filter = "works_count:>100000"
+)
+```
+
+We check how many records match the query:
+
+```{r}
+res <- oaApiRequest(
+  query_url = query_venue,
+  total.count = TRUE,
+  verbose = TRUE
+)
+res$count
+```
+
+Then we download and convert the collection:
+
+```{r}
+res <- oaApiRequest(
+  query_url = query_venue,
+  total.count = FALSE,
+  verbose = TRUE
+)
+
+df <- oa2df(res, entity = "venues")
+
+dplyr::glimpse(df)
+
+```
+
+### Get all concepts matching a set of filters
+
+We want to download the records of all the concepts that concern at least one million works:
+
+```{r}
+query_concept <- oaQueryBuild(
+  entity = "concepts",
+  filter = "works_count:>1000000"
+)
+```
+
+We check how many records match the query:
+
+```{r}
+res <- oaApiRequest(
+  query_url = query_concept,
+  total.count = TRUE,
+  verbose = TRUE
+)
+res$count
+
+## 112
+```
+
+Then we download and convert the collection:
+
+```{r}
+res <- oaApiRequest(
+  query_url = query_concept,
+  total.count = FALSE,
+  verbose = TRUE
+)
+
+df <- oa2df(res, entity = "concepts")
+
+dplyr::glimpse(df)
+```
+
+## Convert an OpenAlex data frame to a bibliometrix object
+
+The bibliometrix R-package (<https://www.bibliometrix.org>) provides a set of tools for quantitative research in bibliometrics and scientometrics.
+It is written in the R language, which is an open-source environment and ecosystem.
+
+Today it represents one of the most used science mapping software in the world.
+In a recent survey on bibliometric analysis tools, Moral-Muñoz et al. (2020) wrote: “At this moment, maybe Bibliometrix and its Shiny platform contain the more extensive set of techniques implemented, and together with the easiness of its interface, could be a great software for practitioners”.
+
+The function **oa2bibliometrix** converts a bibliographic data frame of works into a bibliometrix object.
+This object can be used as input collection of a science mapping workflow.
+
+```{r}
+query1 <- oaQueryBuild(
+  identifier = NULL,
+  entity = "works",
+  filter = "cites:W2755950973",
+  date_from = "2022-01-01",
+  date_to = "2022-03-31",
+  # sort = NULL
+)
+
+res1 <- oaApiRequest(
+  query_url = query1,
+  total.count = TRUE,
+  verbose = FALSE
+)
+```
+
+This query will return a collection of `r res1$count` publications.
+Let's download it:
+
+```{r}
+res1 <- oaApiRequest(
+  query_url = query1,
+  total.count = FALSE,
+  verbose = FALSE
+)
+```
+
+Convert it into a data frame and then into a bibliometrix object:
+
+```{r}
+df <- oa2df(res1, entity = "works")
+M <- oa2bibliometrix(df)
+dplyr::glimpse(M)
+```

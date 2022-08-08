@@ -13,7 +13,6 @@ utils::globalVariables("progress_bar")
 #'
 #'
 #' @examples
-#'
 #' \dontrun{
 #'
 #' # Query to search information about all Italian educational institutions
@@ -21,27 +20,29 @@ utils::globalVariables("progress_bar")
 #'
 #' query_inst <- oaQueryBuild(
 #'   entity = "institutions",
-#'  filter = "country_code:it,type:education")
+#'   filter = "country_code:it,type:education"
+#' )
 #'
 #' res <- oaApiRequest(
-#'    query_url = query_inst,
-#'    total.count = FALSE,
-#'    verbose = FALSE
-#'    )
+#'   query_url = query_inst,
+#'   total.count = FALSE,
+#'   verbose = FALSE
+#' )
 #'
 #' df <- oa2df(res, entity = "concepts")
 #'
 #' df
-#'
 #' }
 #'
-# @export
-oaConcepts2df <- function(data, verbose = TRUE){
+#' # @export
+oaConcepts2df <- function(data, verbose = TRUE) {
 
   # replace NULL with NA
-  data <- simple_rapply(data, function(x) if(is.null(x)) NA else x)
+  data <- simple_rapply(data, function(x) if (is.null(x)) NA else x)
 
-  if (!is.null(data$id)){data <- list(data)}
+  if (!is.null(data$id)) {
+    data <- list(data)
+  }
 
   if (is.null(data[[1]]$id)) {
     message("the list does not contain a valid OpenAlex collection")
@@ -50,78 +51,84 @@ oaConcepts2df <- function(data, verbose = TRUE){
 
   n <- length(data)
 
-  list_df<- vector(mode = "list", length = n)
+  list_df <- vector(mode = "list", length = n)
 
   pb <- progress::progress_bar$new(
     format = "  converting [:bar] :percent eta: :eta",
-    total = n, clear = FALSE, width = 60)
+    total = n, clear = FALSE, width = 60
+  )
 
-  for (i in 1:n){
-
+  for (i in 1:n) {
     if (isTRUE(verbose)) pb$tick()
 
     item <- data[[i]]
 
     id <- item$id
     name <- item$display_name
-    if (length(item$international)>0){
+    if (length(item$international) > 0) {
       name_international <- list(as.data.frame(item$international$display_name))
-    }else{
+    } else {
       name_international <- NA
     }
     wikidata <- item$wikidata
     rel_score <- item$relevance_score
     level <- item$level
     description <- item$description
-    if (length(item$international)>0){
+    if (length(item$international) > 0) {
       description_international <- list(as.data.frame(item$international$description))
-    }else{
+    } else {
       description_international <- NA
     }
     works_count <- item$works_count
     TC <- item$cited_by_count
-    if (length(item$ids)>0){
+    if (length(item$ids) > 0) {
       ids <- unlist(item$ids)
-      ids <- list(data.frame(item=names(ids), value=ids))
-    }else{
+      ids <- list(data.frame(item = names(ids), value = ids))
+    } else {
       ids <- NA
     }
     image <- item$image_url
     thumbnail <- item$image_thumbnail_url
-    if (length(item$ancestors)>0){
+    if (length(item$ancestors) > 0) {
       ancestors <- unlist(item$ancestors)
       lab <- names(ancestors)
-      ancestors <- list(data.frame(id=ancestors[lab=="id"], name=ancestors[lab=="display_name"],
-                                   level=ancestors[lab=="level"], wikidata=ancestors[lab=="wikidata"]))
-    }else{
+      ancestors <- list(data.frame(
+        id = ancestors[lab == "id"], name = ancestors[lab == "display_name"],
+        level = ancestors[lab == "level"], wikidata = ancestors[lab == "wikidata"]
+      ))
+    } else {
       ancestors <- NA
     }
-    if (length(item$related_concepts)>0){
+    if (length(item$related_concepts) > 0) {
       rel_concepts <- unlist(item$related_concepts)
       lab <- names(rel_concepts)
-      rel_concepts <- list(data.frame(id=rel_concepts[lab=="id"], name=rel_concepts[lab=="display_name"],
-                                   level=rel_concepts[lab=="level"], wikidata=rel_concepts[lab=="wikidata"],
-                                   score=rel_concepts[lab=="score"]))
-    }else{
+      rel_concepts <- list(data.frame(
+        id = rel_concepts[lab == "id"], name = rel_concepts[lab == "display_name"],
+        level = rel_concepts[lab == "level"], wikidata = rel_concepts[lab == "wikidata"],
+        score = rel_concepts[lab == "score"]
+      ))
+    } else {
       ancestors <- NA
     }
 
     ## Total Citation per Year
     TCperYear <- unlist(item$counts_by_year)
     lab <- names(TCperYear)
-    TCperYear <- list(data.frame(year=TCperYear[lab=="year"], works_count=TCperYear[lab=="works_count"],
-                                 TC=TCperYear[lab=="cited_by_count"]))
+    TCperYear <- list(data.frame(
+      year = TCperYear[lab == "year"], works_count = TCperYear[lab == "works_count"],
+      TC = TCperYear[lab == "cited_by_count"]
+    ))
 
     works_api_url <- item$works_api_url
 
-    list_df[[i]] <- tibble(id=id, name=name, name_international=name_international, description=description,
-                           description_international=description_international, wikidata=wikidata, level=level,
-                           ids=ids, image=image, thumbnail=thumbnail,
-                           ancestors=ancestors, rel_concepts=rel_concepts,
-                           rel_score=rel_score,works_count=works_count, TC=TC, TCperYear=TCperYear,
-                           works_api_url=works_api_url)
+    list_df[[i]] <- tibble::tibble(
+      id = id, name = name, name_international = name_international, description = description,
+      description_international = description_international, wikidata = wikidata, level = level,
+      ids = ids, image = image, thumbnail = thumbnail,
+      ancestors = ancestors, rel_concepts = rel_concepts,
+      rel_score = rel_score, works_count = works_count, TC = TC, TCperYear = TCperYear,
+      works_api_url = works_api_url
+    )
   }
-  df <- do.call(rbind,list_df)
+  df <- do.call(rbind, list_df)
 }
-
-

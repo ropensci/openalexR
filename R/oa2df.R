@@ -13,7 +13,6 @@
 #'
 #'
 #' @examples
-#'
 #' \dontrun{
 #'
 #' # Query to search all works citing the article:
@@ -27,51 +26,35 @@
 #' #  Results have to be sorted by relevance score in a descending order.
 #'
 #' query <- oaQueryBuild(
-#' identifier=NULL,
-#' entity = "works",
-#' filter = "cites:W2755950973",
-#' date_from = "2021-01-01",
-#' date_to = "2021-12-31",
-#' search = NULL,
-#' endpoint = "https://api.openalex.org/")
+#'   identifier = NULL,
+#'   entity = "works",
+#'   filter = "cites:W2755950973",
+#'   date_from = "2021-01-01",
+#'   date_to = "2021-12-31",
+#'   search = NULL,
+#'   endpoint = "https://api.openalex.org/"
+#' )
 #'
 #' res <- oaApiRequest(
-#'    query_url = query,
-#'    total.count = FALSE,
-#'    verbose = FALSE
-#'    )
+#'   query_url = query,
+#'   total.count = FALSE,
+#'   verbose = FALSE
+#' )
 #'
-#' df <- oa2df(res, entity="works")
+#' df <- oa2df(res, entity = "works")
 #'
 #' df
-#'
 #' }
 #'
 #' @export
-oa2df <- function(data, entity="works", verbose = TRUE){
-  entity_list = c("works", "authors", "venues", "institutions", "concepts")
-  if (!(entity %in% entity_list)){
-    message('Please choose one of the following entity type: "works", "authors", "venues", "institutions", "concepts"')
-    return()
-  }
+oa2df <- function(data, entity = c("works", "authors", "venues", "institutions", "concepts"), verbose = TRUE) {
+  entity <- match.arg(entity)
+
   switch(entity,
-         works={
-           df <- oaWorks2df(data, verbose)
-         },
-         authors={
-           df <- oaAuthors2df(data, verbose)
-         },
-         institutions={
-           df <- oaInstitutions2df(data, verbose)
-         },
-         venues={
-           df <- oaVenues2df(data, verbose)
-         },
-         concepts={
-           df <- oaConcepts2df(data, verbose)
-         }
+    works = oaWorks2df(data, verbose),
+    authors = oaAuthors2df(data, verbose),
+    institutions = oaInstitutions2df(data, verbose),
+    venues = oaVenues2df(data, verbose),
+    concepts = oaConcepts2df(data, verbose)
   )
-
 }
-
-
