@@ -75,8 +75,8 @@ utils::globalVariables("progress_bar")
 #'   identifier = NULL,
 #'   entity = "works",
 #'   filter = "cites:W2755950973",
-#'   date_from = "2021-01-01",
-#'   date_to = "2021-12-31",
+#'   from_publication_date = "2021-01-01",
+#'   to_publication_date = "2021-12-31",
 #'   search = NULL,
 #'   endpoint = "https://api.openalex.org/"
 #' )
@@ -99,8 +99,8 @@ utils::globalVariables("progress_bar")
 #'   identifier = NULL,
 #'   entity = "works",
 #'   filter = 'title.search:"bibliometric analysis"|"science mapping"',
-#'   date_from = "2020-01-01",
-#'   date_to = "2021-12-31",
+#'   from_publication_date = "2020-01-01",
+#'   to_publication_date = "2021-12-31",
 #'   search = NULL,
 #'   endpoint = "https://api.openalex.org/"
 #' )
@@ -121,8 +121,8 @@ utils::globalVariables("progress_bar")
 #'   identifier = NULL,
 #'   entity = "works",
 #'   filter = 'title.search:"bibliometric analysis"|"science mapping"',
-#'   date_from = "2020-01-01",
-#'   date_to = "2021-12-31",
+#'   from_publication_date = "2020-01-01",
+#'   to_publication_date = "2021-12-31",
 #'   search = NULL,
 #'   endpoint = "https://api.openalex.org/"
 #' )
@@ -144,28 +144,24 @@ oaApiRequest <- function(query_url,
                          verbose = FALSE) {
   ua <- httr::user_agent(cfg()$user_agent)
 
+  # building query...
+  # first, download info about n. of items returned by the query
+  query_ls <- list("per-page" = 1) # TODO did we mean for this to be 1???
+
   if (!is.null(mailto)) {
     if (isValidEmail(mailto)) {
-      mail_anchor <-
-        ifelse(grepl("+[^?#]+\\?[^#:]+", query_url), "&", "?")
-      query_url <- paste(query_url, mail_anchor, "mailto=", mailto, sep = "")
+      query_ls[["mailto"]] <- mailto
     } else {
       message(mailto, " is not a valid email address")
     }
   }
 
   if (verbose == TRUE) message("Requesting url: ", query_url)
-
-  ## download info about n. of items returned by the query
-  per_page_anchor <-
-    ifelse(grepl("+[^?#]+\\?[^#:]+", query_url), "&", "?")
-  query_url_count <- paste(query_url, per_page_anchor, "per-page=1", sep = "")
-  res <- oa_request(query_url_count, ua)
-
+  res <- oa_request(query_url, ua, query = query_ls)
 
   if (!is.null(res$meta)) {
     ## return only item counting
-    if (isTRUE(total.count)) {
+    if (total.count) {
       return(res$meta)
     }
   } else {
@@ -184,7 +180,7 @@ oaApiRequest <- function(query_url,
 
   if (verbose) {
     message(
-      "About to get a total of ", length(pages), " pages of results",
+      "About to get a total of ", n_pages, " pages of results",
       " with a total of ", n_items, " records."
     )
   }
@@ -195,31 +191,29 @@ oaApiRequest <- function(query_url,
   )
 
   # Setting items per page
-  query_url <- paste(query_url, "&per-page=", per_page, sep = "")
+  query_ls[["per-page"]] <- per_page
 
   # Activation of cursor pagination
-  query_anchor <-
-    ifelse(grepl("+[^?#]+\\?[^#:]+", query_url), "&", "?")
   cursor <- "*" # cursor request
-  data <- vector("list", length = length(pages))
+  data <- vector("list", length = n_pages)
   for (i in pages) {
-    if (isTRUE(verbose)) pb$tick()
+    if (verbose) pb$tick()
     Sys.sleep(1 / 100)
-    query_url2 <- paste(query_url, query_anchor, "cursor=", cursor, sep = "")
-    res <- oa_request(query_url2, ua)
+    query_ls[["cursor"]] <- cursor
+    res <- oa_request(query_url, ua, query = query_ls)
     cursor <- res$meta$next_cursor # next cursor
     if (!is.null(res$results)) data[[i]] <- res$results
   }
 
   data <- unlist(data, recursive = FALSE)
 
-
   return(data)
 }
 
 
-oa_request <- function(query_url, ua) {
-  res <- httr::GET(query_url, ua)
+oa_request <- function(query_url, ua, query = query) {
+  # browser()
+  res <- httr::GET(query_url, ua, query = query)
 
   if (httr::status_code(res) == 200) {
     if (httr::http_type(res) != "application/json") {

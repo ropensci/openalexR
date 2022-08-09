@@ -333,7 +333,7 @@ Below we show some examples of filters in use.
 
 To do that, we have to set filters about three attributes: title content (*"title.search"*), starting date for publication (*"from_publication_date"*), and ending date for publication (*"to_publication_date"*).
 
-Starting and ending dates can be passed to the function **oaQueryBuild** using the arguments *date_from* and *date_to*.
+Starting and ending dates can be passed to the function **oaQueryBuild** using the arguments *from_publication_date* and *to_publication_date*.
 The format is YYYY-MM-DD.
 
 The other attributes can be passed to the function through the argument *filter*.
@@ -367,11 +367,12 @@ can be read as:
 query <- oaQueryBuild(
   identifier = NULL,
   entity = "works",
-  filter = 'title.search:"bibliometric analysis"|"science mapping",cited_by_count:>50',
-  date_from = "2020-01-01",
-  date_to = "2021-12-31",
+  title.search = c("bibliometric analysis", "science mapping"),
+  cited_by_count = ">50", 
+  from_publication_date = "2020-01-01",
+  to_publication_date = "2021-12-31",
   search = NULL,
-  # sort = "cited_by_count:desc",
+  sort = "cited_by_count:desc",
   endpoint = "https://api.openalex.org/"
 )
 ```
@@ -425,10 +426,7 @@ where *"W2755950973"* is the OA id for the article by Aria and Cuccurullo.
 query1 <- oaQueryBuild(
   identifier = NULL,
   entity = "works",
-  filter = "cites:W2755950973",
-  date_from = NULL,
-  date_to = NULL,
-  # sort = NULL
+  cites = "W2755950973"
 )
 
 res1 <- oaApiRequest(
@@ -463,7 +461,8 @@ We want download all authors' records of scholars who work at the University of 
 query_author <- oaQueryBuild(
   identifier = NULL,
   entity = "authors",
-  filter = "last_known_institution.id:I71267560,works_count:>499"
+  last_known_institution.id = "I71267560",
+  works_count = ">499"
 )
 ```
 
@@ -491,7 +490,6 @@ res <- oaApiRequest(
 df <- oa2df(res, entity = "authors")
 
 dplyr::glimpse(df)
-
 ```
 
 ### Get all institutions matching a set of filters
@@ -501,7 +499,8 @@ We want download all records regarding Italian institutions (country_code:it) th
 ```{r}
 query_inst <- oaQueryBuild(
   entity = "institutions",
-  filter = "country_code:it,type:education"
+  country_code = "it",
+  type = "education"
 )
 ```
 
@@ -536,7 +535,7 @@ We want download all records regarding journals that have published more than 10
 ```{r}
 query_venue <- oaQueryBuild(
   entity = "venues",
-  filter = "works_count:>100000"
+  works_count = ">100000"
 )
 ```
 
@@ -563,7 +562,6 @@ res <- oaApiRequest(
 df <- oa2df(res, entity = "venues")
 
 dplyr::glimpse(df)
-
 ```
 
 ### Get all concepts matching a set of filters
@@ -573,7 +571,7 @@ We want to download the records of all the concepts that concern at least one mi
 ```{r}
 query_concept <- oaQueryBuild(
   entity = "concepts",
-  filter = "works_count:>1000000"
+  works_count = ">1000000"
 )
 ```
 
@@ -619,10 +617,9 @@ This object can be used as input collection of a science mapping workflow.
 query1 <- oaQueryBuild(
   identifier = NULL,
   entity = "works",
-  filter = "cites:W2755950973",
-  date_from = "2022-01-01",
-  date_to = "2022-03-31",
-  # sort = NULL
+  cites = "W2755950973",
+  from_publication_date = "2022-01-01",
+  to_publication_date = "2022-03-31"
 )
 
 res1 <- oaApiRequest(
