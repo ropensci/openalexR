@@ -91,8 +91,8 @@ query2 <- oaQueryBuild(
   identifier = NULL,
   entity = "works",
   filter = "cites:W2755950973",
-  date_from = "2021-01-01",
-  date_to = "2021-12-31",
+  from_publication_date = "2021-01-01",
+  to_publication_date = "2021-12-31",
   search = NULL,
   endpoint = "https://api.openalex.org/"
 )
@@ -115,8 +115,8 @@ query3 <- oaQueryBuild(
   identifier = NULL,
   entity = "works",
   filter = 'title.search:"bibliometric analysis"|"science mapping"',
-  date_from = "2020-01-01",
-  date_to = "2021-12-31",
+  from_publication_date = "2020-01-01",
+  to_publication_date = "2021-12-31",
   search = NULL,
   endpoint = "https://api.openalex.org/"
 )
@@ -137,8 +137,8 @@ query4 <- oaQueryBuild(
   identifier = NULL,
   entity = "works",
   filter = 'title.search:"bibliometric analysis"|"science mapping"',
-  date_from = "2020-01-01",
-  date_to = "2021-12-31",
+  from_publication_date = "2020-01-01",
+  to_publication_date = "2021-12-31",
   search = NULL,
   endpoint = "https://api.openalex.org/"
 )

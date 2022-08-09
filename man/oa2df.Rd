@@ -44,8 +44,8 @@ query <- oaQueryBuild(
   identifier = NULL,
   entity = "works",
   filter = "cites:W2755950973",
-  date_from = "2021-01-01",
-  date_to = "2021-12-31",
+  from_publication_date = "2021-01-01",
+  to_publication_date = "2021-12-31",
   search = NULL,
   endpoint = "https://api.openalex.org/"
 )

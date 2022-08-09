@@ -171,6 +171,7 @@ OpenAlex endpoint accepts an OpenAlex ID, but many external IDs (eg DOI, ISSN) a
 **DOI (Digital Object Identifier)**
 
 We can get a publication record through its DOI using the format **doi:***doi identifier*. Example:
+
 ```{r}
 query_work <- oaQueryBuild(
   identifier = "doi:10.1016/j.joi.2017.08.007",
@@ -196,6 +197,7 @@ dplyr::glimpse(df)
 **Persistent Identifiers (PIDs)**
 
 Many persistent identifiers (PIDs) are canonically expressed as a URL that will take you to the thing being identified. Where these URL formats exist, OpenAlex treats them as the canonical ID, and also accepts them as valid IDs. Example:
+
 ```{r}
 query_work <- oaQueryBuild(
   identifier = "doi:https://doi.org/10.1016/j.joi.2017.08.007",
@@ -204,6 +206,7 @@ query_work <- oaQueryBuild(
 
 cat(query_work)
 ```
+
 ```{r}
  res <- oaApiRequest(
     query_url = query_work
@@ -403,7 +406,7 @@ Below we show some examples of filters in use.
 
 To do that, we have to set filters about three attributes: title content (*"title.search"*), starting date for publication (*"from_publication_date"*), and ending date for publication (*"to_publication_date"*).
 
-Starting and ending dates can be passed to the function **oaQueryBuild** using the arguments *date_from* and *date_to*. The format is YYYY-MM-DD.
+Starting and ending dates can be passed to the function **oaQueryBuild** using the arguments *from_publication_date* and *to_publication_date*. The format is YYYY-MM-DD.
 
 The other attributes can be passed to the function through the argument *filter*.  
 
@@ -437,9 +440,10 @@ can be read as:
 query <- oaQueryBuild(
     identifier=NULL,
     entity = "works",
-    filter = 'title.search:"bibliometric analysis"|"science mapping",cited_by_count:>100',
-    date_from = "2000-01-01",
-    date_to = "2021-12-31",
+    title.search = c("bibliometric analysis", "science mapping"),
+    cited_by_count = ">100",
+    from_publication_date = "2000-01-01",
+    to_publication_date = "2021-12-31",
     search=NULL,
     endpoint = "https://api.openalex.org/")
 ```
@@ -471,6 +475,7 @@ and transform it into a data frame:
 ```{r}
 df <- oa2df(res, entity = "works")
 ```
+
 ```{r}
 dplyr::glimpse(df)
 ```
@@ -481,13 +486,13 @@ dplyr::glimpse(df)
 
 We can download all publications citing another publication by using the filter attribute **cites:***id*.
 
-For example, if we want to download all publications citing the article Aria and Cuccurullo (2017) during the first quarter of 2022, we have to set the arguments filter, date_from, and date_to as:
+For example, if we want to download all publications citing the article Aria and Cuccurullo (2017) during the first quarter of 2022, we have to set the arguments filter, from_publication_date, and to_publication_date as:
 
 **filter = "cites:W2755950973"**
 
-**date_from = "2022-01-01"**
+**from_publication_date = "2022-01-01"**
 
-**date_to = "2022-03-31"**
+**to_publication_date = "2022-03-31"**
 
 where *"W2755950973"* is the OA id for the article by Aria and Cuccurullo (2017).
 
@@ -495,9 +500,9 @@ where *"W2755950973"* is the OA id for the article by Aria and Cuccurullo (2017)
 query1 <- oaQueryBuild(
  identifier=NULL,
  entity = "works",
- filter = "cites:W2755950973",
- date_from = "2022-01-01",
- date_to = "2022-03-31")
+ cites = "W2755950973",
+ from_publication_date = "2022-01-01",
+ to_publication_date = "2022-03-31")
 
 res1 <- oaApiRequest(
     query_url = query1,
@@ -541,7 +546,8 @@ We want download all authors' records of scholars who work at the University of 
 query_author <- oaQueryBuild(
   identifier = NULL,
   entity = "authors",
-  filter = "last_known_institution.id:I71267560,works_count:>499")
+  last_known_institution.id = "I71267560",
+  works_count = ">499")
 
 ```
 
@@ -574,7 +580,8 @@ We want download all records regarding Italian institutions (country_code:it) th
 ```{r}
 query_inst <- oaQueryBuild(
   entity = "institutions",
-  filter = "country_code:it,type:education")
+  country_code = "it",
+  type = "education")
 
 ```
 
@@ -607,7 +614,7 @@ We want download all records regarding journals that have published more than 10
 ```{r}
 query_venue <- oaQueryBuild(
   entity = "venues",
-  filter = "works_count:>100000")
+  works_count = ">100000")
 
 ```
 
@@ -641,7 +648,7 @@ We want to download the records of all the concepts that concern at least one mi
 ```{r}
 query_concept <- oaQueryBuild(
   entity = "concepts",
-  filter = "works_count:>1000000")
+  works_count = ">1000000")
 ```
 
 We check how many records match the query:
@@ -679,9 +686,9 @@ The function **oa2bibliometrix** converts a bibliographic data frame of works in
 query1 <- oaQueryBuild(
  identifier=NULL,
  entity = "works",
- filter = "cites:W2755950973",
- date_from = "2022-01-01",
- date_to = "2022-03-31")
+ cites = "W2755950973",
+ from_publication_date = "2022-01-01",
+ to_publication_date = "2022-03-31")
 
 res1 <- oaApiRequest(
     query_url = query1,
