@@ -102,7 +102,7 @@ oaInstitutions2df <- function(data, verbose = TRUE) {
     names(c_tcs)[names(c_tcs) == "cited_by_count"] <- "TC"
     TCperYear <- list(c_tcs)
 
-    if (length(item$x_concept) == 0){
+    if (length(item$x_concept) == 0) {
       concept <- NA
     } else {
       c_concepts <- do.call(rbind.data.frame, item$x_concepts)
@@ -112,7 +112,8 @@ oaInstitutions2df <- function(data, verbose = TRUE) {
     }
 
     item_organized <- tibble::tibble(
-      sub_unlist, sub_df, sub_identical, sub_modified, ids = ids,
+      sub_unlist, sub_df, sub_identical, sub_modified,
+      ids = ids,
       rel_score = rel_score, TCperYear = TCperYear, concept = concept
     )
 

@@ -31,7 +31,6 @@ oa_fetch <- function(...,
                      count_only = FALSE,
                      mailto = NULL,
                      verbose = FALSE) {
-
   entity <- match.arg(entity)
   print(entity)
   oa2df(
@@ -194,11 +193,10 @@ oa_fetch <- function(...,
 #' @export
 #'
 oa_request <- function(query_url,
-                         per_page = 200,
-                         count_only = FALSE,
-                         mailto = NULL,
-                         verbose = FALSE) {
-  # browser()
+                       per_page = 200,
+                       count_only = FALSE,
+                       mailto = NULL,
+                       verbose = FALSE) {
   ua <- httr::user_agent(cfg()$user_agent)
 
   # building query...

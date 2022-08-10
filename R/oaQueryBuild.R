@@ -52,7 +52,7 @@
 #' #  The author Massimo Aria is associated to the OpenAlex-id A923435168:
 #'
 #' query_auth <- oa_query(identifier = "A923435168", verbose = TRUE)
-
+#'
 #'
 #' ### EXAMPLE 2: all works citing a particular work.
 #'
@@ -89,20 +89,19 @@
 #'   sort = "cited_by_count:desc",
 #'   verbose = TRUE
 #' )
-#'
 #' }
 #'
 #' @export
 #'
 
 oa_query <- function(...,
-                         identifier = NULL, ## identifier of a work, author, venue, etc.
-                         entity = id_type(identifier),
-                         search = NULL,
-                         sort = NULL,
-                         group_by = NULL,
-                         endpoint = "https://api.openalex.org/",
-                         verbose = FALSE) {
+                     identifier = NULL, ## identifier of a work, author, venue, etc.
+                     entity = id_type(identifier),
+                     search = NULL,
+                     sort = NULL,
+                     group_by = NULL,
+                     endpoint = "https://api.openalex.org/",
+                     verbose = FALSE) {
 
   # if (is.null(entity)){
   #   if (is.null(identifier)){
@@ -112,9 +111,9 @@ oa_query <- function(...,
   #   }
   # }
   # entity <- match.arg(entity)
-  filter <-  list(...)
+  filter <- list(...)
 
-  if (length(filter) > 0){
+  if (length(filter) > 0) {
     flt_ready <- mapply(append_flt, filter, names(filter))
     flt_ready[sapply(flt_ready, is.null)] <- NULL
     flt_ready <- paste0(flt_ready, collapse = ",")
@@ -122,7 +121,7 @@ oa_query <- function(...,
     flt_ready <- list()
   }
 
-  if (is.null(identifier)){
+  if (is.null(identifier)) {
     if (is.null(filter) & (is.null(search))) {
       message("Identifier is missing, please specify filter or search argument.")
       return()

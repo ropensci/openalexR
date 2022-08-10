@@ -101,10 +101,9 @@ oaWorks2df <- function(data, verbose = TRUE) {
     }
 
     # authorships and affilitation
-    author <- list(do.call(rbind,lapply(paper$authorships, function(l){
-
-      ind <- which(lengths(l[["institutions"]])>0)[1]
-      if (!is.na(ind)){
+    author <- list(do.call(rbind, lapply(paper$authorships, function(l) {
+      ind <- which(lengths(l[["institutions"]]) > 0)[1]
+      if (!is.na(ind)) {
         institution_id <- l[["institutions"]][[ind]]$id
         institution_name <- l[["institutions"]][[ind]]$display_name
         institution_ror <- l[["institutions"]][[ind]]$ror
@@ -117,29 +116,29 @@ oaWorks2df <- function(data, verbose = TRUE) {
         institution_country <- NA
         institution_type <- NA
       }
-      if (length(l[["author"]])==0){
+      if (length(l[["author"]]) == 0) {
         au_id <- NA
         au_name <- NA
         au_orcid <- NA
         au_position <- NA
-      }else{
+      } else {
         au_id <- l[["author"]]$id[1]
         au_name <- l[["author"]]$display_name[1]
         au_orcid <- l[["author"]]$orcid[1]
         au_position <- l$author_position[1]
       }
-      #print(l[["author"]]$id)
+      # print(l[["author"]]$id)
       L <- data.frame(
-        au_id=au_id,
-        au_name=au_name,
-        au_orcid=au_orcid,
-        au_position=au_position,
-        au_affiliation_raw=l$raw_affiliation_string[1],
-          institution_id = institution_id[1],
-          institution_name = institution_name[1],
-          institution_ror = institution_ror[1],
-          institution_country = institution_country[1],
-          institution_type = institution_type[1]
+        au_id = au_id,
+        au_name = au_name,
+        au_orcid = au_orcid,
+        au_position = au_position,
+        au_affiliation_raw = l$raw_affiliation_string[1],
+        institution_id = institution_id[1],
+        institution_name = institution_name[1],
+        institution_ror = institution_ror[1],
+        institution_country = institution_country[1],
+        institution_type = institution_type[1]
       )
     })))
 
@@ -199,7 +198,6 @@ oaWorks2df <- function(data, verbose = TRUE) {
   }
 
   do.call(rbind, list_df)
-
 }
 
 abstract_build <- function(ab) {
