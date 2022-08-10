@@ -25,7 +25,7 @@ utils::globalVariables("progress_bar")
 #'
 #' res <- oaApiRequest(
 #'   query_url = query_inst,
-#'   total.count = FALSE,
+#'   count_only = FALSE,
 #'   verbose = FALSE
 #' )
 #'
@@ -83,7 +83,7 @@ oaInstitutions2df <- function(data, verbose = TRUE) {
       item[c("id", "ror", "works_api_url", "type", "works_count")]
     )
     ids <- subs_na(item$ids, type = "col_df") # TODO is tibble ok? (no rownames)
-      
+
     # TODO changing the name is not very robust here
     # TODO check rel_score
     rel_score <- item$relevance_score
@@ -98,7 +98,6 @@ oaInstitutions2df <- function(data, verbose = TRUE) {
     # Total Citations per Year
     # TODO
     # Do we need to change these names?
-    # there was a typo here earlier: lecel should be level
     c_tcs <- do.call(rbind.data.frame, item$counts_by_year)
     names(c_tcs)[names(c_tcs) == "cited_by_count"] <- "TC"
     TCperYear <- list(c_tcs)
@@ -126,5 +125,5 @@ oaInstitutions2df <- function(data, verbose = TRUE) {
     )
     list_df[[i]] <- item_organized[, col_order]
   }
-  df <- do.call(rbind, list_df)
+  do.call(rbind, list_df)
 }

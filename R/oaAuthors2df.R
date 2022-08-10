@@ -29,7 +29,7 @@ utils::globalVariables("progress_bar")
 #'
 #' res <- oaApiRequest(
 #'   query_url = query_author,
-#'   total.count = FALSE,
+#'   count_only = FALSE,
 #'   verbose = FALSE
 #' )
 #'

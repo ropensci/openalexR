@@ -37,7 +37,7 @@ utils::globalVariables("progress_bar")
 #'
 #' res <- oaApiRequest(
 #'   query_url = query,
-#'   total.count = FALSE,
+#'   count_only = FALSE,
 #'   verbose = FALSE
 #' )
 #'
@@ -197,7 +197,9 @@ oaWorks2df <- function(data, verbose = TRUE) {
       concept = concept
     )
   }
-  df <- do.call(rbind, list_df)
+
+  do.call(rbind, list_df)
+
 }
 
 abstract_build <- function(ab) {

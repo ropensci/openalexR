@@ -26,18 +26,16 @@
 #' #  Results have to be sorted by relevance score in a descending order.
 #'
 #' query <- oaQueryBuild(
-#'   identifier = NULL,
 #'   entity = "works",
-#'   filter = "cites:W2755950973",
+#'   cites = "W2755950973",
 #'   from_publication_date = "2021-01-01",
 #'   to_publication_date = "2021-12-31",
-#'   search = NULL,
 #'   endpoint = "https://api.openalex.org/"
 #' )
 #'
 #' res <- oaApiRequest(
 #'   query_url = query,
-#'   total.count = FALSE,
+#'   count_only = FALSE,
 #'   verbose = FALSE
 #' )
 #'
