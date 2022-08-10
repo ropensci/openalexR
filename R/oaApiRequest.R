@@ -1,5 +1,61 @@
 # library(progress)
 utils::globalVariables("progress_bar")
+
+
+#' A composition function to perform query building, requesting,
+#' and convert the result to a tibble/data frame.
+#' @inheritParams oaQueryBuild
+#' @inheritParams oaApiRequest
+#'
+#' @return A data.frame or a list. Result of the query.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' paper_meta <- oa_fetch(
+#'   identifier = "W2755950973",
+#'   entity = "works",
+#'   endpoint = "https://api.openalex.org/",
+#'   count_only = TRUE,
+#'   verbose = TRUE
+#' )
+#' }
+oa_fetch <- function(...,
+                     identifier = NULL, ## identifier of a work, author, venue, etc.
+                     entity = c("works", "authors", "venues", "institutions", "concepts"),
+                     search = NULL,
+                     sort = NULL,
+                     group_by = NULL,
+                     endpoint = "https://api.openalex.org/",
+                     per_page = 200,
+                     count_only = FALSE,
+                     mailto = NULL,
+                     verbose = FALSE) {
+
+  entity <- match.arg(entity)
+  print(entity)
+  oa2df(
+    oaApiRequest(
+      oaQueryBuild(
+        ...,
+        identifier = identifier,
+        entity = entity,
+        search = search,
+        sort = sort,
+        group_by = group_by,
+        endpoint = endpoint,
+        verbose = verbose
+      ),
+      per_page = per_page,
+      count_only = count_only,
+      mailto = mailto,
+      verbose = verbose
+    ),
+    entity = entity
+  )
+}
+
+
 #' Get bibliographic records from OpenAlex databases
 #'
 #' It gets bibliographic records from OpenAlex database \href{https://openalex.org/}{https://openalex.org/}.
@@ -7,7 +63,7 @@ utils::globalVariables("progress_bar")
 #'
 #' @param query_url is a character. It contains a search query formulated using the OpenAlex API language. A query can be automatically generated using the function \code{oaQueryBuild}.
 #' @param per_page is a numeric. It indicates how many items to download per page. The per-page argument can assume any number between 1 and 200. Default is \code{per_page=200}.
-#' @param total.count is a logical. If TRUE, the function returns only the number of item matching the query. Default is \code{total.count=FALSE}.
+#' @param count_only is a logical. If TRUE, the function returns only the number of item matching the query. Default is \code{count_only=FALSE}.
 #' @param mailto is a character. To get into the polite pool, the arguments mailto have to give OpenAlex an email where they can contact you.
 #' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=FALSE}.
 #'
@@ -38,7 +94,7 @@ utils::globalVariables("progress_bar")
 #'
 #' res <- oaApiRequest(
 #'   query_url = query_work,
-#'   total.count = FALSE,
+#'   count_only = FALSE,
 #'   verbose = FALSE
 #' )
 #'
@@ -53,7 +109,7 @@ utils::globalVariables("progress_bar")
 #'
 #' res <- oaApiRequest(
 #'   query_url = query_author,
-#'   total.count = FALSE,
+#'   count_only = FALSE,
 #'   verbose = FALSE
 #' )
 #'
@@ -83,7 +139,7 @@ utils::globalVariables("progress_bar")
 #'
 #' res2 <- oaApiRequest(
 #'   query_url = query2,
-#'   total.count = FALSE,
+#'   count_only = FALSE,
 #'   verbose = FALSE
 #' )
 #'
@@ -107,7 +163,7 @@ utils::globalVariables("progress_bar")
 #'
 #' res3 <- oaApiRequest(
 #'   query_url = query3,
-#'   total.count = FALSE,
+#'   count_only = FALSE,
 #'   verbose = FALSE
 #' )
 #'
@@ -115,7 +171,7 @@ utils::globalVariables("progress_bar")
 #' # Query to search all works containing the exact string
 #' # "bibliometric analysis" OR "science mapping" in the title, published in 2020 or 2021.
 #'
-#' # Query only to know how many works could be retrieved (total.count=TRUE)
+#' # Query only to know how many works could be retrieved (count_only=TRUE)
 #'
 #' query4 <- oaQueryBuild(
 #'   identifier = NULL,
@@ -129,7 +185,7 @@ utils::globalVariables("progress_bar")
 #'
 #' res4 <- oaApiRequest(
 #'   query_url = query4,
-#'   total.count = TRUE,
+#'   count_only = TRUE,
 #'   verbose = FALSE
 #' )
 #'
@@ -139,9 +195,10 @@ utils::globalVariables("progress_bar")
 #'
 oaApiRequest <- function(query_url,
                          per_page = 200,
-                         total.count = FALSE,
+                         count_only = FALSE,
                          mailto = NULL,
                          verbose = FALSE) {
+  # browser()
   ua <- httr::user_agent(cfg()$user_agent)
 
   # building query...
@@ -161,7 +218,7 @@ oaApiRequest <- function(query_url,
 
   if (!is.null(res$meta)) {
     ## return only item counting
-    if (total.count) {
+    if (count_only) {
       return(res$meta)
     }
   } else {
@@ -205,14 +262,11 @@ oaApiRequest <- function(query_url,
     if (!is.null(res$results)) data[[i]] <- res$results
   }
 
-  data <- unlist(data, recursive = FALSE)
-
-  return(data)
+  unlist(data, recursive = FALSE)
 }
 
 
 oa_request <- function(query_url, ua, query = query) {
-  # browser()
   res <- httr::GET(query_url, ua, query = query)
 
   if (httr::status_code(res) == 200) {
@@ -240,7 +294,6 @@ oa_request <- function(query_url, ua, query = query) {
 }
 
 
-
 cfg <- function(.ua = base::getOption("HTTPUserAgent")) {
   ## >> maybe something like this
   if (is.null(.ua) || length(.ua) == 0L) {
@@ -260,10 +313,5 @@ cfg <- function(.ua = base::getOption("HTTPUserAgent")) {
   if (Sys.getenv("OPENALEX_USERAGENT") != "") {
     res$user_agent <- Sys.getenv("OPENALEX_USERAGENT")
   }
-  return(res)
-}
-
-
-isValidEmail <- function(x) {
-  grepl("\\<[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}\\>", as.character(x), ignore.case = TRUE)
+  res
 }
