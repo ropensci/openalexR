@@ -2,9 +2,9 @@ utils::globalVariables("progress_bar")
 #' Convert OpenAlex collection of authors' records from list format to data frame
 #'
 #' It converts bibliographic collection of authors' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
-#' The function converts a list of authors' records obtained using \code{oaApiRequest} into a data frame/tibble.
+#' The function converts a list of authors' records obtained using \code{oa_request} into a data frame/tibble.
 #'
-#' @param data is a list. data is the output of the function \code{oaApiRequest}.
+#' @param data is a list. data is the output of the function \code{oa_request}.
 #' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.
 #'
 #' @return a data.frame.
@@ -21,13 +21,13 @@ utils::globalVariables("progress_bar")
 #' # University of Naples Federico II is associated to the OpenAlex id I71267560.
 #'
 #'
-#' query_author <- oaQueryBuild(
+#' query_author <- oa_query(
 #'   identifier = NULL,
 #'   entity = "authors",
 #'   filter = "last_known_institution.id:I71267560,works_count:>99"
 #' )
 #'
-#' res <- oaApiRequest(
+#' res <- oa_request(
 #'   query_url = query_author,
 #'   count_only = FALSE,
 #'   verbose = FALSE

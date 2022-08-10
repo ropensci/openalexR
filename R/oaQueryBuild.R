@@ -30,7 +30,7 @@
 #' @examples
 #' \dontrun{
 #'
-#' query_auth <- oaQueryBuild(identifier = "A923435168", verbose = TRUE)
+#' query_auth <- oa_query(identifier = "A923435168", verbose = TRUE)
 #'
 #' ### EXAMPLE 1: Full record about an entity.
 #'
@@ -42,7 +42,7 @@
 #' #   An R-tool for comprehensive science mapping analysis.
 #' #   Journal of informetrics, 11(4), 959-975.
 #'
-#' query_work <- oaQueryBuild(
+#' query_work <- oa_query(
 #'   identifier = "W2755950973",
 #'   endpoint = "https://api.openalex.org/",
 #'   verbose = TRUE
@@ -51,7 +51,7 @@
 #'
 #' #  The author Massimo Aria is associated to the OpenAlex-id A923435168:
 #'
-#' query_auth <- oaQueryBuild(identifier = "A923435168", verbose = TRUE)
+#' query_auth <- oa_query(identifier = "A923435168", verbose = TRUE)
 
 #'
 #' ### EXAMPLE 2: all works citing a particular work.
@@ -66,7 +66,7 @@
 #'
 #' #  Results have to be sorted by relevance score in a descending order.
 #'
-#' query1 <- oaQueryBuild(
+#' query1 <- oa_query(
 #'   entity = "works",
 #'   cites = "W2755950973",
 #'   from_publication_date = "2021-01-01",
@@ -81,7 +81,7 @@
 #'
 #' # Results have to be sorted by relevance score in a descending order.
 #'
-#' query2 <- oaQueryBuild(
+#' query2 <- oa_query(
 #'   entity = "works",
 #'   title.search = c("bibliometric analysis", "science mapping"),
 #'   from_publication_date = "2021-01-01",
@@ -95,7 +95,7 @@
 #' @export
 #'
 
-oaQueryBuild <- function(...,
+oa_query <- function(...,
                          identifier = NULL, ## identifier of a work, author, venue, etc.
                          entity = id_type(identifier),
                          search = NULL,

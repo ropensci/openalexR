@@ -1,9 +1,9 @@
 #' Convert OpenAlex collection from list to data frame
 #'
 #' It converts bibliographic collections gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
-#' The function converts a collection of records about works, authors, institutions, venues or concepts obtained using \code{oaApiRequest} into a data frame/tibble.
+#' The function converts a collection of records about works, authors, institutions, venues or concepts obtained using \code{oa_request} into a data frame/tibble.
 #'
-#' @param data is a list. data is the output of the function \code{oaApiRequest}.
+#' @param data is a list. data is the output of the function \code{oa_request}.
 #' @param entity is a character. It indicates the scholarly entity of the search. The argument can be equal to
 #' entity = c("works", "authors", "venues", "institutions", "concepts"). The default value is entity = works".
 #' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.
@@ -25,7 +25,7 @@
 #'
 #' #  Results have to be sorted by relevance score in a descending order.
 #'
-#' query <- oaQueryBuild(
+#' query <- oa_query(
 #'   entity = "works",
 #'   cites = "W2755950973",
 #'   from_publication_date = "2021-01-01",
@@ -33,7 +33,7 @@
 #'   endpoint = "https://api.openalex.org/"
 #' )
 #'
-#' res <- oaApiRequest(
+#' res <- oa_request(
 #'   query_url = query,
 #'   count_only = FALSE,
 #'   verbose = FALSE

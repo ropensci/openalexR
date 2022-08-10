@@ -1,6 +1,6 @@
 test_that("OA query works", {
   expect_equal(
-    oaQueryBuild(
+    oa_query(
       entity = "works",
       doi = c("10.1371/journal.pone.0266781",
               "10.1371/journal.pone.0267149")

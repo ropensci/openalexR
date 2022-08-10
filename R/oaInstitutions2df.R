@@ -2,9 +2,9 @@ utils::globalVariables("progress_bar")
 #' Convert OpenAlex collection of institutions' records from list format to data frame
 #'
 #' It converts bibliographic collection of institutions' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
-#' The function converts a list of institutions' records obtained using \code{oaApiRequest} into a data frame/tibble.
+#' The function converts a list of institutions' records obtained using \code{oa_request} into a data frame/tibble.
 #'
-#' @param data is a list. data is the output of the function \code{oaApiRequest}.
+#' @param data is a list. data is the output of the function \code{oa_request}.
 #' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.
 #'
 #' @return a data.frame.
@@ -18,12 +18,12 @@ utils::globalVariables("progress_bar")
 #' # Query to search information about all Italian educational institutions
 #'
 #'
-#' query_inst <- oaQueryBuild(
+#' query_inst <- oa_query(
 #'   entity = "institutions",
 #'   filter = "country_code:it,type:education"
 #' )
 #'
-#' res <- oaApiRequest(
+#' res <- oa_request(
 #'   query_url = query_inst,
 #'   count_only = FALSE,
 #'   verbose = FALSE

@@ -2,9 +2,9 @@ utils::globalVariables("progress_bar")
 #' Convert OpenAlex collection of works from list format to data frame
 #'
 #' It converts bibliographic collection of works gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
-#' The function converts a list of works obtained using \code{oaApiRequest} into a data frame/tibble.
+#' The function converts a list of works obtained using \code{oa_request} into a data frame/tibble.
 #'
-#' @param data is a list. data is the output of the function \code{oaApiRequest}.
+#' @param data is a list. data is the output of the function \code{oa_request}.
 #' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.
 #'
 #' @return a data.frame.
@@ -25,7 +25,7 @@ utils::globalVariables("progress_bar")
 #'
 #' #  Results have to be sorted by relevance score in a descending order.
 #'
-#' query <- oaQueryBuild(
+#' query <- oa_query(
 #'   identifier = NULL,
 #'   entity = "works",
 #'   filter = "cites:W2755950973",
@@ -35,7 +35,7 @@ utils::globalVariables("progress_bar")
 #'   endpoint = "https://api.openalex.org/"
 #' )
 #'
-#' res <- oaApiRequest(
+#' res <- oa_request(
 #'   query_url = query,
 #'   count_only = FALSE,
 #'   verbose = FALSE

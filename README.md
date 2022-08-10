@@ -58,10 +58,10 @@ The basic idea of openalexR is to provide three main functions helping
 the user to:
 
 -   Create a query by passing one or more arguments to a function
-    (function **oaQueryBuild**)
+    (function **oa_query**)
 
 -   Gather a collection of entities in JSON format (function
-    **oaApiRequest**)
+    **oa_request**)
 
 -   Transform the JSON in a data frame (similar to an excel sheet) can
     be used as input in a bibliometric or science mapping analysis
@@ -69,13 +69,13 @@ the user to:
 
 OpenAlex defined a custom query language based on entity type. You can
 choose to write a valid query using that language or, in alternative,
-using the function **oaQueryBuild**.
+using the function **oa_query**.
 
-**oaQueryBuild** generates a valid query, written following the OpenAlex
+**oa_query** generates a valid query, written following the OpenAlex
 API language, from a set of arguments provided by the user.
 
-The function **oaApiRequest** downloads a collection of entities
-matching the query created by **oaQueryBuild** or manually written by
+The function **oa_request** downloads a collection of entities
+matching the query created by **oa_query** or manually written by
 the user. The function will return a JSON object in a list format.
 
 Finally, the function **oa2df** converts the JSON object in classical
@@ -98,7 +98,7 @@ is, the identifier of the entity to download: identifier =
 “W2755950973”.
 
 ``` r
-query_work <- oaQueryBuild(
+query_work <- oa_query(
   identifier = "W2755950973",
   entity = "works"
 )
@@ -107,15 +107,15 @@ cat(query_work)
 #> https://api.openalex.org/works/W2755950973
 ```
 
-As results, **oaQueryBuild** returns the query string including the
+As results, **oa_query** returns the query string including the
 OpenAlex endpoint API server address. You should change it by using the
 argument “endpoint = *address*”
 
-The function **oaApiRequest** downloads the bibliographic records
+The function **oa_request** downloads the bibliographic records
 matching the query.
 
 ``` r
-res <- oaApiRequest(
+res <- oa_request(
   query_url = query_work
 )
 
@@ -168,7 +168,7 @@ We can get a publication record through its DOI using the format
 **doi:***doi identifier*. Example:
 
 ``` r
-query_work <- oaQueryBuild(
+query_work <- oa_query(
   identifier = "doi:10.1016/j.joi.2017.08.007",
   entity = "works"
 )
@@ -178,7 +178,7 @@ cat(query_work)
 ```
 
 ``` r
-res <- oaApiRequest(
+res <- oa_request(
   query_url = query_work
 )
 df <- oa2df(res, entity = "works")
@@ -221,7 +221,7 @@ formats exist, OpenAlex treats them as the canonical ID, and also
 accepts them as valid IDs. Example:
 
 ``` r
-query_work <- oaQueryBuild(
+query_work <- oa_query(
   identifier = "doi:https://doi.org/10.1016/j.joi.2017.08.007",
   entity = "works"
 )
@@ -229,7 +229,7 @@ query_work <- oaQueryBuild(
 cat(query_work)
 #> https://api.openalex.org/works/doi:https://doi.org/10.1016/j.joi.2017.08.007
 
-res <- oaApiRequest(
+res <- oa_request(
   query_url = query_work
 )
 
@@ -268,15 +268,15 @@ dplyr::glimpse(df)
 ### Query to obtain all information about a two o more publications
 
 To download the records of two o more identifiers through a single
-query, we can recursively apply **oaApiRequest** to each id using the
+query, we can recursively apply **oa_request** to each id using the
 function **lapply**.
 
 ``` r
 ids <- c("W2755950973", "W3005144120")
 
 res <- lapply(ids, function(x) {
-  oaApiRequest(
-    query_url = oaQueryBuild(
+  oa_request(
+    query_url = oa_query(
       identifier = x,
       entity = "works"
     )
@@ -320,7 +320,7 @@ dplyr::glimpse(df)
 The author Massimo Aria is associated to the OpenAlex-id A923435168.
 
 ``` r
-query_author <- oaQueryBuild(
+query_author <- oa_query(
   identifier = "A923435168",
   entity = "authors"
 )
@@ -330,7 +330,7 @@ cat(query_author)
 ```
 
 ``` r
-res_author <- oaApiRequest(
+res_author <- oa_request(
   query_url = query_author,
   count_only = FALSE,
   verbose = FALSE
@@ -494,7 +494,7 @@ To do that, we have to set filters about three attributes: title content
 (*“from_publication_date”*), and ending date for publication
 (*“to_publication_date”*).
 
-Starting and ending dates can be passed to the function **oaQueryBuild**
+Starting and ending dates can be passed to the function **oa_query**
 using the arguments *from_publication_date* and *to_publication_date*.
 The format is YYYY-MM-DD.
 
@@ -531,7 +531,7 @@ can be read as:
     in the publication title AND cited more than 50 times"*.
 
 ``` r
-query <- oaQueryBuild(
+query <- oa_query(
   identifier = NULL,
   entity = "works",
   title.search = c("bibliometric analysis", "science mapping"),
@@ -549,12 +549,12 @@ The **sort** argument indicates how results have to be sorted.
 In this example results are sorted by total citations in a descending
 order.
 
-Setting the argument count_only=TRUE, the function **oaApiRequest**
+Setting the argument count_only=TRUE, the function **oa_request**
 returns the number of items matching the query without downloading the
 collection.
 
 ``` r
-res <- oaApiRequest(
+res <- oa_request(
   query_url = query,
   count_only = TRUE,
   verbose = FALSE
@@ -567,7 +567,7 @@ res$count
 Then, we can download the collection:
 
 ``` r
-res <- oaApiRequest(
+res <- oa_request(
   query_url = query,
   count_only = FALSE,
   verbose = FALSE
@@ -624,13 +624,13 @@ where *“W2755950973”* is the OA id for the article by Aria and
 Cuccurullo.
 
 ``` r
-query1 <- oaQueryBuild(
+query1 <- oa_query(
   identifier = NULL,
   entity = "works",
   cites = "W2755950973"
 )
 
-res1 <- oaApiRequest(
+res1 <- oa_request(
   query_url = query1,
   count_only = TRUE,
   verbose = FALSE
@@ -641,7 +641,7 @@ This query will return a collection of 1456 publications. Let’s to
 download it and then to convert it into a data frame:
 
 ``` r
-res <- oaApiRequest(
+res <- oa_request(
   query_url = query1,
   count_only = FALSE,
   verbose = FALSE
@@ -687,7 +687,7 @@ University of Naples Federico II (OpenAlex ID: I71267560) and who have
 published more than 499 works:
 
 ``` r
-query_author <- oaQueryBuild(
+query_author <- oa_query(
   identifier = NULL,
   entity = "authors",
   last_known_institution.id = "I71267560",
@@ -698,7 +698,7 @@ query_author <- oaQueryBuild(
 Check how many records match the query:
 
 ``` r
-res <- oaApiRequest(
+res <- oa_request(
   query_url = query_author,
   count_only = TRUE,
   verbose = FALSE
@@ -712,7 +712,7 @@ res$count
 Then, we download and convert the collection:
 
 ``` r
-res <- oaApiRequest(
+res <- oa_request(
   query_url = query_author,
   count_only = FALSE,
   verbose = FALSE
@@ -745,7 +745,7 @@ We want download all records regarding Italian institutions
 (country_code:it) that are classified as educational (type:education):
 
 ``` r
-query_inst <- oaQueryBuild(
+query_inst <- oa_query(
   entity = "institutions",
   country_code = "it",
   type = "education"
@@ -755,7 +755,7 @@ query_inst <- oaQueryBuild(
 We check how many records match the query:
 
 ``` r
-res <- oaApiRequest(
+res <- oa_request(
   query_url = query_inst,
   count_only = TRUE,
   verbose = TRUE
@@ -768,7 +768,7 @@ res$count
 Then we download and convert the collection:
 
 ``` r
-res <- oaApiRequest(
+res <- oa_request(
   query_url = query_inst,
   count_only = FALSE,
   verbose = TRUE
@@ -807,7 +807,7 @@ We want download all records regarding journals that have published more
 than 100,000 works:
 
 ``` r
-query_venue <- oaQueryBuild(
+query_venue <- oa_query(
   entity = "venues",
   works_count = ">100000"
 )
@@ -816,7 +816,7 @@ query_venue <- oaQueryBuild(
 We check how many records match the query:
 
 ``` r
-res <- oaApiRequest(
+res <- oa_request(
   query_url = query_venue,
   count_only = TRUE,
   verbose = TRUE
@@ -829,7 +829,7 @@ res$count
 Then we download and convert the collection:
 
 ``` r
-res <- oaApiRequest(
+res <- oa_request(
   query_url = query_venue,
   count_only = FALSE,
   verbose = TRUE
@@ -864,7 +864,7 @@ We want to download the records of all the concepts that concern at
 least one million works:
 
 ``` r
-query_concept <- oaQueryBuild(
+query_concept <- oa_query(
   entity = "concepts",
   works_count = ">1000000"
 )
@@ -873,7 +873,7 @@ query_concept <- oaQueryBuild(
 We check how many records match the query:
 
 ``` r
-res <- oaApiRequest(
+res <- oa_request(
   query_url = query_concept,
   count_only = TRUE,
   verbose = TRUE
@@ -888,7 +888,7 @@ res$count
 Then we download and convert the collection:
 
 ``` r
-res <- oaApiRequest(
+res <- oa_request(
   query_url = query_concept,
   count_only = FALSE,
   verbose = TRUE
@@ -938,7 +938,7 @@ works into a bibliometrix object. This object can be used as input
 collection of a science mapping workflow.
 
 ``` r
-query1 <- oaQueryBuild(
+query1 <- oa_query(
   identifier = NULL,
   entity = "works",
   cites = "W2755950973",
@@ -946,7 +946,7 @@ query1 <- oaQueryBuild(
   to_publication_date = "2022-03-31"
 )
 
-res1 <- oaApiRequest(
+res1 <- oa_request(
   query_url = query1,
   count_only = TRUE,
   verbose = FALSE
@@ -957,7 +957,7 @@ This query will return a collection of 213 publications. Let’s download
 it:
 
 ``` r
-res1 <- oaApiRequest(
+res1 <- oa_request(
   query_url = query1,
   count_only = FALSE,
   verbose = FALSE

@@ -4,8 +4,8 @@ utils::globalVariables("progress_bar")
 
 #' A composition function to perform query building, requesting,
 #' and convert the result to a tibble/data frame.
-#' @inheritParams oaQueryBuild
-#' @inheritParams oaApiRequest
+#' @inheritParams oa_query
+#' @inheritParams oa_request
 #'
 #' @return A data.frame or a list. Result of the query.
 #' @export
@@ -35,8 +35,8 @@ oa_fetch <- function(...,
   entity <- match.arg(entity)
   print(entity)
   oa2df(
-    oaApiRequest(
-      oaQueryBuild(
+    oa_request(
+      oa_query(
         ...,
         identifier = identifier,
         entity = entity,
@@ -59,9 +59,9 @@ oa_fetch <- function(...,
 #' Get bibliographic records from OpenAlex databases
 #'
 #' It gets bibliographic records from OpenAlex database \href{https://openalex.org/}{https://openalex.org/}.
-#' The function \code{oaApiRequest} queries OpenAlex database using a query formulated through the function \code{oaQueryBuild}.
+#' The function \code{oa_request} queries OpenAlex database using a query formulated through the function \code{oa_query}.
 #'
-#' @param query_url is a character. It contains a search query formulated using the OpenAlex API language. A query can be automatically generated using the function \code{oaQueryBuild}.
+#' @param query_url is a character. It contains a search query formulated using the OpenAlex API language. A query can be automatically generated using the function \code{oa_query}.
 #' @param per_page is a numeric. It indicates how many items to download per page. The per-page argument can assume any number between 1 and 200. Default is \code{per_page=200}.
 #' @param count_only is a logical. If TRUE, the function returns only the number of item matching the query. Default is \code{count_only=FALSE}.
 #' @param mailto is a character. To get into the polite pool, the arguments mailto have to give OpenAlex an email where they can contact you.
@@ -86,13 +86,13 @@ oa_fetch <- function(...,
 #' #   Journal of informetrics, 11(4), 959-975.
 #'
 #'
-#' query_work <- oaQueryBuild(
+#' query_work <- oa_query(
 #'   identifier = "W2755950973",
 #'   entity = "works",
 #'   endpoint = "https://api.openalex.org/"
 #' )
 #'
-#' res <- oaApiRequest(
+#' res <- oa_request(
 #'   query_url = query_work,
 #'   count_only = FALSE,
 #'   verbose = FALSE
@@ -101,13 +101,13 @@ oa_fetch <- function(...,
 #' #  The author Massimo Aria is associated to the OpenAlex-id A923435168.
 #'
 #'
-#' query_author <- oaQueryBuild(
+#' query_author <- oa_query(
 #'   identifier = "A923435168",
 #'   entity = "authors",
 #'   endpoint = "https://api.openalex.org/"
 #' )
 #'
-#' res <- oaApiRequest(
+#' res <- oa_request(
 #'   query_url = query_author,
 #'   count_only = FALSE,
 #'   verbose = FALSE
@@ -127,7 +127,7 @@ oa_fetch <- function(...,
 #'
 #' #  Results have to be sorted by relevance score in a descending order.
 #'
-#' query2 <- oaQueryBuild(
+#' query2 <- oa_query(
 #'   identifier = NULL,
 #'   entity = "works",
 #'   filter = "cites:W2755950973",
@@ -137,7 +137,7 @@ oa_fetch <- function(...,
 #'   endpoint = "https://api.openalex.org/"
 #' )
 #'
-#' res2 <- oaApiRequest(
+#' res2 <- oa_request(
 #'   query_url = query2,
 #'   count_only = FALSE,
 #'   verbose = FALSE
@@ -151,7 +151,7 @@ oa_fetch <- function(...,
 #' # Results have to be sorted by relevance score in a descending order.
 #'
 #'
-#' query3 <- oaQueryBuild(
+#' query3 <- oa_query(
 #'   identifier = NULL,
 #'   entity = "works",
 #'   filter = 'title.search:"bibliometric analysis"|"science mapping"',
@@ -161,7 +161,7 @@ oa_fetch <- function(...,
 #'   endpoint = "https://api.openalex.org/"
 #' )
 #'
-#' res3 <- oaApiRequest(
+#' res3 <- oa_request(
 #'   query_url = query3,
 #'   count_only = FALSE,
 #'   verbose = FALSE
@@ -173,7 +173,7 @@ oa_fetch <- function(...,
 #'
 #' # Query only to know how many works could be retrieved (count_only=TRUE)
 #'
-#' query4 <- oaQueryBuild(
+#' query4 <- oa_query(
 #'   identifier = NULL,
 #'   entity = "works",
 #'   filter = 'title.search:"bibliometric analysis"|"science mapping"',
@@ -183,7 +183,7 @@ oa_fetch <- function(...,
 #'   endpoint = "https://api.openalex.org/"
 #' )
 #'
-#' res4 <- oaApiRequest(
+#' res4 <- oa_request(
 #'   query_url = query4,
 #'   count_only = TRUE,
 #'   verbose = FALSE
@@ -193,7 +193,7 @@ oa_fetch <- function(...,
 #' }
 #' @export
 #'
-oaApiRequest <- function(query_url,
+oa_request <- function(query_url,
                          per_page = 200,
                          count_only = FALSE,
                          mailto = NULL,
@@ -214,7 +214,7 @@ oaApiRequest <- function(query_url,
   }
 
   if (verbose == TRUE) message("Requesting url: ", query_url)
-  res <- oa_request(query_url, ua, query = query_ls)
+  res <- api_request(query_url, ua, query = query_ls)
 
   if (!is.null(res$meta)) {
     ## return only item counting
@@ -257,7 +257,7 @@ oaApiRequest <- function(query_url,
     if (verbose) pb$tick()
     Sys.sleep(1 / 100)
     query_ls[["cursor"]] <- cursor
-    res <- oa_request(query_url, ua, query = query_ls)
+    res <- api_request(query_url, ua, query = query_ls)
     cursor <- res$meta$next_cursor # next cursor
     if (!is.null(res$results)) data[[i]] <- res$results
   }
@@ -266,7 +266,7 @@ oaApiRequest <- function(query_url,
 }
 
 
-oa_request <- function(query_url, ua, query = query) {
+api_request <- function(query_url, ua, query = query) {
   res <- httr::GET(query_url, ua, query = query)
 
   if (httr::status_code(res) == 200) {
