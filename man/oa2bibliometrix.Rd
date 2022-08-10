@@ -29,7 +29,7 @@ bibliometrix data frame (\href{https://bibliometrix.org/}{https://bibliometrix.o
 
 #  Results have to be sorted by relevance score in a descending order.
 
-query <- oaQueryBuild(
+query <- oa_query(
   identifier = NULL,
   entity = "works",
   filter = "cites:W2755950973",
@@ -39,7 +39,7 @@ query <- oaQueryBuild(
   endpoint = "https://api.openalex.org/"
 )
 
-res <- oaApiRequest(
+res <- oa_request(
   query_url = query,
   count_only = FALSE,
   verbose = FALSE

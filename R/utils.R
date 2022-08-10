@@ -32,7 +32,7 @@ append_flt <- function(x, pre = "from_publication_date", collapse = "|") {
   if (is.null(x)) {
     return(NULL)
   }
-  # x <- paste0("\"", x, "\"")
+
   if (length(x) > 1) x <- paste(x, collapse = collapse)
   paste0(pre, ":", x)
 }

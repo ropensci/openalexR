@@ -49,9 +49,6 @@ utils::globalVariables("progress_bar")
 #' # @export
 oaWorks2df <- function(data, verbose = TRUE) {
 
-  # replace NULL with NA
-  # data <- simple_rapply(data, function(x) if(is.null(x)) NA else x)
-
   if (!is.null(data$id)) {
     data <- list(data)
   }

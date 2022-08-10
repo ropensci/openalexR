@@ -1,17 +1,25 @@
 # library(progress)
 utils::globalVariables("progress_bar")
 
+#' Available entities in the OpenAlex database
+#'
+#' @return Character vector of 5 entity options.
+oa_entities <- function(){
+  c("works", "authors", "venues", "institutions", "concepts")
+}
 
 #' A composition function to perform query building, requesting,
 #' and convert the result to a tibble/data frame.
 #' @inheritParams oa_query
 #' @inheritParams oa_request
+#' @param output Character. Type of output, either a list or a tibble/data.frame.
 #'
 #' @return A data.frame or a list. Result of the query.
 #' @export
 #'
 #' @examples
 #' \dontrun{
+#'
 #' paper_meta <- oa_fetch(
 #'   identifier = "W2755950973",
 #'   entity = "works",
@@ -19,39 +27,66 @@ utils::globalVariables("progress_bar")
 #'   count_only = TRUE,
 #'   verbose = TRUE
 #' )
+#'
+#' oa_fetch(
+#'   entity = "works",
+#'   doi = c(
+#'     "10.1371/journal.pone.0266781",
+#'     "10.1371/journal.pone.0267149"
+#'   ),
+#'   verbose = TRUE,
+#'   count_only = TRUE
+#' )
+#'
+#' oa_fetch(
+#'   entity = "works",
+#'   doi = c(
+#'     "10.1371/journal.pone.0266781",
+#'     "10.1371/journal.pone.0267149"
+#'   ),
+#'   verbose = TRUE
+#' )
 #' }
 oa_fetch <- function(...,
                      identifier = NULL, ## identifier of a work, author, venue, etc.
-                     entity = c("works", "authors", "venues", "institutions", "concepts"),
+                     entity = if (is.null(identifier)) NULL else id_type(identifier),
                      search = NULL,
                      sort = NULL,
                      group_by = NULL,
+                     output = c("tibble", "list", "dataframe"),
                      endpoint = "https://api.openalex.org/",
                      per_page = 200,
                      count_only = FALSE,
                      mailto = NULL,
                      verbose = FALSE) {
-  entity <- match.arg(entity)
-  print(entity)
-  oa2df(
-    oa_request(
-      oa_query(
-        ...,
-        identifier = identifier,
-        entity = entity,
-        search = search,
-        sort = sort,
-        group_by = group_by,
-        endpoint = endpoint,
-        verbose = verbose
-      ),
-      per_page = per_page,
-      count_only = count_only,
-      mailto = mailto,
+  output <- match.arg(output)
+
+  if (output == "dataframe") output <- "tibble"
+
+  res <- oa_request(
+    oa_query(
+      ...,
+      identifier = identifier,
+      entity = entity,
+      search = search,
+      sort = sort,
+      group_by = group_by,
+      endpoint = endpoint,
       verbose = verbose
     ),
-    entity = entity
+    per_page = per_page,
+    count_only = count_only,
+    mailto = mailto,
+    verbose = verbose
   )
+
+  final_res <- switch(output,
+    list = res,
+    tibble = oa2df(res, entity = entity, count_only = count_only, verbose = verbose)
+  )
+
+  final_res
+
 }
 
 
@@ -227,7 +262,6 @@ oa_request <- function(query_url,
   n_items <- res$meta$count
   n_pages <- ceiling(res$meta$count / per_page)
   pages <- seq.int(n_pages)
-  ##
 
   if (n_items <= 0) {
     return(list())

@@ -50,6 +50,19 @@ install.packages("openalexR")
 
 ``` r
 library(openalexR)
+library(dplyr)
+#> Warning: replacing previous import 'lifecycle::last_warnings' by
+#> 'rlang::last_warnings' when loading 'pillar'
+#> Warning: replacing previous import 'lifecycle::last_warnings' by
+#> 'rlang::last_warnings' when loading 'tibble'
+#> 
+#> Attaching package: 'dplyr'
+#> The following objects are masked from 'package:stats':
+#> 
+#>     filter, lag
+#> The following objects are masked from 'package:base':
+#> 
+#>     intersect, setdiff, setequal, union
 ```
 
 # openalexR overview
@@ -71,17 +84,17 @@ OpenAlex defined a custom query language based on entity type. You can
 choose to write a valid query using that language or, in alternative,
 using the function **oa_query**.
 
-**oa_query** generates a valid query, written following the OpenAlex
-API language, from a set of arguments provided by the user.
+**oa_query** generates a valid query, written following the OpenAlex API
+language, from a set of arguments provided by the user.
 
-The function **oa_request** downloads a collection of entities
-matching the query created by **oa_query** or manually written by
-the user. The function will return a JSON object in a list format.
+The function **oa_request** downloads a collection of entities matching
+the query created by **oa_query** or manually written by the user. The
+function will return a JSON object in a list format.
 
 Finally, the function **oa2df** converts the JSON object in classical
 bibliographic data frame.
 
-## Get full records through entity IDs.
+## Get full records through entity IDs
 
 ### Query to obtain all information about a single publications
 
@@ -94,40 +107,20 @@ The following paper:
 is associated to the OpenAlex-id **W2755950973**.
 
 In this example, we need to pass a single argument to the function, that
-is, the identifier of the entity to download: identifier =
-“W2755950973”.
+is, the identifier of the entity to download:
+`identifier = "W2755950973"`.
 
 ``` r
-query_work <- oa_query(
+paper_id <- oa_fetch(
   identifier = "W2755950973",
-  entity = "works"
+  entity = "works",
+  verbose = TRUE
 )
-
-cat(query_work)
-#> https://api.openalex.org/works/W2755950973
-```
-
-As results, **oa_query** returns the query string including the
-OpenAlex endpoint API server address. You should change it by using the
-argument “endpoint = *address*”
-
-The function **oa_request** downloads the bibliographic records
-matching the query.
-
-``` r
-res <- oa_request(
-  query_url = query_work
-)
-
-df <- oa2df(res, entity = "works")
+#> [1] "https://api.openalex.org/works/W2755950973"
+#> Requesting url: https://api.openalex.org/works/W2755950973
 #> Warning: replacing previous import 'lifecycle::last_warnings' by
 #> 'rlang::last_warnings' when loading 'hms'
-#> Warning: replacing previous import 'lifecycle::last_warnings' by
-#> 'rlang::last_warnings' when loading 'tibble'
-#> Warning: replacing previous import 'lifecycle::last_warnings' by
-#> 'rlang::last_warnings' when loading 'pillar'
-
-dplyr::glimpse(df)
+dplyr::glimpse(paper_id)
 #> Rows: 1
 #> Columns: 25
 #> $ id            <chr> "https://openalex.org/W2755950973"
@@ -157,33 +150,30 @@ dplyr::glimpse(df)
 #> $ concept       <list> [<data.frame[8 x 5]>]
 ```
 
-### Query to obtain all information about a single publications using external id formats
+**oa_fetch** is a composition of functions:
+`oa_query |> oa_request |> oa2df`. As results, **oa_query** returns the
+query string including the OpenAlex endpoint API server address
+(default). **oa_request** downloads the bibliographic records matching
+the query. Finally, **oa2df** converts the final result list to a
+tibble.
 
-OpenAlex endpoint accepts an OpenAlex ID, but many external IDs (*e.g.*,
-DOI, ISSN) are accepted as well, in several formats.
+### External id formats
 
-#### DOI (Digital Object Identifier)
+OpenAlex endpoint accepts an OpenAlex ID, but many [external
+IDs](https://docs.openalex.org/api/get-single-entities#id-formats)
+(*e.g.*, DOI, ISSN) are accepted as well, in several formats, including
+Digital Object Identifier (DOI) and Persistent Identifiers (PIDs).
 
 We can get a publication record through its DOI using the format
 **doi:***doi identifier*. Example:
 
 ``` r
-query_work <- oa_query(
+paper_doi <- oa_fetch(
+  # "doi:https://doi.org/10.1016/j.joi.2017.08.007" would also work (PIDs)
   identifier = "doi:10.1016/j.joi.2017.08.007",
   entity = "works"
 )
-
-cat(query_work)
-#> https://api.openalex.org/works/doi:10.1016/j.joi.2017.08.007
-```
-
-``` r
-res <- oa_request(
-  query_url = query_work
-)
-df <- oa2df(res, entity = "works")
-
-dplyr::glimpse(df)
+dplyr::glimpse(paper_doi)
 #> Rows: 1
 #> Columns: 25
 #> $ id            <chr> "https://openalex.org/W2755950973"
@@ -213,134 +203,58 @@ dplyr::glimpse(df)
 #> $ concept       <list> [<data.frame[8 x 5]>]
 ```
 
-#### Persistent Identifiers (PIDs)
+### More than one publications
 
-Many persistent identifiers (PIDs) are canonically expressed as a URL
-that will take you to the thing being identified. Where these URL
-formats exist, OpenAlex treats them as the canonical ID, and also
-accepts them as valid IDs. Example:
-
-``` r
-query_work <- oa_query(
-  identifier = "doi:https://doi.org/10.1016/j.joi.2017.08.007",
-  entity = "works"
-)
-
-cat(query_work)
-#> https://api.openalex.org/works/doi:https://doi.org/10.1016/j.joi.2017.08.007
-
-res <- oa_request(
-  query_url = query_work
-)
-
-df <- oa2df(res, entity = "works")
-
-dplyr::glimpse(df)
-#> Rows: 1
-#> Columns: 25
-#> $ id            <chr> "https://openalex.org/W2755950973"
-#> $ TI            <chr> "bibliometrix: An R-tool for comprehensive science mappi…
-#> $ author        <list> [<data.frame[2 x 10]>]
-#> $ AB            <chr> "Abstract The use of bibliometrics is gradually extendin…
-#> $ pubdata       <chr> "2017-11-01"
-#> $ SO            <chr> "Journal of Informetrics"
-#> $ SO_ID         <chr> "https://openalex.org/V205292342"
-#> $ PU            <chr> "Elsevier"
-#> $ IS            <list> <"1875-5879", "1751-1577">
-#> $ URL           <chr> "https://doi.org/10.1016/j.joi.2017.08.007"
-#> $ first_page    <chr> "959"
-#> $ last_page     <chr> "975"
-#> $ volume        <chr> "11"
-#> $ issue         <chr> "4"
-#> $ OA            <lgl> FALSE
-#> $ TC            <int> 1456
-#> $ TCperYear     <list> [<data.frame[5 x 2]>]
-#> $ PY            <int> 2017
-#> $ cited_by_url  <chr> "https://api.openalex.org/works?filter=cites:W2755950973"
-#> $ ids           <list> [[<data.frame[3 x 2]>]]
-#> $ DI            <chr> "https://doi.org/10.1016/j.joi.2017.08.007"
-#> $ DT            <chr> "journal-article"
-#> $ CR            <list> <"https://openalex.org/W189804332", "https://openalex.o…
-#> $ related_works <list> <"https://openalex.org/W150292108", "https://openalex.or…
-#> $ concept       <list> [<data.frame[8 x 5]>]
-```
-
-### Query to obtain all information about a two o more publications
-
-To download the records of two o more identifiers through a single
-query, we can recursively apply **oa_request** to each id using the
-function **lapply**.
+To download the records of two or more identifiers through a single
+query, we may be tempted to recursively apply **oa_request** to each id
+using the function **lapply**. Some
 
 ``` r
-ids <- c("W2755950973", "W3005144120")
-
-res <- lapply(ids, function(x) {
+c("W3005144120", "W2755950973") %>% 
+  lapply(function(x) {
   oa_request(
     query_url = oa_query(
       identifier = x,
       entity = "works"
     )
   )
-})
-
-df <- oa2df(res, entity = "works")
-
-dplyr::glimpse(df)
-#> Rows: 2
-#> Columns: 25
-#> $ id            <chr> "https://openalex.org/W2755950973", "https://openalex.or…
-#> $ TI            <chr> "bibliometrix: An R-tool for comprehensive science mappi…
-#> $ author        <list> [<data.frame[2 x 10]>], [<data.frame[3 x 10]>]
-#> $ AB            <chr> "Abstract The use of bibliometrics is gradually extendi…
-#> $ pubdata       <chr> "2017-11-01", "2020-06-01"
-#> $ SO            <chr> "Journal of Informetrics", "Social Indicators Research"
-#> $ SO_ID         <chr> "https://openalex.org/V205292342", "https://openalex.org…
-#> $ PU            <chr> "Elsevier", "Springer Nature"
-#> $ IS            <list> <"1875-5879", "1751-1577">, <"1573-0921", "0303-8300">
-#> $ URL           <chr> "https://doi.org/10.1016/j.joi.2017.08.007", "https://do…
-#> $ first_page    <chr> "959", "803"
-#> $ last_page     <chr> "975", "831"
-#> $ volume        <chr> "11", "149"
-#> $ issue         <chr> "4", "3"
-#> $ OA            <lgl> FALSE, FALSE
-#> $ TC            <int> 1456, 48
-#> $ TCperYear     <list> [<data.frame[5 x 2]>], [<data.frame[3 x 2]>]
-#> $ PY            <int> 2017, 2020
-#> $ cited_by_url  <chr> "https://api.openalex.org/works?filter=cites:W2755950973…
-#> $ ids           <list> [[<data.frame[3 x 2]>]], [[<data.frame[3 x 2]>]]
-#> $ DI            <chr> "https://doi.org/10.1016/j.joi.2017.08.007", "https://do…
-#> $ DT            <chr> "journal-article", "journal-article"
-#> $ CR            <list> <"https://openalex.org/W189804332", "https://openalex.or…
-#> $ related_works <list> <"https://openalex.org/W150292108", "https://openalex.o…
-#> $ concept       <list> [<data.frame[8 x 5]>], [<data.frame[6 x 5]>]
+}) %>% 
+  oa2df(entity = "works")
 ```
 
-### Query to obtain all information about a single author
+However, the recommended way to avoid [burst rate
+limits](https://docs.openalex.org/api#rate-limits) (especially when we
+have a lot of identifiers) is to use a
+[filter](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists),
+in this case, by the
+[openalex](https://docs.openalex.org/about-the-data/work#ids) attribute:
+
+``` r
+paper_oa <- oa_fetch(
+  openalex = c("W3005144120", "W2755950973"),
+  entity = "works",
+  verbose = TRUE
+)
+#> [1] "https://api.openalex.org/works?filter=openalex%3AW3005144120%7CW2755950973"
+#> Requesting url: https://api.openalex.org/works?filter=openalex%3AW3005144120%7CW2755950973
+#> About to get a total of 1 pages of results with a total of 2 records.
+```
+
+## Authors
+
+### Single author
 
 The author Massimo Aria is associated to the OpenAlex-id A923435168.
 
 ``` r
-query_author <- oa_query(
+oa_fetch(
   identifier = "A923435168",
-  entity = "authors"
-)
-
-cat(query_author)
-#> https://api.openalex.org/authors/A923435168
-```
-
-``` r
-res_author <- oa_request(
-  query_url = query_author,
-  count_only = FALSE,
-  verbose = FALSE
-)
-```
-
-``` r
-df <- oa2df(res_author, entity = "authors")
-
-dplyr::glimpse(df)
+  count_only = TRUE,
+  verbose = TRUE
+) %>% 
+  dplyr::glimpse()
+#> [1] "https://api.openalex.org/authors/A923435168"
+#> Requesting url: https://api.openalex.org/authors/A923435168
 #> Rows: 1
 #> Columns: 15
 #> $ id                  <chr> "https://openalex.org/A923435168"
@@ -360,178 +274,55 @@ dplyr::glimpse(df)
 #> $ works_api_url       <chr> "https://api.openalex.org/works?filter=author.id:A…
 ```
 
-## Get all entities matching a set of inclusion/exclusion criteria (filters)
+``` r
+oa_fetch(
+  identifier = "A923435168",
+  entity = "authors",
+  count_only = FALSE
+) %>% 
+  dplyr::glimpse()
+#> Rows: 1
+#> Columns: 15
+#> $ id                  <chr> "https://openalex.org/A923435168"
+#> $ name                <chr> "Massimo Aria"
+#> $ name_alternatives   <lgl> NA
+#> $ ids                 <list> [<data.frame[4 x 2]>]
+#> $ orcid               <chr> "https://orcid.org/0000-0002-8517-9411"
+#> $ works_count         <int> 102
+#> $ TC                  <int> 2887
+#> $ TCperYear           <list> [<data.frame[11 x 3]>]
+#> $ affiliation_name    <chr> "University of Naples Federico II"
+#> $ affiliation_id      <chr> "https://openalex.org/I71267560"
+#> $ affiliation_ror     <chr> "https://ror.org/05290cv24"
+#> $ affiliation_country <chr> "IT"
+#> $ affiliation_type    <chr> "education"
+#> $ concept             <list> [<data.frame[21 x 5]>]
+#> $ works_api_url       <chr> "https://api.openalex.org/works?filter=author.id:A…
+```
+
+## Filters
 
 In most cases, we are interested in downloading a collection of items
-that meet one or more inclusion/exclusion criteria (filters).
-
-In this case, the query definition will not be based on a single
-identifier but the choice of the entity type (usually “works”) and one
-or more filters about this entity.
-
-Filters narrow the list down to just entities that meet a particular
+that meet one or more inclusion/exclusion criteria (filters). Filters
+narrow the list down to just entities that meet a particular
 condition–specifically, a particular value for a particular attribute.
 Supported attributes for each endpoints are listed on [OpenAlex API
 Documentation
 Website](https://docs.openalex.org/api/get-lists-of-entities#filter).
 
-Filters are formatted thusly: **attribute:***value*. You set them using
-the *?filter* query parameter. Filters are case-insensitive.
-
-Each endpoint supports its own list of filters. Here they are, by
-endpoint:
-
-### /works filters
-
-You can filter using these attributes of the Works object.
-
--   display_name.search (alias: title.search)
-
--   publication_year
-
--   publication_date
-
--   from_publication_date
-
--   to_publication_date
-
--   host_venue.issn
-
--   authorships.author.id (alias: author.id)
-
--   type
-
-etc.
-
-You can find more documentation about each attribute on the [OA
-Documentation Work page](https://docs.openalex.org/about-the-data/work).
-
-### /authors filters
-
-You can filter using these attributes of the Authors object.
-
--   display_name.search
-
--   works_count
-
--   cited_by_count
-
--   last_known_institution.id
-
-etc.
-
-You can find more documentation about each attribute on the [OA
-Documentation Author
-page](https://docs.openalex.org/about-the-data/author).
-
-### /venues filters
-
-You can filter using these attributes of the Venue object.
-
--   display_name.search
-
--   issn
-
--   works_count
-
--   cited_by_count
-
-etc.
-
-You can find more documentation about each attribute on the [OA
-Documentation Venue
-page](https://docs.openalex.org/about-the-data/venue).
-
-### /institutions filters
-
-You can filter using these attributes of the Institution object.
-
--   display_name.search
-
--   country_code
-
--   type
-
--   works_count
-
--   cited_by_count
-
--   x_concepts.id
-
-You can find more documentation about each attribute on the [OA
-Documentation Institution
-page](https://docs.openalex.org/about-the-data/institution).
-
-### /concepts filters
-
-You can filter using these attributes of the Concept object. You can
-find more documentation about each attribute on the Concept page.
-
--   display_name.search
-
--   level
-
--   works_count
-
--   cited_by_count
-
--   ancestors.id
-
-You can find more documentation about each attribute on the [OA
-Documentation Concept
-page](https://docs.openalex.org/about-the-data/concept).
-
-Below we show some examples of filters in use.
-
-### Filters based on string matching
-
-**We want to download all works, cited more than 50 times, published
-between 2020 and 2021, which include the strings “bibliometric analysis”
-or “science mapping” in the title.**
-
-To do that, we have to set filters about three attributes: title content
-(*“title.search”*), starting date for publication
-(*“from_publication_date”*), and ending date for publication
-(*“to_publication_date”*).
-
-Starting and ending dates can be passed to the function **oa_query**
-using the arguments *from_publication_date* and *to_publication_date*.
-The format is YYYY-MM-DD.
-
-The other attributes can be passed to the function through the argument
-*filter*.
-
-When an attribute has more than one item, these can be separated by the
-boolean operator OR represented by the symbol **\|** .
-
-On the contrary, different attributes have to be separated by commas.
-
-e.g. **filter = ‘title.search:“bibliometric analysis”\|“science
-mapping”, cited_by_count:\>50’**
-
-where:
-
--   ‘title.search:“bibliometric analysis”\|“science mapping’
-
-means all works containing the string “bibliometric analysis” OR
-“science mapping” in the publication title.
-
-and:
-
--   cited_by_count:\>50
-
-means all works cited more than 10 times.
-
-The whole filter **‘title.search:“bibliometric analysis”\|“science
-mapping”,cited_by_count:\>50’**
-
-can be read as:
-
-    *"all works containing the string "bibliometric analysis" OR "science mapping" 
-    in the publication title AND cited more than 50 times"*.
+### Works
+
+**Example**: We want to download all works, cited more than 50 times,
+published between 2020 and 2021, which include the strings “bibliometric
+analysis” or “science mapping” in the title. Maybe we also want the
+results to be sorted by total citations in a descending order.
+
+Setting the argument count_only=TRUE, the function **oa_request**
+returns the number of items matching the query without downloading the
+collection.
 
 ``` r
-query <- oa_query(
+oa_fetch(
   identifier = NULL,
   entity = "works",
   title.search = c("bibliometric analysis", "science mapping"),
@@ -540,47 +331,30 @@ query <- oa_query(
   to_publication_date = "2021-12-31",
   search = NULL,
   sort = "cited_by_count:desc",
-  endpoint = "https://api.openalex.org/"
-)
-```
-
-The **sort** argument indicates how results have to be sorted.
-
-In this example results are sorted by total citations in a descending
-order.
-
-Setting the argument count_only=TRUE, the function **oa_request**
-returns the number of items matching the query without downloading the
-collection.
-
-``` r
-res <- oa_request(
-  query_url = query,
+  endpoint = "https://api.openalex.org/",
   count_only = TRUE,
-  verbose = FALSE
+  verbose = TRUE
 )
-
-res$count
-#> [1] 23
+#> [1] "https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc"
+#> Requesting url: https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc
+#>               count db_response_time_ms                page            per_page 
+#>                  23                  17                   1                   1
 ```
 
-Then, we can download the collection:
+We can now download the records and transform it into a tibble/data
+frame:
 
 ``` r
-res <- oa_request(
-  query_url = query,
-  count_only = FALSE,
-  verbose = FALSE
-)
-
-## OpenAlex downloading [======================] 100% eta:  0s
-```
-
-and transform it into a data frame:
-
-``` r
-df <- oa2df(res, entity = "works")
-dplyr::glimpse(df)
+oa_fetch(
+  entity = "works",
+  title.search = c("bibliometric analysis", "science mapping"),
+  cited_by_count = ">50", 
+  from_publication_date = "2020-01-01",
+  to_publication_date = "2021-12-31",
+  sort = "cited_by_count:desc",
+  count_only = FALSE
+) %>% 
+  dplyr::glimpse()
 #> Rows: 23
 #> Columns: 25
 #> $ id            <chr> "https://openalex.org/W3160856016", "https://openalex.or…
@@ -610,116 +384,29 @@ dplyr::glimpse(df)
 #> $ concept       <list> [<data.frame[7 x 5]>], [<data.frame[7 x 5]>], [<data.fr…
 ```
 
-### Get all works citing a particular work.
+### Authors
 
-We can download all publications citing another publication by using the
-filter attribute **cites:***id*.
+**Example**: We want download all authors’ records of scholars who work
+at the University of Naples Federico II (OpenAlex ID: I71267560) and who
+have published more than 499 works.
 
-For example, if we want to download all publications citing the article
-Aria and Cuccurullo (2017), we have just to set the argument filter as:
-
-**filter = “cites:W2755950973”**
-
-where *“W2755950973”* is the OA id for the article by Aria and
-Cuccurullo.
+Let’s first check how many records match the query, then set
+`count_only = FALSE` to download the entire collection. We can do this
+by first defining a list of arguments, then adding `count_only` (default
+`FALSE`) to this list:
 
 ``` r
-query1 <- oa_query(
-  identifier = NULL,
-  entity = "works",
-  cites = "W2755950973"
-)
-
-res1 <- oa_request(
-  query_url = query1,
-  count_only = TRUE,
-  verbose = FALSE
-)
-```
-
-This query will return a collection of 1456 publications. Let’s to
-download it and then to convert it into a data frame:
-
-``` r
-res <- oa_request(
-  query_url = query1,
-  count_only = FALSE,
-  verbose = FALSE
-)
-
-# OpenAlex downloading [=====================] 100% eta:  0s
-
-df <- oa2df(res, entity = "works")
-dplyr::glimpse(df)
-#> Rows: 1,456
-#> Columns: 25
-#> $ id            <chr> "https://openalex.org/W4288801103", "https://openalex.or…
-#> $ TI            <chr> "Anaerobic digestion of sewage sludge for biogas &amp; b…
-#> $ author        <list> [<data.frame[7 x 10]>], [<data.frame[2 x 10]>], [<data.…
-#> $ AB            <chr> "• A critical review on anaerobic digestion of sewage sl…
-#> $ pubdata       <chr> "2022-12-01", "2022-11-01", "2022-11-01", "2022-11-01", …
-#> $ SO            <chr> "Fuel", "Energy Reports", "Annals of tourism research em…
-#> $ SO_ID         <chr> "https://openalex.org/V164770093", "https://openalex.org…
-#> $ PU            <chr> "Elsevier", "Elsevier", "Elsevier", "Elsevier", "Elsevie…
-#> $ IS            <list> <"0016-2361", "1873-7153">, "2352-4847", "2666-9579", <…
-#> $ URL           <chr> "https://doi.org/10.1016/j.fuel.2022.125416", "https://d…
-#> $ first_page    <chr> "125416", "2699", "100054", "417", "399", "567", "100399…
-#> $ last_page     <chr> "125416", "2711", "100054", "436", "416", "584", "100399…
-#> $ volume        <chr> "329", "8", "3", "150", "150", "150", "31", "149", "215"…
-#> $ issue         <chr> NA, NA, "2", NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…
-#> $ OA            <lgl> FALSE, TRUE, TRUE, FALSE, TRUE, FALSE, FALSE, FALSE, FAL…
-#> $ TC            <int> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…
-#> $ TCperYear     <list> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…
-#> $ PY            <int> 2022, 2022, 2022, 2022, 2022, 2022, 2022, 2022, 2022, 20…
-#> $ cited_by_url  <chr> "https://api.openalex.org/works?filter=cites:W4288801103…
-#> $ ids           <list> [[<data.frame[2 x 2]>]], [[<data.frame[2 x 2]>]], [[<da…
-#> $ DI            <chr> "https://doi.org/10.1016/j.fuel.2022.125416", "https://d…
-#> $ DT            <chr> "journal-article", "journal-article", "journal-article",…
-#> $ CR            <list> <"https://openalex.org/W1963772285", "https://openalex.…
-#> $ related_works <list> <"https://openalex.org/W1249074", "https://openalex.org…
-#> $ concept       <list> [<data.frame[11 x 5]>], [<data.frame[6 x 5]>], [<data.f…
-```
-
-### Get all authors matching a set of filters
-
-We want download all authors’ records of scholars who work at the
-University of Naples Federico II (OpenAlex ID: I71267560) and who have
-published more than 499 works:
-
-``` r
-query_author <- oa_query(
-  identifier = NULL,
+my_arguments <- list(
   entity = "authors",
   last_known_institution.id = "I71267560",
   works_count = ">499"
-)
-```
+  )
 
-Check how many records match the query:
-
-``` r
-res <- oa_request(
-  query_url = query_author,
-  count_only = TRUE,
-  verbose = FALSE
-)
-res$count
-#> [1] 22
-
-## 34
-```
-
-Then, we download and convert the collection:
-
-``` r
-res <- oa_request(
-  query_url = query_author,
-  count_only = FALSE,
-  verbose = FALSE
-)
-df <- oa2df(res, entity = "authors")
-
-dplyr::glimpse(df)
+do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
+#>               count db_response_time_ms                page            per_page 
+#>                  22                   4                   1                   1
+do.call(oa_fetch, my_arguments) %>% 
+  dplyr::glimpse()
 #> Rows: 22
 #> Columns: 15
 #> $ id                  <chr> "https://openalex.org/A2600338221", "https://opena…
@@ -739,45 +426,30 @@ dplyr::glimpse(df)
 #> $ works_api_url       <chr> "https://api.openalex.org/works?filter=author.id:A…
 ```
 
-### Get all institutions matching a set of filters
+### Institutions
 
 We want download all records regarding Italian institutions
-(country_code:it) that are classified as educational (type:education):
+(country_code:it) that are classified as educational (type:education).
+Again, we check how many records match the query then download the
+collection:
 
 ``` r
-query_inst <- oa_query(
+italian_insts <- list(
   entity = "institutions",
   country_code = "it",
-  type = "education"
-)
-```
-
-We check how many records match the query:
-
-``` r
-res <- oa_request(
-  query_url = query_inst,
-  count_only = TRUE,
+  type = "education",
   verbose = TRUE
 )
+
+do.call(oa_fetch, c(italian_insts, list(count_only = TRUE)))
+#> [1] "https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation"
 #> Requesting url: https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation
-res$count
-#> [1] 231
-```
-
-Then we download and convert the collection:
-
-``` r
-res <- oa_request(
-  query_url = query_inst,
-  count_only = FALSE,
-  verbose = TRUE
-)
+#>               count db_response_time_ms                page            per_page 
+#>                 231                   1                   1                   1
+dplyr::glimpse(do.call(oa_fetch, italian_insts))
+#> [1] "https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation"
 #> Requesting url: https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation
 #> About to get a total of 2 pages of results with a total of 231 records.
-df <- oa2df(res, entity = "institutions")
-
-dplyr::glimpse(df)
 #> Rows: 231
 #> Columns: 19
 #> $ id                 <chr> "https://openalex.org/I861853513", "https://openale…
@@ -794,52 +466,34 @@ dplyr::glimpse(df)
 #> $ image              <chr> "https://upload.wikimedia.org/wikipedia/en/4/45/Sap…
 #> $ thumbnail          <chr> "https://upload.wikimedia.org/wikipedia/en/thumb/4/…
 #> $ associated_inst    <list> [<data.frame[1 x 24]>], [<data.frame[1 x 12]>], [<…
-#> $ works_count        <int> 163562, 130351, 128903, 127513, 91327, 86739, 85292…
-#> $ TC                 <int> 10745039, 9805342, 9655713, 9421355, 6065825, 56813…
+#> $ works_count        <int> 163634, 130417, 128964, 127569, 91377, 86776, 85339…
+#> $ TC                 <int> 10642287, 9701581, 9575453, 9321475, 6026087, 56396…
 #> $ TCperYear          <list> [<data.frame[11 x 3]>], [<data.frame[11 x 3]>], [<…
 #> $ concept            <list> [<data.frame[14 x 5]>], [<data.frame[15 x 5]>], [<…
 #> $ works_api_url      <chr> "https://api.openalex.org/works?filter=institutions…
 ```
 
-### Get all venues matching a set of filters
+### Venues (think journals)
 
 We want download all records regarding journals that have published more
 than 100,000 works:
 
 ``` r
-query_venue <- oa_query(
+big_journals <- list(
   entity = "venues",
-  works_count = ">100000"
-)
-```
-
-We check how many records match the query:
-
-``` r
-res <- oa_request(
-  query_url = query_venue,
-  count_only = TRUE,
+  works_count = ">100000",
   verbose = TRUE
 )
+
+do.call(oa_fetch, c(big_journals, list(count_only = TRUE)))
+#> [1] "https://api.openalex.org/venues?filter=works_count%3A%3E100000"
 #> Requesting url: https://api.openalex.org/venues?filter=works_count%3A%3E100000
-res$count
-#> [1] 52
-```
-
-Then we download and convert the collection:
-
-``` r
-res <- oa_request(
-  query_url = query_venue,
-  count_only = FALSE,
-  verbose = TRUE
-)
+#>               count db_response_time_ms                page            per_page 
+#>                  52                   1                   1                   1
+dplyr::glimpse(do.call(oa_fetch, big_journals))
+#> [1] "https://api.openalex.org/venues?filter=works_count%3A%3E100000"
 #> Requesting url: https://api.openalex.org/venues?filter=works_count%3A%3E100000
 #> About to get a total of 1 pages of results with a total of 52 records.
-
-df <- oa2df(res, entity = "venues")
-
-dplyr::glimpse(df)
 #> Rows: 52
 #> Columns: 14
 #> $ id            <chr> "https://openalex.org/V2751751161", "https://openalex.or…
@@ -851,54 +505,34 @@ dplyr::glimpse(df)
 #> $ is_in_doaj    <lgl> NA, NA, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,…
 #> $ ids           <list> [<data.frame[2 x 2]>], [<data.frame[2 x 2]>], [<data.fr…
 #> $ homepage      <chr> "http://www.ssrn.com/", "http://www.repec.org/", NA, "ht…
-#> $ works_count   <int> 788533, 753720, 743069, 513290, 466134, 451837, 434328, …
-#> $ TC            <int> 2758083, 2425857, 243670, 5509864, 7289709, 3570630, 194…
+#> $ works_count   <int> 776812, 753216, 742246, 513454, 466874, 449106, 433972, …
+#> $ TC            <int> 2717287, 2388134, 239266, 5436658, 7182567, 3466204, 192…
 #> $ TCperYear     <list> [<data.frame[11 x 3]>], [<data.frame[11 x 3]>], [<data.…
-#> $ concept       <list> [<data.frame[20 x 5]>], [<data.frame[21 x 5]>], [<data.…
+#> $ concept       <list> [<data.frame[19 x 5]>], [<data.frame[21 x 5]>], [<data.…
 #> $ works_api_url <chr> "https://api.openalex.org/works?filter=host_venue.id:V27…
 ```
 
-### Get all concepts matching a set of filters
+### Concepts (think theme, keywords)
 
 We want to download the records of all the concepts that concern at
 least one million works:
 
 ``` r
-query_concept <- oa_query(
+popular_concepts <- list(
   entity = "concepts",
-  works_count = ">1000000"
-)
-```
-
-We check how many records match the query:
-
-``` r
-res <- oa_request(
-  query_url = query_concept,
-  count_only = TRUE,
+  works_count = ">1000000",
   verbose = TRUE
 )
+
+do.call(oa_fetch, c(popular_concepts, list(count_only = TRUE)))
+#> [1] "https://api.openalex.org/concepts?filter=works_count%3A%3E1000000"
 #> Requesting url: https://api.openalex.org/concepts?filter=works_count%3A%3E1000000
-res$count
-#> [1] 146
-
-## 112
-```
-
-Then we download and convert the collection:
-
-``` r
-res <- oa_request(
-  query_url = query_concept,
-  count_only = FALSE,
-  verbose = TRUE
-)
+#>               count db_response_time_ms                page            per_page 
+#>                 146                   1                   1                   1
+dplyr::glimpse(do.call(oa_fetch, popular_concepts))
+#> [1] "https://api.openalex.org/concepts?filter=works_count%3A%3E1000000"
 #> Requesting url: https://api.openalex.org/concepts?filter=works_count%3A%3E1000000
 #> About to get a total of 1 pages of results with a total of 146 records.
-
-df <- oa2df(res, entity = "concepts")
-
-dplyr::glimpse(df)
 #> Rows: 146
 #> Columns: 16
 #> $ id                        <chr> "https://openalex.org/C41008148", "https://o…
@@ -913,32 +547,72 @@ dplyr::glimpse(df)
 #> $ thumbnail                 <chr> "https://upload.wikimedia.org/wikipedia/comm…
 #> $ ancestors                 <list> NA, NA, NA, NA, NA, NA, NA, [<data.frame[2 …
 #> $ rel_concepts              <list> [<data.frame[93 x 5]>], [<data.frame[51 x 5…
-#> $ works_count               <int> 40372866, 36589392, 20854924, 17439452, 1704…
-#> $ TC                        <int> 217452199, 375003407, 329532622, 161337890, …
+#> $ works_count               <int> 40417121, 36727089, 20869200, 17500738, 1702…
+#> $ TC                        <int> 214994456, 372265879, 327061283, 160317677, …
 #> $ TCperYear                 <list> [<data.frame[11 x 3]>], [<data.frame[11 x 3…
 #> $ works_api_url             <chr> "https://api.openalex.org/works?filter=conce…
+```
+
+### Other examples
+
+*Get all works citing a particular work*
+
+We can download all publications citing another publication by using the
+filter attribute **cites**.
+
+For example, if we want to download all publications citing the article
+Aria and Cuccurullo (2017), we have just to set the argument filter as
+`cites = "W2755950973"` where “W2755950973” is the OA id for the article
+by Aria and Cuccurullo.
+
+``` r
+aria_count <- oa_fetch(
+  entity = "works",
+  cites = "W2755950973",
+  count_only = TRUE,
+  verbose = TRUE
+) 
+#> [1] "https://api.openalex.org/works?filter=cites%3AW2755950973"
+#> Requesting url: https://api.openalex.org/works?filter=cites%3AW2755950973
+aria_count
+#>               count db_response_time_ms                page            per_page 
+#>                1457                   8                   1                   1
+```
+
+This query will return a collection of 1457 publications. Let’s to
+download it and then to convert it into a data frame:
+
+``` r
+oa_fetch(
+  entity = "works",
+  cites = "W2755950973",
+  count_only = TRUE,
+  verbose = TRUE
+) %>% 
+  dplyr::glimpse()
+#> [1] "https://api.openalex.org/works?filter=cites%3AW2755950973"
+#> Requesting url: https://api.openalex.org/works?filter=cites%3AW2755950973
+#>  Named int [1:4] 1457 14 1 1
+#>  - attr(*, "names")= chr [1:4] "count" "db_response_time_ms" "page" "per_page"
 ```
 
 ## Convert an OpenAlex data frame to a bibliometrix object
 
 The bibliometrix R-package (<https://www.bibliometrix.org>) provides a
 set of tools for quantitative research in bibliometrics and
-scientometrics. It is written in the R language, which is an open-source
-environment and ecosystem.
-
-Today it represents one of the most used science mapping software in the
-world. In a recent survey on bibliometric analysis tools, Moral-Muñoz et
-al. (2020) wrote: “At this moment, maybe Bibliometrix and its Shiny
-platform contain the more extensive set of techniques implemented, and
-together with the easiness of its interface, could be a great software
-for practitioners”.
+scientometrics. Today it represents one of the most used science mapping
+software in the world. In a recent survey on bibliometric analysis
+tools, Moral-Muñoz et al. (2020) wrote: “At this moment, maybe
+Bibliometrix and its Shiny platform contain the more extensive set of
+techniques implemented, and together with the easiness of its interface,
+could be a great software for practitioners”.
 
 The function **oa2bibliometrix** converts a bibliographic data frame of
 works into a bibliometrix object. This object can be used as input
 collection of a science mapping workflow.
 
 ``` r
-query1 <- oa_query(
+bib_ls <- list(
   identifier = NULL,
   entity = "works",
   cites = "W2755950973",
@@ -946,30 +620,12 @@ query1 <- oa_query(
   to_publication_date = "2022-03-31"
 )
 
-res1 <- oa_request(
-  query_url = query1,
-  count_only = TRUE,
-  verbose = FALSE
-)
-```
-
-This query will return a collection of 213 publications. Let’s download
-it:
-
-``` r
-res1 <- oa_request(
-  query_url = query1,
-  count_only = FALSE,
-  verbose = FALSE
-)
-```
-
-Convert it into a data frame and then into a bibliometrix object:
-
-``` r
-df <- oa2df(res1, entity = "works")
-M <- oa2bibliometrix(df)
-dplyr::glimpse(M)
+do.call(oa_fetch, c(bib_ls, list(count_only = TRUE)))
+#>               count db_response_time_ms                page            per_page 
+#>                 213                   7                   1                   1
+do.call(oa_fetch, bib_ls) %>% 
+  oa2bibliometrix() %>% 
+  dplyr::glimpse()
 #> Rows: 213
 #> Columns: 37
 #> $ AU            <chr> "CHENG WANG;TAO LV;RONGJIANG CAI;JIANFENG XU;LIYA WANG",…

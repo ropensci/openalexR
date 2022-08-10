@@ -3,8 +3,9 @@
 #' It generates a valid query, written following the OpenAlex API Language, from a set of parameters.
 #'
 #' @param identifier Character. It indicates an item identifier.
-#' @param entity Character. It indicates the scholarly entity of the search. The argument can be one of
-#' c("works", "authors", "venues", "institutions", "concepts"). The default value is entity = works".
+#' @param entity Character. It indicates the scholarly entity of the search.
+#' The argument can be one of c("works", "authors", "venues", "institutions", "concepts").
+#' If not provided, `entity` is guessed from `identifier`.
 #' @param \dots Filter arguments. Filters narrow the list down to just entities that meet a particular condition--specifically, a particular value for a particular attribute.
 #' Filters are formatted as attribute = value. The complete list of filter attributes for each entity can be found
 #' For example, `cited_by_count = ">100"`,
@@ -103,14 +104,6 @@ oa_query <- function(...,
                      endpoint = "https://api.openalex.org/",
                      verbose = FALSE) {
 
-  # if (is.null(entity)){
-  #   if (is.null(identifier)){
-  #     stop("Please provide identifier or entity!")
-  #   } else {
-  #     entity <- id_type(identifier)
-  #   }
-  # }
-  # entity <- match.arg(entity)
   filter <- list(...)
 
   if (length(filter) > 0) {

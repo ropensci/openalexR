@@ -8,10 +8,11 @@ and convert the result to a tibble/data frame.}
 oa_fetch(
   ...,
   identifier = NULL,
-  entity = c("works", "authors", "venues", "institutions", "concepts"),
+  entity = if (is.null(identifier)) NULL else id_type(identifier),
   search = NULL,
   sort = NULL,
   group_by = NULL,
+  output = c("tibble", "list", "dataframe"),
   endpoint = "https://api.openalex.org/",
   per_page = 200,
   count_only = FALSE,
@@ -29,8 +30,9 @@ at \href{https://docs.openalex.org/api/get-lists-of-entities#filter}{https://doc
 
 \item{identifier}{Character. It indicates an item identifier.}
 
-\item{entity}{Character. It indicates the scholarly entity of the search. The argument can be one of
-c("works", "authors", "venues", "institutions", "concepts"). The default value is entity = works".}
+\item{entity}{Character. It indicates the scholarly entity of the search.
+The argument can be one of c("works", "authors", "venues", "institutions", "concepts").
+If not provided, `entity` is guessed from `identifier`.}
 
 \item{search}{Character. Search is just another kind of filter, one that all five endpoints support. But unlike the other filters, search doesn't require an exact match.
 To filter using search, append .search to the end of the property you're filtering for.}
@@ -42,6 +44,8 @@ See more at <https://docs.openalex.org/api/get-lists-of-entities/sort-entity-lis
 \item{group_by}{Character. Property to group by.
 For example: "oa_status" for works.
 https://docs.openalex.org/api/get-groups-of-entities}
+
+\item{output}{Character. Type of output, either a list or a tibble/data.frame.}
 
 \item{endpoint}{is character. It indicates the url of the OpenAlex Endpoint API server. The default value is endpoint = "https://api.openalex.org/".}
 
@@ -62,11 +66,31 @@ and convert the result to a tibble/data frame.
 }
 \examples{
 \dontrun{
+
 paper_meta <- oa_fetch(
   identifier = "W2755950973",
   entity = "works",
   endpoint = "https://api.openalex.org/",
   count_only = TRUE,
+  verbose = TRUE
+)
+
+oa_fetch(
+  entity = "works",
+  doi = c(
+    "10.1371/journal.pone.0266781",
+    "10.1371/journal.pone.0267149"
+  ),
+  verbose = TRUE,
+  count_only = TRUE
+)
+
+oa_fetch(
+  entity = "works",
+  doi = c(
+    "10.1371/journal.pone.0266781",
+    "10.1371/journal.pone.0267149"
+  ),
   verbose = TRUE
 )
 }
