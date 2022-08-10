@@ -332,7 +332,7 @@ cat(query_author)
 ``` r
 res_author <- oaApiRequest(
   query_url = query_author,
-  total.count = FALSE,
+  count_only = FALSE,
   verbose = FALSE
 )
 ```
@@ -549,14 +549,14 @@ The **sort** argument indicates how results have to be sorted.
 In this example results are sorted by total citations in a descending
 order.
 
-Setting the argument total.count=TRUE, the function **oaApiRequest**
+Setting the argument count_only=TRUE, the function **oaApiRequest**
 returns the number of items matching the query without downloading the
 collection.
 
 ``` r
 res <- oaApiRequest(
   query_url = query,
-  total.count = TRUE,
+  count_only = TRUE,
   verbose = FALSE
 )
 
@@ -569,7 +569,7 @@ Then, we can download the collection:
 ``` r
 res <- oaApiRequest(
   query_url = query,
-  total.count = FALSE,
+  count_only = FALSE,
   verbose = FALSE
 )
 
@@ -632,7 +632,7 @@ query1 <- oaQueryBuild(
 
 res1 <- oaApiRequest(
   query_url = query1,
-  total.count = TRUE,
+  count_only = TRUE,
   verbose = FALSE
 )
 ```
@@ -643,7 +643,7 @@ download it and then to convert it into a data frame:
 ``` r
 res <- oaApiRequest(
   query_url = query1,
-  total.count = FALSE,
+  count_only = FALSE,
   verbose = FALSE
 )
 
@@ -700,7 +700,7 @@ Check how many records match the query:
 ``` r
 res <- oaApiRequest(
   query_url = query_author,
-  total.count = TRUE,
+  count_only = TRUE,
   verbose = FALSE
 )
 res$count
@@ -714,7 +714,7 @@ Then, we download and convert the collection:
 ``` r
 res <- oaApiRequest(
   query_url = query_author,
-  total.count = FALSE,
+  count_only = FALSE,
   verbose = FALSE
 )
 df <- oa2df(res, entity = "authors")
@@ -757,7 +757,7 @@ We check how many records match the query:
 ``` r
 res <- oaApiRequest(
   query_url = query_inst,
-  total.count = TRUE,
+  count_only = TRUE,
   verbose = TRUE
 )
 #> Requesting url: https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation
@@ -770,7 +770,7 @@ Then we download and convert the collection:
 ``` r
 res <- oaApiRequest(
   query_url = query_inst,
-  total.count = FALSE,
+  count_only = FALSE,
   verbose = TRUE
 )
 #> Requesting url: https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation
@@ -818,7 +818,7 @@ We check how many records match the query:
 ``` r
 res <- oaApiRequest(
   query_url = query_venue,
-  total.count = TRUE,
+  count_only = TRUE,
   verbose = TRUE
 )
 #> Requesting url: https://api.openalex.org/venues?filter=works_count%3A%3E100000
@@ -831,7 +831,7 @@ Then we download and convert the collection:
 ``` r
 res <- oaApiRequest(
   query_url = query_venue,
-  total.count = FALSE,
+  count_only = FALSE,
   verbose = TRUE
 )
 #> Requesting url: https://api.openalex.org/venues?filter=works_count%3A%3E100000
@@ -875,7 +875,7 @@ We check how many records match the query:
 ``` r
 res <- oaApiRequest(
   query_url = query_concept,
-  total.count = TRUE,
+  count_only = TRUE,
   verbose = TRUE
 )
 #> Requesting url: https://api.openalex.org/concepts?filter=works_count%3A%3E1000000
@@ -890,7 +890,7 @@ Then we download and convert the collection:
 ``` r
 res <- oaApiRequest(
   query_url = query_concept,
-  total.count = FALSE,
+  count_only = FALSE,
   verbose = TRUE
 )
 #> Requesting url: https://api.openalex.org/concepts?filter=works_count%3A%3E1000000
@@ -948,7 +948,7 @@ query1 <- oaQueryBuild(
 
 res1 <- oaApiRequest(
   query_url = query1,
-  total.count = TRUE,
+  count_only = TRUE,
   verbose = FALSE
 )
 ```
@@ -959,7 +959,7 @@ it:
 ``` r
 res1 <- oaApiRequest(
   query_url = query1,
-  total.count = FALSE,
+  count_only = FALSE,
   verbose = FALSE
 )
 ```

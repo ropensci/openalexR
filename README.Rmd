@@ -57,6 +57,7 @@ install.packages("openalexR")
 
 ```{r}
 library(openalexR)
+library(dplyr)
 ```
 
 # openalexR overview
@@ -79,7 +80,7 @@ The function will return a JSON object in a list format.
 
 Finally, the function **oa2df** converts the JSON object in classical bibliographic data frame.
 
-## Get full records through entity IDs.
+## Get full records through entity IDs
 
 ### Query to obtain all information about a single publications
 
@@ -91,105 +92,77 @@ The following paper:
 
 is associated to the OpenAlex-id **W2755950973**.
 
-In this example, we need to pass a single argument to the function, that is, the identifier of the entity to download: identifier = "W2755950973".
+In this example, we need to pass a single argument to the function, that is, the identifier of the entity to download: `identifier = "W2755950973"`.
 
 ```{r}
-query_work <- oaQueryBuild(
+paper_id <- oa_fetch(
   identifier = "W2755950973",
-  entity = "works"
+  entity = "works",
+  verbose = TRUE
 )
-
-cat(query_work)
+dplyr::glimpse(paper_id)
 ```
 
-As results, **oaQueryBuild** returns the query string including the OpenAlex endpoint API server address.
-You should change it by using the argument "endpoint = *address*"
-
-The function **oaApiRequest** downloads the bibliographic records matching the query.
-
-```{r}
-res <- oaApiRequest(
-  query_url = query_work
-)
-
-df <- oa2df(res, entity = "works")
-
-dplyr::glimpse(df)
-```
+**oa_fetch** is a composition of functions: `oaQueryBuild |> oaApiRequest |> oa2df`.
+As results, **oaQueryBuild** returns the query string including the OpenAlex endpoint API server address (default).
+**oaApiRequest** downloads the bibliographic records matching the query.
+Finally, **oa2df** converts the final result list to a tibble.
 
 
-### Query to obtain all information about a single publications using external id formats
+### External id formats
 
-OpenAlex endpoint accepts an OpenAlex ID, but many external IDs (*e.g.*, DOI, ISSN) are accepted as well, in several formats.
-
-#### DOI (Digital Object Identifier)
+OpenAlex endpoint accepts an OpenAlex ID, but many [external IDs](https://docs.openalex.org/api/get-single-entities#id-formats) (*e.g.*, DOI, ISSN) are accepted as well, in several formats, 
+including Digital Object Identifier (DOI) and Persistent Identifiers (PIDs).
 
 We can get a publication record through its DOI using the format **doi:***doi identifier*.
 Example:
 
 ```{r}
-query_work <- oaQueryBuild(
+paper_doi <- oa_fetch(
+  # "doi:https://doi.org/10.1016/j.joi.2017.08.007" would also work (PIDs)
   identifier = "doi:10.1016/j.joi.2017.08.007",
   entity = "works"
 )
-
-cat(query_work)
+dplyr::glimpse(paper_doi)
 ```
 
-```{r}
-res <- oaApiRequest(
-  query_url = query_work
-)
-df <- oa2df(res, entity = "works")
 
-dplyr::glimpse(df)
-```
 
-#### Persistent Identifiers (PIDs)
+### More than one publications
 
-Many persistent identifiers (PIDs) are canonically expressed as a URL that will take you to the thing being identified.
-Where these URL formats exist, OpenAlex treats them as the canonical ID, and also accepts them as valid IDs.
-Example:
+To download the records of two or more identifiers through a single query, 
+we may be tempted to recursively apply **oaApiRequest** to each id using the function **lapply**.
+Some
 
-```{r}
-query_work <- oaQueryBuild(
-  identifier = "doi:https://doi.org/10.1016/j.joi.2017.08.007",
-  entity = "works"
-)
-
-cat(query_work)
-
-res <- oaApiRequest(
-  query_url = query_work
-)
-
-df <- oa2df(res, entity = "works")
-
-dplyr::glimpse(df)
-```
-
-### Query to obtain all information about a two o more publications
-
-To download the records of two o more identifiers through a single query, we can recursively apply **oaApiRequest** to each id using the function **lapply**.
-
-```{r}
-ids <- c("W2755950973", "W3005144120")
-
-res <- lapply(ids, function(x) {
+```{r eval=FALSE}
+c("W3005144120", "W2755950973") %>% 
+  lapply(function(x) {
   oaApiRequest(
     query_url = oaQueryBuild(
       identifier = x,
       entity = "works"
     )
   )
-})
+}) %>% 
+  oa2df(entity = "works")
 
-df <- oa2df(res, entity = "works")
-
-dplyr::glimpse(df)
 ```
 
-### Query to obtain all information about a single author
+However, the recommended way to avoid [burst rate limits](https://docs.openalex.org/api#rate-limits) (especially when we have a lot of identifiers) is to use a [filter](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists),
+in this case, by the [openalex](https://docs.openalex.org/about-the-data/work#ids) attribute:
+
+```{r}
+paper_oa <- oa_fetch(
+  openalex = c("W3005144120", "W2755950973"),
+  entity = "works",
+  verbose = TRUE
+)
+```
+
+
+## Authors
+
+### Single author
 
 The author Massimo Aria is associated to the OpenAlex-id A923435168.
 
@@ -199,13 +172,19 @@ query_author <- oaQueryBuild(
   entity = "authors"
 )
 
-cat(query_author)
+
+author_oa <- oa_fetch(
+  identifier = "A923435168",
+  entity = "authors",
+  verbose = TRUE
+)
+
 ```
 
 ```{r}
 res_author <- oaApiRequest(
   query_url = query_author,
-  total.count = FALSE,
+  count_only = FALSE,
   verbose = FALSE
 )
 ```
@@ -381,12 +360,12 @@ The **sort** argument indicates how results have to be sorted.
 
 In this example results are sorted by total citations in a descending order.
 
-Setting the argument total.count=TRUE, the function **oaApiRequest** returns the number of items matching the query without downloading the collection.
+Setting the argument count_only=TRUE, the function **oaApiRequest** returns the number of items matching the query without downloading the collection.
 
 ```{r}
 res <- oaApiRequest(
   query_url = query,
-  total.count = TRUE,
+  count_only = TRUE,
   verbose = FALSE
 )
 
@@ -398,7 +377,7 @@ Then, we can download the collection:
 ```{r}
 res <- oaApiRequest(
   query_url = query,
-  total.count = FALSE,
+  count_only = FALSE,
   verbose = FALSE
 )
 
@@ -431,7 +410,7 @@ query1 <- oaQueryBuild(
 
 res1 <- oaApiRequest(
   query_url = query1,
-  total.count = TRUE,
+  count_only = TRUE,
   verbose = FALSE
 )
 ```
@@ -443,7 +422,7 @@ Let's to download it and then to convert it into a data frame:
 ```{r}
 res <- oaApiRequest(
   query_url = query1,
-  total.count = FALSE,
+  count_only = FALSE,
   verbose = FALSE
 )
 
@@ -471,7 +450,7 @@ Check how many records match the query:
 ```{r}
 res <- oaApiRequest(
   query_url = query_author,
-  total.count = TRUE,
+  count_only = TRUE,
   verbose = FALSE
 )
 res$count
@@ -484,7 +463,7 @@ Then, we download and convert the collection:
 ```{r}
 res <- oaApiRequest(
   query_url = query_author,
-  total.count = FALSE,
+  count_only = FALSE,
   verbose = FALSE
 )
 df <- oa2df(res, entity = "authors")
@@ -509,7 +488,7 @@ We check how many records match the query:
 ```{r}
 res <- oaApiRequest(
   query_url = query_inst,
-  total.count = TRUE,
+  count_only = TRUE,
   verbose = TRUE
 )
 res$count
@@ -520,7 +499,7 @@ Then we download and convert the collection:
 ```{r}
 res <- oaApiRequest(
   query_url = query_inst,
-  total.count = FALSE,
+  count_only = FALSE,
   verbose = TRUE
 )
 df <- oa2df(res, entity = "institutions")
@@ -544,7 +523,7 @@ We check how many records match the query:
 ```{r}
 res <- oaApiRequest(
   query_url = query_venue,
-  total.count = TRUE,
+  count_only = TRUE,
   verbose = TRUE
 )
 res$count
@@ -555,7 +534,7 @@ Then we download and convert the collection:
 ```{r}
 res <- oaApiRequest(
   query_url = query_venue,
-  total.count = FALSE,
+  count_only = FALSE,
   verbose = TRUE
 )
 
@@ -580,7 +559,7 @@ We check how many records match the query:
 ```{r}
 res <- oaApiRequest(
   query_url = query_concept,
-  total.count = TRUE,
+  count_only = TRUE,
   verbose = TRUE
 )
 res$count
@@ -593,7 +572,7 @@ Then we download and convert the collection:
 ```{r}
 res <- oaApiRequest(
   query_url = query_concept,
-  total.count = FALSE,
+  count_only = FALSE,
   verbose = TRUE
 )
 
@@ -624,7 +603,7 @@ query1 <- oaQueryBuild(
 
 res1 <- oaApiRequest(
   query_url = query1,
-  total.count = TRUE,
+  count_only = TRUE,
   verbose = FALSE
 )
 ```
@@ -635,7 +614,7 @@ Let's download it:
 ```{r}
 res1 <- oaApiRequest(
   query_url = query1,
-  total.count = FALSE,
+  count_only = FALSE,
   verbose = FALSE
 )
 ```
