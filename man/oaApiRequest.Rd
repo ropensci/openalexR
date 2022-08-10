@@ -7,7 +7,7 @@
 oaApiRequest(
   query_url,
   per_page = 200,
-  total.count = FALSE,
+  count_only = FALSE,
   mailto = NULL,
   verbose = FALSE
 )
@@ -17,7 +17,7 @@ oaApiRequest(
 
 \item{per_page}{is a numeric. It indicates how many items to download per page. The per-page argument can assume any number between 1 and 200. Default is \code{per_page=200}.}
 
-\item{total.count}{is a logical. If TRUE, the function returns only the number of item matching the query. Default is \code{total.count=FALSE}.}
+\item{count_only}{is a logical. If TRUE, the function returns only the number of item matching the query. Default is \code{count_only=FALSE}.}
 
 \item{mailto}{is a character. To get into the polite pool, the arguments mailto have to give OpenAlex an email where they can contact you.}
 
@@ -54,7 +54,7 @@ query_work <- oaQueryBuild(
 
 res <- oaApiRequest(
   query_url = query_work,
-  total.count = FALSE,
+  count_only = FALSE,
   verbose = FALSE
 )
 
@@ -69,7 +69,7 @@ query_author <- oaQueryBuild(
 
 res <- oaApiRequest(
   query_url = query_author,
-  total.count = FALSE,
+  count_only = FALSE,
   verbose = FALSE
 )
 
@@ -99,7 +99,7 @@ query2 <- oaQueryBuild(
 
 res2 <- oaApiRequest(
   query_url = query2,
-  total.count = FALSE,
+  count_only = FALSE,
   verbose = FALSE
 )
 
@@ -123,7 +123,7 @@ query3 <- oaQueryBuild(
 
 res3 <- oaApiRequest(
   query_url = query3,
-  total.count = FALSE,
+  count_only = FALSE,
   verbose = FALSE
 )
 
@@ -131,7 +131,7 @@ res3 <- oaApiRequest(
 # Query to search all works containing the exact string
 # "bibliometric analysis" OR "science mapping" in the title, published in 2020 or 2021.
 
-# Query only to know how many works could be retrieved (total.count=TRUE)
+# Query only to know how many works could be retrieved (count_only=TRUE)
 
 query4 <- oaQueryBuild(
   identifier = NULL,
@@ -145,7 +145,7 @@ query4 <- oaQueryBuild(
 
 res4 <- oaApiRequest(
   query_url = query4,
-  total.count = TRUE,
+  count_only = TRUE,
   verbose = FALSE
 )
 

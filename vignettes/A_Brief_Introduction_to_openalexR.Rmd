@@ -263,7 +263,7 @@ cat(query_author)
 ```{r}
  res_author <- oaApiRequest(
     query_url = query_author,
-    total.count = FALSE,
+    count_only = FALSE,
     verbose = FALSE
  )
 ```
@@ -448,12 +448,12 @@ query <- oaQueryBuild(
     endpoint = "https://api.openalex.org/")
 ```
 
-Setting the argument total.count=TRUE, the function **oaApiRequest** returns the number of items matching the query without downloading the collection. 
+Setting the argument count_only=TRUE, the function **oaApiRequest** returns the number of items matching the query without downloading the collection. 
 
 ```{r}
  res <- oaApiRequest(
     query_url = query,
-    total.count = TRUE,
+    count_only = TRUE,
     verbose = FALSE
     )
 
@@ -465,7 +465,7 @@ Then, we can download the collection:
 ```{r}
  res <- oaApiRequest(
     query_url = query,
-    total.count = FALSE,
+    count_only = FALSE,
     verbose = FALSE
     )
 ```
@@ -506,7 +506,7 @@ query1 <- oaQueryBuild(
 
 res1 <- oaApiRequest(
     query_url = query1,
-    total.count = TRUE,
+    count_only = TRUE,
     verbose = FALSE
     )
 ```
@@ -521,7 +521,7 @@ Let's to download it:
 ```{r}
 res1 <- oaApiRequest(
     query_url = query1,
-    total.count = FALSE,
+    count_only = FALSE,
     verbose = FALSE
     )
 ```
@@ -555,7 +555,7 @@ We check how many records match the query:
 
 ```{r}
 res <- oaApiRequest(query_url = query_author,
-                    total.count = TRUE,
+                    count_only = TRUE,
                     verbose=FALSE)
 res$count
 ```
@@ -564,7 +564,7 @@ Then we download and convert the collection:
 
 ```{r}
 res <- oaApiRequest(query_url = query_author,
-                    total.count = FALSE,
+                    count_only = FALSE,
                     verbose=FALSE)
 df <- oa2df(res, entity = "authors")
 
@@ -589,7 +589,7 @@ We check how many records match the query:
 
 ```{r}
 res <- oaApiRequest(query_url = query_inst,
-                    total.count = TRUE,
+                    count_only = TRUE,
                     verbose=TRUE)
 res$count
 ```
@@ -598,7 +598,7 @@ Then we download and convert the collection:
 
 ```{r}
 res <- oaApiRequest(query_url = query_inst,
-                    total.count = FALSE,
+                    count_only = FALSE,
                     verbose=TRUE)
 df <- oa2df(res, entity = "institutions")
 
@@ -622,7 +622,7 @@ We check how many records match the query:
 
 ```{r}
 res <- oaApiRequest(query_url = query_venue,
-                    total.count = TRUE,
+                    count_only = TRUE,
                     verbose=TRUE)
 res$count
 ```
@@ -631,7 +631,7 @@ Then we download and convert the collection:
 
 ```{r}
 res <- oaApiRequest(query_url = query_venue,
-                    total.count = FALSE,
+                    count_only = FALSE,
                     verbose=TRUE)
 
 df <- oa2df(res, entity="venues")
@@ -655,7 +655,7 @@ We check how many records match the query:
 
 ```{r}
 res <- oaApiRequest(query_url = query_concept,
-                    total.count = TRUE,
+                    count_only = TRUE,
                     verbose=TRUE)
 res$count
 ```
@@ -664,7 +664,7 @@ Then we download and convert the collection:
 
 ```{r}
 res <- oaApiRequest(query_url = query_concept,
-                    total.count = FALSE,
+                    count_only = FALSE,
                     verbose=TRUE)
 
 df <- oa2df(res, entity="concepts")
@@ -692,7 +692,7 @@ query1 <- oaQueryBuild(
 
 res1 <- oaApiRequest(
     query_url = query1,
-    total.count = TRUE,
+    count_only = TRUE,
     verbose = FALSE
     )
 ```
@@ -707,7 +707,7 @@ Let's to download it:
 ```{r}
 res1 <- oaApiRequest(
     query_url = query1,
-    total.count = FALSE,
+    count_only = FALSE,
     verbose = FALSE
     )
 ```

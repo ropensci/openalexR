@@ -5,9 +5,9 @@
 \title{Generate an OpenAlex query from a set of parameters}
 \usage{
 oaQueryBuild(
-  identifier = NULL,
-  entity = c("works", "authors", "venues", "institutions", "concepts"),
   ...,
+  identifier = NULL,
+  entity = id_type(identifier),
   search = NULL,
   sort = NULL,
   group_by = NULL,
@@ -16,17 +16,17 @@ oaQueryBuild(
 )
 }
 \arguments{
-\item{identifier}{Character. It indicates an item identifier.}
-
-\item{entity}{Character. It indicates the scholarly entity of the search. The argument can be one of
-c("works", "authors", "venues", "institutions", "concepts"). The default value is entity = works".}
-
 \item{\dots}{Filter arguments. Filters narrow the list down to just entities that meet a particular condition--specifically, a particular value for a particular attribute.
 Filters are formatted as attribute = value. The complete list of filter attributes for each entity can be found
 For example, `cited_by_count = ">100"`,
 `title.search = c("bibliometric analysis", "science mapping")`,
 or `to_publication_date = "2021-12-31"`.
 at \href{https://docs.openalex.org/api/get-lists-of-entities#filter}{https://docs.openalex.org/api/get-lists-of-entities#filter}}
+
+\item{identifier}{Character. It indicates an item identifier.}
+
+\item{entity}{Character. It indicates the scholarly entity of the search. The argument can be one of
+c("works", "authors", "venues", "institutions", "concepts"). The default value is entity = works".}
 
 \item{search}{Character. Search is just another kind of filter, one that all five endpoints support. But unlike the other filters, search doesn't require an exact match.
 To filter using search, append .search to the end of the property you're filtering for.}
@@ -54,6 +54,8 @@ It generates a valid query, written following the OpenAlex API Language, from a 
 \examples{
 \dontrun{
 
+query_auth <- oaQueryBuild(identifier = "A923435168", verbose = TRUE)
+
 ### EXAMPLE 1: Full record about an entity.
 
 # Query to obtain allinformation about a particular work/author/institution/etc.:
@@ -64,35 +66,16 @@ It generates a valid query, written following the OpenAlex API Language, from a 
 #   An R-tool for comprehensive science mapping analysis.
 #   Journal of informetrics, 11(4), 959-975.
 
-
 query_work <- oaQueryBuild(
   identifier = "W2755950973",
-  endpoint = "https://api.openalex.org/"
+  endpoint = "https://api.openalex.org/",
+  verbose = TRUE
 )
 
-res_work <- oaApiRequest(
-  query_url = query_work,
-  format = "list",
-  total.count = FALSE,
-  verbose = FALSE
-)
 
 #  The author Massimo Aria is associated to the OpenAlex-id A923435168:
 
-
-query_author <- oaQueryBuild(
-  identifier = "A923435168",
-  entity = "authors",
-  endpoint = "https://api.openalex.org/"
-)
-
-res_author <- oaApiRequest(
-  query_url = query_author,
-  total.count = FALSE,
-  verbose = FALSE
-)
-
-
+query_auth <- oaQueryBuild(identifier = "A923435168", verbose = TRUE)
 
 ### EXAMPLE 2: all works citing a particular work.
 
@@ -107,58 +90,29 @@ res_author <- oaApiRequest(
 #  Results have to be sorted by relevance score in a descending order.
 
 query1 <- oaQueryBuild(
-  identifier = NULL,
   entity = "works",
   cites = "W2755950973",
   from_publication_date = "2021-01-01",
   to_publication_date = "2021-12-31",
-  search = NULL,
-  endpoint = "https://api.openalex.org/"
-)
-
-res1 <- oaApiRequest(
-  query_url = query1,
-  total.count = FALSE,
-  verbose = FALSE
+  verbose = TRUE
 )
 
 ### EXAMPLE 3: All works matching a string in their title
 
 # Query to search all works containing the exact string
-# "bibliometric analysis" OR "science mapping" in the title, published in 2020 or 2021.
+# "bibliometric analysis" OR "science mapping" in the title, published in the first half of 2021.
 
 # Results have to be sorted by relevance score in a descending order.
 
-
 query2 <- oaQueryBuild(
-  identifier = NULL,
   entity = "works",
   title.search = c("bibliometric analysis", "science mapping"),
   from_publication_date = "2021-01-01",
-  to_publication_date = "2021-06-31",
+  to_publication_date = "2021-06-30",
   sort = "cited_by_count:desc",
-  endpoint = "https://api.openalex.org/"
+  verbose = TRUE
 )
 
-res2 <- oaApiRequest(
-  query_url = query2,
-  total.count = FALSE,
-  verbose = FALSE
-)
-
-### EXAMPLE 4: How to check how many works match a query
-# Query to search all works containing the exact string
-# "bibliometric analysis" OR "science mapping" in the title, published in 2020 or 2021.
-
-# Query only to know how many works could be retrieved (total.count=TRUE)
-
-res3 <- oaApiRequest(
-  query_url = query2,
-  total.count = TRUE,
-  verbose = FALSE
-)
-
-res3$count # number of items retrieved by our query
 }
 
 }

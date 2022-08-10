@@ -33,7 +33,7 @@ query_inst <- oaQueryBuild(
 
 res <- oaApiRequest(
   query_url = query_inst,
-  total.count = FALSE,
+  count_only = FALSE,
   verbose = FALSE
 )
 

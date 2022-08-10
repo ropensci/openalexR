@@ -45,7 +45,7 @@ query <- oaQueryBuild(
 
 res <- oaApiRequest(
   query_url = query,
-  total.count = FALSE,
+  count_only = FALSE,
   verbose = FALSE
 )
 
