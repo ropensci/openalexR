@@ -6,28 +6,23 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of openalexR is to gather bibliographic metadata about
-publications, authors, venues, institutions and concepts from OpenAlex
-using API.
+**openalexR** helps you interface with the
+[OpenAlex](https://openalex.org) API for acquiring bibliographic
+infomation about publications, authors, venues, institutions and
+concepts with 4 main functions:
 
-OpenAlex is a fully open catalog of the global research system. It’s
-named after the ancient [Library of
-Alexandria](https://en.wikipedia.org/wiki/Library_of_Alexandria). The
-OpenAlex dataset describes scholarly entities and how those entities are
-connected to each other. There are five types of entities:
+-   `oa_query()`: generates a valid query, written following the
+    OpenAlex API syntax, from a set of arguments provided by the user.
 
--   **Works** are papers, books, datasets, etc; they cite other works
+-   `oa_request()`: downloads a collection of entities matching the
+    query created by `oa_query()` or manually written by the user, and
+    returns a JSON object in a list format.
 
--   **Authors** are people who create works
+-   `oa2df()`: converts the JSON object in classical bibliographic
+    tibble/data frame.
 
--   **Venues** are journals and repositories that host works
-
--   **Institutions** are universities and other orgs that are affiliated
-    with works (via authors)
-
--   **Concepts** *tag* Works with a topic
-
-(source: [OpenAlex website](https://openalex.org))
+-   `oa_fetch()`: composes three functions above so the user can execute
+    everything in one step, *i.e.*, `oa_query |> oa_request |> oa2df`
 
 ## Installation
 
@@ -65,50 +60,22 @@ library(dplyr)
 #>     intersect, setdiff, setequal, union
 ```
 
-# openalexR overview
+## Get full records through entity identifiers
 
-The basic idea of openalexR is to provide three main functions helping
-the user to:
+### Single publications
 
--   Create a query by passing one or more arguments to a function
-    (function **oa_query**)
-
--   Gather a collection of entities in JSON format (function
-    **oa_request**)
-
--   Transform the JSON in a data frame (similar to an excel sheet) can
-    be used as input in a bibliometric or science mapping analysis
-    (e.g. using the bibliometrix package) (function **oa2df**)
-
-OpenAlex defined a custom query language based on entity type. You can
-choose to write a valid query using that language or, in alternative,
-using the function **oa_query**.
-
-**oa_query** generates a valid query, written following the OpenAlex API
-language, from a set of arguments provided by the user.
-
-The function **oa_request** downloads a collection of entities matching
-the query created by **oa_query** or manually written by the user. The
-function will return a JSON object in a list format.
-
-Finally, the function **oa2df** converts the JSON object in classical
-bibliographic data frame.
-
-## Get full records through entity IDs
-
-### Query to obtain all information about a single publications
-
-The following paper:
+This paper:
 
     Aria, M., & Cuccurullo, C. (2017). bibliometrix: 
     An R-tool for comprehensive science mapping analysis. 
     Journal of informetrics, 11(4), 959-975.
 
-is associated to the OpenAlex-id **W2755950973**.
+is associated to the
+[OpenAlex-id](https://docs.openalex.org/about-the-data#the-openalex-id)
+**W2755950973**.
 
-In this example, we need to pass a single argument to the function, that
-is, the identifier of the entity to download:
-`identifier = "W2755950973"`.
+If you know this ID, all you need to do is passing
+`identifier = "W2755950973"` as an argument in `oa_fetch()`:
 
 ``` r
 paper_id <- oa_fetch(
@@ -150,11 +117,11 @@ dplyr::glimpse(paper_id)
 #> $ concept       <list> [<data.frame[8 x 5]>]
 ```
 
-**oa_fetch** is a composition of functions:
-`oa_query |> oa_request |> oa2df`. As results, **oa_query** returns the
+`oa_fetch()` is a composition of functions:
+`oa_query |> oa_request |> oa2df`. As results, `oa_query()` returns the
 query string including the OpenAlex endpoint API server address
-(default). **oa_request** downloads the bibliographic records matching
-the query. Finally, **oa2df** converts the final result list to a
+(default). `oa_request()` downloads the bibliographic records matching
+the query. Finally, `oa2df()` converts the final result list to a
 tibble.
 
 ### External id formats
@@ -169,7 +136,7 @@ We can get a publication record through its DOI using the format
 
 ``` r
 paper_doi <- oa_fetch(
-  # "doi:https://doi.org/10.1016/j.joi.2017.08.007" would also work (PIDs)
+  # identifier = "doi:https://doi.org/10.1016/j.joi.2017.08.007" # would also work (PIDs)
   identifier = "doi:10.1016/j.joi.2017.08.007",
   entity = "works"
 )
@@ -206,8 +173,8 @@ dplyr::glimpse(paper_doi)
 ### More than one publications
 
 To download the records of two or more identifiers through a single
-query, we may be tempted to recursively apply **oa_request** to each id
-using the function **lapply**. Some
+query, we may be tempted to recursively apply `oa_request()` to each id
+using `lapply()`:
 
 ``` r
 c("W3005144120", "W2755950973") %>% 
@@ -222,11 +189,11 @@ c("W3005144120", "W2755950973") %>%
   oa2df(entity = "works")
 ```
 
-However, the recommended way to avoid [burst rate
+However, the recommended way to do this to avoid [burst rate
 limits](https://docs.openalex.org/api#rate-limits) (especially when we
 have a lot of identifiers) is to use a
-[filter](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists),
-in this case, by the
+[filter](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists)
+(see more below), in this case, by the
 [openalex](https://docs.openalex.org/about-the-data/work#ids) attribute:
 
 ``` r
@@ -244,7 +211,7 @@ paper_oa <- oa_fetch(
 
 ### Single author
 
-The author Massimo Aria is associated to the OpenAlex-id A923435168.
+The author Massimo Aria is associated to the OpenAlex-id **A923435168**.
 
 ``` r
 oa_fetch(
@@ -317,7 +284,7 @@ published between 2020 and 2021, which include the strings “bibliometric
 analysis” or “science mapping” in the title. Maybe we also want the
 results to be sorted by total citations in a descending order.
 
-Setting the argument count_only=TRUE, the function **oa_request**
+Setting the argument count_only=TRUE, the function `oa_request()`
 returns the number of items matching the query without downloading the
 collection.
 
@@ -342,7 +309,7 @@ oa_fetch(
 ```
 
 We can now download the records and transform it into a tibble/data
-frame:
+frame by setting `count_only = FALSE` (also the default value):
 
 ``` r
 oa_fetch(
@@ -384,6 +351,8 @@ oa_fetch(
 #> $ concept       <list> [<data.frame[7 x 5]>], [<data.frame[7 x 5]>], [<data.fr…
 ```
 
+Read on to see how we can shorten these two function calls.
+
 ### Authors
 
 **Example**: We want download all authors’ records of scholars who work
@@ -404,7 +373,7 @@ my_arguments <- list(
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #>               count db_response_time_ms                page            per_page 
-#>                  22                   4                   1                   1
+#>                  22                   5                   1                   1
 do.call(oa_fetch, my_arguments) %>% 
   dplyr::glimpse()
 #> Rows: 22
@@ -445,7 +414,7 @@ do.call(oa_fetch, c(italian_insts, list(count_only = TRUE)))
 #> [1] "https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation"
 #> Requesting url: https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation
 #>               count db_response_time_ms                page            per_page 
-#>                 231                   1                   1                   1
+#>                 231                   2                   1                   1
 dplyr::glimpse(do.call(oa_fetch, italian_insts))
 #> [1] "https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation"
 #> Requesting url: https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation
@@ -489,7 +458,7 @@ do.call(oa_fetch, c(big_journals, list(count_only = TRUE)))
 #> [1] "https://api.openalex.org/venues?filter=works_count%3A%3E100000"
 #> Requesting url: https://api.openalex.org/venues?filter=works_count%3A%3E100000
 #>               count db_response_time_ms                page            per_page 
-#>                  52                   1                   1                   1
+#>                  52                   2                   1                   1
 dplyr::glimpse(do.call(oa_fetch, big_journals))
 #> [1] "https://api.openalex.org/venues?filter=works_count%3A%3E100000"
 #> Requesting url: https://api.openalex.org/venues?filter=works_count%3A%3E100000
@@ -528,7 +497,7 @@ do.call(oa_fetch, c(popular_concepts, list(count_only = TRUE)))
 #> [1] "https://api.openalex.org/concepts?filter=works_count%3A%3E1000000"
 #> Requesting url: https://api.openalex.org/concepts?filter=works_count%3A%3E1000000
 #>               count db_response_time_ms                page            per_page 
-#>                 146                   1                   1                   1
+#>                 146                   4                   1                   1
 dplyr::glimpse(do.call(oa_fetch, popular_concepts))
 #> [1] "https://api.openalex.org/concepts?filter=works_count%3A%3E1000000"
 #> Requesting url: https://api.openalex.org/concepts?filter=works_count%3A%3E1000000
@@ -592,7 +561,7 @@ oa_fetch(
   dplyr::glimpse()
 #> [1] "https://api.openalex.org/works?filter=cites%3AW2755950973"
 #> Requesting url: https://api.openalex.org/works?filter=cites%3AW2755950973
-#>  Named int [1:4] 1457 14 1 1
+#>  Named int [1:4] 1457 11 1 1
 #>  - attr(*, "names")= chr [1:4] "count" "db_response_time_ms" "page" "per_page"
 ```
 
@@ -622,7 +591,7 @@ bib_ls <- list(
 
 do.call(oa_fetch, c(bib_ls, list(count_only = TRUE)))
 #>               count db_response_time_ms                page            per_page 
-#>                 213                   7                   1                   1
+#>                 213                   6                   1                   1
 do.call(oa_fetch, bib_ls) %>% 
   oa2bibliometrix() %>% 
   dplyr::glimpse()
@@ -666,3 +635,22 @@ do.call(oa_fetch, bib_ls) %>%
 #> $ SR_FULL       <chr> "CHENG WANG, 2022, V10134376", "GIANLUCA ELIA, 2022, V90…
 #> $ SR            <chr> "CHENG WANG, 2022, V10134376", "GIANLUCA ELIA, 2022, V90…
 ```
+
+# About OpenAlex
+
+[OpenAlex](https://openalex.org) is a fully open catalog of the global
+research system. It’s named after the ancient [Library of
+Alexandria](https://en.wikipedia.org/wiki/Library_of_Alexandria). The
+OpenAlex dataset describes scholarly entities and how those entities are
+connected to each other. There are five types of entities:
+
+-   **Works** are papers, books, datasets, etc; they cite other works
+
+-   **Authors** are people who create works
+
+-   **Venues** are journals and repositories that host works
+
+-   **Institutions** are universities and other orgs that are affiliated
+    with works (via authors)
+
+-   **Concepts** *tag* Works with a topic
