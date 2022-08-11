@@ -49,7 +49,7 @@ oa_entities <- function(){
 #' }
 oa_fetch <- function(...,
                      identifier = NULL, ## identifier of a work, author, venue, etc.
-                     entity = if (is.null(identifier)) NULL else id_type(identifier),
+                     entity = if (is.null(identifier)) NULL else id_type(identifier[[1]]),
                      search = NULL,
                      sort = NULL,
                      group_by = NULL,

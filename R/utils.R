@@ -46,3 +46,7 @@ id_type <- function(identifier) {
     C = "concepts"
   )
 }
+
+show_author <- function(x){
+  head(x[, c("name", "works_count", "TC", "affiliation_name", "concept")])
+}

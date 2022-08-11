@@ -97,7 +97,7 @@
 
 oa_query <- function(...,
                      identifier = NULL, ## identifier of a work, author, venue, etc.
-                     entity = id_type(identifier),
+                     entity = id_type(identifier[[1]]),
                      search = NULL,
                      sort = NULL,
                      group_by = NULL,
@@ -105,8 +105,10 @@ oa_query <- function(...,
                      verbose = FALSE) {
 
   filter <- list(...)
+  multiple_id <- length(identifier) > 1
+  if (multiple_id) filter <- c(filter, list(openalex = identifier))
 
-  if (length(filter) > 0) {
+  if (length(filter) > 0 || multiple_id) {
     flt_ready <- mapply(append_flt, filter, names(filter))
     flt_ready[sapply(flt_ready, is.null)] <- NULL
     flt_ready <- paste0(flt_ready, collapse = ",")
@@ -114,7 +116,7 @@ oa_query <- function(...,
     flt_ready <- list()
   }
 
-  if (is.null(identifier)) {
+  if (is.null(identifier) || multiple_id) {
     if (is.null(filter) & (is.null(search))) {
       message("Identifier is missing, please specify filter or search argument.")
       return()

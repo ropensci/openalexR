@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: end -->
 
-**openalexR** helps you interface with the [OpenAlex](https://openalex.org) API for acquiring bibliographic infomation about publications, authors, venues, institutions and concepts with 4 main functions:
+**openalexR** helps you interface with the [OpenAlex](https://openalex.org) API to retrieve bibliographic infomation about publications, authors, venues, institutions and concepts with 4 main functions:
 
 -   `oa_query()`: generates a valid query, written following the OpenAlex API syntax, from a set of arguments provided by the user.
 
@@ -46,14 +46,14 @@ install.packages("openalexR")
 
 ## Package loading
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 library(openalexR)
 library(dplyr)
 ```
 
 ## Get full records through entity identifiers
 
-### Single publications
+### Single publication/author
 
 This paper:
 
@@ -79,6 +79,18 @@ As results, `oa_query()` returns the query string including the OpenAlex endpoin
 `oa_request()` downloads the bibliographic records matching the query.
 Finally, `oa2df()` converts the final result list to a tibble.
 
+Similarly, we can use identifier to pass in an author ID.
+
+In this example, the author Massimo Aria is associated to the OpenAlex-id **A923435168**.
+
+```{r}
+oa_fetch(
+  identifier = "A923435168",
+  count_only = FALSE
+) %>% 
+  dplyr::glimpse()
+```
+
 ### External id formats
 
 OpenAlex endpoint accepts an OpenAlex ID, but many [external IDs](https://docs.openalex.org/api/get-single-entities#id-formats) (*e.g.*, DOI, ISSN) are accepted as well, in several formats, including Digital Object Identifier (DOI) and Persistent Identifiers (PIDs).
@@ -95,57 +107,25 @@ paper_doi <- oa_fetch(
 dplyr::glimpse(paper_doi)
 ```
 
-### More than one publications
+### More than one publications/authors
 
-To download the records of two or more identifiers through a single query, we may be tempted to recursively apply `oa_request()` to each id using `lapply()`:
+[https://api.openalex.org/authors/https://orcid.org/](https://api.openalex.org/authors/https://orcid.org/0000-0003-1613-5981)
 
-```{r eval=FALSE}
-c("W3005144120", "W2755950973") %>% 
-  lapply(function(x) {
-  oa_request(
-    query_url = oa_query(
-      identifier = x,
-      entity = "works"
-    )
-  )
-}) %>% 
-  oa2df(entity = "works")
-
-```
-
-However, the recommended way to do this to avoid [burst rate limits](https://docs.openalex.org/api#rate-limits) (especially when we have a lot of identifiers) is to use a [filter](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists) (see more below), in this case, by the [openalex](https://docs.openalex.org/about-the-data/work#ids) attribute:
+If you know the OpenAlex IDs or external IDs of these entities, you can also feed them into the `identifier` argument.
+Otherwise,
 
 ```{r}
-paper_oa <- oa_fetch(
-  openalex = c("W3005144120", "W2755950973"),
-  entity = "works",
+oa_fetch(
+  identifier = c("doi:10.1016/j.joi.2017.08.007", "W2755950973"),
   verbose = TRUE
 )
-```
-
-## Authors
-
-### Single author
-
-The author Massimo Aria is associated to the OpenAlex-id **A923435168**.
-
-```{r}
-oa_fetch(
-  identifier = "A923435168",
-  count_only = TRUE,
-  verbose = TRUE
-) %>% 
-  dplyr::glimpse()
-
-```
-
-```{r}
-oa_fetch(
-  identifier = "A923435168",
-  entity = "authors",
-  count_only = FALSE
-) %>% 
-  dplyr::glimpse()
+# "orcid:0000-0001-6187-6610"
+# oa_fetch(
+#   identifier = c("A923435168", "A2208157607"),
+#   entity = "authors",
+#   verbose = TRUE
+# ) %>% 
+#   show_author()
 ```
 
 ## Filters
@@ -332,3 +312,5 @@ There are five types of entities:
 -   **Institutions** are universities and other orgs that are affiliated with works (via authors)
 
 -   **Concepts** *tag* Works with a topic
+
+![](https://i.imgur.com/FXTji65.png)
