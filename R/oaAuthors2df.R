@@ -40,7 +40,6 @@ utils::globalVariables("progress_bar")
 #'
 #' # @export
 oaAuthors2df <- function(data, verbose = TRUE) {
-
   # replace NULL with NA
   data <- simple_rapply(data, function(x) if (is.null(x)) NA else x)
 
@@ -48,8 +47,8 @@ oaAuthors2df <- function(data, verbose = TRUE) {
     data <- list(data)
   }
 
-  if (is.null(data[[1]]$id)) {
-    message("the list does not contain a valid OpenAlex collection")
+  if (length(data) == 0 || is.null(data[[1]]$id)) {
+    message("The list does not contain a valid OpenAlex collection.")
     return()
   }
 
@@ -83,7 +82,7 @@ oaAuthors2df <- function(data, verbose = TRUE) {
       ids <- NA
     }
 
-    rel_score <- item$relevance_score
+    rel_score <- item$relevance_score %||% NA
     orcid <- item$orcid
     works_count <- item$works_count
     TC <- item$cited_by_count
@@ -129,5 +128,6 @@ oaAuthors2df <- function(data, verbose = TRUE) {
       concept = concept, works_api_url = works_api_url
     )
   }
-  df <- do.call(rbind, list_df)
+
+  do.call(rbind, list_df)
 }

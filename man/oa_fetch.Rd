@@ -8,7 +8,7 @@ and convert the result to a tibble/data frame.}
 oa_fetch(
   ...,
   identifier = NULL,
-  entity = if (is.null(identifier)) NULL else id_type(identifier),
+  entity = if (is.null(identifier)) NULL else id_type(identifier[[1]]),
   search = NULL,
   sort = NULL,
   group_by = NULL,

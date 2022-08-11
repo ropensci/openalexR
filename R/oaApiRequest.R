@@ -319,6 +319,20 @@ api_request <- function(query_url, ua, query = query) {
     return(list())
   }
 
+  parsed <- jsonlite::fromJSON(httr::content(res, "text", encoding = "UTF-8"), simplifyVector = FALSE)
+
+  if (httr::http_error(res)) {
+    stop(
+      sprintf(
+        "OpenAlex API request failed [%s]\n%s\n<%s>",
+        httr::status_code(res),
+        parsed$error,
+        parsed$message
+      ),
+      call. = FALSE
+    )
+  }
+
   if (httr::status_code(res) != 429 & httr::status_code(res) != 200) {
     message("HTTP status ", httr::status_code(res))
     return(list())

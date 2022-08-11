@@ -42,8 +42,7 @@ query <- oa_query(
   entity = "works",
   cites = "W2755950973",
   from_publication_date = "2021-01-01",
-  to_publication_date = "2021-12-31",
-  endpoint = "https://api.openalex.org/"
+  to_publication_date = "2021-04-31"
 )
 
 res <- oa_request(
@@ -52,9 +51,8 @@ res <- oa_request(
   verbose = FALSE
 )
 
-df <- oa2df(res, entity = "works")
+oa2df(res, entity = "works")
 
-df
 }
 
 }

@@ -7,7 +7,7 @@
 oa_query(
   ...,
   identifier = NULL,
-  entity = id_type(identifier),
+  entity = id_type(identifier[[1]]),
   search = NULL,
   sort = NULL,
   group_by = NULL,
