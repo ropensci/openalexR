@@ -2,9 +2,9 @@ utils::globalVariables("progress_bar")
 #' Convert OpenAlex collection of venues' records from list format to data frame
 #'
 #' It converts bibliographic collection of venues' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
-#' The function converts a list of venues' records obtained using \code{oaApiRequest} into a data frame/tibble.
+#' The function converts a list of venues' records obtained using \code{oa_request} into a data frame/tibble.
 #'
-#' @param data is a list. data is the output of the function \code{oaApiRequest}.
+#' @param data is a list. data is the output of the function \code{oa_request}.
 #' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.
 #'
 #' @return a data.frame.
@@ -18,14 +18,14 @@ utils::globalVariables("progress_bar")
 #' # Query to search information about the Journal of Informetrics (OA id:V205292342)
 #'
 #'
-#' query_inst <- oaQueryBuild(
+#' query_inst <- oa_query(
 #'   identifier = "V205292342",
 #'   entity = "venues",
 #' )
 #'
-#' res <- oaApiRequest(
+#' res <- oa_request(
 #'   query_url = query_inst,
-#'   total.count = FALSE,
+#'   count_only = FALSE,
 #'   verbose = FALSE
 #' )
 #'

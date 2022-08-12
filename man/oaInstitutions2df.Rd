@@ -7,7 +7,7 @@
 oaInstitutions2df(data, verbose = TRUE)
 }
 \arguments{
-\item{data}{is a list. data is the output of the function \code{oaApiRequest}.}
+\item{data}{is a list. data is the output of the function \code{oa_request}.}
 
 \item{verbose}{is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.}
 }
@@ -18,7 +18,7 @@ For more extensive information about OpenAlex API, please visit: \href{https://d
 }
 \description{
 It converts bibliographic collection of institutions' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
-The function converts a list of institutions' records obtained using \code{oaApiRequest} into a data frame/tibble.
+The function converts a list of institutions' records obtained using \code{oa_request} into a data frame/tibble.
 }
 \examples{
 \dontrun{
@@ -26,14 +26,14 @@ The function converts a list of institutions' records obtained using \code{oaApi
 # Query to search information about all Italian educational institutions
 
 
-query_inst <- oaQueryBuild(
+query_inst <- oa_query(
   entity = "institutions",
   filter = "country_code:it,type:education"
 )
 
-res <- oaApiRequest(
+res <- oa_request(
   query_url = query_inst,
-  total.count = FALSE,
+  count_only = FALSE,
   verbose = FALSE
 )
 

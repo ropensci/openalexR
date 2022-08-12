@@ -19,7 +19,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Massimo Aria \email{massimo.aria@gmail.com} (\href{https://orcid.org/0000-0002-8517-9411}{ORCID})
+\strong{Maintainer}: Massimo Aria \email{massimo.aria@gmail.com} (\href{https://orcid.org/0000-0002-8517-9411}{ORCID}) [copyright holder]
 
 }
 \keyword{internal}

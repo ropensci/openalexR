@@ -2,9 +2,9 @@ utils::globalVariables("progress_bar")
 #' Convert OpenAlex collection of works from list format to data frame
 #'
 #' It converts bibliographic collection of works gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
-#' The function converts a list of works obtained using \code{oaApiRequest} into a data frame/tibble.
+#' The function converts a list of works obtained using \code{oa_request} into a data frame/tibble.
 #'
-#' @param data is a list. data is the output of the function \code{oaApiRequest}.
+#' @param data is a list. data is the output of the function \code{oa_request}.
 #' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.
 #'
 #' @return a data.frame.
@@ -25,19 +25,19 @@ utils::globalVariables("progress_bar")
 #'
 #' #  Results have to be sorted by relevance score in a descending order.
 #'
-#' query <- oaQueryBuild(
+#' query <- oa_query(
 #'   identifier = NULL,
 #'   entity = "works",
 #'   filter = "cites:W2755950973",
-#'   date_from = "2021-01-01",
-#'   date_to = "2021-12-31",
+#'   from_publication_date = "2021-01-01",
+#'   to_publication_date = "2021-12-31",
 #'   search = NULL,
 #'   endpoint = "https://api.openalex.org/"
 #' )
 #'
-#' res <- oaApiRequest(
+#' res <- oa_request(
 #'   query_url = query,
-#'   total.count = FALSE,
+#'   count_only = FALSE,
 #'   verbose = FALSE
 #' )
 #'
@@ -48,9 +48,6 @@ utils::globalVariables("progress_bar")
 #'
 #' # @export
 oaWorks2df <- function(data, verbose = TRUE) {
-
-  # replace NULL with NA
-  # data <- simple_rapply(data, function(x) if(is.null(x)) NA else x)
 
   if (!is.null(data$id)) {
     data <- list(data)
@@ -101,10 +98,9 @@ oaWorks2df <- function(data, verbose = TRUE) {
     }
 
     # authorships and affilitation
-    author <- list(do.call(rbind,lapply(paper$authorships, function(l){
-
-      ind <- which(lengths(l[["institutions"]])>0)[1]
-      if (!is.na(ind)){
+    author <- list(do.call(rbind, lapply(paper$authorships, function(l) {
+      ind <- which(lengths(l[["institutions"]]) > 0)[1]
+      if (!is.na(ind)) {
         institution_id <- l[["institutions"]][[ind]]$id
         institution_name <- l[["institutions"]][[ind]]$display_name
         institution_ror <- l[["institutions"]][[ind]]$ror
@@ -117,29 +113,29 @@ oaWorks2df <- function(data, verbose = TRUE) {
         institution_country <- NA
         institution_type <- NA
       }
-      if (length(l[["author"]])==0){
+      if (length(l[["author"]]) == 0) {
         au_id <- NA
         au_name <- NA
         au_orcid <- NA
         au_position <- NA
-      }else{
+      } else {
         au_id <- l[["author"]]$id[1]
         au_name <- l[["author"]]$display_name[1]
         au_orcid <- l[["author"]]$orcid[1]
         au_position <- l$author_position[1]
       }
-      #print(l[["author"]]$id)
+      # print(l[["author"]]$id)
       L <- data.frame(
-        au_id=au_id,
-        au_name=au_name,
-        au_orcid=au_orcid,
-        au_position=au_position,
-        au_affiliation_raw=l$raw_affiliation_string[1],
-          institution_id = institution_id[1],
-          institution_name = institution_name[1],
-          institution_ror = institution_ror[1],
-          institution_country = institution_country[1],
-          institution_type = institution_type[1]
+        au_id = au_id,
+        au_name = au_name,
+        au_orcid = au_orcid,
+        au_position = au_position,
+        au_affiliation_raw = l$raw_affiliation_string[1],
+        institution_id = institution_id[1],
+        institution_name = institution_name[1],
+        institution_ror = institution_ror[1],
+        institution_country = institution_country[1],
+        institution_type = institution_type[1]
       )
     })))
 
@@ -197,7 +193,8 @@ oaWorks2df <- function(data, verbose = TRUE) {
       concept = concept
     )
   }
-  df <- do.call(rbind, list_df)
+
+  do.call(rbind, list_df)
 }
 
 abstract_build <- function(ab) {

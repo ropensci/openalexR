@@ -2,9 +2,9 @@ utils::globalVariables("progress_bar")
 #' Convert OpenAlex collection of institutions' records from list format to data frame
 #'
 #' It converts bibliographic collection of institutions' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
-#' The function converts a list of institutions' records obtained using \code{oaApiRequest} into a data frame/tibble.
+#' The function converts a list of institutions' records obtained using \code{oa_request} into a data frame/tibble.
 #'
-#' @param data is a list. data is the output of the function \code{oaApiRequest}.
+#' @param data is a list. data is the output of the function \code{oa_request}.
 #' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.
 #'
 #' @return a data.frame.
@@ -18,14 +18,14 @@ utils::globalVariables("progress_bar")
 #' # Query to search information about all Italian educational institutions
 #'
 #'
-#' query_inst <- oaQueryBuild(
+#' query_inst <- oa_query(
 #'   entity = "institutions",
 #'   filter = "country_code:it,type:education"
 #' )
 #'
-#' res <- oaApiRequest(
+#' res <- oa_request(
 #'   query_url = query_inst,
-#'   total.count = FALSE,
+#'   count_only = FALSE,
 #'   verbose = FALSE
 #' )
 #'
@@ -83,7 +83,7 @@ oaInstitutions2df <- function(data, verbose = TRUE) {
       item[c("id", "ror", "works_api_url", "type", "works_count")]
     )
     ids <- subs_na(item$ids, type = "col_df") # TODO is tibble ok? (no rownames)
-      
+
     # TODO changing the name is not very robust here
     # TODO check rel_score
     rel_score <- item$relevance_score
@@ -98,12 +98,11 @@ oaInstitutions2df <- function(data, verbose = TRUE) {
     # Total Citations per Year
     # TODO
     # Do we need to change these names?
-    # there was a typo here earlier: lecel should be level
     c_tcs <- do.call(rbind.data.frame, item$counts_by_year)
     names(c_tcs)[names(c_tcs) == "cited_by_count"] <- "TC"
     TCperYear <- list(c_tcs)
 
-    if (length(item$x_concept) == 0){
+    if (length(item$x_concept) == 0) {
       concept <- NA
     } else {
       c_concepts <- do.call(rbind.data.frame, item$x_concepts)
@@ -113,7 +112,8 @@ oaInstitutions2df <- function(data, verbose = TRUE) {
     }
 
     item_organized <- tibble::tibble(
-      sub_unlist, sub_df, sub_identical, sub_modified, ids = ids,
+      sub_unlist, sub_df, sub_identical, sub_modified,
+      ids = ids,
       rel_score = rel_score, TCperYear = TCperYear, concept = concept
     )
 
@@ -126,5 +126,5 @@ oaInstitutions2df <- function(data, verbose = TRUE) {
     )
     list_df[[i]] <- item_organized[, col_order]
   }
-  df <- do.call(rbind, list_df)
+  do.call(rbind, list_df)
 }

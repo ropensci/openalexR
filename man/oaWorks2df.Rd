@@ -7,7 +7,7 @@
 oaWorks2df(data, verbose = TRUE)
 }
 \arguments{
-\item{data}{is a list. data is the output of the function \code{oaApiRequest}.}
+\item{data}{is a list. data is the output of the function \code{oa_request}.}
 
 \item{verbose}{is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.}
 }
@@ -18,7 +18,7 @@ For more extensive information about OpenAlex API, please visit: \href{https://d
 }
 \description{
 It converts bibliographic collection of works gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
-The function converts a list of works obtained using \code{oaApiRequest} into a data frame/tibble.
+The function converts a list of works obtained using \code{oa_request} into a data frame/tibble.
 }
 \examples{
 \dontrun{
@@ -33,19 +33,19 @@ The function converts a list of works obtained using \code{oaApiRequest} into a 
 
 #  Results have to be sorted by relevance score in a descending order.
 
-query <- oaQueryBuild(
+query <- oa_query(
   identifier = NULL,
   entity = "works",
   filter = "cites:W2755950973",
-  date_from = "2021-01-01",
-  date_to = "2021-12-31",
+  from_publication_date = "2021-01-01",
+  to_publication_date = "2021-12-31",
   search = NULL,
   endpoint = "https://api.openalex.org/"
 )
 
-res <- oaApiRequest(
+res <- oa_request(
   query_url = query,
-  total.count = FALSE,
+  count_only = FALSE,
   verbose = FALSE
 )
 

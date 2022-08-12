@@ -1,11 +1,12 @@
 #' Convert OpenAlex collection from list to data frame
 #'
 #' It converts bibliographic collections gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
-#' The function converts a collection of records about works, authors, institutions, venues or concepts obtained using \code{oaApiRequest} into a data frame/tibble.
+#' The function converts a collection of records about works, authors, institutions, venues or concepts obtained using \code{oa_request} into a data frame/tibble.
 #'
-#' @param data is a list. data is the output of the function \code{oaApiRequest}.
+#' @param data is a list. data is the output of the function \code{oa_request}.
 #' @param entity is a character. It indicates the scholarly entity of the search. The argument can be equal to
 #' entity = c("works", "authors", "venues", "institutions", "concepts"). The default value is entity = works".
+#' @param count_only Logical. If TRUE, the function returns only the number of item matching the query. Default is \code{count_only=FALSE}.
 #' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.
 #' @return a data.frame.
 #'
@@ -25,30 +26,26 @@
 #'
 #' #  Results have to be sorted by relevance score in a descending order.
 #'
-#' query <- oaQueryBuild(
-#'   identifier = NULL,
+#' query <- oa_query(
 #'   entity = "works",
-#'   filter = "cites:W2755950973",
-#'   date_from = "2021-01-01",
-#'   date_to = "2021-12-31",
-#'   search = NULL,
-#'   endpoint = "https://api.openalex.org/"
+#'   cites = "W2755950973",
+#'   from_publication_date = "2021-01-01",
+#'   to_publication_date = "2021-04-31"
 #' )
 #'
-#' res <- oaApiRequest(
+#' res <- oa_request(
 #'   query_url = query,
-#'   total.count = FALSE,
+#'   count_only = FALSE,
 #'   verbose = FALSE
 #' )
 #'
-#' df <- oa2df(res, entity = "works")
+#' oa2df(res, entity = "works")
 #'
-#' df
 #' }
 #'
 #' @export
-oa2df <- function(data, entity = c("works", "authors", "venues", "institutions", "concepts"), verbose = TRUE) {
-  entity <- match.arg(entity)
+oa2df <- function(data, entity, count_only = FALSE, verbose = TRUE) {
+  if (count_only && length(data) == 4) return(unlist(data))
 
   switch(entity,
     works = oaWorks2df(data, verbose),

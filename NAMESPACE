@@ -2,5 +2,8 @@
 
 export(oa2bibliometrix)
 export(oa2df)
-export(oaApiRequest)
-export(oaQueryBuild)
+export(oa_fetch)
+export(oa_query)
+export(oa_request)
+export(show_authors)
+export(show_works)
