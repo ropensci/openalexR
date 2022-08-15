@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# openalexR
+# openalexR <img src="man/figures/logo.png" align="right" height="139" />
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -223,7 +223,7 @@ oa_fetch(
 #> [1] "https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc"
 #> Requesting url: https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc
 #>               count db_response_time_ms                page            per_page 
-#>                  23                  17                   1                   1
+#>                  23                  19                   1                   1
 ```
 
 We can now download the records and transform it into a tibble/data
@@ -277,7 +277,7 @@ oa_fetch(
 | short_id    | name         | orcid               | works_count |   TC | affiliation_name                 | top_concepts                                                                            |
 |:------------|:-------------|:--------------------|------------:|-----:|:---------------------------------|:----------------------------------------------------------------------------------------|
 | A923435168  | Massimo Aria | 0000-0002-8517-9411 |         102 | 2887 | University of Naples Federico II | Biology, Medicine, Computer science, Mathematics, Psychology, Statistics                |
-| A2208157607 | Jason Priem  | 0000-0001-6187-6610 |          49 | 2486 | Our Research                     | Computer science, World Wide Web, Political science, Law, Library science, Data science |
+| A2208157607 | Jason Priem  | 0000-0001-6187-6610 |          49 | 2184 | Our Research                     | Computer science, World Wide Web, Political science, Law, Library science, Data science |
 
 **Example**: We want download all authors’ records of scholars who work
 at the University of Naples Federico II (OpenAlex ID: I71267560) and who
@@ -297,7 +297,7 @@ my_arguments <- list(
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #>               count db_response_time_ms                page            per_page 
-#>                  22                   5                   1                   1
+#>                  22                  22                   1                   1
 do.call(oa_fetch, my_arguments) %>% 
   show_authors() %>%
   knitr::kable()
@@ -307,8 +307,8 @@ do.call(oa_fetch, my_arguments) %>%
 |:------------|:-------------------------|:--------------------|------------:|------:|:---------------------------------|:--------------------------------------------------------------------------------------------------|
 | A2600338221 | Alberto Orso Maria Iorio | 0000-0002-3798-1135 |        1144 | 49621 | University of Naples Federico II | Physics, Nuclear physics, Particle physics, Quantum mechanics, Large Hadron Collider, Mathematics |
 | A2011452631 | Leonardo Merola          | NA                  |        1115 | 35840 | University of Naples Federico II | Physics, Nuclear physics, Particle physics, Quantum mechanics, Large Hadron Collider, Biology     |
-| A2062713547 | G. De Nardo              | NA                  |        1024 | 27850 | University of Naples Federico II | Physics, Nuclear physics, Particle physics, Quantum mechanics, Hadron, Atomic physics             |
 | A3113327292 | Vincenzo Canale          | NA                  |         990 | 30781 | University of Naples Federico II | Physics, Quantum mechanics, Particle physics, Nuclear physics, Large Hadron Collider, Geology     |
+| A2062713547 | G. De Nardo              | NA                  |         959 | 20140 | University of Naples Federico II | Physics, Nuclear physics, Particle physics, Quantum mechanics, Hadron, Atomic physics             |
 | A223517670  | Ettore Novellino         | 0000-0002-2181-2142 |         933 | 23082 | University of Naples Federico II | Chemistry, Biology, Biochemistry, Genetics, Medicine, Organic chemistry                           |
 | A2159261619 | Annamaria Colao          | 0000-0001-6986-266X |         927 | 40708 | University of Naples Federico II | Medicine, Biology, Internal medicine, Endocrinology, Pathology, Chemistry                         |
 
@@ -364,7 +364,7 @@ do.call(oa_fetch, c(italian_insts, list(count_only = TRUE)))
 #> [1] "https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation"
 #> Requesting url: https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation
 #>               count db_response_time_ms                page            per_page 
-#>                 231                   0                   1                   1
+#>                 231                   1                   1                   1
 dplyr::glimpse(do.call(oa_fetch, italian_insts))
 #> [1] "https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation"
 #> Requesting url: https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation
@@ -385,8 +385,8 @@ dplyr::glimpse(do.call(oa_fetch, italian_insts))
 #> $ image              <chr> "https://upload.wikimedia.org/wikipedia/en/4/45/Sap…
 #> $ thumbnail          <chr> "https://upload.wikimedia.org/wikipedia/en/thumb/4/…
 #> $ associated_inst    <list> [<data.frame[1 x 24]>], [<data.frame[1 x 12]>], [<…
-#> $ works_count        <int> 163634, 130425, 128970, 127569, 91377, 86776, 85346…
-#> $ TC                 <int> 10642287, 9668301, 9544719, 9321475, 6026087, 56396…
+#> $ works_count        <int> 163734, 130504, 129044, 127634, 91431, 86804, 85397…
+#> $ TC                 <int> 10604126, 9662346, 9535357, 9249788, 5999184, 56226…
 #> $ TCperYear          <list> [<data.frame[11 x 3]>], [<data.frame[11 x 3]>], [<…
 #> $ concept            <list> [<data.frame[14 x 5]>], [<data.frame[15 x 5]>], [<…
 #> $ works_api_url      <chr> "https://api.openalex.org/works?filter=institutions…
@@ -408,7 +408,7 @@ do.call(oa_fetch, c(big_journals, list(count_only = TRUE)))
 #> [1] "https://api.openalex.org/venues?filter=works_count%3A%3E100000"
 #> Requesting url: https://api.openalex.org/venues?filter=works_count%3A%3E100000
 #>               count db_response_time_ms                page            per_page 
-#>                  52                   1                   1                   1
+#>                  52                   2                   1                   1
 dplyr::glimpse(do.call(oa_fetch, big_journals))
 #> [1] "https://api.openalex.org/venues?filter=works_count%3A%3E100000"
 #> Requesting url: https://api.openalex.org/venues?filter=works_count%3A%3E100000
@@ -424,8 +424,8 @@ dplyr::glimpse(do.call(oa_fetch, big_journals))
 #> $ is_in_doaj    <lgl> NA, NA, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE,…
 #> $ ids           <list> [<data.frame[2 x 2]>], [<data.frame[2 x 2]>], [<data.fr…
 #> $ homepage      <chr> "http://www.ssrn.com/", "http://www.repec.org/", NA, "ht…
-#> $ works_count   <int> 763564, 753131, 742246, 513454, 466874, 449104, 433975, …
-#> $ TC            <int> 2703239, 2379960, 239266, 5436658, 7182567, 3461681, 191…
+#> $ works_count   <int> 761305, 753036, 740934, 514023, 467744, 448839, 434063, …
+#> $ TC            <int> 2664226, 2360376, 233707, 5413674, 7062712, 3423228, 191…
 #> $ TCperYear     <list> [<data.frame[11 x 3]>], [<data.frame[11 x 3]>], [<data.…
 #> $ concept       <list> [<data.frame[20 x 5]>], [<data.frame[21 x 5]>], [<data.…
 #> $ works_api_url <chr> "https://api.openalex.org/works?filter=host_venue.id:V27…
@@ -447,7 +447,7 @@ do.call(oa_fetch, c(popular_concepts, list(count_only = TRUE)))
 #> [1] "https://api.openalex.org/concepts?filter=works_count%3A%3E1000000"
 #> Requesting url: https://api.openalex.org/concepts?filter=works_count%3A%3E1000000
 #>               count db_response_time_ms                page            per_page 
-#>                 146                   1                   1                   1
+#>                 146                   3                   1                   1
 dplyr::glimpse(do.call(oa_fetch, popular_concepts))
 #> [1] "https://api.openalex.org/concepts?filter=works_count%3A%3E1000000"
 #> Requesting url: https://api.openalex.org/concepts?filter=works_count%3A%3E1000000
@@ -466,8 +466,8 @@ dplyr::glimpse(do.call(oa_fetch, popular_concepts))
 #> $ thumbnail                 <chr> "https://upload.wikimedia.org/wikipedia/comm…
 #> $ ancestors                 <list> NA, NA, NA, NA, NA, NA, NA, [<data.frame[2 …
 #> $ rel_concepts              <list> [<data.frame[93 x 5]>], [<data.frame[51 x 5…
-#> $ works_count               <int> 40435335, 36757130, 20870559, 17524496, 1702…
-#> $ TC                        <int> 214075881, 370326571, 325870551, 159688450, …
+#> $ works_count               <int> 40513549, 36892224, 20875029, 17567558, 1705…
+#> $ TC                        <int> 214363426, 366806828, 324514640, 158829615, …
 #> $ TCperYear                 <list> [<data.frame[11 x 3]>], [<data.frame[11 x 3…
 #> $ works_api_url             <chr> "https://api.openalex.org/works?filter=conce…
 ```
@@ -495,10 +495,10 @@ aria_count <- oa_fetch(
 #> Requesting url: https://api.openalex.org/works?filter=cites%3AW2755950973
 aria_count
 #>               count db_response_time_ms                page            per_page 
-#>                1457                   7                   1                   1
+#>                1476                  37                   1                   1
 ```
 
-This query will return a collection of 1457 publications. Let’s to
+This query will return a collection of 1476 publications. Let’s to
 download it and then to convert it into a data frame:
 
 ``` r
@@ -511,7 +511,7 @@ oa_fetch(
   dplyr::glimpse()
 #> [1] "https://api.openalex.org/works?filter=cites%3AW2755950973"
 #> Requesting url: https://api.openalex.org/works?filter=cites%3AW2755950973
-#>  Named int [1:4] 1457 7 1 1
+#>  Named int [1:4] 1476 25 1 1
 #>  - attr(*, "names")= chr [1:4] "count" "db_response_time_ms" "page" "per_page"
 ```
 
@@ -541,11 +541,11 @@ bib_ls <- list(
 
 do.call(oa_fetch, c(bib_ls, list(count_only = TRUE)))
 #>               count db_response_time_ms                page            per_page 
-#>                 213                   6                   1                   1
+#>                 215                   8                   1                   1
 do.call(oa_fetch, bib_ls) %>% 
   oa2bibliometrix() %>% 
   dplyr::glimpse()
-#> Rows: 213
+#> Rows: 215
 #> Columns: 37
 #> $ AU            <chr> "CHENG WANG;TAO LV;RONGJIANG CAI;JIANFENG XU;LIYA WANG",…
 #> $ RP            <chr> "SCHOOL OF ECONOMICS AND MANAGEMENT, CHINA UNIVERSITY OF…
@@ -607,3 +607,9 @@ connected to each other. There are five types of entities:
     with works (via authors)
 
 -   **Concepts** *tag* Works with a topic
+
+## Acknowledgements
+
+Package hex made with [Midjourney](https://www.midjourney.com/home/)
+which inherits a [CC BY-NC 4.0
+license](https://creativecommons.org/licenses/by-nc/4.0/legalcode).
