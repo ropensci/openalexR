@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# openalexR
+# openalexR <img src="man/figures/logo.png" align="right" height="139" />
 
 <!-- badges: start -->
 
@@ -351,3 +351,6 @@ There are five types of entities:
 
 -   **Concepts** *tag* Works with a topic
 
+## Acknowledgements
+
+Package hex made with [Midjourney](https://www.midjourney.com/home/) which inherits a [CC BY-NC 4.0 license](https://creativecommons.org/licenses/by-nc/4.0/legalcode).
