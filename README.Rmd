@@ -333,8 +333,9 @@ do.call(oa_fetch, bib_ls) %>%
 
 # About OpenAlex
 
-![Image from https://docs.openalex.org/](https://i.imgur.com/FXTji65.png)
+![oar-img](https://pbs.twimg.com/media/FI2t0KBUYAMQWM5?format=jpg&name=large)
 
+<div style="text-align: right"> Schema credits: [@dhimmel](https://github.com/dhimmel) </div>
 
 [OpenAlex](https://openalex.org) is a fully open catalog of the global research system.
 It's named after the ancient [Library of Alexandria](https://en.wikipedia.org/wiki/Library_of_Alexandria).
@@ -353,4 +354,4 @@ There are five types of entities:
 
 ## Acknowledgements
 
-Package hex made with [Midjourney](https://www.midjourney.com/home/) which inherits a [CC BY-NC 4.0 license](https://creativecommons.org/licenses/by-nc/4.0/legalcode).
+Package hex was made with [Midjourney](https://www.midjourney.com/home/) and thus inherits a [CC BY-NC 4.0 license](https://creativecommons.org/licenses/by-nc/4.0/legalcode).

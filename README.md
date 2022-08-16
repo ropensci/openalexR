@@ -70,8 +70,6 @@ paper_id <- oa_fetch(
 )
 #> [1] "https://api.openalex.org/works/W2755950973"
 #> Requesting url: https://api.openalex.org/works/W2755950973
-#> Warning: replacing previous import 'lifecycle::last_warnings' by
-#> 'rlang::last_warnings' when loading 'hms'
 dplyr::glimpse(paper_id)
 #> Rows: 1
 #> Columns: 25
@@ -223,7 +221,7 @@ oa_fetch(
 #> [1] "https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc"
 #> Requesting url: https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc
 #>               count db_response_time_ms                page            per_page 
-#>                  23                  19                   1                   1
+#>                  23                  17                   1                   1
 ```
 
 We can now download the records and transform it into a tibble/data
@@ -297,7 +295,7 @@ my_arguments <- list(
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #>               count db_response_time_ms                page            per_page 
-#>                  22                  22                   1                   1
+#>                  22                   4                   1                   1
 do.call(oa_fetch, my_arguments) %>% 
   show_authors() %>%
   knitr::kable()
@@ -364,7 +362,7 @@ do.call(oa_fetch, c(italian_insts, list(count_only = TRUE)))
 #> [1] "https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation"
 #> Requesting url: https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation
 #>               count db_response_time_ms                page            per_page 
-#>                 231                   1                   1                   1
+#>                 231                   2                   1                   1
 dplyr::glimpse(do.call(oa_fetch, italian_insts))
 #> [1] "https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation"
 #> Requesting url: https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation
@@ -385,8 +383,8 @@ dplyr::glimpse(do.call(oa_fetch, italian_insts))
 #> $ image              <chr> "https://upload.wikimedia.org/wikipedia/en/4/45/Sap…
 #> $ thumbnail          <chr> "https://upload.wikimedia.org/wikipedia/en/thumb/4/…
 #> $ associated_inst    <list> [<data.frame[1 x 24]>], [<data.frame[1 x 12]>], [<…
-#> $ works_count        <int> 163734, 130504, 129044, 127634, 91431, 86804, 85397…
-#> $ TC                 <int> 10604126, 9662346, 9535357, 9249788, 5999184, 56226…
+#> $ works_count        <int> 163734, 130504, 129044, 127634, 91431, 86815, 85397…
+#> $ TC                 <int> 10604126, 9662346, 9535357, 9249788, 5999184, 56099…
 #> $ TCperYear          <list> [<data.frame[11 x 3]>], [<data.frame[11 x 3]>], [<…
 #> $ concept            <list> [<data.frame[14 x 5]>], [<data.frame[15 x 5]>], [<…
 #> $ works_api_url      <chr> "https://api.openalex.org/works?filter=institutions…
@@ -447,7 +445,7 @@ do.call(oa_fetch, c(popular_concepts, list(count_only = TRUE)))
 #> [1] "https://api.openalex.org/concepts?filter=works_count%3A%3E1000000"
 #> Requesting url: https://api.openalex.org/concepts?filter=works_count%3A%3E1000000
 #>               count db_response_time_ms                page            per_page 
-#>                 146                   3                   1                   1
+#>                 146                   1                   1                   1
 dplyr::glimpse(do.call(oa_fetch, popular_concepts))
 #> [1] "https://api.openalex.org/concepts?filter=works_count%3A%3E1000000"
 #> Requesting url: https://api.openalex.org/concepts?filter=works_count%3A%3E1000000
@@ -495,10 +493,10 @@ aria_count <- oa_fetch(
 #> Requesting url: https://api.openalex.org/works?filter=cites%3AW2755950973
 aria_count
 #>               count db_response_time_ms                page            per_page 
-#>                1476                  37                   1                   1
+#>                1478                  10                   1                   1
 ```
 
-This query will return a collection of 1476 publications. Let’s to
+This query will return a collection of 1478 publications. Let’s to
 download it and then to convert it into a data frame:
 
 ``` r
@@ -511,7 +509,7 @@ oa_fetch(
   dplyr::glimpse()
 #> [1] "https://api.openalex.org/works?filter=cites%3AW2755950973"
 #> Requesting url: https://api.openalex.org/works?filter=cites%3AW2755950973
-#>  Named int [1:4] 1476 25 1 1
+#>  Named int [1:4] 1478 9 1 1
 #>  - attr(*, "names")= chr [1:4] "count" "db_response_time_ms" "page" "per_page"
 ```
 
@@ -588,8 +586,13 @@ do.call(oa_fetch, bib_ls) %>%
 
 # About OpenAlex
 
-![Image from
-<https://docs.openalex.org/>](https://i.imgur.com/FXTji65.png)
+![oar-img](https://pbs.twimg.com/media/FI2t0KBUYAMQWM5?format=jpg&name=large)
+
+<div style="text-align: right">
+
+Schema credits: [@dhimmel](https://github.com/dhimmel)
+
+</div>
 
 [OpenAlex](https://openalex.org) is a fully open catalog of the global
 research system. It’s named after the ancient [Library of
@@ -610,6 +613,6 @@ connected to each other. There are five types of entities:
 
 ## Acknowledgements
 
-Package hex made with [Midjourney](https://www.midjourney.com/home/)
-which inherits a [CC BY-NC 4.0
+Package hex was made with [Midjourney](https://www.midjourney.com/home/)
+and thus inherits a [CC BY-NC 4.0
 license](https://creativecommons.org/licenses/by-nc/4.0/legalcode).
