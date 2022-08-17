@@ -44,6 +44,14 @@ You can install the released version of openalexR from [CRAN](https://CRAN.R-pro
 install.packages("openalexR")
 ```
 
+Before we go any further, we highly recommend you set `openalexR.mailto` option so that your requests go to [the polite pool](https://docs.openalex.org/api#the-polite-pool) for faster response times:
+
+```{r}
+options(openalexR.mailto = "example@email.com")
+```
+
+Bonus point if you put this in your `.Rprofile` with `usethis::edit_r_profile()`.
+
 ## Package loading
 
 ```{r warning=FALSE, message=FALSE}

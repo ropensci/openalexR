@@ -230,7 +230,7 @@ oa_fetch <- function(...,
 oa_request <- function(query_url,
                        per_page = 200,
                        count_only = FALSE,
-                       mailto = NULL,
+                       mailto = oa_email(),
                        verbose = FALSE) {
   ua <- httr::user_agent(cfg()$user_agent)
 

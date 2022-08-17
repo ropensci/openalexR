@@ -41,6 +41,18 @@ You can install the released version of openalexR from
 install.packages("openalexR")
 ```
 
+Before we go any further, we highly recommend you set `openalexR.mailto`
+option so that your requests go to [the polite
+pool](https://docs.openalex.org/api#the-polite-pool) for faster response
+times:
+
+``` r
+options(openalexR.mailto = "example@email.com")
+```
+
+Bonus point if you put this in your `.Rprofile` with
+`usethis::edit_r_profile()`.
+
 ## Package loading
 
 ``` r
@@ -68,6 +80,7 @@ paper_id <- oa_fetch(
   entity = "works",
   verbose = TRUE
 )
+#> NULL
 #> [1] "https://api.openalex.org/works/W2755950973"
 #> Requesting url: https://api.openalex.org/works/W2755950973
 dplyr::glimpse(paper_id)
@@ -133,6 +146,7 @@ oa_fetch(
 ) %>% 
   show_works() %>%
   knitr::kable()
+#> NULL
 ```
 
 | short_id    | TI                                                                 | first_author | last_author        | SO                      | URL                                         | OA    | top_concepts                                                                     |
@@ -155,6 +169,7 @@ oa_fetch(
 ) %>% 
   show_works() %>%
   knitr::kable()
+#> NULL
 #> [1] "https://api.openalex.org/works?filter=openalex_id%3AW2741809807%7CW2755950973"
 #> Requesting url: https://api.openalex.org/works?filter=openalex_id%3AW2741809807%7CW2755950973
 #> About to get a total of 1 pages of results with a total of 2 records.
@@ -178,6 +193,7 @@ oa_fetch(
 ) %>% 
   show_works() %>%
   knitr::kable()
+#> NULL
 #> [1] "https://api.openalex.org/works?filter=doi%3A10.1016%2Fj.joi.2017.08.007%7Chttps%3A%2F%2Fdoi.org%2F10.1093%2Fbioinformatics%2Fbtab727"
 #> Requesting url: https://api.openalex.org/works?filter=doi%3A10.1016%2Fj.joi.2017.08.007%7Chttps%3A%2F%2Fdoi.org%2F10.1093%2Fbioinformatics%2Fbtab727
 #> About to get a total of 1 pages of results with a total of 2 records.
@@ -218,6 +234,7 @@ oa_fetch(
   count_only = TRUE,
   verbose = TRUE
 )
+#> NULL
 #> [1] "https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc"
 #> Requesting url: https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc
 #>               count db_response_time_ms                page            per_page 
@@ -239,6 +256,7 @@ oa_fetch(
 ) %>%
   show_works() %>%
   knitr::kable()
+#> NULL
 ```
 
 | short_id    | TI                                                                                                                            | first_author        | last_author        | SO                                           | URL                                             | OA    | top_concepts                                                                                                                                                                      |
@@ -267,6 +285,7 @@ oa_fetch(
 ) %>%
   show_authors() %>%
   knitr::kable()
+#> NULL
 #> [1] "https://api.openalex.org/authors?filter=openalex_id%3AA923435168%7CA2208157607"
 #> Requesting url: https://api.openalex.org/authors?filter=openalex_id%3AA923435168%7CA2208157607
 #> About to get a total of 1 pages of results with a total of 2 records.
@@ -294,11 +313,13 @@ my_arguments <- list(
   )
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
+#> NULL
 #>               count db_response_time_ms                page            per_page 
-#>                  22                   4                   1                   1
+#>                  22                   5                   1                   1
 do.call(oa_fetch, my_arguments) %>% 
   show_authors() %>%
   knitr::kable()
+#> NULL
 ```
 
 | short_id    | name                     | orcid               | works_count |    TC | affiliation_name                 | top_concepts                                                                                      |
@@ -322,6 +343,7 @@ oa_fetch(
 ) %>%
   show_authors() %>%
   knitr::kable()
+#> NULL
 ```
 
 | short_id    | name         | orcid               | works_count |   TC | affiliation_name                 | top_concepts                                                                   |
@@ -336,6 +358,7 @@ oa_fetch(
 ) %>%
   show_authors() %>%
   knitr::kable()
+#> NULL
 ```
 
 | short_id    | name         | orcid               | works_count |   TC | affiliation_name                 | top_concepts                                                                   |
@@ -359,35 +382,40 @@ italian_insts <- list(
 )
 
 do.call(oa_fetch, c(italian_insts, list(count_only = TRUE)))
+#> NULL
 #> [1] "https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation"
 #> Requesting url: https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation
 #>               count db_response_time_ms                page            per_page 
-#>                 231                   2                   1                   1
+#>                 231                   1                   1                   1
 dplyr::glimpse(do.call(oa_fetch, italian_insts))
+#> NULL
 #> [1] "https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation"
 #> Requesting url: https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation
 #> About to get a total of 2 pages of results with a total of 231 records.
 #> Rows: 231
-#> Columns: 19
-#> $ id                 <chr> "https://openalex.org/I861853513", "https://openale…
-#> $ name               <chr> "Sapienza University of Rome", "University of Bolog…
-#> $ name_alternatives  <list> "Università degli Studi di Roma \"La Sapienza\"", …
-#> $ name_acronyms      <list> NA, "UNIBO", "UNIPD", "UNIMI", NA, NA, "UNITO", "U…
-#> $ name_international <list> [<data.frame[1 x 85]>], [<data.frame[1 x 103]>], […
-#> $ ror                <chr> "https://ror.org/02be6w209", "https://ror.org/01111…
-#> $ ids                <list> [<tbl_df[6 x 2]>], [<tbl_df[6 x 2]>], [<tbl_df[6 x…
-#> $ country            <chr> "IT", "IT", "IT", "IT", "IT", "IT", "IT", "IT", "IT…
-#> $ geo                <list> [<data.frame[1 x 7]>], [<data.frame[1 x 7]>], [<da…
-#> $ type               <chr> "education", "education", "education", "education",…
-#> $ homepage           <chr> "http://www.uniroma1.it/", "http://www.unibo.it/en/…
-#> $ image              <chr> "https://upload.wikimedia.org/wikipedia/en/4/45/Sap…
-#> $ thumbnail          <chr> "https://upload.wikimedia.org/wikipedia/en/thumb/4/…
-#> $ associated_inst    <list> [<data.frame[1 x 24]>], [<data.frame[1 x 12]>], [<…
-#> $ works_count        <int> 163734, 130504, 129044, 127634, 91431, 86815, 85397…
-#> $ TC                 <int> 10604126, 9662346, 9535357, 9249788, 5999184, 56099…
-#> $ TCperYear          <list> [<data.frame[11 x 3]>], [<data.frame[11 x 3]>], [<…
-#> $ concept            <list> [<data.frame[14 x 5]>], [<data.frame[15 x 5]>], [<…
-#> $ works_api_url      <chr> "https://api.openalex.org/works?filter=institutions…
+#> Columns: 22
+#> $ id                        <chr> "https://openalex.org/I861853513", "https://…
+#> $ display_name              <chr> "Sapienza University of Rome", "University o…
+#> $ display_name_alternatives <list> "Università degli Studi di Roma \"La Sapien…
+#> $ display_name_acronyms     <list> NA, "UNIBO", "UNIPD", "UNIMI", NA, NA, "UNI…
+#> $ international             <list> [<data.frame[1 x 85]>], [<data.frame[1 x 10…
+#> $ ror                       <chr> "https://ror.org/02be6w209", "https://ror.or…
+#> $ ids                       <list> [<tbl_df[6 x 2]>], [<tbl_df[6 x 2]>], [<tbl…
+#> $ country_code              <chr> "IT", "IT", "IT", "IT", "IT", "IT", "IT", "I…
+#> $ geo                       <list> [<data.frame[1 x 7]>], [<data.frame[1 x 7]>…
+#> $ type                      <chr> "education", "education", "education", "educ…
+#> $ homepage_url              <chr> "http://www.uniroma1.it/", "http://www.unibo…
+#> $ image_url                 <chr> "https://upload.wikimedia.org/wikipedia/en/4…
+#> $ image_thumbnail_url       <chr> "https://upload.wikimedia.org/wikipedia/en/t…
+#> $ associated_institutions   <list> [<data.frame[1 x 24]>], [<data.frame[1 x 12…
+#> $ rel_score                 <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …
+#> $ works_count               <int> 163734, 130504, 129044, 127634, 91431, 86815…
+#> $ cited_by_count            <int> 10604126, 9662346, 9535357, 9249788, 5999184…
+#> $ counts_by_year            <list> [<data.frame[11 x 3]>], [<data.frame[11 x 3…
+#> $ works_api_url             <chr> "https://api.openalex.org/works?filter=insti…
+#> $ x_concepts                <list> [<data.frame[14 x 5]>], [<data.frame[15 x 5…
+#> $ updated_date              <chr> "2022-08-16T22:24:27.419711", "2022-08-16T17…
+#> $ created_date              <chr> "2016-06-24", "2016-06-24", "2016-06-24", "2…
 ```
 
 ## Venues (think journals)
@@ -403,11 +431,13 @@ big_journals <- list(
 )
 
 do.call(oa_fetch, c(big_journals, list(count_only = TRUE)))
+#> NULL
 #> [1] "https://api.openalex.org/venues?filter=works_count%3A%3E100000"
 #> Requesting url: https://api.openalex.org/venues?filter=works_count%3A%3E100000
 #>               count db_response_time_ms                page            per_page 
-#>                  52                   2                   1                   1
+#>                  52                   1                   1                   1
 dplyr::glimpse(do.call(oa_fetch, big_journals))
+#> NULL
 #> [1] "https://api.openalex.org/venues?filter=works_count%3A%3E100000"
 #> Requesting url: https://api.openalex.org/venues?filter=works_count%3A%3E100000
 #> About to get a total of 1 pages of results with a total of 52 records.
@@ -442,11 +472,13 @@ popular_concepts <- list(
 )
 
 do.call(oa_fetch, c(popular_concepts, list(count_only = TRUE)))
+#> NULL
 #> [1] "https://api.openalex.org/concepts?filter=works_count%3A%3E1000000"
 #> Requesting url: https://api.openalex.org/concepts?filter=works_count%3A%3E1000000
 #>               count db_response_time_ms                page            per_page 
-#>                 146                   1                   1                   1
+#>                 146                   3                   1                   1
 dplyr::glimpse(do.call(oa_fetch, popular_concepts))
+#> NULL
 #> [1] "https://api.openalex.org/concepts?filter=works_count%3A%3E1000000"
 #> Requesting url: https://api.openalex.org/concepts?filter=works_count%3A%3E1000000
 #> About to get a total of 1 pages of results with a total of 146 records.
@@ -489,11 +521,12 @@ aria_count <- oa_fetch(
   count_only = TRUE,
   verbose = TRUE
 ) 
+#> NULL
 #> [1] "https://api.openalex.org/works?filter=cites%3AW2755950973"
 #> Requesting url: https://api.openalex.org/works?filter=cites%3AW2755950973
 aria_count
 #>               count db_response_time_ms                page            per_page 
-#>                1478                  10                   1                   1
+#>                1478                   8                   1                   1
 ```
 
 This query will return a collection of 1478 publications. Let’s to
@@ -507,6 +540,7 @@ oa_fetch(
   verbose = TRUE
 ) %>% 
   dplyr::glimpse()
+#> NULL
 #> [1] "https://api.openalex.org/works?filter=cites%3AW2755950973"
 #> Requesting url: https://api.openalex.org/works?filter=cites%3AW2755950973
 #>  Named int [1:4] 1478 9 1 1
@@ -538,11 +572,13 @@ bib_ls <- list(
 )
 
 do.call(oa_fetch, c(bib_ls, list(count_only = TRUE)))
+#> NULL
 #>               count db_response_time_ms                page            per_page 
 #>                 215                   8                   1                   1
 do.call(oa_fetch, bib_ls) %>% 
   oa2bibliometrix() %>% 
   dplyr::glimpse()
+#> NULL
 #> Rows: 215
 #> Columns: 37
 #> $ AU            <chr> "CHENG WANG;TAO LV;RONGJIANG CAI;JIANFENG XU;LIYA WANG",…

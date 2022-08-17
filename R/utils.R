@@ -48,3 +48,6 @@ id_type <- function(identifier) {
   )
 }
 
+oa_email <- function() {
+  return(getOption("openalexR.mailto", default = NULL))
+}

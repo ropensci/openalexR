@@ -32,7 +32,7 @@ utils::globalVariables("progress_bar")
 #' oa2df(res, entity = "institutions")
 #' }
 #'
-#' @export
+#' # @export
 oaInstitutions2df <- function(data, verbose = TRUE) {
 
   # replace NULL with NA
