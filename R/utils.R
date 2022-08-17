@@ -10,7 +10,7 @@ simple_rapply <- function(x, fn, ...) {
 
 `%||%` <- function(x, y) if (is.null(x)) y else x
 
-subs_na <- function(x, type = c("row_df", "col_df", "flat")) {
+subs_na <- function(x, type = c("row_df", "col_df", "flat", "rbind_df")) {
   type <- match.arg(type)
 
   if (length(x) == 0) {
@@ -20,7 +20,8 @@ subs_na <- function(x, type = c("row_df", "col_df", "flat")) {
   switch(type,
     row_df = list(as.data.frame(x)),
     col_df = list(tibble::enframe(unlist(x))),
-    flat = list(unlist(x))
+    flat = list(unlist(x)),
+    rbind_df = list(do.call(rbind.data.frame, x))
   )
 }
 

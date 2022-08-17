@@ -25,10 +25,10 @@ The function converts a list of institutions' records obtained using \code{oa_re
 
 # Query to search information about all Italian educational institutions
 
-
 query_inst <- oa_query(
   entity = "institutions",
-  filter = "country_code:it,type:education"
+  country_code = "it",
+  type = "education"
 )
 
 res <- oa_request(
@@ -37,9 +37,7 @@ res <- oa_request(
   verbose = FALSE
 )
 
-df <- oa2df(res, entity = "institutions")
-
-df
+oa2df(res, entity = "institutions")
 }
 
 # @export
