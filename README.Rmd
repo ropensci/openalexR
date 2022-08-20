@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# openalexR <img src="man/figures/logo.png" align="right" height="139" />
+# openalexR <img src="man/figures/logo.png" align="right" height="139"/>
 
 <!-- badges: start -->
 
@@ -59,8 +59,7 @@ This paper:
     An R-tool for comprehensive science mapping analysis. 
     Journal of informetrics, 11(4), 959-975.
 
-is associated to the [OpenAlex-id](https://docs.openalex.org/about-the-data#the-openalex-id) **W2755950973**.
-If you know your paper's OpenAlex ID, all you need to do is passing `identifier = <openalex id>` as an argument in `oa_fetch()`:
+is associated to the [OpenAlex-id](https://docs.openalex.org/about-the-data#the-openalex-id) **W2755950973**. If you know your paper's OpenAlex ID, all you need to do is passing `identifier = <openalex id>` as an argument in `oa_fetch()`:
 
 ```{r}
 paper_id <- oa_fetch(
@@ -71,11 +70,7 @@ paper_id <- oa_fetch(
 dplyr::glimpse(paper_id)
 ```
 
-`oa_fetch()` is a composition of functions: `oa_query |> oa_request |> oa2df`.
-As results, `oa_query()` returns the query string including the OpenAlex endpoint API server address (default).
-`oa_request()` downloads the bibliographic records matching the query.
-Finally, `oa2df()` converts the final result list to a tibble.
-The final result is a complicated tibble, but we can use `show_works()` to display a simplified version:
+`oa_fetch()` is a composition of functions: `oa_query |> oa_request |> oa2df`. As results, `oa_query()` returns the query string including the OpenAlex endpoint API server address (default). `oa_request()` downloads the bibliographic records matching the query. Finally, `oa2df()` converts the final result list to a tibble. The final result is a complicated tibble, but we can use `show_works()` to display a simplified version:
 
 ```{r}
 paper_id %>% 
@@ -103,7 +98,6 @@ oa_fetch(
 
 If you know the OpenAlex IDs of these entities, you can also feed them into the `identifier` argument.
 
-
 ```{r}
 oa_fetch(
   identifier = c("W2741809807", "W2755950973"),
@@ -116,7 +110,7 @@ oa_fetch(
 
 ```
 
-However, if you only know their external identifies, say, DOIs, you would need to use `doi` as a filter (either the canonical form with https://doi.org/ or without should work):
+However, if you only know their external identifies, say, DOIs, you would need to use `doi` as a filter (either the canonical form with <https://doi.org/> or without should work):
 
 ```{r}
 oa_fetch(
@@ -129,14 +123,11 @@ oa_fetch(
   knitr::kable()
 ```
 
-
 ### Filters
 
-In most cases, we are interested in downloading a collection of items that meet one or more inclusion/exclusion criteria (filters).
-Supported attributes for each endpoints are listed [here](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists).
+In most cases, we are interested in downloading a collection of items that meet one or more inclusion/exclusion criteria (filters). Supported attributes for each endpoints are listed [here](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists).
 
-**Example**: We want to download all works that have been cited more than 50 times, published between 2020 and 2021, and include the strings "bibliometric analysis" or "science mapping" in the title.
-Maybe we also want the results to be sorted by total citations in a descending order.
+**Example**: We want to download all works that have been cited more than 50 times, published between 2020 and 2021, and include the strings "bibliometric analysis" or "science mapping" in the title. Maybe we also want the results to be sorted by total citations in a descending order.
 
 Setting the argument `count_only = TRUE`, the function `oa_request()` returns the number of items matching the query without downloading the collection.
 
@@ -178,8 +169,7 @@ Read on to see how we can shorten these two function calls.
 
 Similarly to work, we can use identifier to pass in authors' OpenAlex ID.
 
-**Example**: 
-We want more information on authors with IDs **A923435168** and **A2208157607**.
+**Example**: We want more information on authors with IDs **A923435168** and **A2208157607**.
 
 ```{r}
 oa_fetch(
@@ -190,11 +180,9 @@ oa_fetch(
   knitr::kable()
 ```
 
-
 **Example**: We want download all authors' records of scholars who work at the University of Naples Federico II (OpenAlex ID: I71267560) and who have published more than 499 works.
 
-Let's first check how many records match the query, then set `count_only = FALSE` to download the entire collection.
-We can do this by first defining a list of arguments, then adding `count_only` (default `FALSE`) to this list:
+Let's first check how many records match the query, then set `count_only = FALSE` to download the entire collection. We can do this by first defining a list of arguments, then adding `count_only` (default `FALSE`) to this list:
 
 ```{r}
 my_arguments <- list(
@@ -228,11 +216,9 @@ oa_fetch(
   knitr::kable()
 ```
 
-
 ## Institutions
 
-**Example**: We want download all records regarding Italian institutions (country_code:it) that are classified as educational (type:education).
-Again, we check how many records match the query then download the collection:
+**Example**: We want download all records regarding Italian institutions (country_code:it) that are classified as educational (type:education). Again, we check how many records match the query then download the collection:
 
 ```{r}
 italian_insts <- list(
@@ -294,8 +280,7 @@ aria_count <- oa_fetch(
 aria_count
 ```
 
-This query will return a collection of `r aria_count["count"]` publications.
-Let's to download it and then to convert it into a data frame:
+This query will return a collection of `r aria_count["count"]` publications. Let's to download it and then to convert it into a data frame:
 
 ```{r}
 oa_fetch(
@@ -309,12 +294,9 @@ oa_fetch(
 
 ## Convert an OpenAlex data frame to a bibliometrix object
 
-The bibliometrix R-package (<https://www.bibliometrix.org>) provides a set of tools for quantitative research in bibliometrics and scientometrics.
-Today it represents one of the most used science mapping software in the world.
-In a recent survey on bibliometric analysis tools, Moral-Muñoz et al. (2020) wrote: “At this moment, maybe Bibliometrix and its Shiny platform contain the more extensive set of techniques implemented, and together with the easiness of its interface, could be a great software for practitioners”.
+The bibliometrix R-package (<https://www.bibliometrix.org>) provides a set of tools for quantitative research in bibliometrics and scientometrics. Today it represents one of the most used science mapping software in the world. In a recent survey on bibliometric analysis tools, Moral-Muñoz et al. (2020) wrote: "At this moment, maybe Bibliometrix and its Shiny platform contain the more extensive set of techniques implemented, and together with the easiness of its interface, could be a great software for practitioners".
 
-The function **oa2bibliometrix** converts a bibliographic data frame of works into a bibliometrix object.
-This object can be used as input collection of a science mapping workflow.
+The function **oa2bibliometrix** converts a bibliographic data frame of works into a bibliometrix object. This object can be used as input collection of a science mapping workflow.
 
 ```{r}
 bib_ls <- list(
@@ -333,13 +315,9 @@ do.call(oa_fetch, bib_ls) %>%
 
 # About OpenAlex
 
-![Image from https://docs.openalex.org/](https://i.imgur.com/FXTji65.png)
+![Image from <https://docs.openalex.org/>](https://i.imgur.com/FXTji65.png)
 
-
-[OpenAlex](https://openalex.org) is a fully open catalog of the global research system.
-It's named after the ancient [Library of Alexandria](https://en.wikipedia.org/wiki/Library_of_Alexandria).
-The OpenAlex dataset describes scholarly entities and how those entities are connected to each other.
-There are five types of entities:
+[OpenAlex](https://openalex.org) is a fully open catalog of the global research system. It's named after the ancient [Library of Alexandria](https://en.wikipedia.org/wiki/Library_of_Alexandria). The OpenAlex dataset describes scholarly entities and how those entities are connected to each other. There are five types of entities:
 
 -   **Works** are papers, books, datasets, etc; they cite other works
 

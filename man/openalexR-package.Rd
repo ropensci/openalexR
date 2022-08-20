@@ -4,18 +4,17 @@
 \name{openalexR-package}
 \alias{openalexR}
 \alias{openalexR-package}
-\title{openalexR: Getting Bibliographic Records from 'OpenAlex' Database Using 'DSL'
-    API}
+\title{openalexR: Getting Bibliographic Records from 'OpenAlex' Database Using 'DSL' API}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-A set of tools to extract bibliographic content from
-    'OpenAlex' database using API \url{https://docs.openalex.org/api/}.
+A set of tools to extract bibliographic content from 'OpenAlex' database using API \url{https://docs.openalex.org/api/}.
 }
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://github.com/massimoaria/openalexR}
+  \item \url{https://massimoaria.github.io/openalexR/}
   \item Report bugs at \url{https://github.com/massimoaria/openalexR/issues}
 }
 
