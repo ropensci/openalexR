@@ -6,7 +6,7 @@ test_that("Invalid filter errors out", {
 
 
 test_that("oa_fetch works", {
-  work_ids <- c("W2741809807", "W2755950973")
+  work_ids <- c("W2741809807")
   multi_works <- oa_fetch(
     identifier = work_ids,
     verbose = TRUE
