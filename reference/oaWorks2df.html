@@ -57,13 +57,17 @@ The function converts a list of works obtained using <code>oa_request</code> int
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">oaWorks2df</span><span class="op">(</span><span class="va">data</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">oaWorks2df</span><span class="op">(</span><span class="va">data</span>, abstract <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>data</dt>
 <dd><p>is a list. data is the output of the function <code>oa_request</code>.</p></dd>
+
+
+<dt>abstract</dt>
+<dd><p>Logical. If TRUE, the function returns also the abstract of each item. Default is <code>abstract=TRUE</code>.</p></dd>
 
 
 <dt>verbose</dt>
