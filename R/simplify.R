@@ -76,5 +76,9 @@ show_works <- function(x, simp_func = utils::head){
     function(y) paste(utils::head(y$concept_name), collapse = ", ")
   )
 
-  simp_func(x[, c("short_id", "TI", "first_author", "last_author", "SO", "URL", "OA", "top_concepts")])
+  if ("role" %in% names(x)){
+    simp_func(x[, c("short_id", "TI", "first_author", "last_author", "SO", "URL", "OA", "top_concepts", "role")])
+  } else{
+    simp_func(x[, c("short_id", "TI", "first_author", "last_author", "SO", "URL", "OA", "top_concepts")])
+  }
 }
