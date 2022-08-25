@@ -12,6 +12,8 @@ oa_entities <- function(){
 #' and convert the result to a tibble/data frame.
 #' @inheritParams oa_query
 #' @inheritParams oa_request
+#' @param abstract Logical. If TRUE, the function returns also the abstract of each item. Default is \code{abstract = TRUE}.
+#' The argument is ignored if entity is different from "works".
 #' @param output Character. Type of output, either a list or a tibble/data.frame.
 #'
 #' @return A data.frame or a list. Result of the query.
@@ -25,6 +27,7 @@ oa_entities <- function(){
 #'   entity = "works",
 #'   endpoint = "https://api.openalex.org/",
 #'   count_only = TRUE,
+#'   abstract = TRUE,
 #'   verbose = TRUE
 #' )
 #'
@@ -54,6 +57,7 @@ oa_fetch <- function(...,
                      sort = NULL,
                      group_by = NULL,
                      output = c("tibble", "list", "dataframe"),
+                     abstract = TRUE,
                      endpoint = "https://api.openalex.org/",
                      per_page = 200,
                      count_only = FALSE,
@@ -82,7 +86,7 @@ oa_fetch <- function(...,
 
   final_res <- switch(output,
     list = res,
-    tibble = oa2df(res, entity = entity, count_only = count_only, verbose = verbose)
+    tibble = oa2df(res, entity = entity, abstract = abstract, count_only = count_only, verbose = verbose)
   )
 
   final_res

@@ -6,6 +6,8 @@
 #' @param data is a list. data is the output of the function \code{oa_request}.
 #' @param entity is a character. It indicates the scholarly entity of the search. The argument can be equal to
 #' entity = c("works", "authors", "venues", "institutions", "concepts"). The default value is entity = works".
+#' @param abstract Logical. If TRUE, the function returns also the abstract of each item. Default is \code{abstract=TRUE}.
+#' The argument is ignored if entity is different from "works".
 #' @param count_only Logical. If TRUE, the function returns only the number of item matching the query. Default is \code{count_only=FALSE}.
 #' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.
 #' @return a data.frame.
@@ -30,7 +32,7 @@
 #'   entity = "works",
 #'   cites = "W2755950973",
 #'   from_publication_date = "2021-01-01",
-#'   to_publication_date = "2021-04-31"
+#'   to_publication_date = "2021-04-30"
 #' )
 #'
 #' res <- oa_request(
@@ -44,11 +46,11 @@
 #' }
 #'
 #' @export
-oa2df <- function(data, entity, count_only = FALSE, verbose = TRUE) {
+oa2df <- function(data, entity, abstract = TRUE, count_only = FALSE, verbose = TRUE) {
   if (count_only && length(data) == 4) return(unlist(data))
 
   switch(entity,
-    works = oaWorks2df(data, verbose),
+    works = oaWorks2df(data, abstract, verbose),
     authors = oaAuthors2df(data, verbose),
     institutions = oaInstitutions2df(data, verbose),
     venues = oaVenues2df(data, verbose),

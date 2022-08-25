@@ -4,10 +4,12 @@
 \alias{oaWorks2df}
 \title{Convert OpenAlex collection of works from list format to data frame}
 \usage{
-oaWorks2df(data, verbose = TRUE)
+oaWorks2df(data, abstract = TRUE, verbose = TRUE)
 }
 \arguments{
 \item{data}{is a list. data is the output of the function \code{oa_request}.}
+
+\item{abstract}{Logical. If TRUE, the function returns also the abstract of each item. Default is \code{abstract=TRUE}.}
 
 \item{verbose}{is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.}
 }

@@ -4,13 +4,16 @@
 \alias{oa2df}
 \title{Convert OpenAlex collection from list to data frame}
 \usage{
-oa2df(data, entity, count_only = FALSE, verbose = TRUE)
+oa2df(data, entity, abstract = TRUE, count_only = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{data}{is a list. data is the output of the function \code{oa_request}.}
 
 \item{entity}{is a character. It indicates the scholarly entity of the search. The argument can be equal to
 entity = c("works", "authors", "venues", "institutions", "concepts"). The default value is entity = works".}
+
+\item{abstract}{Logical. If TRUE, the function returns also the abstract of each item. Default is \code{abstract=TRUE}.
+The argument is ignored if entity is different from "works".}
 
 \item{count_only}{Logical. If TRUE, the function returns only the number of item matching the query. Default is \code{count_only=FALSE}.}
 
@@ -42,7 +45,7 @@ query <- oa_query(
   entity = "works",
   cites = "W2755950973",
   from_publication_date = "2021-01-01",
-  to_publication_date = "2021-04-31"
+  to_publication_date = "2021-04-30"
 )
 
 res <- oa_request(

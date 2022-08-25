@@ -13,6 +13,7 @@ oa_fetch(
   sort = NULL,
   group_by = NULL,
   output = c("tibble", "list", "dataframe"),
+  abstract = TRUE,
   endpoint = "https://api.openalex.org/",
   per_page = 200,
   count_only = FALSE,
@@ -47,6 +48,9 @@ https://docs.openalex.org/api/get-groups-of-entities}
 
 \item{output}{Character. Type of output, either a list or a tibble/data.frame.}
 
+\item{abstract}{Logical. If TRUE, the function returns also the abstract of each item. Default is \code{abstract = TRUE}.
+The argument is ignored if entity is different from "works".}
+
 \item{endpoint}{is character. It indicates the url of the OpenAlex Endpoint API server. The default value is endpoint = "https://api.openalex.org/".}
 
 \item{per_page}{is a numeric. It indicates how many items to download per page. The per-page argument can assume any number between 1 and 200. Default is \code{per_page=200}.}
@@ -72,6 +76,7 @@ paper_meta <- oa_fetch(
   entity = "works",
   endpoint = "https://api.openalex.org/",
   count_only = TRUE,
+  abstract = TRUE,
   verbose = TRUE
 )
 
