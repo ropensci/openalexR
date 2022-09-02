@@ -50,11 +50,7 @@ oaVenues2df <- function(data, verbose = TRUE) {
   }
 
   n <- length(data)
-  pb <- progress::progress_bar$new(
-    format = "  converting [:bar] :percent eta: :eta",
-    total = n, clear = FALSE, width = 60
-  )
-
+  pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)
 
   for (i in 1:n) {

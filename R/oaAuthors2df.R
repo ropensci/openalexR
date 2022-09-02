@@ -54,12 +54,8 @@ oaAuthors2df <- function(data, verbose = TRUE) {
   }
 
   n <- length(data)
+  pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)
-
-  pb <- progress::progress_bar$new(
-    format = "  converting [:bar] :percent eta: :eta",
-    total = n, clear = FALSE, width = 60
-  )
 
   for (i in 1:n) {
     if (verbose) pb$tick()

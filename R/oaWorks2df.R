@@ -62,11 +62,7 @@ oaWorks2df <- function(data, verbose = TRUE) {
 
   list_df <- vector(mode = "list", length = n)
 
-  pb <- progress::progress_bar$new(
-    format = "  converting [:bar] :percent eta: :eta",
-    total = n, clear = FALSE, width = 60
-  )
-
+  pb <- oa_progress(n)
 
   for (i in 1:n) {
     if (isTRUE(verbose)) pb$tick()

@@ -51,3 +51,10 @@ id_type <- function(identifier) {
 oa_email <- function() {
   return(getOption("openalexR.mailto", default = NULL))
 }
+
+oa_progress <- function(n, text = "converting") {
+  progress::progress_bar$new(
+    format = paste(" ", text, "[:bar] :percent eta: :eta"),
+    total = n, clear = FALSE, width = 60
+  )
+}
