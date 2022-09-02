@@ -20,7 +20,7 @@ utils::globalVariables("progress_bar")
 #'
 #' query_inst <- oa_query(
 #'   identifier = "V205292342",
-#'   entity = "venues",
+#'   entity = "venues"
 #' )
 #'
 #' res <- oa_request(
@@ -50,62 +50,46 @@ oaVenues2df <- function(data, verbose = TRUE) {
   }
 
   n <- length(data)
-
-  list_df <- vector(mode = "list", length = n)
-
   pb <- progress::progress_bar$new(
     format = "  converting [:bar] :percent eta: :eta",
     total = n, clear = FALSE, width = 60
   )
 
+  list_df <- vector(mode = "list", length = n)
+
   for (i in 1:n) {
-    if (isTRUE(verbose)) pb$tick()
+    if (verbose) pb$tick()
 
     item <- data[[i]]
 
-    id <- item$id
-    name <- item$display_name
-    publisher <- item$publisher
-    issn_l <- list(unlist(item$issn_l))
-    issn <- list(unlist(item$issn))
-    rel_score <- item$relevance_score
-    works_count <- item$works_count
-    TC <- item$cited_by_count
-    is_oa <- item$is_oa
-    is_in_doaj <- item$is_in_doaj
-    homepage <- item$homepage_url
-    if (length(item$ids) > 0) {
-      ids <- unlist(item$ids)
-      ids <- list(data.frame(item = names(ids), value = ids))
-    } else {
-      ids <- NA
-    }
+    sub_identical <- item[
+      c("id", "display_name", "publisher", "works_count", "cited_by_count",
+        "is_oa", "is_in_doaj", "homepage_url", "works_api_url")]
 
-    # Total Citations per Year
-    TCperYear <- unlist(item$counts_by_year)
-    lab <- names(TCperYear)
-    TCperYear <- list(data.frame(
-      year = TCperYear[lab == "year"], works_count = TCperYear[lab == "works_count"],
-      TC = TCperYear[lab == "cited_by_count"]
-    ))
-
-    # concepts
-    concept <- list(do.call(rbind, lapply(item$x_concepts, function(l) {
-      L <- data.frame(
-        concept_id = l$id,
-        concept_name = l$display_name,
-        concept_score = l$score,
-        concept_lecel = l$level,
-        concept_url = l$wikidata
-      )
-    })))
-    works_api_url <- item$works_api_url
-
-    list_df[[i]] <- tibble::tibble(
-      id = id, name = name, publisher = publisher, issn = issn, issn_l = issn_l, is_oa = is_oa, is_in_doaj = is_in_doaj,
-      ids = ids, homepage = homepage, rel_score = rel_score, works_count = works_count, TC = TC, TCperYear = TCperYear,
-      concept = concept, works_api_url = works_api_url
+    sub_flat <- lapply(
+      item[c("issn_l", "issn")],
+      subs_na, type = "flat"
     )
+
+    sub_id <- list(
+      ids = subs_na(item$ids, type = "col_df"),
+      relevance_score = item$relevance_score %||% NA
+    )
+
+    sub_rbind_dfs <- lapply(
+      item[c("counts_by_year", "x_concepts")],
+      subs_na, type = "rbind_df"
+    )
+
+    list_df[[i]] <- tibble::as_tibble(
+      c(sub_identical, sub_flat, sub_id, sub_rbind_dfs))
   }
-  df <- do.call(rbind, list_df)
+
+  col_order <- c(
+    "id", "display_name", "publisher", "issn", "issn_l", "is_oa", "is_in_doaj",
+    "ids", "homepage_url", "relevance_score", "works_count", "cited_by_count",
+    "counts_by_year", "x_concepts", "works_api_url"
+  )
+
+  do.call(rbind, list_df)[, col_order]
 }
