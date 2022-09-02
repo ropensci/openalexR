@@ -32,7 +32,7 @@ bibliometrix data frame (\href{https://bibliometrix.org/}{https://bibliometrix.o
 query <- oa_query(
   identifier = NULL,
   entity = "works",
-  filter = "cites:W2755950973",
+  cites = "W2755950973",
   from_publication_date = "2021-01-01",
   to_publication_date = "2021-12-31",
   search = NULL,

@@ -364,7 +364,7 @@ do.call(oa_fetch, bib_ls) %>%
 
 # About OpenAlex
 
-![oar-img](https://pbs.twimg.com/media/FI2t0KBUYAMQWM5?format=jpg&name=large)
+![oar-img](man/figures/oar.jpeg)
 
 <div style="text-align: right"> Schema credits: [@dhimmel](https://github.com/dhimmel) </div>
 
