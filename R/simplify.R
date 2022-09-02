@@ -79,7 +79,11 @@ show_works <- function(x, simp_func = utils::head){
       paste(utils::head(y[["display_name"]]), collapse = ", ")
     }
   )
+  
+  simp_cols <- intersect(
+    c("short_id", "display_name", "first_author", "last_author", "so", "url", "is_oa", "top_concepts", "role"), 
+    names(x)
+  )
 
-  simp_func(x[, c("short_id", "display_name", "first_author", "last_author",
-                  "so", "url", "is_oa", "top_concepts")])
+  simp_func(x[, simp_cols])
 }

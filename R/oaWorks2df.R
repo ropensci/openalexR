@@ -5,6 +5,7 @@ utils::globalVariables("progress_bar")
 #' The function converts a list of works obtained using \code{oa_request} into a data frame/tibble.
 #'
 #' @param data is a list. data is the output of the function \code{oa_request}.
+#' @param abstract Logical. If TRUE, the function returns also the abstract of each item. Default is \code{abstract=TRUE}.
 #' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.
 #'
 #' @return a data.frame.
@@ -48,7 +49,9 @@ utils::globalVariables("progress_bar")
 #' }
 #'
 #' # @export
-oaWorks2df <- function(data, verbose = TRUE) {
+
+oaWorks2df <- function(data, abstract = TRUE, verbose = TRUE) {
+
   if (!is.null(data$id)) {
     data <- list(data)
   }
@@ -120,7 +123,7 @@ oaWorks2df <- function(data, verbose = TRUE) {
     })))
 
     # Abstract
-    if (!is.na(paper$abstract_inverted_index[1])) {
+    if (!is.na(paper$abstract_inverted_index[1]) & isTRUE(abstract)) {
       ab <- abstract_build(paper$abstract_inverted_index)
     } else {
       ab <- ""
@@ -148,5 +151,9 @@ oaWorks2df <- function(data, verbose = TRUE) {
 abstract_build <- function(ab) {
   w <- rep(names(ab), lengths(ab))
   ind <- unlist(ab)
-  paste(w[order(ind)], collapse = " ", sep = "")
+  if (is.null(ind)){
+    ab <- ""
+  } else {
+    ab <- paste(w[order(ind)], collapse = " ", sep = "")
+  }
 }
