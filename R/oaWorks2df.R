@@ -123,7 +123,7 @@ oaWorks2df <- function(data, abstract = TRUE, verbose = TRUE) {
     })))
 
     # Abstract
-    if (!is.na(paper$abstract_inverted_index[1]) & isTRUE(abstract)) {
+    if (abstract && !is.na(paper$abstract_inverted_index[1])) {
       ab <- abstract_build(paper$abstract_inverted_index)
     } else {
       ab <- ""
