@@ -143,6 +143,29 @@ oa_fetch(
 In most cases, we are interested in downloading a collection of items that meet one or more inclusion/exclusion criteria (filters).
 Supported attributes for each endpoints are listed [here](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists).
 
+**Example**: We want to download all works published by a set of authors.
+We can do this by filtering on the authorships.author.id/author.id or  authorships.author.orcid/author.orcid attribute (see more on attributes [here](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#works-attribute-filters)):
+
+```{r}
+oa_fetch(
+  entity = "works",
+  author.id = c("A923435168", "A2208157607"),
+  verbose = TRUE
+) %>% 
+  show_works() %>% 
+  knitr::kable()
+
+orcids <- c("0000-0003-3737-6565", "0000-0002-8517-9411")
+canonical_orcids <- paste0("https://orcid.org/", orcids)
+oa_fetch(
+  entity = "works",
+  author.orcid = canonical_orcids,
+  verbose = TRUE
+) %>% 
+  show_works() %>% 
+  knitr::kable()
+```
+
 **Example**: We want to download all works that have been cited more than 50 times, published between 2020 and 2021, and include the strings "bibliometric analysis" or "science mapping" in the title.
 Maybe we also want the results to be sorted by total citations in a descending order.
 
