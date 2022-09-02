@@ -30,11 +30,12 @@ show_authors <- function(x, simp_func = utils::head){
   }
 
   x$top_concepts <- sapply(
-    x$concept,
+    x$x_concepts,
     function(y) paste(utils::head(y$concept_name), collapse = ", ")
   )
 
-  simp_func(x[, c("short_id", "name", "orcid", "works_count", "TC", "affiliation_name", "top_concepts")])
+  simp_func(x[, c("short_id", "display_name", "orcid", "works_count",
+                  "cited_by_count", "affiliation_display_name", "top_concepts")])
 }
 
 

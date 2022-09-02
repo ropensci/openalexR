@@ -12,8 +12,8 @@ test_that("oa_fetch works", {
     verbose = TRUE
   )
   expect_equal(
-    multi_works$id,
-    paste0("https://openalex.org/", work_ids)
+    sort(multi_works$id),
+    paste0("https://openalex.org/", sort(work_ids))
   )
 
 })

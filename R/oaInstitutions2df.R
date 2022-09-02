@@ -67,7 +67,7 @@ oaInstitutions2df <- function(data, verbose = TRUE) {
 
     sub_id <- list(
       ids = subs_na(item$ids, type = "col_df"),
-      rel_score = item$relevance_score %||% NA
+      relevance_score = item$relevance_score %||% NA
     )
 
     sub_flat <- lapply(
@@ -94,7 +94,7 @@ oaInstitutions2df <- function(data, verbose = TRUE) {
     "id", "display_name", "display_name_alternatives", "display_name_acronyms",
     "international", "ror", "ids", "country_code", "geo", "type",
     "homepage_url", "image_url", "image_thumbnail_url",
-    "associated_institutions", "rel_score", "works_count",
+    "associated_institutions", "relevance_score", "works_count",
     "cited_by_count", "counts_by_year",
     "works_api_url", "x_concepts", "updated_date", "created_date"
   )
