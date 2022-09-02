@@ -73,9 +73,13 @@ show_works <- function(x, simp_func = utils::head){
   )
 
   x$top_concepts <- sapply(
-    x$concept,
-    function(y) paste(utils::head(y$concept_name), collapse = ", ")
+    x$concepts,
+    function(y) {
+      if (is.logical(y)) return(NA)
+      paste(utils::head(y[["display_name"]]), collapse = ", ")
+    }
   )
 
-  simp_func(x[, c("short_id", "TI", "first_author", "last_author", "SO", "URL", "OA", "top_concepts")])
+  simp_func(x[, c("short_id", "display_name", "first_author", "last_author",
+                  "so", "url", "is_oa", "top_concepts")])
 }
