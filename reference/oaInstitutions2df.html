@@ -88,10 +88,10 @@ The function converts a list of institutions' records obtained using <code>oa_re
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Query to search information about all Italian educational institutions</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">query_inst</span> <span class="op">&lt;-</span> <span class="fu"><a href="oa_query.html">oa_query</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  entity <span class="op">=</span> <span class="st">"institutions"</span>,</span></span>
-<span class="r-in"><span>  filter <span class="op">=</span> <span class="st">"country_code:it,type:education"</span></span></span>
+<span class="r-in"><span>  country_code <span class="op">=</span> <span class="st">"it"</span>,</span></span>
+<span class="r-in"><span>  type <span class="op">=</span> <span class="st">"education"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="oa_request.html">oa_request</a></span><span class="op">(</span></span></span>
@@ -100,9 +100,7 @@ The function converts a list of institutions' records obtained using <code>oa_re
 <span class="r-in"><span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="oa2df.html">oa2df</a></span><span class="op">(</span><span class="va">res</span>, entity <span class="op">=</span> <span class="st">"institutions"</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">df</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="oa2df.html">oa2df</a></span><span class="op">(</span><span class="va">res</span>, entity <span class="op">=</span> <span class="st">"institutions"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># @export</span></span></span>
