@@ -3,7 +3,7 @@ pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   A_Brief_Introduction_to_openalexR: A_Brief_Introduction_to_openalexR.html
-last_built: 2022-09-03T07:53Z
+last_built: 2022-09-03T08:01Z
 urls:
   reference: https://massimoaria.github.io/openalexR/reference
   article: https://massimoaria.github.io/openalexR/articles
