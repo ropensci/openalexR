@@ -234,7 +234,7 @@ oa_fetch <- function(...,
 oa_request <- function(query_url,
                        per_page = 200,
                        count_only = FALSE,
-                       mailto = NULL,
+                       mailto = oa_email(),
                        verbose = FALSE) {
   ua <- httr::user_agent(cfg()$user_agent)
 
@@ -278,10 +278,7 @@ oa_request <- function(query_url,
     )
   }
 
-  pb <- progress::progress_bar$new(
-    format = "  OpenAlex downloading [:bar] :percent eta: :eta",
-    total = length(pages), clear = FALSE, width = 60
-  )
+  pb <- oa_progress(n = length(pages), text = "OpenAlex downloading")
 
   # Setting items per page
   query_ls[["per-page"]] <- per_page

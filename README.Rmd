@@ -44,6 +44,14 @@ You can install the released version of openalexR from [CRAN](https://CRAN.R-pro
 install.packages("openalexR")
 ```
 
+Before we go any further, we highly recommend you set `openalexR.mailto` option so that your requests go to [the polite pool](https://docs.openalex.org/api#the-polite-pool) for faster response times:
+
+```{r}
+options(openalexR.mailto = "example@email.com")
+```
+
+Bonus point if you put this in your `.Rprofile` with `usethis::edit_r_profile()`.
+
 ## Package loading
 
 ```{r warning=FALSE, message=FALSE}
@@ -127,7 +135,31 @@ oa_fetch(
 
 In most cases, we are interested in downloading a collection of items that meet one or more inclusion/exclusion criteria (filters). Supported attributes for each endpoints are listed [here](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists).
 
-**Example**: We want to download all works that have been cited more than 50 times, published between 2020 and 2021, and include the strings "bibliometric analysis" or "science mapping" in the title. Maybe we also want the results to be sorted by total citations in a descending order.
+**Example**: We want to download all works published by a set of authors.
+We can do this by filtering on the authorships.author.id/author.id or  authorships.author.orcid/author.orcid attribute (see more on attributes [here](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#works-attribute-filters)):
+
+```{r}
+oa_fetch(
+  entity = "works",
+  author.id = c("A923435168", "A2208157607"),
+  verbose = TRUE
+) %>% 
+  show_works() %>% 
+  knitr::kable()
+
+orcids <- c("0000-0003-3737-6565", "0000-0002-8517-9411")
+canonical_orcids <- paste0("https://orcid.org/", orcids)
+oa_fetch(
+  entity = "works",
+  author.orcid = canonical_orcids,
+  verbose = TRUE
+) %>% 
+  show_works() %>% 
+  knitr::kable()
+```
+
+**Example**: We want to download all works that have been cited more than 50 times, published between 2020 and 2021, and include the strings "bibliometric analysis" or "science mapping" in the title.
+Maybe we also want the results to be sorted by total citations in a descending order.
 
 Setting the argument `count_only = TRUE`, the function `oa_request()` returns the number of items matching the query without downloading the collection.
 
@@ -315,7 +347,9 @@ do.call(oa_fetch, bib_ls) %>%
 
 # About OpenAlex
 
-![Image from <https://docs.openalex.org/>](https://i.imgur.com/FXTji65.png)
+![oar-img](man/figures/oar.jpeg)
+
+<div style="text-align: right"> Schema credits: [@dhimmel](https://github.com/dhimmel) </div>
 
 [OpenAlex](https://openalex.org) is a fully open catalog of the global research system. It's named after the ancient [Library of Alexandria](https://en.wikipedia.org/wiki/Library_of_Alexandria). The OpenAlex dataset describes scholarly entities and how those entities are connected to each other. There are five types of entities:
 
@@ -331,4 +365,4 @@ do.call(oa_fetch, bib_ls) %>%
 
 ## Acknowledgements
 
-Package hex made with [Midjourney](https://www.midjourney.com/home/) which inherits a [CC BY-NC 4.0 license](https://creativecommons.org/licenses/by-nc/4.0/legalcode).
+Package hex was made with [Midjourney](https://www.midjourney.com/home/) and thus inherits a [CC BY-NC 4.0 license](https://creativecommons.org/licenses/by-nc/4.0/legalcode).

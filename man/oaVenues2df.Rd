@@ -28,7 +28,7 @@ The function converts a list of venues' records obtained using \code{oa_request}
 
 query_inst <- oa_query(
   identifier = "V205292342",
-  entity = "venues",
+  entity = "venues"
 )
 
 res <- oa_request(

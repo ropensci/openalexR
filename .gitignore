@@ -3,3 +3,9 @@
 .RData
 .Ruserdata
 docs
+.DS_Store
+.Rprofile
+
+# somehow these files were generate every time I "check" the package
+vignettes/*.R
+vignettes/*.html

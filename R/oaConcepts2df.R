@@ -19,8 +19,8 @@ utils::globalVariables("progress_bar")
 #'
 #'
 #' query_inst <- oa_query(
-#'   entity = "institutions",
-#'   filter = "country_code:it,type:education"
+#'   entity = "concepts",
+#'   display_name.search = "electrodynamics"
 #' )
 #'
 #' res <- oa_request(
@@ -38,7 +38,7 @@ utils::globalVariables("progress_bar")
 oaConcepts2df <- function(data, verbose = TRUE) {
 
   # replace NULL with NA
-  data <- simple_rapply(data, function(x) if (is.null(x)) NA else x)
+  data <- simple_rapply(data, `%||%`, y = NA)
 
   if (!is.null(data$id)) {
     data <- list(data)
@@ -50,85 +50,48 @@ oaConcepts2df <- function(data, verbose = TRUE) {
   }
 
   n <- length(data)
-
+  pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)
 
-  pb <- progress::progress_bar$new(
-    format = "  converting [:bar] :percent eta: :eta",
-    total = n, clear = FALSE, width = 60
-  )
-
   for (i in 1:n) {
-    if (isTRUE(verbose)) pb$tick()
+    if (verbose) pb$tick()
 
     item <- data[[i]]
 
-    id <- item$id
-    name <- item$display_name
-    if (length(item$international) > 0) {
-      name_international <- list(as.data.frame(item$international$display_name))
-    } else {
-      name_international <- NA
-    }
-    wikidata <- item$wikidata
-    rel_score <- item$relevance_score
-    level <- item$level
-    description <- item$description
-    if (length(item$international) > 0) {
-      description_international <- list(as.data.frame(item$international$description))
-    } else {
-      description_international <- NA
-    }
-    works_count <- item$works_count
-    TC <- item$cited_by_count
-    if (length(item$ids) > 0) {
-      ids <- unlist(item$ids)
-      ids <- list(data.frame(item = names(ids), value = ids))
-    } else {
-      ids <- NA
-    }
-    image <- item$image_url
-    thumbnail <- item$image_thumbnail_url
-    if (length(item$ancestors) > 0) {
-      ancestors <- unlist(item$ancestors)
-      lab <- names(ancestors)
-      ancestors <- list(data.frame(
-        id = ancestors[lab == "id"], name = ancestors[lab == "display_name"],
-        level = ancestors[lab == "level"], wikidata = ancestors[lab == "wikidata"]
-      ))
-    } else {
-      ancestors <- NA
-    }
-    if (length(item$related_concepts) > 0) {
-      rel_concepts <- unlist(item$related_concepts)
-      lab <- names(rel_concepts)
-      rel_concepts <- list(data.frame(
-        id = rel_concepts[lab == "id"], name = rel_concepts[lab == "display_name"],
-        level = rel_concepts[lab == "level"], wikidata = rel_concepts[lab == "wikidata"],
-        score = rel_concepts[lab == "score"]
-      ))
-    } else {
-      ancestors <- NA
-    }
+    sub_identical <- item[
+      c("id", "display_name", "wikidata", "level", "description",
+        "image_url", "image_thumbnail_url",  "works_count", "cited_by_count",
+        "works_api_url")]
 
-    ## Total Citation per Year
-    TCperYear <- unlist(item$counts_by_year)
-    lab <- names(TCperYear)
-    TCperYear <- list(data.frame(
-      year = TCperYear[lab == "year"], works_count = TCperYear[lab == "works_count"],
-      TC = TCperYear[lab == "cited_by_count"]
-    ))
+    sub_id <- list(
+      ids = subs_na(item$ids, type = "col_df"),
+      relevance_score = item$relevance_score %||% NA
+    )
 
-    works_api_url <- item$works_api_url
+    sub_rbind_dfs <- lapply(
+      item[c("counts_by_year", "ancestors", "related_concepts")],
+      subs_na, type = "rbind_df"
+    )
 
-    list_df[[i]] <- tibble::tibble(
-      id = id, name = name, name_international = name_international, description = description,
-      description_international = description_international, wikidata = wikidata, level = level,
-      ids = ids, image = image, thumbnail = thumbnail,
-      ancestors = ancestors, rel_concepts = rel_concepts,
-      rel_score = rel_score, works_count = works_count, TC = TC, TCperYear = TCperYear,
-      works_api_url = works_api_url
+    sub_row <- lapply(
+      item$international[c("display_name", "description")],
+      subs_na, type = "row_df"
+    )
+    names(sub_row) <- paste(names(sub_row), "international", sep = "_")
+
+    list_df[[i]] <- tibble::as_tibble(
+      c(sub_identical, sub_id, sub_rbind_dfs, sub_row)
     )
   }
-  df <- do.call(rbind, list_df)
+
+  col_order <- c(
+    "id", "display_name", "display_name_international", "description",
+    "description_international", "wikidata", "level", "ids",
+    "image_url", "image_thumbnail_url", "ancestors",
+    "related_concepts", "relevance_score", "works_count",
+    "cited_by_count", "counts_by_year",
+    "works_api_url"
+  )
+
+  do.call(rbind, list_df)[, col_order]
 }

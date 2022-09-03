@@ -27,8 +27,8 @@ The function converts a list of concepts' records obtained using \code{oa_reques
 
 
 query_inst <- oa_query(
-  entity = "institutions",
-  filter = "country_code:it,type:education"
+  entity = "concepts",
+  display_name.search = "electrodynamics"
 )
 
 res <- oa_request(

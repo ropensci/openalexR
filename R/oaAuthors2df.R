@@ -24,7 +24,8 @@ utils::globalVariables("progress_bar")
 #' query_author <- oa_query(
 #'   identifier = NULL,
 #'   entity = "authors",
-#'   filter = "last_known_institution.id:I71267560,works_count:>99"
+#'   last_known_institution.id = "I71267560",
+#'   works_count = ">99"
 #' )
 #'
 #' res <- oa_request(
@@ -53,81 +54,50 @@ oaAuthors2df <- function(data, verbose = TRUE) {
   }
 
   n <- length(data)
-
+  pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)
 
-  pb <- progress::progress_bar$new(
-    format = "  converting [:bar] :percent eta: :eta",
-    total = n, clear = FALSE, width = 60
-  )
-
-
   for (i in 1:n) {
-    if (isTRUE(verbose)) pb$tick()
+    if (verbose) pb$tick()
 
     item <- data[[i]]
 
-    id <- item$id
-    name <- item$display_name
-    if (length(item$display_name_alternatives) > 0) {
-      name_alternatives <- list(unlist(item$display_name_alternatives))
-    } else {
-      name_alternatives <- NA
-    }
-    #
-    if (length(item$ids) > 0) {
-      ids <- unlist(item$ids)
-      ids <- list(data.frame(item = names(ids), value = ids))
-    } else {
-      ids <- NA
-    }
+    sub_identical <- item[
+      c("id", "works_count", "display_name", "orcid",
+        "works_api_url", "cited_by_count")]
 
-    rel_score <- item$relevance_score %||% NA
-    orcid <- item$orcid
-    works_count <- item$works_count
-    TC <- item$cited_by_count
-    if (!is.na(item$last_known_institution[[1]])) {
-      affiliation_id <- item$last_known_institution$id
-      affiliation_ror <- item$last_known_institution$ror
-      affiliation_name <- item$last_known_institution$display_name
-      affiliation_country <- item$last_known_institution$country_code
-      affiliation_type <- item$last_known_institution$type
-    } else {
-      affiliation_id <- NA
-      affiliation_ror <- NA
-      affiliation_name <- NA
-      affiliation_country <- NA
-      affiliation_type <- NA
-    }
-
-
-    # Total Citations per Year
-    TCperYear <- unlist(item$counts_by_year)
-    lab <- names(TCperYear)
-    TCperYear <- list(data.frame(
-      year = TCperYear[lab == "year"], works_count = TCperYear[lab == "works_count"],
-      TC = TCperYear[lab == "cited_by_count"]
-    ))
-    # concepts
-    concept <- list(do.call(rbind, lapply(item$x_concepts, function(l) {
-      L <- data.frame(
-        concept_id = l$id,
-        concept_name = l$display_name,
-        concept_score = l$score,
-        concept_lecel = l$level,
-        concept_url = l$wikidata
-      )
-    })))
-    works_api_url <- item$works_api_url
-
-    list_df[[i]] <- tibble::tibble(
-      id = id, name = name, name_alternatives = name_alternatives, rel_score = rel_score, ids = ids,
-      orcid = orcid, works_count = works_count, TC = TC, TCperYear = TCperYear, affiliation_name = affiliation_name,
-      affiliation_id = affiliation_id, affiliation_ror = affiliation_ror,
-      affiliation_country = affiliation_country, affiliation_type = affiliation_type,
-      concept = concept, works_api_url = works_api_url
+    sub_id <- list(
+      ids = subs_na(item$ids, type = "col_df"),
+      relevance_score = item$relevance_score %||% NA
     )
+
+    sub_flat <- lapply(
+      item[c("display_name_alternatives")],
+      subs_na, type = "flat"
+    )
+    sub_rbind_dfs <- lapply(
+      item[c("counts_by_year", "x_concepts")],
+      subs_na, type = "rbind_df"
+    )
+
+    sub_affiliation <- item$last_known_institution
+    if (!is.na(sub_affiliation[[1]])) {
+      names(sub_affiliation) <- paste("affiliation", names(sub_affiliation), sep = "_")
+    } else {
+      sub_affiliation <- NULL
+    }
+
+    list_df[[i]] <- tibble::as_tibble(
+      c(sub_identical, sub_id, sub_flat, sub_rbind_dfs, sub_affiliation))
   }
 
-  do.call(rbind, list_df)
+  col_order <- c(
+    "id", "display_name", "display_name_alternatives", "relevance_score",
+    "ids", "orcid", "works_count", "cited_by_count", "counts_by_year",
+    "affiliation_display_name", "affiliation_id", "affiliation_ror",
+    "affiliation_country_code", "affiliation_type", "x_concepts",
+    "works_api_url"
+  )
+
+  do.call(rbind, list_df)[, col_order]
 }

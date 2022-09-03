@@ -17,10 +17,10 @@ utils::globalVariables("progress_bar")
 #'
 #' # Query to search information about all Italian educational institutions
 #'
-#'
 #' query_inst <- oa_query(
 #'   entity = "institutions",
-#'   filter = "country_code:it,type:education"
+#'   country_code = "it",
+#'   type = "education"
 #' )
 #'
 #' res <- oa_request(
@@ -29,9 +29,7 @@ utils::globalVariables("progress_bar")
 #'   verbose = FALSE
 #' )
 #'
-#' df <- oa2df(res, entity = "institutions")
-#'
-#' df
+#' oa2df(res, entity = "institutions")
 #' }
 #'
 #' # @export
@@ -50,81 +48,52 @@ oaInstitutions2df <- function(data, verbose = TRUE) {
   }
 
   n <- length(data)
+  pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)
 
-  pb <- progress::progress_bar$new(
-    format = "  converting [:bar] :percent eta: :eta",
-    total = n, clear = FALSE, width = 60
+  for (i in 1:n) {
+    if (verbose) pb$tick()
+
+    item <- data[[i]]
+    sub_identical <- item[
+      c("id", "ror", "works_api_url", "type", "works_count",
+        "display_name", "country_code", "homepage_url",
+        "image_url", "image_thumbnail_url", "cited_by_count",
+        "updated_date", "created_date")]
+
+    sub_id <- list(
+      ids = subs_na(item$ids, type = "col_df"),
+      relevance_score = item$relevance_score %||% NA
+    )
+
+    sub_flat <- lapply(
+      item[c("display_name_alternatives", "display_name_acronyms")],
+      subs_na, type = "flat"
+    )
+
+    sub_row <- lapply(
+      item[c("international", "geo", "associated_institutions")],
+      subs_na, type = "row_df"
+    )
+
+    sub_rbind_dfs <- lapply(
+      item[c("counts_by_year", "x_concepts")],
+      subs_na, type = "rbind_df"
+    )
+
+    list_df[[i]] <- tibble::as_tibble(
+      c(sub_flat, sub_row, sub_identical, sub_id, sub_rbind_dfs))
+  }
+
+
+  col_order <- c(
+    "id", "display_name", "display_name_alternatives", "display_name_acronyms",
+    "international", "ror", "ids", "country_code", "geo", "type",
+    "homepage_url", "image_url", "image_thumbnail_url",
+    "associated_institutions", "relevance_score", "works_count",
+    "cited_by_count", "counts_by_year",
+    "works_api_url", "x_concepts", "updated_date", "created_date"
   )
 
-  for (i in 1:n) {
-    if (isTRUE(verbose)) pb$tick()
-    # print(i)
-    item <- data[[i]]
-
-    sub_unlist <- `names<-`(
-      tibble::as_tibble(lapply(
-        item[c("display_name_alternatives", "display_name_acronyms")],
-        subs_na,
-        type = "flat"
-      )),
-      c("name_alternatives", "name_acronyms")
-    )
-
-    sub_df <- `names<-`(
-      tibble::as_tibble(lapply(
-        item[c("international", "geo", "associated_institutions")],
-        subs_na,
-        type = "row_df"
-      )),
-      c("name_international", "geo", "associated_inst")
-    )
-    sub_identical <- tibble::as_tibble(
-      item[c("id", "ror", "works_api_url", "type", "works_count")]
-    )
-    ids <- subs_na(item$ids, type = "col_df") # TODO is tibble ok? (no rownames)
-
-    # TODO changing the name is not very robust here
-    # TODO check rel_score
-    rel_score <- item$relevance_score
-    sub_modified <- `names<-`(
-      tibble::as_tibble(item[c(
-        "display_name", "country_code", "homepage_url",
-        "image_url", "image_thumbnail_url", "cited_by_count"
-      )]),
-      c("name", "country", "homepage", "image", "thumbnail", "TC")
-    )
-
-    # Total Citations per Year
-    # TODO
-    # Do we need to change these names?
-    c_tcs <- do.call(rbind.data.frame, item$counts_by_year)
-    names(c_tcs)[names(c_tcs) == "cited_by_count"] <- "TC"
-    TCperYear <- list(c_tcs)
-
-    if (length(item$x_concept) == 0) {
-      concept <- NA
-    } else {
-      c_concepts <- do.call(rbind.data.frame, item$x_concepts)
-      c_concepts <- c_concepts[, c("id", "display_name", "score", "level", "wikidata")]
-      names(c_concepts) <- c("concept_id", "concept_name", "concept_score", "concept_level", "concept_url")
-      concept <- list(c_concepts)
-    }
-
-    item_organized <- tibble::tibble(
-      sub_unlist, sub_df, sub_identical, sub_modified,
-      ids = ids,
-      rel_score = rel_score, TCperYear = TCperYear, concept = concept
-    )
-
-    col_order <- c(
-      "id", "name", "name_alternatives", "name_acronyms", "name_international",
-      "ror", "ids", "country", "geo", "type", "homepage", "image", "thumbnail",
-      "associated_inst", # "rel_score", # TODO
-      "works_count", "TC", "TCperYear", "concept",
-      "works_api_url"
-    )
-    list_df[[i]] <- item_organized[, col_order]
-  }
-  do.call(rbind, list_df)
+  do.call(rbind, list_df)[, col_order]
 }

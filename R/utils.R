@@ -10,18 +10,34 @@ simple_rapply <- function(x, fn, ...) {
 
 `%||%` <- function(x, y) if (is.null(x)) y else x
 
-subs_na <- function(x, type = c("row_df", "col_df", "flat")) {
+subs_na <- function(x, type = c("row_df", "col_df", "flat", "rbind_df"), prefix = NULL) {
   type <- match.arg(type)
 
   if (length(x) == 0) {
     return(NA)
   }
 
-  switch(type,
-    row_df = list(as.data.frame(x)),
-    col_df = list(tibble::enframe(unlist(x))),
-    flat = list(unlist(x))
+  out <- switch(type,
+    row_df = as.data.frame(x),
+    col_df = tibble::enframe(unlist(x)),
+    flat = unlist(x),
+    rbind_df = do.call(rbind.data.frame, x)
   )
+
+  if (!is.null(prefix)){
+    out <- append_prefix(out, prefix)
+  }
+
+  list(out)
+}
+
+append_prefix <- function(x, prefix = ""){
+  names(x) <- paste(prefix, names(x), sep = "_")
+  x
+}
+
+empty_list <- function(vars) {
+  setNames(as.list(rep(NA, length(vars))), vars)
 }
 
 isValidEmail <- function(x) {
@@ -47,3 +63,13 @@ id_type <- function(identifier) {
   )
 }
 
+oa_email <- function() {
+  return(getOption("openalexR.mailto", default = NULL))
+}
+
+oa_progress <- function(n, text = "converting") {
+  progress::progress_bar$new(
+    format = paste(" ", text, "[:bar] :percent eta: :eta"),
+    total = n, clear = FALSE, width = 60
+  )
+}

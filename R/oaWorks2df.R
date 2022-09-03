@@ -12,6 +12,7 @@ utils::globalVariables("progress_bar")
 #'
 #' For more extensive information about OpenAlex API, please visit: \href{https://docs.openalex.org/api}{https://docs.openalex.org/api}
 #'
+#' @importFrom stats setNames
 #'
 #' @examples
 #' \dontrun{
@@ -29,7 +30,7 @@ utils::globalVariables("progress_bar")
 #' query <- oa_query(
 #'   identifier = NULL,
 #'   entity = "works",
-#'   filter = "cites:W2755950973",
+#'   cites = "W2755950973",
 #'   from_publication_date = "2021-01-01",
 #'   to_publication_date = "2021-12-31",
 #'   search = NULL,
@@ -48,6 +49,7 @@ utils::globalVariables("progress_bar")
 #' }
 #'
 #' # @export
+
 oaWorks2df <- function(data, abstract = TRUE, verbose = TRUE) {
 
   if (!is.null(data$id)) {
@@ -60,142 +62,90 @@ oaWorks2df <- function(data, abstract = TRUE, verbose = TRUE) {
   }
 
   n <- length(data)
-
+  pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)
-
-  pb <- progress::progress_bar$new(
-    format = "  converting [:bar] :percent eta: :eta",
-    total = n, clear = FALSE, width = 60
+  # biblio_cols <- c("volume", "issue", "first_page", "last_page")
+  inst_cols <- c("id", "display_name", "ror", "country_code", "type")
+  venue_cols <- c(
+    so_id = "id", so = "display_name", publisher = "publisher",
+    url = "url", is_oa = "is_oa"
   )
 
-
   for (i in 1:n) {
-    if (isTRUE(verbose)) pb$tick()
-    # print(i)
-    paper <- data[[i]]
-    paper <- simple_rapply(paper, function(x) if (is.null(x)) NA else x)
+    if (verbose) pb$tick()
 
-    id <- paper$id
-    title <- paper$display_name
-    pubdate <- paper$publication_date
-    relscore <- paper$relevance_score
-    # host venue
-    so_id <- paper$host_venue$id
-    so <- paper$host_venue$display_name
-    publisher <- paper$host_venue$publisher
-    issn <- list(unlist(paper$host_venue$issn))
-    url <- paper$host_venue$url
-    oa <- paper$host_venue$is_oa
-    if (!is.na(paper$biblio[1])) {
-      first_page <- paper$biblio$first_page[1]
-      last_page <- paper$biblio$last_page[1]
-      volume <- paper$biblio$volume[1]
-      issue <- paper$biblio$issue[1]
-    } else {
-      first_page <- NA
-      last_page <- NA
-      volume <- NA
-      issue <- NA
-    }
+    paper <- data[[i]]
+    paper <- simple_rapply(paper, `%||%`, y = NA)
+
+    sub_identical <- paper[
+      c(
+        "id", "display_name", "publication_date", "doi", "type",
+        "cited_by_count", "publication_year", "cited_by_api_url"
+      )
+    ]
+    sub_biblio <- paper$biblio
+
+    sub_flat <- lapply(
+      paper[c("referenced_works", "related_works")],
+      subs_na,
+      type = "flat"
+    )
+
+    sub_id <- list(
+      ids = subs_na(paper$ids, type = "col_df"),
+      relevance_score = paper$relevance_score %||% NA
+    )
+
+    sub_rbind_dfs <- lapply(
+      paper[c("counts_by_year", "concepts")],
+      subs_na,
+      type = "rbind_df"
+    )
+
+    sub_venue <- setNames(paper$host_venue[venue_cols], names(venue_cols))
+    sub_venue$issn <- subs_na(paper$host_venue$issn, "flat")
+
+    empty_inst <- empty_list(inst_cols)
 
     # authorships and affilitation
-    author <- list(do.call(rbind, lapply(paper$authorships, function(l) {
-      ind <- which(lengths(l[["institutions"]]) > 0)[1]
-      if (!is.na(ind)) {
-        institution_id <- l[["institutions"]][[ind]]$id
-        institution_name <- l[["institutions"]][[ind]]$display_name
-        institution_ror <- l[["institutions"]][[ind]]$ror
-        institution_country <- l[["institutions"]][[ind]]$country_code
-        institution_type <- l[["institutions"]][[ind]]$type
+    author <- list(do.call(rbind.data.frame, lapply(paper$authorships, function(l) {
+      l_inst <- l$institutions
+      inst_idx <- lengths(l_inst) > 0
+      if (length(inst_idx) > 0) {
+        first_inst <- l_inst[inst_idx][[1]]
       } else {
-        institution_id <- NA
-        institution_name <- NA
-        institution_ror <- NA
-        institution_country <- NA
-        institution_type <- NA
+        first_inst <- empty_inst
       }
-      if (length(l[["author"]]) == 0) {
-        au_id <- NA
-        au_name <- NA
-        au_orcid <- NA
-        au_position <- NA
-      } else {
-        au_id <- l[["author"]]$id[1]
-        au_name <- l[["author"]]$display_name[1]
-        au_orcid <- l[["author"]]$orcid[1]
-        au_position <- l$author_position[1]
-      }
-      # print(l[["author"]]$id)
-      L <- data.frame(
-        au_id = au_id,
-        au_name = au_name,
-        au_orcid = au_orcid,
-        au_position = au_position,
-        au_affiliation_raw = l$raw_affiliation_string[1],
-        institution_id = institution_id[1],
-        institution_name = institution_name[1],
-        institution_ror = institution_ror[1],
-        institution_country = institution_country[1],
-        institution_type = institution_type[1]
-      )
+      first_inst <- append_prefix(first_inst, "institution")
+      aff_raw <- list(au_affiliation_raw = l$raw_affiliation_string[1])
+      l_author <- append_prefix(l$author, "au")
+      c(l_author, l["author_position"], aff_raw, first_inst)
     })))
-
-    # concepts
-    concept <- list(do.call(rbind, lapply(paper$concepts, function(l) {
-      L <- data.frame(
-        concept_id = l$id,
-        concept_name = l$display_name,
-        concept_score = l$score,
-        concept_lecel = l$level,
-        concept_url = l$wikidata
-      )
-    })))
-
-    TC <- paper$cited_by_count
-
-    # Total Citations per Year
-    if (length(paper$counts_by_year) > 0) {
-      TCperYear <- unlist(paper$counts_by_year)
-      lab <- names(TCperYear)
-      TCperYear <- list(data.frame(
-        year = TCperYear[lab == "year"],
-        TC = TCperYear[lab == "cited_by_count"]
-      ))
-    } else {
-      TCperYear <- NA
-    }
-
-    PY <- paper$publication_year
-    cited_by_url <- paper$cited_by_api_url
-    if (length(paper$ids) > 0) {
-      ids <- unlist(paper$ids)
-      ids <- list(data.frame(item = names(ids), value = ids))
-    } else {
-      ids <- NA
-    }
-    DI <- paper$doi
-    DT <- paper$type
-    CR <- unlist(paper$referenced_works)
-    related_works <- unlist(paper$related_works)
 
     # Abstract
-    if (!is.na(paper$abstract_inverted_index[1]) & isTRUE(abstract)) {
+    if (abstract && !is.na(paper$abstract_inverted_index[1])) {
       ab <- abstract_build(paper$abstract_inverted_index)
     } else {
       ab <- ""
     }
 
-    list_df[[i]] <- tibble::tibble(
-      id = id, TI = title, author = author, AB = ab, pubdata = pubdate,
-      relscore = relscore, SO = so, SO_ID = so_id, PU = publisher, IS = issn, URL = url,
-      first_page = first_page, last_page = last_page, volume = volume, issue = issue,
-      OA = oa, TC = TC, TCperYear = TCperYear, PY = PY, cited_by_url = cited_by_url,
-      ids = list(ids), DI = DI, DT = DT, CR = list(CR), related_works = list(related_works),
-      concept = concept
+    list_df[[i]] <- tibble::as_tibble(
+      c(
+        sub_identical, sub_flat, sub_id, sub_rbind_dfs, sub_venue, sub_biblio,
+        list(author = author), list(ab = ab)
+      )
     )
   }
 
-  do.call(rbind, list_df)
+  col_order <- c(
+    "id", "display_name", "author", "ab", "publication_date", "relevance_score",
+    "so", "so_id", "publisher", "issn", "url", "first_page", "last_page",
+    "volume", "issue", "is_oa", "cited_by_count", "counts_by_year",
+    "publication_year", "cited_by_api_url", "ids", "doi", "type",
+    "referenced_works", "related_works", "concepts"
+  )
+
+  do.call(rbind.data.frame, list_df)[, col_order]
 }
 
 abstract_build <- function(ab) {
@@ -203,7 +153,7 @@ abstract_build <- function(ab) {
   ind <- unlist(ab)
   if (is.null(ind)){
     ab <- ""
-    }else{
+  } else {
     ab <- paste(w[order(ind)], collapse = " ", sep = "")
   }
 }

@@ -8,7 +8,7 @@ oa_request(
   query_url,
   per_page = 200,
   count_only = FALSE,
-  mailto = NULL,
+  mailto = oa_email(),
   verbose = FALSE
 )
 }

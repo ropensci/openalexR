@@ -23,7 +23,7 @@
 #' query <- oa_query(
 #'   identifier = NULL,
 #'   entity = "works",
-#'   filter = "cites:W2755950973",
+#'   cites = "W2755950973",
 #'   from_publication_date = "2021-01-01",
 #'   to_publication_date = "2021-12-31",
 #'   search = NULL,
@@ -57,39 +57,37 @@ oa2bibliometrix <- function(df) {
 
   # Authors
   AU_info <- lapply(df$author, function(l) {
-    AU <- paste(l$au_name, collapse = ";")
-    C1 <- paste(l$au_affiliation_raw, collapse = ";")
-    RP <- paste(l$au_affiliation_raw[1], collapse = ";")
-    AU_UN <- paste(l$institution_name, collapse = ";")
+    AU <- au_collapse(l$au_name)
+    C1 <- au_collapse(l$au_affiliation_raw)
+    RP <- au_collapse(l$au_affiliation_raw[1])
+    AU_UN <- au_collapse(l$institution_name)
     l$institution_country[is.na(l$institution_country)] <- "Not available"
-    AU_CO <- paste(countrycode[l$institution_country, 1], collapse = ";")
-    data.frame(AU = AU, RP = RP, C1 = C1, AU_UN = AU_UN, AU_CO = AU_CO)
+    AU_CO <- au_collapse(countrycode[l$institution_country, 1])
+    list(AU = AU, RP = RP, C1 = C1, AU_UN = AU_UN, AU_CO = AU_CO)
   })
 
-  AU_info <- do.call(rbind, AU_info)
+  AU_info <- do.call(rbind.data.frame, AU_info)
 
   # References
-  df$CR <- unlist(lapply(df$CR, function(l) {
+  df$CR <- unlist(lapply(df$referenced_works, function(l) {
     paste(l, collapse = ";")
   }))
 
   # Keywords
-  ID <- unlist(lapply(df$concept, function(l) {
-    paste(l$concept_name, collapse = ";")
+  ID <- unlist(lapply(df$concepts, function(l) {
+    if (is.logical(l)) return(NA)
+    au_collapse(l$display_name)
   }))
 
   df <- cbind(AU_info, ID, df)
 
-  label <- c("TI", "AU", "C1", "RP", "ID", "AB", "AU_UN", "AU_CO", "SO", "DT")
-
-  for (i in label) df[[i]] <- toupper(df[[i]])
-
+  df$TI <- toupper(df$display_name)
+  df$AB <- toupper(df$ab)
+  df$SO <- toupper(df$so)
+  df$DT <- toupper(df$type)
   df$DB <- "openalex"
-
-  df$JI <- gsub("https://openalex.org/", "", df$SO_ID)
-
+  df$JI <- gsub("https://openalex.org/", "", df$so_id)
   df$J9 <- df$JI
-
 
   ### SR field creation
   suppressWarnings(df <- SR(df))
@@ -98,7 +96,6 @@ oa2bibliometrix <- function(df) {
   df <- df[!d, ]
 
   row.names(df) <- df$SR
-
   class(df) <- c("bibliometrixDB", "data.frame")
   return(df)
 }
@@ -111,7 +108,6 @@ SR <- function(df) {
     if (!(length(l) > 0)) l <- "NA"
     return(l)
   }))
-
 
   SR <- paste(FirstAuthor, df$PY, df$J9, sep = ", ")
 
@@ -132,4 +128,8 @@ SR <- function(df) {
   df$SR <- SR
 
   return(df)
+}
+
+au_collapse <- function(x){
+  toupper(paste(x, collapse = ";"))
 }

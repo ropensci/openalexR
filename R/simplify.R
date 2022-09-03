@@ -30,11 +30,12 @@ show_authors <- function(x, simp_func = utils::head){
   }
 
   x$top_concepts <- sapply(
-    x$concept,
+    x$x_concepts,
     function(y) paste(utils::head(y$concept_name), collapse = ", ")
   )
 
-  simp_func(x[, c("short_id", "name", "orcid", "works_count", "TC", "affiliation_name", "top_concepts")])
+  simp_func(x[, c("short_id", "display_name", "orcid", "works_count",
+                  "cited_by_count", "affiliation_display_name", "top_concepts")])
 }
 
 
@@ -72,13 +73,17 @@ show_works <- function(x, simp_func = utils::head){
   )
 
   x$top_concepts <- sapply(
-    x$concept,
-    function(y) paste(utils::head(y$concept_name), collapse = ", ")
+    x$concepts,
+    function(y) {
+      if (is.logical(y)) return(NA)
+      paste(utils::head(y[["display_name"]]), collapse = ", ")
+    }
+  )
+  
+  simp_cols <- intersect(
+    c("short_id", "display_name", "first_author", "last_author", "so", "url", "is_oa", "top_concepts", "role"), 
+    names(x)
   )
 
-  if ("role" %in% names(x)){
-    simp_func(x[, c("short_id", "TI", "first_author", "last_author", "SO", "URL", "OA", "top_concepts", "role")])
-  } else{
-    simp_func(x[, c("short_id", "TI", "first_author", "last_author", "SO", "URL", "OA", "top_concepts")])
-  }
+  simp_func(x[, simp_cols])
 }

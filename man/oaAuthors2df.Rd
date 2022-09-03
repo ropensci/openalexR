@@ -32,7 +32,8 @@ The function converts a list of authors' records obtained using \code{oa_request
 query_author <- oa_query(
   identifier = NULL,
   entity = "authors",
-  filter = "last_known_institution.id:I71267560,works_count:>99"
+  last_known_institution.id = "I71267560",
+  works_count = ">99"
 )
 
 res <- oa_request(
