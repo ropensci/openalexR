@@ -50,7 +50,7 @@ paper <- oa_fetch(
 )
 
 # fetching all documents cited by the target papers
-CR <- unique(unlist(paper$CR))
+CR <- unique(unlist(paper$referenced_works))
 list_CR <- split(CR, ceiling(seq_along(CR)/50))
 cited <- list()
 if (isTRUE(verbose)) message("Collecting all documents cited by the target papers")
