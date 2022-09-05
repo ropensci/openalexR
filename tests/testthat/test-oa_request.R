@@ -16,4 +16,29 @@ test_that("oa_fetch works", {
     paste0("https://openalex.org/", sort(work_ids))
   )
 
+  expect_s3_class(
+    oa_fetch(
+      entity = "w",
+      publication_date = "2020-08-01",
+      cited_by_count = ">1000"
+    ),
+    "data.frame"
+  )
+})
+
+test_that("Error when input entity that can't be matched", {
+  expect_error(
+    oa_fetch(
+      entity = "wa",
+      publication_date = "2020-08-01",
+      cited_by_count = ">1000"
+    )
+  )
+
+  expect_error(
+    oa_fetch(
+      entity = "insta",
+      display_name.search = "University of Florida"
+    )
+  )
 })

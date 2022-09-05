@@ -44,7 +44,7 @@ oaVenues2df <- function(data, verbose = TRUE) {
     data <- list(data)
   }
 
-  if (is.null(data[[1]]$id)) {
+  if (length(data) == 0 || is.null(data[[1]]$id)) {
     message("the list does not contain a valid OpenAlex collection")
     return()
   }
