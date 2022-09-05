@@ -1,0 +1,97 @@
+---
+title: "Transition towards Open Access"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  dpi = 300
+)
+```
+
+Following the template in OpenAlex's [oa-percentage tutorial](https://github.com/ourresearch/openalex-api-tutorials/blob/develop/notebooks/institutions/oa-percentage.ipynb), this vignette uses openalexR to answer:
+
+**How many of recent journal articles from the University of Florida are open access? And how many aren't?**
+
+```{r setup, message=FALSE}
+library(openalexR)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+```
+
+We first need to find the [openalex.id](https://docs.openalex.org/about-the-data/institution#id) for University of Florida.
+We can do this by fetching for the *institutions* `entity` and put *"University of Florida"* in `display_name` or `display_name.search`:
+
+```{r}
+oa_fetch(
+  entity = "inst", # same as "institutions"
+  display_name.search = "\"University of Florida\""
+) %>%
+  select(display_name, ror) %>% 
+  knitr::kable()
+```
+
+We will use the first ror, <https://ror.org/02y3ad647>, as one of the filters for our query.
+
+All other filters are straightforward and explained in detailed in the original jupyter notebook [tutorial](https://github.com/ourresearch/openalex-api-tutorials/blob/develop/notebooks/institutions/oa-percentage.ipynb).
+The only difference here is that, instead of grouping by `is_oa`, we're interested in the "trend" over the years, so we're going to group by `publication_year`, and perform the query twice, one for `is_oa = "true"` and one for `is_oa = "false"` .
+
+```{r}
+open_access <- oa_fetch(
+  entity = "works",
+  institutions.ror = "https://ror.org/02y3ad647",
+  type = "journal-article",
+  from_publication_date = "2012-08-24",
+  is_paratext = "false",
+  is_oa = "true",
+  group_by = "publication_year",
+  count_only = TRUE
+)
+
+closed_access <- oa_fetch(
+  entity = "works",
+  institutions.ror = "https://ror.org/02y3ad647",
+  type = "journal-article",
+  from_publication_date = "2012-08-24",
+  is_paratext = "false",
+  is_oa = "false",
+  group_by = "publication_year",
+  count_only = TRUE
+)
+
+uf_df <- closed_access %>%
+  select(- key_display_name) %>%
+  full_join(open_access, by = "key", suffix = c("_ca", "_oa")) 
+
+uf_df
+```
+
+Finally, we compare the number of open vs. closed access articles over the years:
+
+```{r warning=FALSE}
+uf_df %>%
+  filter(key <= 2021) %>% # we do not yet have complete data for 2022 and after
+  pivot_longer(cols = starts_with("count")) %>%
+  mutate(
+    year = as.integer(key),
+    is_oa = recode(
+      name,
+      "count_ca" = "Closed Access",
+      "count_oa" = "Open Access"
+    ),
+    label = if_else(key < 2021, NA_character_, is_oa)
+  ) %>% 
+  select(year, value, is_oa, label) %>%
+  ggplot(aes(x = year, y = value, group = is_oa, color = is_oa)) +
+  geom_line(size = 1) +
+  labs(
+    title = "University of Florida's progress towards Open Access",
+    x = NULL, y = "Number of journal articles") +
+  scale_color_brewer(palette = "Dark2", direction = -1) +
+  scale_x_continuous(breaks = seq(2010, 2024, 2)) +
+  geom_text(aes(label = label), nudge_x = 0.1, hjust = 0) +
+  coord_cartesian(xlim = c(NA, 2022.5)) +
+  guides(color = "none")
+```
