@@ -31,7 +31,8 @@ Suggests:
     testthat (>= 3.0.0),
     dplyr,
     knitr,
-    rmarkdown
+    rmarkdown,
+    tidyr
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
