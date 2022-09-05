@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 
+[![R-CMD-check](https://github.com/massimoaria/openalexR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/massimoaria/openalexR/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 **openalexR** helps you interface with the [OpenAlex](https://openalex.org) API to retrieve bibliographic infomation about publications, authors, venues, institutions and concepts with 4 main functions:
