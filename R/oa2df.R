@@ -9,6 +9,9 @@
 #' @param abstract Logical. If TRUE, the function returns also the abstract of each item. Default is \code{abstract=TRUE}.
 #' The argument is ignored if entity is different from "works".
 #' @param count_only Logical. If TRUE, the function returns only the number of item matching the query. Default is \code{count_only=FALSE}.
+#' @param group_by Character. Property to group by.
+#' For example: "oa_status" for works.
+#' https://docs.openalex.org/api/get-groups-of-entities
 #' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.
 #' @return a data.frame.
 #'
@@ -46,7 +49,11 @@
 #' }
 #'
 #' @export
-oa2df <- function(data, entity, abstract = TRUE, count_only = FALSE, verbose = TRUE) {
+oa2df <- function(data, entity, abstract = TRUE, count_only = FALSE, group_by = NULL, verbose = TRUE) {
+  if (!is.null(group_by)){
+    return(do.call(rbind.data.frame, data))
+  }
+
   if (count_only && length(data) == 4) return(unlist(data))
 
   switch(entity,

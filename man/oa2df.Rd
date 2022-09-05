@@ -4,7 +4,14 @@
 \alias{oa2df}
 \title{Convert OpenAlex collection from list to data frame}
 \usage{
-oa2df(data, entity, abstract = TRUE, count_only = FALSE, verbose = TRUE)
+oa2df(
+  data,
+  entity,
+  abstract = TRUE,
+  count_only = FALSE,
+  group_by = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{data}{is a list. data is the output of the function \code{oa_request}.}
@@ -16,6 +23,10 @@ entity = c("works", "authors", "venues", "institutions", "concepts"). The defaul
 The argument is ignored if entity is different from "works".}
 
 \item{count_only}{Logical. If TRUE, the function returns only the number of item matching the query. Default is \code{count_only=FALSE}.}
+
+\item{group_by}{Character. Property to group by.
+For example: "oa_status" for works.
+https://docs.openalex.org/api/get-groups-of-entities}
 
 \item{verbose}{is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.}
 }

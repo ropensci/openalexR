@@ -64,6 +64,7 @@ oa_fetch <- function(...,
                      mailto = NULL,
                      verbose = FALSE) {
   output <- match.arg(output)
+  entity <- match.arg(entity, oa_entities())
 
   if (output == "dataframe") output <- "tibble"
 
@@ -86,7 +87,9 @@ oa_fetch <- function(...,
 
   final_res <- switch(output,
     list = res,
-    tibble = oa2df(res, entity = entity, abstract = abstract, count_only = count_only, verbose = verbose)
+    tibble = oa2df(res, entity = entity, abstract = abstract,
+                   count_only = count_only, group_by = group_by,
+                   verbose = verbose)
   )
 
   final_res
@@ -240,7 +243,7 @@ oa_request <- function(query_url,
 
   # building query...
   # first, download info about n. of items returned by the query
-  query_ls <- list("per-page" = 1) # TODO did we mean for this to be 1???
+  query_ls <- list("per-page" = 200) # TODO did we mean for this to be 1???
 
   if (!is.null(mailto)) {
     if (isValidEmail(mailto)) {
@@ -252,6 +255,10 @@ oa_request <- function(query_url,
 
   if (verbose == TRUE) message("Requesting url: ", query_url)
   res <- api_request(query_url, ua, query = query_ls)
+
+  if (grepl("group_by", query_url)){
+    return(res$group_by)
+  }
 
   if (!is.null(res$meta)) {
     ## return only item counting

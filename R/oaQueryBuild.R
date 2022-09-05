@@ -104,6 +104,7 @@ oa_query <- function(...,
                      endpoint = "https://api.openalex.org/",
                      verbose = FALSE) {
 
+  entity <- match.arg(entity, oa_entities())
   filter <- list(...)
   multiple_id <- length(identifier) > 1
 

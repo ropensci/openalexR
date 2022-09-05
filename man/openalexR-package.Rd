@@ -22,10 +22,5 @@ Useful links:
 \author{
 \strong{Maintainer}: Massimo Aria \email{massimo.aria@gmail.com} (\href{https://orcid.org/0000-0002-8517-9411}{ORCID}) [copyright holder]
 
-Other contributors:
-\itemize{
-  \item Trang Le \email{grixor@gmail.com} (\href{https://orcid.org/0000-0003-3737-6565}{ORCID}) [contributor]
-}
-
 }
 \keyword{internal}
