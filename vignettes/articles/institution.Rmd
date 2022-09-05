@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
 
 Following the template in OpenAlex's [oa-percentage tutorial](https://github.com/ourresearch/openalex-api-tutorials/blob/develop/notebooks/institutions/oa-percentage.ipynb), this vignette uses openalexR to answer:
 
-**How many of recent journal articles from the University of Florida are open access? And how many aren't?**
+**How many of recent journal articles from the University of Pennsylvania are open access? And how many aren't?**
 
 ```{r setup, message=FALSE}
 library(openalexR)
@@ -21,19 +21,21 @@ library(tidyr)
 library(ggplot2)
 ```
 
-We first need to find the [openalex.id](https://docs.openalex.org/about-the-data/institution#id) for University of Florida.
-We can do this by fetching for the *institutions* `entity` and put *"University of Florida"* in `display_name` or `display_name.search`:
+We first need to find the [openalex.id](https://docs.openalex.org/about-the-data/institution#id) for University of Pennsylvania.
+We can do this by fetching for the *institutions* `entity` and put *"University of Pennsylvania"* in `display_name` or `display_name.search`:
 
 ```{r}
 oa_fetch(
   entity = "inst", # same as "institutions"
-  display_name.search = "\"University of Florida\""
+  display_name.search = "\"University of Pennsylvania\""
 ) %>%
   select(display_name, ror) %>% 
   knitr::kable()
 ```
 
-We will use the first ror, <https://ror.org/02y3ad647>, as one of the filters for our query.
+We will use the first ror, <https://ror.org/00b30xv10>, as one of the filters for our query.
+
+***Alternatively***, we could go to the autocomplete endpoint at <https://explore.openalex.org/> to search for "University of Pennsylvania" and find the ror [there](https://explore.openalex.org/institutions/I79576946)!
 
 All other filters are straightforward and explained in detailed in the original jupyter notebook [tutorial](https://github.com/ourresearch/openalex-api-tutorials/blob/develop/notebooks/institutions/oa-percentage.ipynb).
 The only difference here is that, instead of grouping by `is_oa`, we're interested in the "trend" over the years, so we're going to group by `publication_year`, and perform the query twice, one for `is_oa = "true"` and one for `is_oa = "false"` .
@@ -41,7 +43,7 @@ The only difference here is that, instead of grouping by `is_oa`, we're interest
 ```{r}
 open_access <- oa_fetch(
   entity = "works",
-  institutions.ror = "https://ror.org/02y3ad647",
+  institutions.ror = "https://ror.org/00b30xv10",
   type = "journal-article",
   from_publication_date = "2012-08-24",
   is_paratext = "false",
@@ -52,7 +54,7 @@ open_access <- oa_fetch(
 
 closed_access <- oa_fetch(
   entity = "works",
-  institutions.ror = "https://ror.org/02y3ad647",
+  institutions.ror = "https://ror.org/00b30xv10",
   type = "journal-article",
   from_publication_date = "2012-08-24",
   is_paratext = "false",
@@ -87,7 +89,7 @@ uf_df %>%
   ggplot(aes(x = year, y = value, group = is_oa, color = is_oa)) +
   geom_line(size = 1) +
   labs(
-    title = "University of Florida's progress towards Open Access",
+    title = "University of Pennsylvania's progress towards Open Access",
     x = NULL, y = "Number of journal articles") +
   scale_color_brewer(palette = "Dark2", direction = -1) +
   scale_x_continuous(breaks = seq(2010, 2024, 2)) +

@@ -65,11 +65,11 @@ show_works <- function(x, simp_func = utils::head){
   x$short_id <- sapply(strsplit(x$id, split= "/"), function(y) utils::tail(y, 1))
   x$first_author <- sapply(
     x$author,
-    function(y) utils::head(y$au_name, 1)
+    function(y) y[y$author_position == "first", "au_display_name"]
   )
   x$last_author <- sapply(
     x$author,
-    function(y) utils::tail(y$au_name, 1)
+    function(y) y[y$author_position == "last", "au_display_name"]
   )
 
   x$top_concepts <- sapply(
@@ -79,9 +79,9 @@ show_works <- function(x, simp_func = utils::head){
       paste(utils::head(y[["display_name"]]), collapse = ", ")
     }
   )
-  
+
   simp_cols <- intersect(
-    c("short_id", "display_name", "first_author", "last_author", "so", "url", "is_oa", "top_concepts", "role"), 
+    c("short_id", "display_name", "first_author", "last_author", "so", "url", "is_oa", "top_concepts", "role"),
     names(x)
   )
 
