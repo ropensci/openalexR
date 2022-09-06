@@ -57,6 +57,9 @@ oaAuthors2df <- function(data, verbose = TRUE) {
   pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)
 
+  inst_cols <- c("id", "display_name", "ror", "country_code", "type")
+  empty_inst <- empty_list(inst_cols)
+
   for (i in 1:n) {
     if (verbose) pb$tick()
 
@@ -81,11 +84,10 @@ oaAuthors2df <- function(data, verbose = TRUE) {
     )
 
     sub_affiliation <- item$last_known_institution
-    if (!is.na(sub_affiliation[[1]])) {
-      names(sub_affiliation) <- paste("affiliation", names(sub_affiliation), sep = "_")
-    } else {
-      sub_affiliation <- NULL
+    if (is.na(sub_affiliation[[1]])) {
+      sub_affiliation <- empty_inst
     }
+    sub_affiliation <- prepend(sub_affiliation, "affiliation")
 
     list_df[[i]] <- tibble::as_tibble(
       c(sub_identical, sub_id, sub_flat, sub_rbind_dfs, sub_affiliation))

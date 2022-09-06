@@ -26,7 +26,7 @@ test_that("oa_fetch works", {
   )
 })
 
-test_that("Error when input entity that can't be matched", {
+test_that("Error when input entity can't be matched", {
   expect_error(
     oa_fetch(
       entity = "wa",
@@ -42,3 +42,25 @@ test_that("Error when input entity that can't be matched", {
     )
   )
 })
+
+test_that("oa_fetch authors can deal with NA institutions", {
+  # Old error:
+  # Error in rbind(deparse.level, ...) :
+  #   numbers of columns of arguments do not match
+
+  expect_s3_class(
+    oa_fetch(
+      entity = "authors",
+      orcid = "0000-0001-7482-0480"),
+    "data.frame"
+  )
+
+  expect_type(
+    oa_fetch(
+      entity = "authors",
+      orcid = "0000-0001-7482-0480",
+      output = "list"),
+    "list"
+  )
+})
+
