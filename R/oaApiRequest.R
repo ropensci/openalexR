@@ -273,7 +273,8 @@ oa_request <- function(query_url,
 
   # building query...
   # first, download info about n. of items returned by the query
-  query_ls <- list("per-page" = 200) # TODO did we mean for this to be 1???
+  is_group_by <- grepl("group_by", query_url)
+  query_ls <- if (is_group_by) list() else list("per-page" = 1)
 
   if (!is.null(mailto)) {
     if (isValidEmail(mailto)) {
@@ -286,7 +287,7 @@ oa_request <- function(query_url,
   if (verbose == TRUE) message("Requesting url: ", query_url)
   res <- api_request(query_url, ua, query = query_ls)
 
-  if (grepl("group_by", query_url)) {
+  if (is_group_by) {
     return(res$group_by)
   }
 
