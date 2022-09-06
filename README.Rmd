@@ -30,6 +30,8 @@ knitr::opts_chunk$set(
 
 -   `oa_fetch()`: composes three functions above so the user can execute everything in one step, *i.e.*, `oa_query |> oa_request |> oa2df`
 
+-   `oa_random()`: to get random entity, e.g., `oa_random("works")` gives a different work each time you run it
+
 ## Installation
 
 You can install the developer version of the openalexR from [GitHub](https://github.com) with:
@@ -313,13 +315,15 @@ aria_count <- oa_fetch(
 aria_count
 ```
 
-This query will return a collection of `r aria_count["count"]` publications. Let's to download it and then to convert it into a data frame:
+This query will return a collection of `r aria_count["count"]` publications.
+Among these articles, let's download the ones published in the following year:
 
 ```{r}
 oa_fetch(
   entity = "works",
   cites = "W2755950973",
-  count_only = TRUE,
+  publication_year = 2018,
+  count_only = FALSE,
   verbose = TRUE
 ) %>% 
   dplyr::glimpse()

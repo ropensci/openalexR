@@ -26,6 +26,9 @@ concepts with 4 main functions:
 -   `oa_fetch()`: composes three functions above so the user can execute
     everything in one step, *i.e.*, `oa_query |> oa_request |> oa2df`
 
+-   `oa_random()`: to get random entity, e.g., `oa_random("works")`
+    gives a different work each time you run it
+
 ## Installation
 
 You can install the developer version of the openalexR from
@@ -289,7 +292,7 @@ oa_fetch(
 #> [1] "https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc"
 #> Requesting url: https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc
 #>               count db_response_time_ms                page            per_page 
-#>                  27                  19                   1                 200
+#>                  27                  20                   1                 200
 ```
 
 We can now download the records and transform it into a tibble/data
@@ -340,10 +343,10 @@ oa_fetch(
 #> About to get a total of 1 pages of results with a total of 2 records.
 ```
 
-| short_id    | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts |
-|:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-------------|
-| A923435168  | Massimo Aria | 0000-0002-8517-9411 |         102 |           2952 | University of Naples Federico II |              |
-| A2208157607 | Jason Priem  | 0000-0001-6187-6610 |          49 |           2142 | HortResearch                     |              |
+| short_id    | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                                                            |
+|:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:----------------------------------------------------------------------------------------|
+| A923435168  | Massimo Aria | 0000-0002-8517-9411 |         102 |           2952 | University of Naples Federico II | Biology, Medicine, Computer science, Mathematics, Psychology, Statistics                |
+| A2208157607 | Jason Priem  | 0000-0001-6187-6610 |          49 |           2142 | HortResearch                     | Computer science, World Wide Web, Political science, Law, Library science, Data science |
 
 **Example**: We want download all authors’ records of scholars who work
 at the University of Naples Federico II (OpenAlex ID: I71267560) and who
@@ -363,20 +366,20 @@ my_arguments <- list(
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #>               count db_response_time_ms                page            per_page 
-#>                  22                   8                   1                 200
+#>                  22                   7                   1                 200
 do.call(oa_fetch, my_arguments) %>% 
   show_authors() %>%
   knitr::kable()
 ```
 
-| short_id    | display_name             | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts |
-|:------------|:-------------------------|:--------------------|------------:|---------------:|:---------------------------------|:-------------|
-| A2600338221 | Alberto Orso Maria Iorio | 0000-0002-3798-1135 |        1144 |          47933 | University of Naples Federico II |              |
-| A2011452631 | Leonardo Merola          | NA                  |        1115 |          35281 | University of Naples Federico II |              |
-| A3113327292 | Vincenzo Canale          | NA                  |         990 |          29062 | University of Naples Federico II |              |
-| A2062713547 | G. De Nardo              | NA                  |         959 |          20140 | University of Naples Federico II |              |
-| A223517670  | Ettore Novellino         | 0000-0002-2181-2142 |         933 |          23003 | University of Naples Federico II |              |
-| A2159261619 | Annamaria Colao          | 0000-0001-6986-266X |         927 |          40286 | University of Naples Federico II |              |
+| short_id    | display_name             | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                                                                      |
+|:------------|:-------------------------|:--------------------|------------:|---------------:|:---------------------------------|:--------------------------------------------------------------------------------------------------|
+| A2600338221 | Alberto Orso Maria Iorio | 0000-0002-3798-1135 |        1144 |          47933 | University of Naples Federico II | Physics, Nuclear physics, Particle physics, Quantum mechanics, Large Hadron Collider, Mathematics |
+| A2011452631 | Leonardo Merola          | NA                  |        1115 |          35281 | University of Naples Federico II | Physics, Particle physics, Nuclear physics, Quantum mechanics, Large Hadron Collider, Biology     |
+| A3113327292 | Vincenzo Canale          | NA                  |         990 |          29062 | University of Naples Federico II | Physics, Quantum mechanics, Particle physics, Nuclear physics, Large Hadron Collider, Geology     |
+| A2062713547 | G. De Nardo              | NA                  |         959 |          20140 | University of Naples Federico II | Physics, Nuclear physics, Particle physics, Quantum mechanics, Hadron, Atomic physics             |
+| A223517670  | Ettore Novellino         | 0000-0002-2181-2142 |         933 |          23003 | University of Naples Federico II | Chemistry, Biology, Biochemistry, Genetics, Medicine, Organic chemistry                           |
+| A2159261619 | Annamaria Colao          | 0000-0001-6986-266X |         927 |          40286 | University of Naples Federico II | Medicine, Biology, Internal medicine, Endocrinology, Pathology, Chemistry                         |
 
 You can also filter by other
 [filters](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#authors-filters)
@@ -392,10 +395,10 @@ oa_fetch(
   knitr::kable()
 ```
 
-| short_id    | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts |
-|:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-------------|
-| A923435168  | Massimo Aria | 0000-0002-8517-9411 |         102 |           2952 | University of Naples Federico II |              |
-| A2902074455 | Massimo Aria | 0000-0002-8517-9411 |          29 |             62 | University of Naples Federico II |              |
+| short_id    | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                                                   |
+|:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-------------------------------------------------------------------------------|
+| A923435168  | Massimo Aria | 0000-0002-8517-9411 |         102 |           2952 | University of Naples Federico II | Biology, Medicine, Computer science, Mathematics, Psychology, Statistics       |
+| A2902074455 | Massimo Aria | 0000-0002-8517-9411 |          29 |             62 | University of Naples Federico II | Mathematics, Computer science, Economics, Biology, Political science, Business |
 
 ``` r
 
@@ -407,10 +410,10 @@ oa_fetch(
   knitr::kable()
 ```
 
-| short_id    | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts |
-|:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-------------|
-| A923435168  | Massimo Aria | 0000-0002-8517-9411 |         102 |           2952 | University of Naples Federico II |              |
-| A2902074455 | Massimo Aria | 0000-0002-8517-9411 |          29 |             62 | University of Naples Federico II |              |
+| short_id    | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                                                   |
+|:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-------------------------------------------------------------------------------|
+| A923435168  | Massimo Aria | 0000-0002-8517-9411 |         102 |           2952 | University of Naples Federico II | Biology, Medicine, Computer science, Mathematics, Psychology, Statistics       |
+| A2902074455 | Massimo Aria | 0000-0002-8517-9411 |          29 |             62 | University of Naples Federico II | Mathematics, Computer science, Economics, Biology, Political science, Business |
 
 ## Institutions
 
@@ -431,7 +434,7 @@ do.call(oa_fetch, c(italian_insts, list(count_only = TRUE)))
 #> [1] "https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation"
 #> Requesting url: https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation
 #>               count db_response_time_ms                page            per_page 
-#>                 231                  26                   1                 200
+#>                 231                  23                   1                 200
 dplyr::glimpse(do.call(oa_fetch, italian_insts))
 #> [1] "https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation"
 #> Requesting url: https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation
@@ -458,7 +461,7 @@ dplyr::glimpse(do.call(oa_fetch, italian_insts))
 #> $ counts_by_year            <list> [<data.frame[11 x 3]>], [<data.frame[11 x 3…
 #> $ works_api_url             <chr> "https://api.openalex.org/works?filter=insti…
 #> $ x_concepts                <list> [<data.frame[14 x 5]>], [<data.frame[15 x 5…
-#> $ updated_date              <chr> "2022-08-30T11:37:05.474304", "2022-09-02T15…
+#> $ updated_date              <chr> "2022-09-05T22:37:07.398707", "2022-09-02T15…
 #> $ created_date              <chr> "2016-06-24", "2016-06-24", "2016-06-24", "2…
 ```
 
@@ -518,7 +521,7 @@ do.call(oa_fetch, c(popular_concepts, list(count_only = TRUE)))
 #> [1] "https://api.openalex.org/concepts?filter=works_count%3A%3E1000000"
 #> Requesting url: https://api.openalex.org/concepts?filter=works_count%3A%3E1000000
 #>               count db_response_time_ms                page            per_page 
-#>                 147                  34                   1                 200
+#>                 147                  40                   1                 200
 dplyr::glimpse(do.call(oa_fetch, popular_concepts))
 #> [1] "https://api.openalex.org/concepts?filter=works_count%3A%3E1000000"
 #> Requesting url: https://api.openalex.org/concepts?filter=works_count%3A%3E1000000
@@ -567,24 +570,52 @@ aria_count <- oa_fetch(
 #> Requesting url: https://api.openalex.org/works?filter=cites%3AW2755950973
 aria_count
 #>               count db_response_time_ms                page            per_page 
-#>                1551                  53                   1                 200
+#>                1551                  52                   1                 200
 ```
 
-This query will return a collection of 1551 publications. Let’s to
-download it and then to convert it into a data frame:
+This query will return a collection of 1551 publications. Among these
+articles, let’s download the ones published in the following year:
 
 ``` r
 oa_fetch(
   entity = "works",
   cites = "W2755950973",
-  count_only = TRUE,
+  publication_year = 2018,
+  count_only = FALSE,
   verbose = TRUE
 ) %>% 
   dplyr::glimpse()
-#> [1] "https://api.openalex.org/works?filter=cites%3AW2755950973"
-#> Requesting url: https://api.openalex.org/works?filter=cites%3AW2755950973
-#>  Named int [1:4] 1551 30 1 200
-#>  - attr(*, "names")= chr [1:4] "count" "db_response_time_ms" "page" "per_page"
+#> [1] "https://api.openalex.org/works?filter=cites%3AW2755950973%2Cpublication_year%3A2018"
+#> Requesting url: https://api.openalex.org/works?filter=cites%3AW2755950973%2Cpublication_year%3A2018
+#> About to get a total of 1 pages of results with a total of 16 records.
+#> Rows: 16
+#> Columns: 26
+#> $ id               <chr> "https://openalex.org/W2902888572", "https://openalex…
+#> $ display_name     <chr> "A global bibliometric analysis of Plesiomonas-relate…
+#> $ author           <list> [<data.frame[2 x 10]>], [<data.frame[7 x 10]>], [<da…
+#> $ ab               <chr> "Plesiomonas shigelloides is an emerging pathogen wit…
+#> $ publication_date <chr> "2018-11-29", "2018-06-25", "2018-04-01", "2018-09-27…
+#> $ relevance_score  <lgl> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+#> $ so               <chr> "PLOS ONE", "PLOS ONE", "Journal of Experimental Zool…
+#> $ so_id            <chr> "https://openalex.org/V202381698", "https://openalex.…
+#> $ publisher        <chr> "Public Library of Science", "Public Library of Scien…
+#> $ issn             <list> "1932-6203", "1932-6203", <"1932-5231", "1932-5223">…
+#> $ url              <chr> "https://doi.org/10.1371/journal.pone.0207655", "http…
+#> $ first_page       <chr> "e0207655", NA, "162", "10589", "3", "38", NA, "e0096…
+#> $ last_page        <chr> "e0207655", NA, "176", "10604", "15", "38", NA, "e009…
+#> $ volume           <chr> "13", "13", "329", "101", NA, "4", NA, "4", "22", "4"…
+#> $ issue            <chr> "11", "6", NA, "12", NA, "3", NA, "11", "3", "1", NA,…
+#> $ is_oa            <lgl> TRUE, TRUE, TRUE, TRUE, FALSE, TRUE, TRUE, TRUE, FALS…
+#> $ cited_by_count   <int> 64, 47, 45, 42, 29, 28, 14, 14, 7, 7, 7, 5, 4, 1, 0, 0
+#> $ counts_by_year   <list> [<data.frame[4 x 2]>], [<data.frame[5 x 2]>], [<data.…
+#> $ publication_year <int> 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018…
+#> $ cited_by_api_url <chr> "https://api.openalex.org/works?filter=cites:W2902888…
+#> $ ids              <list> [<tbl_df[5 x 2]>], [<tbl_df[5 x 2]>], [<tbl_df[4 x 2]…
+#> $ doi              <chr> "https://doi.org/10.1371/journal.pone.0207655", "htt…
+#> $ type             <chr> "journal-article", "journal-article", "journal-articl…
+#> $ referenced_works <list> <"https://openalex.org/W1623369780", "https://openale…
+#> $ related_works    <list> <"https://openalex.org/W261917380", "https://openale…
+#> $ concepts         <list> [<data.frame[2 x 5]>], [<data.frame[11 x 5]>], [<dat…
 ```
 
 ## Convert an OpenAlex data frame to a bibliometrix object
@@ -613,7 +644,7 @@ bib_ls <- list(
 
 do.call(oa_fetch, c(bib_ls, list(count_only = TRUE)))
 #>               count db_response_time_ms                page            per_page 
-#>                 226                  72                   1                 200
+#>                 226                  56                   1                 200
 do.call(oa_fetch, bib_ls) %>% 
   oa2bibliometrix() %>% 
   dplyr::glimpse()
