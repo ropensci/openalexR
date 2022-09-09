@@ -12,7 +12,7 @@ oa_fetch(
   search = NULL,
   sort = NULL,
   group_by = NULL,
-  output = c("tibble", "list", "dataframe"),
+  output = c("tibble", "dataframe", "list"),
   abstract = TRUE,
   endpoint = "https://api.openalex.org/",
   per_page = 200,

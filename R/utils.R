@@ -25,13 +25,13 @@ subs_na <- function(x, type = c("row_df", "col_df", "flat", "rbind_df"), prefix 
   )
 
   if (!is.null(prefix)){
-    out <- append_prefix(out, prefix)
+    out <- prepend(out, prefix)
   }
 
   list(out)
 }
 
-append_prefix <- function(x, prefix = ""){
+prepend <- function(x, prefix = ""){
   names(x) <- paste(prefix, names(x), sep = "_")
   x
 }

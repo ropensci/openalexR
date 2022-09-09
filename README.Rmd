@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 
+[![R-CMD-check](https://github.com/massimoaria/openalexR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/massimoaria/openalexR/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 **openalexR** helps you interface with the [OpenAlex](https://openalex.org) API to retrieve bibliographic infomation about publications, authors, venues, institutions and concepts with 4 main functions:
@@ -28,6 +29,8 @@ knitr::opts_chunk$set(
 -   `oa2df()`: converts the JSON object in classical bibliographic tibble/data frame.
 
 -   `oa_fetch()`: composes three functions above so the user can execute everything in one step, *i.e.*, `oa_query |> oa_request |> oa2df`
+
+-   `oa_random()`: to get random entity, e.g., `oa_random("works")` gives a different work each time you run it
 
 ## Installation
 
@@ -312,13 +315,15 @@ aria_count <- oa_fetch(
 aria_count
 ```
 
-This query will return a collection of `r aria_count["count"]` publications. Let's to download it and then to convert it into a data frame:
+This query will return a collection of `r aria_count["count"]` publications.
+Among these articles, let's download the ones published in the following year:
 
 ```{r}
 oa_fetch(
   entity = "works",
   cites = "W2755950973",
-  count_only = TRUE,
+  publication_year = 2018,
+  count_only = FALSE,
   verbose = TRUE
 ) %>% 
   dplyr::glimpse()

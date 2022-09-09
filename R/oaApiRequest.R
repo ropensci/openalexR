@@ -4,10 +4,39 @@ utils::globalVariables("progress_bar")
 #' Available entities in the OpenAlex database
 #'
 #' @return Character vector of 5 entity options.
-oa_entities <- function(){
+oa_entities <- function() {
   c("works", "authors", "venues", "institutions", "concepts")
 }
 
+#' oa_fetch but for a random query
+#'
+#' @inheritParams oa_fetch
+#'
+#' @return A data.frame or a list. One row or one element.
+#' Result of the random query.
+#' @export
+#'
+#' @examples
+#' oa_random()
+oa_random <- function(entity = oa_entities(),
+                      output = c("tibble", "dataframe", "list"),
+                      endpoint = "https://api.openalex.org/") {
+  output <- match.arg(output)
+  entity <- match.arg(entity, oa_entities())
+  if (output == "dataframe") output <- "tibble"
+
+  query_url <- paste0(endpoint, entity, "/random")
+  res <- oa_request(query_url)
+
+  final_res <- switch(output,
+    list = res,
+    tibble = oa2df(res,
+      entity = entity
+    )
+  )
+
+  final_res
+}
 #' A composition function to perform query building, requesting,
 #' and convert the result to a tibble/data frame.
 #' @inheritParams oa_query
@@ -56,7 +85,7 @@ oa_fetch <- function(...,
                      search = NULL,
                      sort = NULL,
                      group_by = NULL,
-                     output = c("tibble", "list", "dataframe"),
+                     output = c("tibble", "dataframe", "list"),
                      abstract = TRUE,
                      endpoint = "https://api.openalex.org/",
                      per_page = 200,
@@ -64,6 +93,7 @@ oa_fetch <- function(...,
                      mailto = NULL,
                      verbose = FALSE) {
   output <- match.arg(output)
+  entity <- match.arg(entity, oa_entities())
 
   if (output == "dataframe") output <- "tibble"
 
@@ -86,11 +116,14 @@ oa_fetch <- function(...,
 
   final_res <- switch(output,
     list = res,
-    tibble = oa2df(res, entity = entity, abstract = abstract, count_only = count_only, verbose = verbose)
+    tibble = oa2df(res,
+      entity = entity, abstract = abstract,
+      count_only = count_only, group_by = group_by,
+      verbose = verbose
+    )
   )
 
   final_res
-
 }
 
 
@@ -240,7 +273,8 @@ oa_request <- function(query_url,
 
   # building query...
   # first, download info about n. of items returned by the query
-  query_ls <- list("per-page" = 1) # TODO did we mean for this to be 1???
+  is_group_by <- grepl("group_by", query_url)
+  query_ls <- if (is_group_by) list() else list("per-page" = 1)
 
   if (!is.null(mailto)) {
     if (isValidEmail(mailto)) {
@@ -252,6 +286,10 @@ oa_request <- function(query_url,
 
   if (verbose == TRUE) message("Requesting url: ", query_url)
   res <- api_request(query_url, ua, query = query_ls)
+
+  if (is_group_by) {
+    return(res$group_by)
+  }
 
   if (!is.null(res$meta)) {
     ## return only item counting

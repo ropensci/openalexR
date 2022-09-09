@@ -11,7 +11,7 @@ Authors@R: c(
            comment = c(ORCID = "0000-0002-8517-9411")),
     person(given = "Trang",
            family = "Le",
-           role = "ctb",
+           role = "aut",
            email = "grixor@gmail.com",
            comment = c(ORCID = "0000-0003-3737-6565"))
     )
@@ -31,7 +31,9 @@ Suggests:
     testthat (>= 3.0.0),
     dplyr,
     knitr,
-    rmarkdown
+    rmarkdown,
+    tidyr,
+    ggplot2
 VignetteBuilder: 
     knitr
 Encoding: UTF-8

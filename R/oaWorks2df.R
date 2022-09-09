@@ -56,7 +56,7 @@ oaWorks2df <- function(data, abstract = TRUE, verbose = TRUE) {
     data <- list(data)
   }
 
-  if (is.null(data[[1]]$id)) {
+  if (length(data) == 0 || is.null(data[[1]]$id)) {
     message("the list does not contain a valid OpenAlex collection")
     return()
   }
@@ -70,6 +70,7 @@ oaWorks2df <- function(data, abstract = TRUE, verbose = TRUE) {
     so_id = "id", so = "display_name", publisher = "publisher",
     url = "url", is_oa = "is_oa"
   )
+  empty_inst <- empty_list(inst_cols)
 
   for (i in 1:n) {
     if (verbose) pb$tick()
@@ -105,8 +106,6 @@ oaWorks2df <- function(data, abstract = TRUE, verbose = TRUE) {
     sub_venue <- setNames(paper$host_venue[venue_cols], names(venue_cols))
     sub_venue$issn <- subs_na(paper$host_venue$issn, "flat")
 
-    empty_inst <- empty_list(inst_cols)
-
     # authorships and affilitation
     author <- list(do.call(rbind.data.frame, lapply(paper$authorships, function(l) {
       l_inst <- l$institutions
@@ -116,9 +115,9 @@ oaWorks2df <- function(data, abstract = TRUE, verbose = TRUE) {
       } else {
         first_inst <- empty_inst
       }
-      first_inst <- append_prefix(first_inst, "institution")
+      first_inst <- prepend(first_inst, "institution")
       aff_raw <- list(au_affiliation_raw = l$raw_affiliation_string[1])
-      l_author <- append_prefix(l$author, "au")
+      l_author <- prepend(l$author, "au")
       c(l_author, l["author_position"], aff_raw, first_inst)
     })))
 
