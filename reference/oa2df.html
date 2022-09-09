@@ -27,6 +27,7 @@ The function converts a collection of records about works, authors, institutions
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/A_Brief_Introduction_to_openalexR.html">A Brief Introduction to openalexR</a>
+    <a class="dropdown-item" href="../articles/institution.html">Transition towards Open Access</a>
   </div>
 </li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
@@ -57,7 +58,14 @@ The function converts a collection of records about works, authors, institutions
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">oa2df</span><span class="op">(</span><span class="va">data</span>, <span class="va">entity</span>, abstract <span class="op">=</span> <span class="cn">TRUE</span>, count_only <span class="op">=</span> <span class="cn">FALSE</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">oa2df</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  <span class="va">entity</span>,</span>
+<span>  abstract <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  count_only <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  group_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -78,6 +86,12 @@ The argument is ignored if entity is different from "works".</p></dd>
 
 <dt>count_only</dt>
 <dd><p>Logical. If TRUE, the function returns only the number of item matching the query. Default is <code>count_only=FALSE</code>.</p></dd>
+
+
+<dt>group_by</dt>
+<dd><p>Character. Property to group by.
+For example: "oa_status" for works.
+https://docs.openalex.org/api/get-groups-of-entities</p></dd>
 
 
 <dt>verbose</dt>
@@ -134,7 +148,7 @@ The argument is ignored if entity is different from "works".</p></dd>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by Massimo Aria.</p>
+  <p></p><p>Developed by Massimo Aria, Trang Le.</p>
 </div>
 
 <div class="pkgdown-footer-right">

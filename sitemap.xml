@@ -13,6 +13,9 @@
     <loc>https://massimoaria.github.io/openalexR/articles/index.html</loc>
   </url>
   <url>
+    <loc>https://massimoaria.github.io/openalexR/articles/institution.html</loc>
+  </url>
+  <url>
     <loc>https://massimoaria.github.io/openalexR/authors.html</loc>
   </url>
   <url>
@@ -53,6 +56,9 @@
   </url>
   <url>
     <loc>https://massimoaria.github.io/openalexR/reference/oa_query.html</loc>
+  </url>
+  <url>
+    <loc>https://massimoaria.github.io/openalexR/reference/oa_random.html</loc>
   </url>
   <url>
     <loc>https://massimoaria.github.io/openalexR/reference/oa_request.html</loc>
