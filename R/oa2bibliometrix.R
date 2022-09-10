@@ -57,7 +57,7 @@ oa2bibliometrix <- function(df) {
 
   # Authors
   AU_info <- lapply(df$author, function(l) {
-    AU <- au_collapse(l$au_name)
+    AU <- au_collapse(l$au_display_name)
     C1 <- au_collapse(l$au_affiliation_raw)
     RP <- au_collapse(l$au_affiliation_raw[1])
     AU_UN <- au_collapse(l$institution_name)
@@ -88,6 +88,10 @@ oa2bibliometrix <- function(df) {
   df$DB <- "openalex"
   df$JI <- gsub("https://openalex.org/", "", df$so_id)
   df$J9 <- df$JI
+  df$PY <- df$publication_year
+  df$TC <- df$cited_by_count
+  df <-  df[!names(df) %in% c("display_name","ab","so","type","publication_year","cited_by_count")]
+
 
   ### SR field creation
   suppressWarnings(df <- SR(df))
@@ -109,7 +113,7 @@ SR <- function(df) {
     return(l)
   }))
 
-  SR <- paste(FirstAuthor, df$PY, df$J9, sep = ", ")
+  SR <- paste(FirstAuthor, df$PY, df$SO, sep = ", ")
 
   df$SR_FULL <- gsub("\\s+", " ", SR)
 
