@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   A_Brief_Introduction_to_openalexR: A_Brief_Introduction_to_openalexR.html
   institution: institution.html
-last_built: 2022-09-09T13:49Z
+last_built: 2022-09-10T08:26Z
 urls:
   reference: https://massimoaria.github.io/openalexR/reference
   article: https://massimoaria.github.io/openalexR/articles
