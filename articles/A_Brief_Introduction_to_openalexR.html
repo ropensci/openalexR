@@ -402,7 +402,7 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <pre><code><span><span class="co">## [1] "https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&amp;sort=cited_by_count%3Adesc"</span></span></code></pre>
 <pre><code><span><span class="co">## Requesting url: https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&amp;sort=cited_by_count%3Adesc</span></span></code></pre>
 <pre><code><span><span class="co">##               count db_response_time_ms                page            per_page </span></span>
-<span><span class="co">##                  29                  13                   1                   1</span></span></code></pre>
+<span><span class="co">##                  29                  14                   1                   1</span></span></code></pre>
 <p>We can now download the records and transform it into a tibble/data frame by setting <code>count_only = FALSE</code> (also the default value):</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/oa_fetch.html">oa_fetch</a></span><span class="op">(</span></span>
@@ -569,7 +569,7 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">my_arguments</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>count_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##               count db_response_time_ms                page            per_page </span></span>
-<span><span class="co">##                  23                   5                   1                   1</span></span></code></pre>
+<span><span class="co">##                  23                   4                   1                   1</span></span></code></pre>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="va">my_arguments</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/show_authors.html">show_authors</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -763,7 +763,7 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <pre><code><span><span class="co">## [1] "https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation"</span></span></code></pre>
 <pre><code><span><span class="co">## Requesting url: https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation</span></span></code></pre>
 <pre><code><span><span class="co">##               count db_response_time_ms                page            per_page </span></span>
-<span><span class="co">##                 231                   1                   1                   1</span></span></code></pre>
+<span><span class="co">##                 231                   2                   1                   1</span></span></code></pre>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="va">italian_insts</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation"</span></span></code></pre>
@@ -923,26 +923,23 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">bib_ls</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>count_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##               count db_response_time_ms                page            per_page </span></span>
-<span><span class="co">##                 225                  11                   1                   1</span></span></code></pre>
+<span><span class="co">##                 225                  10                   1                   1</span></span></code></pre>
 <div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="va">bib_ls</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/oa2bibliometrix.html">oa2bibliometrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Rows: 225</span></span>
-<span><span class="co">## Columns: 43</span></span>
-<span><span class="co">## $ AU               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "", "", "", "", "", "", "", "", "", "", "", "", "", "…</span></span>
+<span><span class="co">## Columns: 39</span></span>
+<span><span class="co">## $ AU               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "ZHIQUAN LIU;CHRISTOPHER R. MALINOWSKI;MARIA S. SEPÚL…</span></span>
 <span><span class="co">## $ RP               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "DEPARTMENT OF FORESTRY AND NATURAL RESOURCES, PURDUE…</span></span>
 <span><span class="co">## $ C1               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "DEPARTMENT OF FORESTRY AND NATURAL RESOURCES, PURDUE…</span></span>
 <span><span class="co">## $ AU_UN            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "", "", "", "", "", "", "", "", "", "", "", "", "", "…</span></span>
 <span><span class="co">## $ AU_CO            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "USA;USA;USA", "ITALY;ITALY;ITALY;MALAYSIA", "INDIA;I…</span></span>
 <span><span class="co">## $ ID               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "ORGANISM;DAPHNIA;NANOTOXICOLOGY;DAPHNIA MAGNA;ECOTOX…</span></span>
 <span><span class="co">## $ id_url           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://openalex.org/W3212020496", "https://openalex…</span></span>
-<span><span class="co">## $ display_name     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Emerging trends in nanoparticle toxicity and the sig…</span></span>
 <span><span class="co">## $ author           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[3 x 10]&gt;], [&lt;data.frame[4 x 10]&gt;], [&lt;da…</span></span>
-<span><span class="co">## $ ab               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Nanoparticle production is on the rise due to its ma…</span></span>
 <span><span class="co">## $ publication_date <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "2022-03-01", "2022-01-10", "2022-01-10", "2022-02-01…</span></span>
 <span><span class="co">## $ relevance_score  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…</span></span>
-<span><span class="co">## $ so               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Chemosphere", "British Food Journal", "Journal of ho…</span></span>
 <span><span class="co">## $ so_id            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://openalex.org/V203465130", "https://openalex.…</span></span>
 <span><span class="co">## $ publisher        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Elsevier", "Emerald (MCB UP)", "Emerald (MCB UP)", "…</span></span>
 <span><span class="co">## $ issn             <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;"0045-6535", "1879-1298"&gt;, &lt;"0007-070X", "1758-4108…</span></span>
@@ -952,13 +949,10 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <span><span class="co">## $ volume           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "291", "124", NA, "297", "19", "39", "292", "157", NA…</span></span>
 <span><span class="co">## $ issue            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> NA, "7", NA, NA, "5", "6", NA, NA, NA, "2", NA, NA, N…</span></span>
 <span><span class="co">## $ is_oa            <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, TRUE,…</span></span>
-<span><span class="co">## $ cited_by_count   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 6, 6, 6, 6, 6, 6, 5, 5, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3,…</span></span>
 <span><span class="co">## $ counts_by_year   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[1 x 2]&gt;], [&lt;data.frame[1 x 2]&gt;], [&lt;data…</span></span>
-<span><span class="co">## $ publication_year <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 2022, 2022, 2022, 2022, 2022, 2022, 2022, 2022, 2022,…</span></span>
 <span><span class="co">## $ cited_by_api_url <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://api.openalex.org/works?filter=cites:W3212020…</span></span>
 <span><span class="co">## $ ids              <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;tbl_df[4 x 2]&gt;], [&lt;tbl_df[2 x 2]&gt;], [&lt;tbl_df[2 x 2…</span></span>
 <span><span class="co">## $ doi              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://doi.org/10.1016/j.chemosphere.2021.132941", …</span></span>
-<span><span class="co">## $ type             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "journal-article", "journal-article", "journal-articl…</span></span>
 <span><span class="co">## $ referenced_works <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;"https://openalex.org/W321855510", "https://openale…</span></span>
 <span><span class="co">## $ related_works    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;"https://openalex.org/W2040538662", "https://openal…</span></span>
 <span><span class="co">## $ concepts         <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[13 x 5]&gt;], [&lt;data.frame[8 x 5]&gt;], [&lt;dat…</span></span>
@@ -971,8 +965,10 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <span><span class="co">## $ DB               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "openalex", "openalex", "openalex", "openalex", "open…</span></span>
 <span><span class="co">## $ JI               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "V203465130", "V99313352", "V4210226067", "V203465130…</span></span>
 <span><span class="co">## $ J9               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "V203465130", "V99313352", "V4210226067", "V203465130…</span></span>
-<span><span class="co">## $ SR_FULL          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "NA, , V203465130", "NA, , V99313352", "NA, , V421022…</span></span>
-<span><span class="co">## $ SR               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "NA, , V203465130", "NA, , V99313352", "NA, , V421022…</span></span></code></pre>
+<span><span class="co">## $ PY               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 2022, 2022, 2022, 2022, 2022, 2022, 2022, 2022, 2022,…</span></span>
+<span><span class="co">## $ TC               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 6, 6, 6, 6, 6, 6, 5, 5, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3,…</span></span>
+<span><span class="co">## $ SR_FULL          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "ZHIQUAN LIU, 2022, CHEMOSPHERE", "PAOLO BIANCONE, 20…</span></span>
+<span><span class="co">## $ SR               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "ZHIQUAN LIU, 2022, CHEMOSPHERE", "PAOLO BIANCONE, 20…</span></span></code></pre>
 </div>
 </div>
 <div class="section level2">
