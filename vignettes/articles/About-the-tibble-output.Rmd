@@ -1,0 +1,50 @@
+---
+title: "About the tibble output"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(openalexR)
+library(dplyr)
+```
+
+
+```{r bib-works}
+bib_works <- oa_fetch(
+  entity = "works",
+  title.search = c("bibliometric analysis", "science mapping"),
+  cited_by_count = ">500", 
+  count_only = FALSE
+) 
+
+institution_names <- lapply(
+  my_works$author, 
+  function(x) unique(x$institution_display_name)
+)
+head(institution_names)
+```
+
+
+```{r italian-institutions}
+large_italian_insts <- oa_fetch(
+  entity = "institutions",
+  country_code = "it",
+  cited_by_count = ">2000000",
+  type = "education",
+  verbose = TRUE
+)
+
+lat_longs <- lapply(
+  large_italian_insts$geo, 
+  function(x) c(x$latitude, x$longitude)
+)
+
+head(lat_longs)
+```
+
