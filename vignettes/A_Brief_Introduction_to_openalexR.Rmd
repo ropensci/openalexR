@@ -138,7 +138,7 @@ oa_fetch(
 
 ```
 
-However, if you only know their external identifies, say, DOIs, you would need to use `doi` as a filter (either the canonical form with https://doi.org/ or without should work):
+However, if you only know their external identifies, say, DOIs, you would need to use `doi` as a filter (either the canonical form with https://www.doi.org/ or without should work):
 
 ```{r}
 oa_fetch(
