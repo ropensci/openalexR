@@ -88,7 +88,7 @@
     
 <p> </p>
 <p><em><a href="https://github.com/massimoaria/openalexR" class="external-link uri">https://github.com/massimoaria/openalexR</a></em></p>
-<p><em>Latest version: 1.0.0, 2022-09-28</em></p>
+<p><em>Latest version: 1.0.0, 2022-09-30</em></p>
 <p> </p>
 <p><strong>by Massimo Aria</strong></p>
 <p>Full Professor in Social Statistics</p>
@@ -403,7 +403,7 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <pre><code><span><span class="co">## [1] "https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&amp;sort=cited_by_count%3Adesc"</span></span></code></pre>
 <pre><code><span><span class="co">## Requesting url: https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&amp;sort=cited_by_count%3Adesc</span></span></code></pre>
 <pre><code><span><span class="co">##               count db_response_time_ms                page            per_page </span></span>
-<span><span class="co">##                  32                  13                   1                   1</span></span></code></pre>
+<span><span class="co">##                  33                  29                   1                   1</span></span></code></pre>
 <p>We can now download the records and transform it into a tibble/data frame by setting <code>count_only = FALSE</code> (also the default value):</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/oa_fetch.html">oa_fetch</a></span><span class="op">(</span></span>
@@ -447,7 +447,7 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <td align="left">Journal of Business Research</td>
 <td align="left"><a href="https://doi.org/10.1016/j.jbusres.2021.04.070" class="external-link uri">https://doi.org/10.1016/j.jbusres.2021.04.070</a></td>
 <td align="left">TRUE</td>
-<td align="left">Bibliometrics, Field (mathematics), Data science, Computer science, Resource (disambiguation), Management science</td>
+<td align="left">Bibliometrics, Field (mathematics), Data science, Resource (disambiguation), Computer science, Management science</td>
 </tr>
 <tr class="even">
 <td align="left">W3038273726</td>
@@ -457,7 +457,7 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <td align="left">Journal of Business Research</td>
 <td align="left"><a href="https://doi.org/10.1016/j.jbusres.2020.06.057" class="external-link uri">https://doi.org/10.1016/j.jbusres.2020.06.057</a></td>
 <td align="left">TRUE</td>
-<td align="left">Scopus, Coronavirus disease 2019 (COVID-19), Pandemic, Bibliometrics, Web of science, Field (mathematics)</td>
+<td align="left">Scopus, Coronavirus disease 2019 (COVID-19), Pandemic, Web of science, Bibliometrics, Field (mathematics)</td>
 </tr>
 <tr class="odd">
 <td align="left">W2990450011</td>
@@ -618,9 +618,9 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <td align="left">Leonardo Merola</td>
 <td align="left">NA</td>
 <td align="right">1115</td>
-<td align="right">17370</td>
+<td align="right">17072</td>
 <td align="left">University of Naples Federico II</td>
-<td align="left">Physics, Particle physics, Nuclear physics, Quantum mechanics, Large Hadron Collider, Biology</td>
+<td align="left">Physics, Quantum mechanics, Particle physics, Nuclear physics, Large Hadron Collider, Biology</td>
 </tr>
 <tr class="even">
 <td align="left">A3113327292</td>
@@ -765,12 +765,12 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <span><span class="co">## $ image_thumbnail_url       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://upload.wikimedia.org/wikipedia/en/t…</span></span>
 <span><span class="co">## $ associated_institutions   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[1 x 24]&gt;], [&lt;data.frame[1 x 12…</span></span>
 <span><span class="co">## $ relevance_score           <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span>
-<span><span class="co">## $ works_count               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 164607, 131208, 129778, 128265, 92062, 87234…</span></span>
-<span><span class="co">## $ cited_by_count            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 10289420, 9360314, 9283817, 8807431, 5810265…</span></span>
+<span><span class="co">## $ works_count               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 164695, 131279, 129884, 128318, 92105, 87277…</span></span>
+<span><span class="co">## $ cited_by_count            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 10314378, 9381916, 9305169, 8824640, 5823378…</span></span>
 <span><span class="co">## $ counts_by_year            <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[11 x 3]&gt;], [&lt;data.frame[11 x 3…</span></span>
 <span><span class="co">## $ works_api_url             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://api.openalex.org/works?filter=insti…</span></span>
 <span><span class="co">## $ x_concepts                <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[14 x 5]&gt;], [&lt;data.frame[15 x 5…</span></span>
-<span><span class="co">## $ updated_date              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "2022-09-28T15:50:33.303014", "2022-09-28T13…</span></span>
+<span><span class="co">## $ updated_date              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "2022-09-30T09:26:08.967043", "2022-09-30T04…</span></span>
 <span><span class="co">## $ created_date              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "2016-06-24", "2016-06-24", "2016-06-24", "2…</span></span></code></pre>
 </div>
 <div class="section level3">
@@ -788,7 +788,7 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <pre><code><span><span class="co">## [1] "https://api.openalex.org/venues?filter=works_count%3A%3E100000"</span></span></code></pre>
 <pre><code><span><span class="co">## Requesting url: https://api.openalex.org/venues?filter=works_count%3A%3E100000</span></span></code></pre>
 <pre><code><span><span class="co">##               count db_response_time_ms                page            per_page </span></span>
-<span><span class="co">##                  51                   1                   1                   1</span></span></code></pre>
+<span><span class="co">##                  51                   0                   1                   1</span></span></code></pre>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="va">big_journals</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "https://api.openalex.org/venues?filter=works_count%3A%3E100000"</span></span></code></pre>
@@ -806,10 +806,10 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <span><span class="co">## $ ids             <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;tbl_df[2 x 2]&gt;], [&lt;tbl_df[6 x 2]&gt;], [&lt;tbl_df[2 x 2]…</span></span>
 <span><span class="co">## $ homepage_url    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "http://www.repec.org/", NA, "http://www.ssrn.com/", "…</span></span>
 <span><span class="co">## $ relevance_score <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…</span></span>
-<span><span class="co">## $ works_count     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 750726, 729203, 698331, 518127, 470120, 439731, 432624…</span></span>
-<span><span class="co">## $ cited_by_count  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 1885565, 151043, 1813853, 4940601, 6374074, 2950473, 1…</span></span>
+<span><span class="co">## $ works_count     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 750656, 729170, 694250, 518185, 470157, 439740, 432713…</span></span>
+<span><span class="co">## $ cited_by_count  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 1875653, 150155, 1783211, 4930055, 6379350, 2951231, 1…</span></span>
 <span><span class="co">## $ counts_by_year  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[11 x 3]&gt;], [&lt;data.frame[11 x 3]&gt;], [&lt;dat…</span></span>
-<span><span class="co">## $ x_concepts      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[20 x 5]&gt;], [&lt;data.frame[12 x 5]&gt;], [&lt;dat…</span></span>
+<span><span class="co">## $ x_concepts      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[22 x 5]&gt;], [&lt;data.frame[12 x 5]&gt;], [&lt;dat…</span></span>
 <span><span class="co">## $ works_api_url   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://api.openalex.org/works?filter=host_venue.id:V…</span></span></code></pre>
 </div>
 <div class="section level3">
@@ -827,13 +827,13 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <pre><code><span><span class="co">## [1] "https://api.openalex.org/concepts?filter=works_count%3A%3E1000000"</span></span></code></pre>
 <pre><code><span><span class="co">## Requesting url: https://api.openalex.org/concepts?filter=works_count%3A%3E1000000</span></span></code></pre>
 <pre><code><span><span class="co">##               count db_response_time_ms                page            per_page </span></span>
-<span><span class="co">##                 146                   1                   1                   1</span></span></code></pre>
+<span><span class="co">##                 147                   0                   1                   1</span></span></code></pre>
 <div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="va">popular_concepts</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "https://api.openalex.org/concepts?filter=works_count%3A%3E1000000"</span></span></code></pre>
 <pre><code><span><span class="co">## Requesting url: https://api.openalex.org/concepts?filter=works_count%3A%3E1000000</span></span></code></pre>
-<pre><code><span><span class="co">## About to get a total of 1 pages of results with a total of 146 records.</span></span></code></pre>
-<pre><code><span><span class="co">## Rows: 146</span></span>
+<pre><code><span><span class="co">## About to get a total of 1 pages of results with a total of 147 records.</span></span></code></pre>
+<pre><code><span><span class="co">## Rows: 147</span></span>
 <span><span class="co">## Columns: 17</span></span>
 <span><span class="co">## $ id                         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://openalex.org/C41008148", "https://…</span></span>
 <span><span class="co">## $ display_name               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Computer science", "Medicine", "Chemistry"…</span></span>
@@ -848,8 +848,8 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <span><span class="co">## $ ancestors                  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> NA, NA, NA, NA, NA, NA, NA, [&lt;data.frame[2…</span></span>
 <span><span class="co">## $ related_concepts           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[93 x 5]&gt;], [&lt;data.frame[51 x …</span></span>
 <span><span class="co">## $ relevance_score            <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…</span></span>
-<span><span class="co">## $ works_count                <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 41229216, 37572135, 20985468, 17812916, 171…</span></span>
-<span><span class="co">## $ cited_by_count             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 202345450, 338756616, 309812785, 148061327,…</span></span>
+<span><span class="co">## $ works_count                <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 41328805, 37656333, 21039316, 17842181, 172…</span></span>
+<span><span class="co">## $ cited_by_count             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 206057659, 342689467, 313417437, 148991198,…</span></span>
 <span><span class="co">## $ counts_by_year             <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[11 x 3]&gt;], [&lt;data.frame[11 x …</span></span>
 <span><span class="co">## $ works_api_url              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://api.openalex.org/works?filter=conc…</span></span></code></pre>
 </div>
@@ -871,8 +871,8 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">aria_count</span></span></code></pre></div>
 <pre><code><span><span class="co">##               count db_response_time_ms                page            per_page </span></span>
-<span><span class="co">##                1631                  14                   1                   1</span></span></code></pre>
-<p>This query will return a collection of 1631 publications. Let’s to download it and then to convert it into a data frame:</p>
+<span><span class="co">##                1638                  15                   1                   1</span></span></code></pre>
+<p>This query will return a collection of 1638 publications. Let’s to download it and then to convert it into a data frame:</p>
 <div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/oa_fetch.html">oa_fetch</a></span><span class="op">(</span></span>
 <span>  entity <span class="op">=</span> <span class="st">"works"</span>,</span>
@@ -883,7 +883,7 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "https://api.openalex.org/works?filter=cites%3AW2755950973"</span></span></code></pre>
 <pre><code><span><span class="co">## Requesting url: https://api.openalex.org/works?filter=cites%3AW2755950973</span></span></code></pre>
-<pre><code><span><span class="co">##  Named int [1:4] 1631 15 1 1</span></span>
+<pre><code><span><span class="co">##  Named int [1:4] 1638 17 1 1</span></span>
 <span><span class="co">##  - attr(*, "names")= chr [1:4] "count" "db_response_time_ms" "page" "per_page"</span></span></code></pre>
 </div>
 <div class="section level3">
@@ -902,7 +902,7 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">bib_ls</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>count_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##               count db_response_time_ms                page            per_page </span></span>
-<span><span class="co">##                 235                   9                   1                   1</span></span></code></pre>
+<span><span class="co">##                 235                   8                   1                   1</span></span></code></pre>
 <div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="va">bib_ls</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/oa2bibliometrix.html">oa2bibliometrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>

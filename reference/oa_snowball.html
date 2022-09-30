@@ -65,7 +65,7 @@ and convert the result to a tibble/data frame.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">oa_snowball</span><span class="op">(</span></span>
 <span>  identifier <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  output <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tibble"</span>, <span class="st">"dataframe"</span><span class="op">)</span>,</span>
-<span>  mailto <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  mailto <span class="op">=</span> <span class="fu">oa_email</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  endpoint <span class="op">=</span> <span class="st">"https://api.openalex.org/"</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
