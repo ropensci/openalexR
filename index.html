@@ -82,7 +82,7 @@
 </h1>
 </div>
 <!-- badges: start -->
-<p><strong>openalexR</strong> helps you interface with the <a href="https://openalex.org" class="external-link">OpenAlex</a> API to retrieve bibliographic infomation about publications, authors, venues, institutions and concepts with 4 main functions:</p>
+<!-- badges: end --><p><strong>openalexR</strong> helps you interface with the <a href="https://openalex.org" class="external-link">OpenAlex</a> API to retrieve bibliographic infomation about publications, authors, venues, institutions and concepts with 4 main functions:</p>
 <ul>
 <li><p><code><a href="reference/oa_query.html">oa_query()</a></code>: generates a valid query, written following the OpenAlex API syntax, from a set of arguments provided by the user.</p></li>
 <li><p><code><a href="reference/oa_request.html">oa_request()</a></code>: downloads a collection of entities matching the query created by <code><a href="reference/oa_query.html">oa_query()</a></code> or manually written by the user, and returns a JSON object in a list format.</p></li>
@@ -162,16 +162,16 @@
 <code class="sourceCode R"><span><span class="va">paper_id</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="reference/show_works.html">show_works</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
+<table style="width:100%;" class="table">
 <colgroup>
-<col width="5%">
-<col width="27%">
-<col width="5%">
-<col width="8%">
-<col width="10%">
-<col width="18%">
-<col width="2%">
-<col width="22%">
+<col width="12%">
+<col width="14%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">short_id</th>
@@ -206,16 +206,16 @@
 <span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="reference/show_works.html">show_works</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
+<table style="width:100%;" class="table">
 <colgroup>
-<col width="5%">
-<col width="27%">
-<col width="5%">
-<col width="8%">
-<col width="10%">
-<col width="18%">
-<col width="2%">
-<col width="22%">
+<col width="12%">
+<col width="14%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">short_id</th>
@@ -258,14 +258,14 @@
 <span><span class="co">#&gt; About to get a total of 1 pages of results with a total of 2 records.</span></span></code></pre></div>
 <table class="table">
 <colgroup>
-<col width="4%">
-<col width="30%">
-<col width="6%">
-<col width="6%">
-<col width="7%">
+<col width="11%">
+<col width="15%">
+<col width="11%">
+<col width="11%">
+<col width="11%">
+<col width="11%">
+<col width="11%">
 <col width="14%">
-<col width="2%">
-<col width="28%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">short_id</th>
@@ -300,7 +300,7 @@
 </tr>
 </tbody>
 </table>
-<p>However, if you only know their external identifies, say, DOIs, you would need to use <code>doi</code> as a filter (either the canonical form with <a href="https://doi.org/" class="external-link uri">https://doi.org/</a> or without should work):</p>
+<p>However, if you only know their external identifies, say, DOIs, you would need to use <code>doi</code> as a filter (either the canonical form with <a href="https://www.doi.org/" class="external-link uri">https://www.doi.org/</a> or without should work):</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/oa_fetch.html">oa_fetch</a></span><span class="op">(</span></span>
 <span>  <span class="co"># identifier = c("W2741809807", "W2755950973"),</span></span>
@@ -315,14 +315,14 @@
 <span><span class="co">#&gt; About to get a total of 1 pages of results with a total of 2 records.</span></span></code></pre></div>
 <table class="table">
 <colgroup>
-<col width="3%">
-<col width="26%">
-<col width="5%">
-<col width="6%">
-<col width="7%">
-<col width="15%">
-<col width="2%">
-<col width="33%">
+<col width="11%">
+<col width="12%">
+<col width="11%">
+<col width="11%">
+<col width="11%">
+<col width="11%">
+<col width="11%">
+<col width="17%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">short_id</th>
@@ -374,16 +374,16 @@
 <span><span class="co">#&gt; [1] "https://api.openalex.org/works?filter=author.id%3AA923435168%7CA2208157607"</span></span>
 <span><span class="co">#&gt; Requesting url: https://api.openalex.org/works?filter=author.id%3AA923435168%7CA2208157607</span></span>
 <span><span class="co">#&gt; About to get a total of 1 pages of results with a total of 151 records.</span></span></code></pre></div>
-<table style="width:100%;" class="table">
+<table class="table">
 <colgroup>
-<col width="3%">
-<col width="23%">
-<col width="4%">
-<col width="5%">
-<col width="17%">
-<col width="20%">
-<col width="1%">
-<col width="22%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">short_id</th>
@@ -474,14 +474,14 @@
 <span><span class="co">#&gt; About to get a total of 2 pages of results with a total of 211 records.</span></span></code></pre></div>
 <table style="width:100%;" class="table">
 <colgroup>
-<col width="3%">
-<col width="35%">
-<col width="5%">
-<col width="5%">
-<col width="8%">
-<col width="12%">
-<col width="1%">
-<col width="28%">
+<col width="10%">
+<col width="20%">
+<col width="10%">
+<col width="10%">
+<col width="10%">
+<col width="10%">
+<col width="10%">
+<col width="13%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">short_id</th>
@@ -591,14 +591,14 @@
 <span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <colgroup>
-<col width="3%">
-<col width="32%">
-<col width="5%">
-<col width="5%">
-<col width="10%">
-<col width="12%">
-<col width="1%">
-<col width="29%">
+<col width="11%">
+<col width="18%">
+<col width="11%">
+<col width="11%">
+<col width="11%">
+<col width="11%">
+<col width="11%">
+<col width="15%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">short_id</th>
@@ -693,13 +693,13 @@
 <span><span class="co">#&gt; About to get a total of 1 pages of results with a total of 2 records.</span></span></code></pre></div>
 <table class="table">
 <colgroup>
-<col width="6%">
-<col width="7%">
-<col width="10%">
-<col width="6%">
-<col width="8%">
-<col width="17%">
-<col width="44%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="28%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">short_id</th>
@@ -748,13 +748,13 @@
 <span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <colgroup>
-<col width="5%">
-<col width="11%">
-<col width="9%">
-<col width="5%">
-<col width="7%">
-<col width="15%">
-<col width="44%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="28%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">short_id</th>
@@ -833,13 +833,13 @@
 <span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <colgroup>
-<col width="6%">
-<col width="7%">
-<col width="10%">
-<col width="6%">
-<col width="8%">
-<col width="17%">
-<col width="41%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="27%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">short_id</th>
@@ -881,13 +881,13 @@
 <span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <colgroup>
-<col width="6%">
-<col width="7%">
-<col width="10%">
-<col width="6%">
-<col width="8%">
-<col width="17%">
-<col width="41%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="12%">
+<col width="27%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">short_id</th>
