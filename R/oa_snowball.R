@@ -21,7 +21,7 @@
 oa_snowball <- function(
                      identifier = NULL, ## identifier of a work, author, venue, etc.
                      output = c("tibble", "dataframe"),
-                     mailto = NULL,
+                     mailto = oa_email(),
                      endpoint = "https://api.openalex.org/",
                      verbose = FALSE) {
   output <- match.arg(output)
@@ -67,6 +67,8 @@ for (i in 1:length(list_CR)){
 cited<- do.call(rbind,cited)
 
 # merging all documents in a single data frame
+if (is.null(citing)) citing <- paper[0, TRUE]
+
 citing$role <- "citing"
 cited$role <- "cited"
 paper$role <- "target"
