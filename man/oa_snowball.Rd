@@ -8,7 +8,7 @@ and convert the result to a tibble/data frame.}
 oa_snowball(
   identifier = NULL,
   output = c("tibble", "dataframe"),
-  mailto = NULL,
+  mailto = oa_email(),
   endpoint = "https://api.openalex.org/",
   verbose = FALSE
 )
