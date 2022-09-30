@@ -18,62 +18,62 @@
 #'   verbose = TRUE
 #' )
 #' }
-oa_snowball <- function(
-                     identifier = NULL, ## identifier of a work, author, venue, etc.
-                     output = c("tibble", "dataframe"),
-                     mailto = NULL,
-                     endpoint = "https://api.openalex.org/",
-                     verbose = FALSE) {
+oa_snowball <- function(identifier = NULL, ## identifier of a work, author, venue, etc.
+                        output = c("tibble", "dataframe"),
+                        mailto = oa_email(),
+                        endpoint = "https://api.openalex.org/",
+                        verbose = FALSE) {
   output <- match.arg(output)
 
   if (output == "dataframe") output <- "tibble"
 
-# fetching all documents citing the target papers
-  if (isTRUE(verbose)) message("Collecting all documents citing the target papers")
-citing <- oa_fetch(
-  entity = "works",
-  cites = identifier,
-  output = output,
-  endpoint = endpoint,
-  mailto = mailto,
-  verbose = verbose
-)
+  # fetching all documents citing the target papers
+  if (verbose) message("Collecting all documents citing the target papers")
 
-# collecting the reference lists of the target papers
-paper <- oa_fetch(
-  entity = "works",
-  identifier = identifier,
-  output = output,
-  endpoint = endpoint,
-  mailto = mailto,
-  verbose = verbose
-)
-
-# fetching all documents cited by the target papers
-CR <- unique(unlist(paper$referenced_works))
-list_CR <- split(CR, ceiling(seq_along(CR)/50))
-cited <- list()
-if (isTRUE(verbose)) message("Collecting all documents cited by the target papers")
-for (i in 1:length(list_CR)){
-  cited[[i]] <- oa_fetch(
+  citing <- oa_fetch(
     entity = "works",
-    identifier = list_CR[[i]],
+    cites = identifier,
     output = output,
     endpoint = endpoint,
     mailto = mailto,
     verbose = verbose
   )
+
+  # collecting the reference lists of the target papers
+  paper <- oa_fetch(
+    entity = "works",
+    identifier = identifier,
+    output = output,
+    endpoint = endpoint,
+    mailto = mailto,
+    verbose = verbose
+  )
+
+  # fetching all documents cited by the target papers
+  CR <- unique(unlist(paper$referenced_works))
+  list_CR <- split(CR, ceiling(seq_along(CR) / 50))
+
+  if (verbose) message("Collecting all documents cited by the target papers")
+
+  cited <- list()
+  for (i in seq_along(list_CR)) {
+    cited[[i]] <- oa_fetch(
+      entity = "works",
+      identifier = list_CR[[i]],
+      output = output,
+      endpoint = endpoint,
+      mailto = mailto,
+      verbose = verbose
+    )
+  }
+  cited <- do.call(rbind, cited)
+
+  # merging all documents in a single data frame
+  if (is.null(citing)) citing <- paper[0, TRUE]
+
+  citing$role <- "citing"
+  cited$role <- "cited"
+  paper$role <- "target"
+
+  rbind(citing, cited, paper)
 }
-cited<- do.call(rbind,cited)
-
-# merging all documents in a single data frame
-citing$role <- "citing"
-cited$role <- "cited"
-paper$role <- "target"
-df <- rbind(citing,cited, paper)
-
-return(df)
-}
-
-
-
