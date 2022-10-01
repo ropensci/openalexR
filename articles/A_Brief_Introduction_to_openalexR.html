@@ -860,7 +860,7 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">aria_count</span></span></code></pre></div>
 <pre><code><span><span class="co">##      count db_response_time_ms page per_page</span></span>
-<span><span class="co">## [1,]  1644                  15    1        1</span></span></code></pre>
+<span><span class="co">## [1,]  1644                  14    1        1</span></span></code></pre>
 <p>This query will return a collection of NA publications. Let’s to download it and then to convert it into a data frame:</p>
 <div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/oa_fetch.html">oa_fetch</a></span><span class="op">(</span></span>
@@ -872,7 +872,7 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "https://api.openalex.org/works?filter=cites%3AW2755950973"</span></span></code></pre>
 <pre><code><span><span class="co">## Requesting url: https://api.openalex.org/works?filter=cites%3AW2755950973</span></span></code></pre>
-<pre><code><span><span class="co">##  int [1, 1:4] 1644 18 1 1</span></span>
+<pre><code><span><span class="co">##  int [1, 1:4] 1644 14 1 1</span></span>
 <span><span class="co">##  - attr(*, "dimnames")=List of 2</span></span>
 <span><span class="co">##   ..$ : NULL</span></span>
 <span><span class="co">##   ..$ : chr [1:4] "count" "db_response_time_ms" "page" "per_page"</span></span></code></pre>
