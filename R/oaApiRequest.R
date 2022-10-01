@@ -97,33 +97,41 @@ oa_fetch <- function(...,
 
   if (output == "dataframe") output <- "tibble"
 
-  res <- oa_request(
-    oa_query(
-      ...,
-      identifier = identifier,
-      entity = entity,
-      search = search,
-      sort = sort,
-      group_by = group_by,
-      endpoint = endpoint,
-      verbose = verbose
-    ),
-    per_page = per_page,
-    count_only = count_only,
-    mailto = mailto,
-    verbose = verbose
-  )
+  # for cicle needed to overcome OA limitation of 50 identifiers at a time
+  if (!is.null(identifier)){
+    list_id <- split(identifier, ceiling(seq_along(identifier) / 50))
+  } else {list_id <- list(NULL)}
 
-  final_res <- switch(output,
-    list = res,
-    tibble = oa2df(res,
-      entity = entity, abstract = abstract,
-      count_only = count_only, group_by = group_by,
+  final_res <- list()
+  for (i in seq_along(list_id)) {
+    res <- oa_request(
+      oa_query(
+        ...,
+        identifier = list_id[[i]],
+        entity = entity,
+        search = search,
+        sort = sort,
+        group_by = group_by,
+        endpoint = endpoint,
+        verbose = verbose
+      ),
+      per_page = per_page,
+      count_only = count_only,
+      mailto = mailto,
       verbose = verbose
     )
-  )
 
-  final_res
+    final_res[[i]] <- switch(output,
+                             list = res,
+                             tibble = oa2df(res,
+                                            entity = entity, abstract = abstract,
+                                            count_only = count_only, group_by = group_by,
+                                            verbose = verbose
+                             )
+    )
+  }
+
+  final_res <- do.call(rbind, final_res)
 }
 
 

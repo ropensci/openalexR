@@ -108,9 +108,12 @@ oa_query <- function(...,
   filter <- list(...)
   multiple_id <- length(identifier) > 1
 
-  # if multiple identifiers are provided, use openalex_id as a filter property
-  # TODO openalex_id -> openalex
-  if (multiple_id) filter <- c(filter, list(openalex_id = identifier))
+  # if multiple identifiers are provided, use openalex_id or doi as a filter property
+  if (multiple_id) filter <-
+    switch(toupper(substr(identifier[[1]],1,1)),
+           H = c(filter, list(doi = identifier)),
+           W = c(filter, list(openalex_id = identifier))
+           )
 
   if (length(filter) > 0 || multiple_id) {
     flt_ready <- mapply(append_flt, filter, names(filter))
