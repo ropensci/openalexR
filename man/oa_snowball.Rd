@@ -25,7 +25,7 @@ oa_snowball(
 \item{verbose}{is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=FALSE}.}
 }
 \value{
-A data.frame or a tibble. Result of the snowball search.
+A list containing 2 objects: relationship links among documents (from -> to); data frame with publication records.
 }
 \description{
 A function to perform a snowball search

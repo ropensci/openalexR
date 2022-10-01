@@ -3,7 +3,8 @@ test_that("oa_snowball works", {
   multi_works <- oa_snowball(
     identifier = work_ids,
     verbose = TRUE
-  )
+  )$data
+
   expect_equal(
     multi_works$id[multi_works$role=="target"],
     paste0("https://openalex.org/", work_ids)
@@ -15,6 +16,6 @@ test_that("oa_snowball works", {
     verbose = TRUE
   )
 
-  expect_true(is.data.frame(snowball_docs))
+  expect_true(is.list(snowball_docs))
 
 })

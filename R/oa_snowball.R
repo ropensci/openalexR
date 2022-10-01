@@ -6,7 +6,7 @@
 #' @param endpoint is character. It indicates the url of the OpenAlex Endpoint API server. The default value is endpoint = "https://api.openalex.org/".
 #' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=FALSE}.
 #'
-#' @return A data.frame or a tibble. Result of the snowball search.
+#' @return A list containing 2 objects: relationship links among documents (from -> to); data frame with publication records.
 #' @export
 #'
 #' @examples
@@ -39,7 +39,7 @@ oa_snowball <- function(identifier = NULL, ## identifier of a work, author, venu
     verbose = verbose
   )
 
-  # collecting the reference lists of the target papers
+  # collecting records about the target papers
   paper <- oa_fetch(
     entity = "works",
     identifier = identifier,
@@ -49,24 +49,17 @@ oa_snowball <- function(identifier = NULL, ## identifier of a work, author, venu
     verbose = verbose
   )
 
-  # fetching all documents cited by the target papers
-  CR <- unique(unlist(paper$referenced_works))
-  list_CR <- split(CR, ceiling(seq_along(CR) / 50))
-
+  # collecting all documents cited by the target papers
   if (verbose) message("Collecting all documents cited by the target papers")
 
-  cited <- list()
-  for (i in seq_along(list_CR)) {
-    cited[[i]] <- oa_fetch(
-      entity = "works",
-      identifier = list_CR[[i]],
-      output = output,
-      endpoint = endpoint,
-      mailto = mailto,
-      verbose = verbose
-    )
-  }
-  cited <- do.call(rbind, cited)
+  cited <- oa_fetch(
+    entity = "works",
+    cited_by = identifier,
+    output = output,
+    endpoint = endpoint,
+    mailto = mailto,
+    verbose = verbose
+  )
 
   # merging all documents in a single data frame
   if (is.null(citing)) citing <- paper[0, TRUE]
@@ -75,5 +68,14 @@ oa_snowball <- function(identifier = NULL, ## identifier of a work, author, venu
   cited$role <- "cited"
   paper$role <- "target"
 
-  rbind(citing, cited, paper)
+  # relationships
+  citing_rel <- tibble::tibble(
+    from = rep(gsub("https://openalex.org/","",citing$id), lengths(citing$referenced_works)),
+    to = gsub("https://openalex.org/","",unlist(citing$referenced_works)))
+  citing_rel <- citing_rel[citing_rel$to %in% identifier,]
+  cited_rel <- tibble::tibble(
+    from = rep(gsub("https://openalex.org/","",paper$id), lengths(paper$referenced_works)),
+    to = gsub("https://openalex.org/","",unlist(paper$referenced_works)))
+
+  results <- list(relationships = rbind(citing_rel,cited_rel), data = rbind(citing, cited, paper))
 }

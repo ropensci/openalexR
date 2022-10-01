@@ -112,7 +112,7 @@ oa_query <- function(...,
   if (multiple_id) filter <-
     switch(toupper(substr(identifier[[1]],1,1)),
            H = c(filter, list(doi = identifier)),
-           W = c(filter, list(openalex_id = identifier))
+           c(filter, list(openalex_id = identifier))
            )
 
   if (length(filter) > 0 || multiple_id) {
