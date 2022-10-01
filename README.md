@@ -1,9 +1,3 @@
----
-editor_options: 
-  markdown: 
-    wrap: 72
----
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # openalexR <img src="man/figures/logo.png" align="right" height="139"/>
@@ -14,55 +8,40 @@ editor_options:
 
 <!-- badges: end -->
 
-**openalexR** helps you interface with the
-[OpenAlex](https://openalex.org) API to retrieve bibliographic
-infomation about publications, authors, venues, institutions and
-concepts with 4 main functions:
+**openalexR** helps you interface with the [OpenAlex](https://openalex.org) API to retrieve bibliographic infomation about publications, authors, venues, institutions and concepts with 4 main functions:
 
--   `oa_query()`: generates a valid query, written following the
-    OpenAlex API syntax, from a set of arguments provided by the user.
+-   `oa_query()`: generates a valid query, written following the OpenAlex API syntax, from a set of arguments provided by the user.
 
--   `oa_request()`: downloads a collection of entities matching the
-    query created by `oa_query()` or manually written by the user, and
-    returns a JSON object in a list format.
+-   `oa_request()`: downloads a collection of entities matching the query created by `oa_query()` or manually written by the user, and returns a JSON object in a list format.
 
--   `oa2df()`: converts the JSON object in classical bibliographic
-    tibble/data frame.
+-   `oa2df()`: converts the JSON object in classical bibliographic tibble/data frame.
 
--   `oa_fetch()`: composes three functions above so the user can execute
-    everything in one step, *i.e.*, `oa_query |> oa_request |> oa2df`
+-   `oa_fetch()`: composes three functions above so the user can execute everything in one step, *i.e.*, `oa_query |> oa_request |> oa2df`
 
--   `oa_random()`: to get random entity, e.g., `oa_random("works")`
-    gives a different work each time you run it
+-   `oa_random()`: to get random entity, e.g., `oa_random("works")` gives a different work each time you run it
 
 ## Installation
 
-You can install the developer version of the openalexR from
-[GitHub](https://github.com) with:
+You can install the developer version of the openalexR from [GitHub](https://github.com) with:
 
 ``` r
 install.packages("remotes")
 remotes::install_github("massimoaria/openalexR")
 ```
 
-You can install the released version of openalexR from
-[CRAN](https://CRAN.R-project.org) with:
+You can install the released version of openalexR from [CRAN](https://CRAN.R-project.org) with:
 
 ``` r
 install.packages("openalexR")
 ```
 
-Before we go any further, we highly recommend you set `openalexR.mailto`
-option so that your requests go to [the polite
-pool](https://docs.openalex.org/api#the-polite-pool) for faster response
-times:
+Before we go any further, we highly recommend you set `openalexR.mailto` option so that your requests go to [the polite pool](https://docs.openalex.org/api#the-polite-pool) for faster response times:
 
 ``` r
 options(openalexR.mailto = "example@email.com")
 ```
 
-Bonus point if you put this in your `.Rprofile` with
-`usethis::edit_r_profile()`.
+Bonus point if you put this in your `.Rprofile` with `usethis::edit_r_profile()`.
 
 ## Package loading
 
@@ -79,11 +58,7 @@ This paper:
     An R-tool for comprehensive science mapping analysis. 
     Journal of informetrics, 11(4), 959-975.
 
-is associated to the
-[OpenAlex-id](https://docs.openalex.org/about-the-data#the-openalex-id)
-**W2755950973**. If you know your paper's OpenAlex ID, all you need to
-do is passing `identifier = <openalex id>` as an argument in
-`oa_fetch()`:
+is associated to the [OpenAlex-id](https://docs.openalex.org/about-the-data#the-openalex-id) **W2755950973**. If you know your paper's OpenAlex ID, all you need to do is passing `identifier = <openalex id>` as an argument in `oa_fetch()`:
 
 ``` r
 paper_id <- oa_fetch(
@@ -124,13 +99,7 @@ dplyr::glimpse(paper_id)
 #> $ concepts         <list> [<data.frame[3 x 5]>]
 ```
 
-`oa_fetch()` is a composition of functions:
-`oa_query |> oa_request |> oa2df`. As results, `oa_query()` returns the
-query string including the OpenAlex endpoint API server address
-(default). `oa_request()` downloads the bibliographic records matching
-the query. Finally, `oa2df()` converts the final result list to a
-tibble. The final result is a complicated tibble, but we can use
-`show_works()` to display a simplified version:
+`oa_fetch()` is a composition of functions: `oa_query |> oa_request |> oa2df`. As results, `oa_query()` returns the query string including the OpenAlex endpoint API server address (default). `oa_request()` downloads the bibliographic records matching the query. Finally, `oa2df()` converts the final result list to a tibble. The final result is a complicated tibble, but we can use `show_works()` to display a simplified version:
 
 ``` r
 paper_id %>% 
@@ -139,15 +108,12 @@ paper_id %>%
 ```
 
 | short_id    | display_name                                                        | first_author | last_author        | so                      | url                                         | is_oa | top_concepts                                          |
-|:--------|:----------|:--------|:--------|:--------|:--------|:--------|:--------|
+|:--------|:--------|:--------|:--------|:--------|:--------|:--------|:--------|
 | W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis | Massimo Aria | Corrado Cuccurullo | Journal of Informetrics | <https://doi.org/10.1016/j.joi.2017.08.007> | FALSE | Computer science, Data science, Information retrieval |
 
 ### External id formats
 
-OpenAlex endpoint accepts OpenAlex IDs and other [external
-IDs](https://docs.openalex.org/api/get-single-entities#id-formats)
-(*e.g.*, DOI, ISSN) in several formats, including Digital Object
-Identifier (DOI) and Persistent Identifiers (PIDs).
+OpenAlex endpoint accepts OpenAlex IDs and other [external IDs](https://docs.openalex.org/api/get-single-entities#id-formats) (*e.g.*, DOI, ISSN) in several formats, including Digital Object Identifier (DOI) and Persistent Identifiers (PIDs).
 
 ``` r
 oa_fetch(
@@ -160,15 +126,14 @@ oa_fetch(
 ```
 
 | short_id    | display_name                                                        | first_author | last_author        | so                      | url                                         | is_oa | top_concepts                                          |
-|:--------|:----------|:--------|:--------|:--------|:--------|:--------|:--------|
+|:--------|:--------|:--------|:--------|:--------|:--------|:--------|:--------|
 | W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis | Massimo Aria | Corrado Cuccurullo | Journal of Informetrics | <https://doi.org/10.1016/j.joi.2017.08.007> | FALSE | Computer science, Data science, Information retrieval |
 
 ### More than one publications/authors
 
 [https://api.openalex.org/authors/https://orcid.org/](https://api.openalex.org/authors/https://orcid.org/0000-0003-1613-5981)
 
-If you know the OpenAlex IDs of these entities, you can also feed them
-into the `identifier` argument.
+If you know the OpenAlex IDs of these entities, you can also feed them into the `identifier` argument.
 
 ``` r
 oa_fetch(
@@ -185,13 +150,11 @@ oa_fetch(
 ```
 
 | short_id    | display_name                                                                                 | first_author       | last_author        | so                      | url                                         | is_oa | top_concepts                                                                            |
-|:--------|:-----------|:--------|:--------|:--------|:--------|:--------|:----------|
+|:--------|:--------|:--------|:--------|:--------|:--------|:--------|:--------|
 | W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis                          | Massimo Aria       | Corrado Cuccurullo | Journal of Informetrics | <https://doi.org/10.1016/j.joi.2017.08.007> | FALSE | Computer science, Data science, Information retrieval                                   |
 | W2741809807 | The state of OA: a large-scale analysis of the prevalence and impact of Open Access articles | Heather A. Piwowar | Stefanie Haustein  | PeerJ                   | <https://doi.org/10.7717/peerj.4375>        | TRUE  | Citation, License, Scholarly communication, Web of science, Bibliometrics, Open science |
 
-However, if you only know their external identifies, say, DOIs, you
-would need to use `doi` as a filter (either the canonical form with
-<https://www.doi.org/> or without should work):
+However, if you only know their external identifies, say, DOIs, you would need to use `doi` as a filter (either the canonical form with <https://www.doi.org/> or without should work):
 
 ``` r
 oa_fetch(
@@ -208,22 +171,15 @@ oa_fetch(
 ```
 
 | short_id    | display_name                                                                           | first_author     | last_author        | so                      | url                                              | is_oa | top_concepts                                                                                                |
-|:--------|:---------|:--------|:--------|:--------|:--------|:--------|:-------------|
+|:--------|:--------|:--------|:--------|:--------|:--------|:--------|:--------|
 | W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis                    | Massimo Aria     | Corrado Cuccurullo | Journal of Informetrics | <https://doi.org/10.1016/j.joi.2017.08.007>      | FALSE | Computer science, Data science, Information retrieval                                                       |
 | W3206431085 | PMLB v1.0: an open-source dataset collection for benchmarking machine learning methods | Joseph D. Romano | Jason H. Moore     | Bioinformatics          | <https://doi.org/10.1093/bioinformatics/btab727> | TRUE  | Benchmarking, Python (programming language), Computer science, Benchmark (surveying), Open source, Workflow |
 
 ### Filters
 
-In most cases, we are interested in downloading a collection of items
-that meet one or more inclusion/exclusion criteria (filters). Supported
-attributes for each endpoints are listed
-[here](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists).
+In most cases, we are interested in downloading a collection of items that meet one or more inclusion/exclusion criteria (filters). Supported attributes for each endpoints are listed [here](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists).
 
-**Example**: We want to download all works published by a set of
-authors. We can do this by filtering on the
-authorships.author.id/author.id or authorships.author.orcid/author.orcid
-attribute (see more on attributes
-[here](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#works-attribute-filters)):
+**Example**: We want to download all works published by a set of authors. We can do this by filtering on the authorships.author.id/author.id or authorships.author.orcid/author.orcid attribute (see more on attributes [here](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#works-attribute-filters)):
 
 ``` r
 oa_fetch(
@@ -264,7 +220,7 @@ oa_fetch(
 ```
 
 | short_id    | display_name                                                                                                                              | first_author          | last_author         | so                              | url                                             | is_oa | top_concepts                                                                                                  |
-|:-------|:--------------|:-------|:-------|:-------|:-------|:-------|:---------|
+|:--------|:--------|:--------|:--------|:--------|:--------|:--------|:--------|
 | W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis                                                                       | Massimo Aria          | Corrado Cuccurullo  | Journal of Informetrics         | <https://doi.org/10.1016/j.joi.2017.08.007>     | FALSE | Computer science, Data science, Information retrieval                                                         |
 | W1979874437 | Analysis of powered two-wheeler crashes in Italy by classification trees and rules discovery                                              | Alfonso Montella      | Filomena Mauriello  | Accident Analysis & Prevention  | <https://doi.org/10.1016/j.aap.2011.04.025>     | FALSE | Crash, Computer science, Data mining, Identification (biology), Decision tree, Probabilistic logic            |
 | W2955219525 | Scaling tree-based automated machine learning to biomedical big data with a feature set selector                                          | Trang T. Le           | Jason H. Moore      | Bioinformatics                  | <https://doi.org/10.1093/bioinformatics/btz470> | TRUE  | Pipeline (software), Computer science, Scalability, Feature (linguistics), Set (abstract data type), Big data |
@@ -272,14 +228,9 @@ oa_fetch(
 | W2408216567 | Foundations and trends in performance management. A twenty-five years bibliometric analysis in business and public administration domains | Corrado Cuccurullo    | Fabrizia Sarto      | Scientometrics                  | <https://doi.org/10.1007/s11192-016-1948-8>     | FALSE | Administration (probate law), Bibliometrics, Regional science, Trend analysis, Political science, Sociology   |
 | W2281330131 | Coopetition and sustainable competitive advantage. The case of tourist destinations                                                       | Valentina Della Corte | Massimo Aria        | Tourism Management              | <https://doi.org/10.1016/j.tourman.2015.12.009> | FALSE | Coopetition, Competitive advantage, Business, Destinations, Tourist destinations, Tourism                     |
 
-**Example**: We want to download all works that have been cited more
-than 50 times, published between 2020 and 2021, and include the strings
-"bibliometric analysis" or "science mapping" in the title. Maybe we also
-want the results to be sorted by total citations in a descending order.
+**Example**: We want to download all works that have been cited more than 50 times, published between 2020 and 2021, and include the strings "bibliometric analysis" or "science mapping" in the title. Maybe we also want the results to be sorted by total citations in a descending order.
 
-Setting the argument `count_only = TRUE`, the function `oa_request()`
-returns the number of items matching the query without downloading the
-collection.
+Setting the argument `count_only = TRUE`, the function `oa_request()` returns the number of items matching the query without downloading the collection.
 
 ``` r
 oa_fetch(
@@ -301,8 +252,7 @@ oa_fetch(
 #>                  27                  20                   1                 200
 ```
 
-We can now download the records and transform it into a tibble/data
-frame by setting `count_only = FALSE` (also the default value):
+We can now download the records and transform it into a tibble/data frame by setting `count_only = FALSE` (also the default value):
 
 ``` r
 oa_fetch(
@@ -319,7 +269,7 @@ oa_fetch(
 ```
 
 | short_id    | display_name                                                                                                                   | first_author        | last_author        | so                                        | url                                             | is_oa | top_concepts                                                                                                      |
-|:-------|:------------|:-------|:-------|:-------|:-------|:-------|:----------|
+|:--------|:--------|:--------|:--------|:--------|:--------|:--------|:--------|
 | W3160856016 | How to conduct a bibliometric analysis: An overview and guidelines                                                             | Naveen Donthu       | Weng Marc Lim      | Journal of Business Research              | <https://doi.org/10.1016/j.jbusres.2021.04.070> | TRUE  | Bibliometrics, Field (mathematics), Data science, Computer science, Resource (disambiguation), Management science |
 | W3038273726 | Investigating the emerging COVID-19 research trends in the field of business and management: A bibliometric analysis approach. | Surabhi Verma       | Anders Gustafsson  | Journal of Business Research              | <https://pubmed.ncbi.nlm.nih.gov/32834211/>     | NA    | Scopus, Coronavirus disease 2019 (COVID-19), Pandemic, Bibliometrics, Web of science, Field (mathematics)         |
 | W2990450011 | Forty-five years of Journal of Business Research: A bibliometric analysis                                                      | Naveen Donthu       | Debidutta Pattnaik | Journal of Business Research              | <https://doi.org/10.1016/j.jbusres.2019.10.039> | FALSE | Bibliometrics, Regional science                                                                                   |
@@ -331,11 +281,9 @@ Read on to see how we can shorten these two function calls.
 
 ## Authors
 
-Similarly to work, we can use identifier to pass in authors' OpenAlex
-ID.
+Similarly to work, we can use identifier to pass in authors' OpenAlex ID.
 
-**Example**: We want more information on authors with IDs **A923435168**
-and **A2208157607**.
+**Example**: We want more information on authors with IDs **A923435168** and **A2208157607**.
 
 ``` r
 oa_fetch(
@@ -350,18 +298,13 @@ oa_fetch(
 ```
 
 | short_id    | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                                                            |
-|:--------|:--------|:--------|--------:|--------:|:--------|:--------------------|
+|:---------|:---------|:---------|---------:|---------:|:---------|:-----------|
 | A923435168  | Massimo Aria | 0000-0002-8517-9411 |         102 |           2952 | University of Naples Federico II | Biology, Medicine, Computer science, Mathematics, Psychology, Statistics                |
 | A2208157607 | Jason Priem  | 0000-0001-6187-6610 |          49 |           2142 | HortResearch                     | Computer science, World Wide Web, Political science, Law, Library science, Data science |
 
-**Example**: We want download all authors' records of scholars who work
-at the University of Naples Federico II (OpenAlex ID: I71267560) and who
-have published more than 499 works.
+**Example**: We want download all authors' records of scholars who work at the University of Naples Federico II (OpenAlex ID: I71267560) and who have published more than 499 works.
 
-Let's first check how many records match the query, then set
-`count_only = FALSE` to download the entire collection. We can do this
-by first defining a list of arguments, then adding `count_only` (default
-`FALSE`) to this list:
+Let's first check how many records match the query, then set `count_only = FALSE` to download the entire collection. We can do this by first defining a list of arguments, then adding `count_only` (default `FALSE`) to this list:
 
 ``` r
 my_arguments <- list(
@@ -379,7 +322,7 @@ do.call(oa_fetch, my_arguments) %>%
 ```
 
 | short_id    | display_name             | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                                                                      |
-|:--------|:--------|:--------|--------:|--------:|:--------|:--------------------|
+|:---------|:---------|:---------|---------:|---------:|:---------|:-----------|
 | A2600338221 | Alberto Orso Maria Iorio | 0000-0002-3798-1135 |        1144 |          47933 | University of Naples Federico II | Physics, Nuclear physics, Particle physics, Quantum mechanics, Large Hadron Collider, Mathematics |
 | A2011452631 | Leonardo Merola          | NA                  |        1115 |          35281 | University of Naples Federico II | Physics, Particle physics, Nuclear physics, Quantum mechanics, Large Hadron Collider, Biology     |
 | A3113327292 | Vincenzo Canale          | NA                  |         990 |          29062 | University of Naples Federico II | Physics, Quantum mechanics, Particle physics, Nuclear physics, Large Hadron Collider, Geology     |
@@ -387,9 +330,7 @@ do.call(oa_fetch, my_arguments) %>%
 | A223517670  | Ettore Novellino         | 0000-0002-2181-2142 |         933 |          23003 | University of Naples Federico II | Chemistry, Biology, Biochemistry, Genetics, Medicine, Organic chemistry                           |
 | A2159261619 | Annamaria Colao          | 0000-0001-6986-266X |         927 |          40286 | University of Naples Federico II | Medicine, Biology, Internal medicine, Endocrinology, Pathology, Chemistry                         |
 
-You can also filter by other
-[filters](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#authors-filters)
-such as `display_name`, `has_orcid`, and `orcid`:
+You can also filter by other [filters](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#authors-filters) such as `display_name`, `has_orcid`, and `orcid`:
 
 ``` r
 oa_fetch(
@@ -402,7 +343,7 @@ oa_fetch(
 ```
 
 | short_id    | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                                                   |
-|:--------|:--------|:--------|--------:|--------:|:--------|:-------------------|
+|:---------|:---------|:---------|---------:|---------:|:---------|:-----------|
 | A923435168  | Massimo Aria | 0000-0002-8517-9411 |         102 |           2952 | University of Naples Federico II | Biology, Medicine, Computer science, Mathematics, Psychology, Statistics       |
 | A2902074455 | Massimo Aria | 0000-0002-8517-9411 |          29 |             62 | University of Naples Federico II | Mathematics, Computer science, Economics, Biology, Political science, Business |
 
@@ -417,16 +358,13 @@ oa_fetch(
 ```
 
 | short_id    | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                                                   |
-|:--------|:--------|:--------|--------:|--------:|:--------|:-------------------|
+|:---------|:---------|:---------|---------:|---------:|:---------|:-----------|
 | A923435168  | Massimo Aria | 0000-0002-8517-9411 |         102 |           2952 | University of Naples Federico II | Biology, Medicine, Computer science, Mathematics, Psychology, Statistics       |
 | A2902074455 | Massimo Aria | 0000-0002-8517-9411 |          29 |             62 | University of Naples Federico II | Mathematics, Computer science, Economics, Biology, Political science, Business |
 
 ## Institutions
 
-**Example**: We want download all records regarding Italian institutions
-(country_code:it) that are classified as educational (type:education).
-Again, we check how many records match the query then download the
-collection:
+**Example**: We want download all records regarding Italian institutions (country_code:it) that are classified as educational (type:education). Again, we check how many records match the query then download the collection:
 
 ``` r
 italian_insts <- list(
@@ -473,8 +411,7 @@ dplyr::glimpse(do.call(oa_fetch, italian_insts))
 
 ## Venues (think journals)
 
-**Example**: We want download all records regarding journals that have
-published more than 100,000 works:
+**Example**: We want download all records regarding journals that have published more than 100,000 works:
 
 ``` r
 big_journals <- list(
@@ -513,8 +450,7 @@ dplyr::glimpse(do.call(oa_fetch, big_journals))
 
 ## Concepts (think theme, keywords)
 
-**Example**: We want to download the records of all the concepts that
-concern at least one million works:
+**Example**: We want to download the records of all the concepts that concern at least one million works:
 
 ``` r
 popular_concepts <- list(
@@ -557,13 +493,9 @@ dplyr::glimpse(do.call(oa_fetch, popular_concepts))
 
 *Get all works citing a particular work*
 
-We can download all publications citing another publication by using the
-filter attribute **cites**.
+We can download all publications citing another publication by using the filter attribute **cites**.
 
-For example, if we want to download all publications citing the article
-Aria and Cuccurullo (2017), we have just to set the argument filter as
-`cites = "W2755950973"` where "W2755950973" is the OA id for the article
-by Aria and Cuccurullo.
+For example, if we want to download all publications citing the article Aria and Cuccurullo (2017), we have just to set the argument filter as `cites = "W2755950973"` where "W2755950973" is the OA id for the article by Aria and Cuccurullo.
 
 ``` r
 aria_count <- oa_fetch(
@@ -579,8 +511,7 @@ aria_count
 #>                1551                  52                   1                 200
 ```
 
-This query will return a collection of 1551 publications. Among these
-articles, let's download the ones published in the following year:
+This query will return a collection of 1551 publications. Among these articles, let's download the ones published in the following year:
 
 ``` r
 oa_fetch(
@@ -626,18 +557,9 @@ oa_fetch(
 
 ## Convert an OpenAlex data frame to a bibliometrix object
 
-The bibliometrix R-package (<https://www.bibliometrix.org>) provides a
-set of tools for quantitative research in bibliometrics and
-scientometrics. Today it represents one of the most used science mapping
-software in the world. In a recent survey on bibliometric analysis
-tools, Moral-Muñoz et al. (2020) wrote: "At this moment, maybe
-Bibliometrix and its Shiny platform contain the more extensive set of
-techniques implemented, and together with the easiness of its interface,
-could be a great software for practitioners".
+The bibliometrix R-package (<https://www.bibliometrix.org>) provides a set of tools for quantitative research in bibliometrics and scientometrics. Today it represents one of the most used science mapping software in the world. In a recent survey on bibliometric analysis tools, Moral-Muñoz et al. (2020) wrote: "At this moment, maybe Bibliometrix and its Shiny platform contain the more extensive set of techniques implemented, and together with the easiness of its interface, could be a great software for practitioners".
 
-The function **oa2bibliometrix** converts a bibliographic data frame of
-works into a bibliometrix object. This object can be used as input
-collection of a science mapping workflow.
+The function **oa2bibliometrix** converts a bibliographic data frame of works into a bibliometrix object. This object can be used as input collection of a science mapping workflow.
 
 ``` r
 bib_ls <- list(
@@ -709,11 +631,7 @@ do.call(oa_fetch, bib_ls) %>%
 Schema credits: [\@dhimmel](https://github.com/dhimmel)
 :::
 
-[OpenAlex](https://openalex.org) is a fully open catalog of the global
-research system. It's named after the ancient [Library of
-Alexandria](https://en.wikipedia.org/wiki/Library_of_Alexandria). The
-OpenAlex dataset describes scholarly entities and how those entities are
-connected to each other. There are five types of entities:
+[OpenAlex](https://openalex.org) is a fully open catalog of the global research system. It's named after the ancient [Library of Alexandria](https://en.wikipedia.org/wiki/Library_of_Alexandria). The OpenAlex dataset describes scholarly entities and how those entities are connected to each other. There are five types of entities:
 
 -   **Works** are papers, books, datasets, etc; they cite other works
 
@@ -721,13 +639,10 @@ connected to each other. There are five types of entities:
 
 -   **Venues** are journals and repositories that host works
 
--   **Institutions** are universities and other orgs that are affiliated
-    with works (via authors)
+-   **Institutions** are universities and other orgs that are affiliated with works (via authors)
 
 -   **Concepts** *tag* Works with a topic
 
 ## Acknowledgements
 
-Package hex was made with [Midjourney](https://www.midjourney.com/home/)
-and thus inherits a [CC BY-NC 4.0
-license](https://creativecommons.org/licenses/by-nc/4.0/legalcode).
+Package hex was made with [Midjourney](https://www.midjourney.com/home/) and thus inherits a [CC BY-NC 4.0 license](https://creativecommons.org/licenses/by-nc/4.0/legalcode).
