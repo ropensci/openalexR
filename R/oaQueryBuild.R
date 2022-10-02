@@ -110,8 +110,8 @@ oa_query <- function(...,
 
   # if multiple identifiers are provided, use openalex_id or doi as a filter property
   if (multiple_id) filter <-
-    switch(toupper(substr(identifier[[1]],1,1)),
-           H = c(filter, list(doi = identifier)),
+    switch(regexpr("https://doi.org",identifier[[1]])>-1,
+           "TRUE" = c(filter, list(doi = identifier)),
            c(filter, list(openalex_id = identifier))
            )
 
