@@ -17,17 +17,12 @@ oa_fetch(
   endpoint = "https://api.openalex.org/",
   per_page = 200,
   count_only = FALSE,
-  mailto = NULL,
+  mailto = oa_email(),
   verbose = FALSE
 )
 }
 \arguments{
-\item{...}{Filter arguments. Filters narrow the list down to just entities that meet a particular condition--specifically, a particular value for a particular attribute.
-Filters are formatted as attribute = value. The complete list of filter attributes for each entity can be found
-For example, `cited_by_count = ">100"`,
-`title.search = c("bibliometric analysis", "science mapping")`,
-or `to_publication_date = "2021-12-31"`.
-at \href{https://docs.openalex.org/api/get-lists-of-entities#filter}{https://docs.openalex.org/api/get-lists-of-entities#filter}}
+\item{...}{Additional filter arguments.}
 
 \item{identifier}{Character. It indicates an item identifier.}
 
@@ -97,6 +92,11 @@ oa_fetch(
     "10.1371/journal.pone.0267149"
   ),
   verbose = TRUE
+)
+
+oa_fetch(
+identifier = c("A923435168", "A2208157607"),
+verbose = TRUE
 )
 }
 }

@@ -78,6 +78,11 @@ oa_random <- function(entity = oa_entities(),
 #'   ),
 #'   verbose = TRUE
 #' )
+#'
+#' oa_fetch(
+#' identifier = c("A923435168", "A2208157607"),
+#' verbose = TRUE
+#' )
 #' }
 oa_fetch <- function(...,
                      identifier = NULL, ## identifier of a work, author, venue, etc.
@@ -90,24 +95,40 @@ oa_fetch <- function(...,
                      endpoint = "https://api.openalex.org/",
                      per_page = 200,
                      count_only = FALSE,
-                     mailto = NULL,
+                     mailto = oa_email(),
                      verbose = FALSE) {
   output <- match.arg(output)
   entity <- match.arg(entity, oa_entities())
 
   if (output == "dataframe") output <- "tibble"
+  filter <- list(...)
 
-  # for cicle needed to overcome OA limitation of 50 identifiers at a time
-  if (!is.null(identifier)){
-    list_id <- split(identifier, ceiling(seq_along(identifier) / 50))
-  } else {list_id <- list(NULL)}
+  # if multiple identifiers are provided, use openalex_id or doi as a filter property
+  multiple_id <- length(identifier) > 1
+  if (multiple_id) filter <- c(filter, list(openalex_id = identifier))
+
+  # overcome OA limitation of combining 50 values (OR) for a filter at a time
+  # https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#addition-or
+  # here, we assume there is only ONE "large" filter
+  large_filter <- which(lengths(filter) > 50)
+  if (length(large_filter) == 0) {
+    list_id <- list(`1` = NULL)
+  } else {
+    list_id <- split(filter[[large_filter]], ceiling(seq_along(filter[[large_filter]]) / 50))
+  }
 
   final_res <- list()
   for (i in seq_along(list_id)) {
+    filter_i <- filter
+    if (length(large_filter) > 0){
+      filter_i[[large_filter]] <- list_id[[i]]
+    }
+
     res <- oa_request(
       oa_query(
-        ...,
-        identifier = list_id[[i]],
+        filter = filter_i,
+        multiple_id = multiple_id,
+        identifier = identifier,
         entity = entity,
         search = search,
         sort = sort,
@@ -122,16 +143,16 @@ oa_fetch <- function(...,
     )
 
     final_res[[i]] <- switch(output,
-                             list = res,
-                             tibble = oa2df(res,
-                                            entity = entity, abstract = abstract,
-                                            count_only = count_only, group_by = group_by,
-                                            verbose = verbose
-                             )
+      list = res,
+      tibble = oa2df(res,
+        entity = entity, abstract = abstract,
+        count_only = count_only, group_by = group_by,
+        verbose = verbose
+      )
     )
   }
 
-  final_res <- do.call(rbind, final_res)
+  do.call(rbind, final_res)
 }
 
 
