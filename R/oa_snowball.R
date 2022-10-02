@@ -18,7 +18,7 @@
 #'   verbose = TRUE
 #' )
 #' }
-oa_snowball <- function(identifier = NULL, ## identifier of a work, author, venue, etc.
+oa_snowball <- function(identifier = NULL,
                         output = c("tibble", "dataframe"),
                         mailto = oa_email(),
                         endpoint = "https://api.openalex.org/",

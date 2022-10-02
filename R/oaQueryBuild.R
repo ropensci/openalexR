@@ -97,7 +97,7 @@
 
 oa_query <- function(...,
                      identifier = NULL, ## identifier of a work, author, venue, etc.
-                     entity = id_type(identifier[[1]]),
+                     entity = if (is.null(entity)) id_type(identifier[[1]]),
                      search = NULL,
                      sort = NULL,
                      group_by = NULL,
@@ -109,11 +109,13 @@ oa_query <- function(...,
   multiple_id <- length(identifier) > 1
 
   # if multiple identifiers are provided, use openalex_id or doi as a filter property
-  if (multiple_id) filter <-
-    switch(regexpr("https://doi.org",identifier[[1]])>-1,
-           "TRUE" = c(filter, list(doi = identifier)),
-           c(filter, list(openalex_id = identifier))
-           )
+  if (multiple_id){
+    if (regexpr("https://doi.org",identifier[[1]])>-1){
+      filter <-  c(filter, list(doi = identifier))
+    } else{
+      filter <-  c(filter, list(openalex_id = identifier))
+    }
+  }
 
   if (length(filter) > 0 || multiple_id) {
     flt_ready <- mapply(append_flt, filter, names(filter))
