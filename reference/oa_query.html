@@ -59,7 +59,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">oa_query</span><span class="op">(</span></span>
 <span>  <span class="va">...</span>,</span>
 <span>  identifier <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  entity <span class="op">=</span> <span class="fu">id_type</span><span class="op">(</span><span class="va">identifier</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>  entity <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">entity</span><span class="op">)</span><span class="op">)</span> <span class="fu">id_type</span><span class="op">(</span><span class="va">identifier</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,</span>
 <span>  search <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  sort <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  group_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
