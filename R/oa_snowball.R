@@ -1,6 +1,6 @@
 #' A function to perform a snowball search
 #' and convert the result to a tibble/data frame.
-#' @param identifier Character. It indicates a vector of item identifiers.
+#' @param identifier Character. It indicates a vector of openalex_id identifiers.
 #' @param output a tibble/data.frame.
 #' @param mailto is a character. To get into the polite pool, the arguments mailto have to give OpenAlex an email where they can contact you.
 #' @param endpoint is character. It indicates the url of the OpenAlex Endpoint API server. The default value is endpoint = "https://api.openalex.org/".
@@ -77,5 +77,7 @@ oa_snowball <- function(identifier = NULL,
     from = rep(gsub("https://openalex.org/","",paper$id), lengths(paper$referenced_works)),
     to = gsub("https://openalex.org/","",unlist(paper$referenced_works)))
 
-  results <- list(relationships = rbind(citing_rel,cited_rel), data = rbind(citing, cited, paper))
+  data <- rbind(citing, cited, paper)
+  data <- data[!duplicated(data$id),]
+  results <- list(relationships = rbind(citing_rel,cited_rel), data = data)
 }

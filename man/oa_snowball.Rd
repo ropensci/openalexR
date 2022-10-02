@@ -14,7 +14,7 @@ oa_snowball(
 )
 }
 \arguments{
-\item{identifier}{Character. It indicates a vector of item identifiers.}
+\item{identifier}{Character. It indicates a vector of openalex_id identifiers.}
 
 \item{output}{a tibble/data.frame.}
 
