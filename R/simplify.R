@@ -31,7 +31,11 @@ show_authors <- function(x, simp_func = utils::head){
 
   x$top_concepts <- sapply(
     x$x_concepts,
-    function(y) paste(utils::head(y$display_name), collapse = ", ")
+    function(y) {
+      if (is.logical(y)) return(NA)
+      op_level <- min(1, max(y$level))
+      paste(utils::head(y[y$level == op_level, "display_name"], 3), collapse = ", ")
+    }
   )
 
   simp_func(x[, c("short_id", "display_name", "orcid", "works_count",
@@ -76,7 +80,8 @@ show_works <- function(x, simp_func = utils::head){
     x$concepts,
     function(y) {
       if (is.logical(y)) return(NA)
-      paste(utils::head(y[["display_name"]]), collapse = ", ")
+      op_level <- min(2, max(y$level))
+      paste(utils::head(y[y$level == op_level, "display_name"], 3), collapse = ", ")
     }
   )
 
