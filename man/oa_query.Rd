@@ -8,7 +8,7 @@ oa_query(
   filter = NULL,
   multiple_id = FALSE,
   identifier = NULL,
-  entity = id_type(identifier[[1]]),
+  entity = if (is.null(entity)) id_type(identifier[[1]]),
   search = NULL,
   sort = NULL,
   group_by = NULL,

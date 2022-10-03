@@ -55,12 +55,12 @@ append_flt <- function(x, pre = "from_publication_date", collapse = "|") {
 
 id_type <- function(identifier) {
   switch(toupper(substr(identifier, 1, 1)),
-    H = "works", # for doi
     W = "works",
     A = "authors",
     V = "venues",
     I = "institutions",
-    C = "concepts"
+    C = "concepts",
+    NA
   )
 }
 

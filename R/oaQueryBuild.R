@@ -103,7 +103,7 @@
 oa_query <- function(filter = NULL,
                      multiple_id = FALSE,
                      identifier = NULL, ## identifier of a work, author, venue, etc.
-                     entity = id_type(identifier[[1]]),
+                     entity = if (is.null(entity)) id_type(identifier[[1]]),
                      search = NULL,
                      sort = NULL,
                      group_by = NULL,
