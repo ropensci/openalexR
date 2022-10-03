@@ -1,4 +1,5 @@
 test_that("Invalid filter errors out", {
+  # open_alex is not a valid filter
   query_url <- "https://api.openalex.org/authors?filter=open_alex%3AA923435168%7CA2208157607"
 
   expect_error(oa_request(query_url))
