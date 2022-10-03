@@ -64,7 +64,7 @@ test_that("oa_fetch authors can deal with NA institutions", {
   )
 })
 
-test_that("oa_fetch can combine (OR) more than 50 values in a filter", {
+test_that("oa_fetch can combine (OR) more than 50 DOIs in a filter", {
   valid_dois <- c(
     "https://doi.org/10.1016/j.jbusres.2021.04.070",
     "https://doi.org/10.1016/j.jbusres.2020.06.057",
@@ -127,3 +127,70 @@ test_that("oa_fetch can combine (OR) more than 50 values in a filter", {
 
   expect_equal(nrow(many_doi_results), length(valid_dois))
 })
+
+
+test_that("oa_fetch can combine (OR) more than 50 ORCIDs in a filter", {
+  valid_orcids <- c(
+    "https://orcid.org/0000-0002-8525-3159",
+    "https://orcid.org/0000-0001-7641-0637",
+    "https://orcid.org/0000-0002-6465-982X",
+    "https://orcid.org/0000-0002-8270-3134",
+    "https://orcid.org/0000-0001-8446-2349",
+    "https://orcid.org/0000-0002-3128-0135",
+    "https://orcid.org/0000-0001-6428-8611",
+    "https://orcid.org/0000-0002-4951-4526",
+    "https://orcid.org/0000-0002-6354-3913",
+    "https://orcid.org/0000-0001-7523-7967",
+    "https://orcid.org/0000-0002-3792-0818",
+    "https://orcid.org/0000-0002-9412-2556",
+    "https://orcid.org/0000-0002-4147-892X",
+    "https://orcid.org/0000-0002-7060-8404",
+    "https://orcid.org/0000-0001-9080-6267",
+    "https://orcid.org/0000-0002-8057-6864",
+    "https://orcid.org/0000-0002-7369-2058",
+    "https://orcid.org/0000-0002-9460-5144",
+    "https://orcid.org/0000-0002-8517-9411",
+    "https://orcid.org/0000-0003-1345-9649",
+    "https://orcid.org/0000-0001-6048-7277",
+    "https://orcid.org/0000-0001-5882-1168",
+    "https://orcid.org/0000-0001-9558-6099",
+    "https://orcid.org/0000-0003-3421-5627",
+    "https://orcid.org/0000-0002-8850-6764",
+    "https://orcid.org/0000-0002-0811-6580",
+    "https://orcid.org/0000-0001-6535-5492",
+    "https://orcid.org/0000-0001-8934-7569",
+    "https://orcid.org/0000-0002-1355-9175",
+    "https://orcid.org/0000-0001-8693-5947",
+    "https://orcid.org/0000-0003-4126-9244",
+    "https://orcid.org/0000-0001-9102-9359",
+    "https://orcid.org/0000-0002-5119-8358",
+    "https://orcid.org/0000-0001-5035-5983",
+    "https://orcid.org/0000-0002-2817-5377",
+    "https://orcid.org/0000-0002-5935-7544",
+    "https://orcid.org/0000-0001-9059-7442",
+    "https://orcid.org/0000-0003-2796-9148",
+    "https://orcid.org/0000-0002-5639-3128",
+    "https://orcid.org/0000-0001-6591-5015",
+    "https://orcid.org/0000-0002-7319-418X",
+    "https://orcid.org/0000-0003-1759-1700",
+    "https://orcid.org/0000-0003-4867-5149",
+    "https://orcid.org/0000-0002-2622-0672",
+    "https://orcid.org/0000-0003-1013-5809",
+    "https://orcid.org/0000-0001-5200-1476",
+    "https://orcid.org/0000-0001-9443-8123",
+    "https://orcid.org/0000-0002-4180-2216",
+    "https://orcid.org/0000-0003-1761-3180",
+    "https://orcid.org/0000-0002-3721-1122",
+    "https://orcid.org/0000-0001-6618-8542"
+  )
+
+  many_orcid_results <- oa_fetch(entity = "authors", orcid = valid_orcids)
+
+  expect_s3_class(
+    many_orcid_results,
+    "data.frame"
+  )
+  # https://orcid.org/0000-0002-4147-892X corresponds to two openalex id
+  expect_true(nrow(many_orcid_results) >= length(valid_orcids))
+})
+
