@@ -1,4 +1,6 @@
 test_that("oa_snowball works", {
+  skip_on_cran()
+
   work_ids <- c("W2741809807")
   multi_works <- oa_snowball(
     identifier = work_ids,

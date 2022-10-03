@@ -1,4 +1,6 @@
 test_that("Invalid filter errors out", {
+  skip_on_cran()
+
   # open_alex is not a valid filter
   query_url <- "https://api.openalex.org/authors?filter=open_alex%3AA923435168%7CA2208157607"
 
@@ -6,12 +8,16 @@ test_that("Invalid filter errors out", {
 })
 
 test_that("oa_request returns list", {
+  skip_on_cran()
+
   query_url <- "https://api.openalex.org/authors?filter=openalex%3AA923435168%7CA2208157607"
 
   expect_type(oa_request(query_url), "list")
 })
 
 test_that("oa_fetch works", {
+  skip_on_cran()
+
   work_ids <- c("W2741809807")
   multi_works <- oa_fetch(
     identifier = work_ids,
@@ -33,6 +39,8 @@ test_that("oa_fetch works", {
 })
 
 test_that("Error when input entity can't be matched", {
+  skip_on_cran()
+
   expect_error(
     oa_fetch(
       entity = "wa",
@@ -50,9 +58,7 @@ test_that("Error when input entity can't be matched", {
 })
 
 test_that("oa_fetch authors can deal with NA institutions", {
-  # Old error:
-  # Error in rbind(deparse.level, ...) :
-  #   numbers of columns of arguments do not match
+  skip_on_cran()
 
   expect_s3_class(
     oa_fetch(
@@ -71,6 +77,8 @@ test_that("oa_fetch authors can deal with NA institutions", {
 })
 
 test_that("oa_fetch can combine (OR) more than 50 DOIs in a filter", {
+  skip_on_cran()
+
   valid_dois <- c(
     "https://doi.org/10.1016/j.jbusres.2021.04.070",
     "https://doi.org/10.1016/j.jbusres.2020.06.057",
@@ -136,6 +144,8 @@ test_that("oa_fetch can combine (OR) more than 50 DOIs in a filter", {
 
 
 test_that("oa_fetch can combine (OR) more than 50 ORCIDs in a filter", {
+  skip_on_cran()
+
   valid_orcids <- c(
     "https://orcid.org/0000-0002-8525-3159",
     "https://orcid.org/0000-0001-7641-0637",
