@@ -146,7 +146,7 @@ oa_query <- function(filter = NULL,
     query = query
   )
 
-  if (verbose) print(query_url)
+  if (verbose) message("Requesting url: ", query_url)
 
   query_url
 }

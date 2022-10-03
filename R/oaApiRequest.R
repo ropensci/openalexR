@@ -313,7 +313,6 @@ oa_request <- function(query_url,
     }
   }
 
-  if (verbose == TRUE) message("Requesting url: ", query_url)
   res <- api_request(query_url, ua, query = query_ls)
 
   if (is_group_by) {
