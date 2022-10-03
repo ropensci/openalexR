@@ -7,39 +7,33 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-&nbsp; 
+ 
 
-*https://github.com/massimoaria/openalexR*
+[*https://github.com/massimoaria/openalexR*](https://github.com/massimoaria/openalexR){.uri}
 
 *Latest version: `r packageVersion("openalexR")`, `r Sys.Date()`*
 
-&nbsp; 
+ 
 
 **by Massimo Aria**
 
-Full Professor in Social Statistics 
+Full Professor in Social Statistics
 
 PhD in Computational Statistics
 
 Laboratory and Research Group STAD Statistics, Technology, Data Analysis
 
-Department of Economics and Statistics 
+Department of Economics and Statistics
 
 University of Naples Federico II
 
-email aria@unina.it
+email [aria\@unina.it](mailto:aria@unina.it){.email}
 
-https://massimoaria.com
+<https://massimoaria.com>
 
-&nbsp; 
+ 
 
-# An R-package to gather bibliographic data from OpenAlex. 
-
-## Introduction 
-
-<!-- badges: start -->
-
-<!-- badges: end -->
+# An R-package to gather bibliographic data from OpenAlex
 
 **openalexR** helps you interface with the [OpenAlex](https://openalex.org) API to retrieve bibliographic infomation about publications, authors, venues, institutions and concepts with 4 main functions:
 
@@ -51,22 +45,7 @@ https://massimoaria.com
 
 -   `oa_fetch()`: composes three functions above so the user can execute everything in one step, *i.e.*, `oa_query |> oa_request |> oa2df`
 
-## Installation
-
-You can install the developer version of the openalexR from [GitHub](https://github.com) with:
-
-```{r eval=FALSE}
-install.packages("remotes")
-remotes::install_github("massimoaria/openalexR")
-```
-
-You can install the released version of openalexR from [CRAN](https://CRAN.R-project.org) with:
-
-```{r eval=FALSE}
-install.packages("openalexR")
-```
-
-## Package loading
+-   `oa_random()`: to get random entity, e.g., `oa_random("works")` gives a different work each time you run it
 
 ```{r warning=FALSE, message=FALSE}
 library(openalexR)
@@ -125,7 +104,6 @@ oa_fetch(
 
 If you know the OpenAlex IDs of these entities, you can also feed them into the `identifier` argument.
 
-
 ```{r}
 oa_fetch(
   identifier = c("W2741809807", "W2755950973"),
@@ -138,7 +116,7 @@ oa_fetch(
 
 ```
 
-However, if you only know their external identifies, say, DOIs, you would need to use `doi` as a filter (either the canonical form with https://www.doi.org/ or without should work):
+However, if you only know their external identifies, say, DOIs, you would need to use `doi` as a filter (either the canonical form with <https://doi.org/> or without should work):
 
 ```{r}
 oa_fetch(
@@ -151,11 +129,33 @@ oa_fetch(
   knitr::kable()
 ```
 
-
 ### Filters
 
 In most cases, we are interested in downloading a collection of items that meet one or more inclusion/exclusion criteria (filters).
 Supported attributes for each endpoints are listed [here](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists).
+
+**Example**: We want to download all works published by a set of authors.
+We can do this by filtering on the authorships.author.id/author.id or authorships.author.orcid/author.orcid attribute (see more on attributes [here](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#works-attribute-filters)):
+
+```{r}
+oa_fetch(
+  entity = "works",
+  author.id = c("A923435168", "A2208157607"),
+  verbose = TRUE
+) %>% 
+  show_works() %>% 
+  knitr::kable()
+
+orcids <- c("0000-0003-3737-6565", "0000-0002-8517-9411")
+canonical_orcids <- paste0("https://orcid.org/", orcids)
+oa_fetch(
+  entity = "works",
+  author.orcid = canonical_orcids,
+  verbose = TRUE
+) %>% 
+  show_works() %>% 
+  knitr::kable()
+```
 
 **Example**: We want to download all works that have been cited more than 50 times, published between 2020 and 2021, and include the strings "bibliometric analysis" or "science mapping" in the title.
 Maybe we also want the results to be sorted by total citations in a descending order.
@@ -200,8 +200,7 @@ Read on to see how we can shorten these two function calls.
 
 Similarly to work, we can use identifier to pass in authors' OpenAlex ID.
 
-**Example**: 
-We want more information on authors with IDs **A923435168** and **A2208157607**.
+**Example**: We want more information on authors with IDs **A923435168** and **A2208157607**.
 
 ```{r}
 oa_fetch(
@@ -211,7 +210,6 @@ oa_fetch(
   show_authors() %>%
   knitr::kable()
 ```
-
 
 **Example**: We want download all authors' records of scholars who work at the University of Naples Federico II (OpenAlex ID: I71267560) and who have published more than 499 works.
 
@@ -249,7 +247,6 @@ oa_fetch(
   show_authors() %>%
   knitr::kable()
 ```
-
 
 ## Institutions
 
@@ -317,13 +314,14 @@ aria_count
 ```
 
 This query will return a collection of `r aria_count["count"]` publications.
-Let's to download it and then to convert it into a data frame:
+Among these articles, let's download the ones published in the following year:
 
 ```{r}
 oa_fetch(
   entity = "works",
   cites = "W2755950973",
-  count_only = TRUE,
+  publication_year = 2018,
+  count_only = FALSE,
   verbose = TRUE
 ) %>% 
   dplyr::glimpse()
@@ -333,7 +331,7 @@ oa_fetch(
 
 The bibliometrix R-package (<https://www.bibliometrix.org>) provides a set of tools for quantitative research in bibliometrics and scientometrics.
 Today it represents one of the most used science mapping software in the world.
-In a recent survey on bibliometric analysis tools, Moral-Muñoz et al. (2020) wrote: “At this moment, maybe Bibliometrix and its Shiny platform contain the more extensive set of techniques implemented, and together with the easiness of its interface, could be a great software for practitioners”.
+In a recent survey on bibliometric analysis tools, Moral-Muñoz et al. (2020) wrote: "At this moment, maybe Bibliometrix and its Shiny platform contain the more extensive set of techniques implemented, and together with the easiness of its interface, could be a great software for practitioners".
 
 The function **oa2bibliometrix** converts a bibliographic data frame of works into a bibliometrix object.
 This object can be used as input collection of a science mapping workflow.
@@ -355,8 +353,11 @@ do.call(oa_fetch, bib_ls) %>%
 
 # About OpenAlex
 
-![](https://i.imgur.com/FXTji65.png)
+![oar-img](man/figures/oar.jpeg)
 
+::: {style="text-align: right"}
+Schema credits: [\@dhimmel](https://github.com/dhimmel)
+:::
 
 [OpenAlex](https://openalex.org) is a fully open catalog of the global research system.
 It's named after the ancient [Library of Alexandria](https://en.wikipedia.org/wiki/Library_of_Alexandria).
@@ -373,3 +374,6 @@ There are five types of entities:
 
 -   **Concepts** *tag* Works with a topic
 
+## Acknowledgements
+
+Package hex was made with [Midjourney](https://www.midjourney.com/home/) and thus inherits a [CC BY-NC 4.0 license](https://creativecommons.org/licenses/by-nc/4.0/legalcode).
