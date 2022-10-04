@@ -18,8 +18,10 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/massimoaria/openalexR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/massimoaria/openalexR/actions/workflows/R-CMD-check.yaml) `r badger::badge_cran_download("openalexR", "grand-total")` [![CRAN status](https://www.r-pkg.org/badges/version/openalexR)](https://CRAN.R-project.org/package=openalexR)
+[![R-CMD-check](https://github.com/massimoaria/openalexR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/massimoaria/openalexR/actions/workflows/R-CMD-check.yaml) 
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![CRAN status](https://www.r-pkg.org/badges/version/openalexR)](https://CRAN.R-project.org/package=openalexR)
+`r badger::badge_cran_download("openalexR", "grand-total")` 
 
 <!-- badges: end -->
 
@@ -33,11 +35,11 @@ knitr::opts_chunk$set(
 
 -   `oa2df()`: converts the JSON object in classical bibliographic tibble/data frame.
 
--   `oa_random()`: to get random entity, e.g., `oa_random("works")` gives a different work each time you run it
+-   `oa_random()`: get random entity, _e.g._, `oa_random("works")` gives a different work each time you run it
 
 ## Setup
 
-You can install the developer version of the openalexR from [GitHub](https://github.com) with:
+You can install the developer version of openalexR from [GitHub](https://github.com) with:
 
 ```{r eval=FALSE}
 install.packages("remotes")
@@ -56,7 +58,7 @@ Before we go any further, we highly recommend you set `openalexR.mailto` option 
 options(openalexR.mailto = "example@email.com")
 ```
 
-Bonus point if you put this in your `.Rprofile` with `usethis::edit_r_profile()`.
+Bonus point if you put this in your `.Rprofile` with `file.edit("~/.Rprofile")`.
 
 ```{r warning=FALSE, message=FALSE}
 library(openalexR)
@@ -68,13 +70,13 @@ theme_set(theme_classic())
 ## Examples
 
 There are different [filters](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists)/arguments you can use in `oa_fetch`, depending on which [entity](https://docs.openalex.org/about-the-data) you're interested in: works, authors, venues, institutions, or concepts.
-We show a few examples before.
+We show a few examples below.
 
 ### Works
 
-**Goal**: Download all information about certain publications (given DOIs).
+**Goal**: Download all information about a givens set of publications (known DOIs).
 
-Use `doi` as a [**works** filter](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#works-filters) (either the canonical form with <https://doi.org/> or without):
+Use `doi` as a [works filter](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#works-filters) (either the canonical form with <https://doi.org/> or without):
 
 ```{r}
 oa_fetch(
@@ -86,7 +88,7 @@ oa_fetch(
   knitr::kable()
 ```
 
-**Goal**: Download all works published by a set of authors (given ORCIDs).
+**Goal**: Download all works published by a set of authors (known ORCIDs).
 
 Use `author.orcid` as a filter (for now, we need to provide the canonical form with <https://orcid.org/>):
 
@@ -124,7 +126,7 @@ oa_fetch(
 **Goal**: Download author information when we know their ORCID.
 
 Here, instead of `author.orcid` like earlier, we have to use `orcid` as an argument.
-This may be a little confusing, but again, because this is a different entity (**authors** instead of **works**), we have to use a [different set of filters](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#authors-filters).
+This may be a little confusing, but again, a different entity (**authors** instead of **works**) requires a [different set of filters](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#authors-filters).
 
 ```{r}
 oa_fetch(
@@ -137,7 +139,7 @@ oa_fetch(
 
 **Goal**: Acquire information on the authors of this package.
 
-We can also filter by other [filters](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#authors-filters) such as `display_name` and `has_orcid`:
+We can filter by other [filters](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#authors-filters) such as `display_name` and `has_orcid`:
 
 ```{r}
 oa_fetch(
@@ -151,7 +153,7 @@ oa_fetch(
 
 **Goal**: Download all authors' records of scholars who work at the [University of Naples Federico II](https://explore.openalex.org/institutions/I71267560) (OpenAlex ID: I71267560) and have published at least 500 publications.
 
-Let's first check how many records match the query, then set `count_only = FALSE` to download the entire collection.
+Let's first check how many records match the query, then download the entire collection.
 We can do this by first defining a list of arguments, then adding `count_only` (default `FALSE`) to this list:
 
 ```{r}
@@ -159,7 +161,7 @@ my_arguments <- list(
   entity = "authors",
   last_known_institution.id = "I71267560",
   works_count = ">499"
-  )
+)
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 do.call(oa_fetch, my_arguments) %>% 
@@ -191,7 +193,8 @@ concept_df %>%
   facet_wrap(~ display_name) +
   geom_line(size = 0.7) +
   scale_color_brewer(palette = "Dark2") +
-  labs(x = NULL, y = "Works count") +
+  labs(x = NULL, y = "Works count",
+       title = "We know what happened in 2020.") +
   guides(color = "none") +
   gghighlight(max(works_count) > 99500) +
   NULL
@@ -218,7 +221,8 @@ italy_insts %>%
   geom_col() +
   scale_fill_viridis_d(option = "E") +
   guides(fill = "none") +
-  labs(x = "Total citations", y = NULL) +
+  labs(x = "Total citations", y = NULL,
+       title = "Italian references.") +
   coord_cartesian(expand = FALSE)
 ```
 
@@ -252,7 +256,8 @@ jours %>%
   scale_fill_brewer(palette = "Set1") +
   scale_y_continuous(breaks = 50) +
   guides(fill = "none") +
-  labs(y = NULL, x = NULL)
+  labs(y = NULL, x = NULL,
+       title = "Journal clocks.")
 ```
 
 ## Snowball search

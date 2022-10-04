@@ -6,11 +6,11 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/massimoaria/openalexR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/massimoaria/openalexR/actions/workflows/R-CMD-check.yaml)
-[![](http://cranlogs.r-pkg.org/badges/grand-total/openalexR)](https://cran.r-project.org/package=openalexR)
-[![CRAN
-status](https://www.r-pkg.org/badges/version/openalexR)](https://CRAN.R-project.org/package=openalexR)
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/openalexR)](https://CRAN.R-project.org/package=openalexR)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/openalexR)](https://cran.r-project.org/package=openalexR)
 
 <!-- badges: end -->
 
@@ -32,12 +32,12 @@ concepts with 5 main functions:
 -   `oa2df()`: converts the JSON object in classical bibliographic
     tibble/data frame.
 
--   `oa_random()`: to get random entity, e.g., `oa_random("works")`
-    gives a different work each time you run it
+-   `oa_random()`: get random entity, *e.g.*, `oa_random("works")` gives
+    a different work each time you run it
 
 ## Setup
 
-You can install the developer version of the openalexR from
+You can install the developer version of openalexR from
 [GitHub](https://github.com) with:
 
 ``` r
@@ -62,7 +62,7 @@ options(openalexR.mailto = "example@email.com")
 ```
 
 Bonus point if you put this in your `.Rprofile` with
-`usethis::edit_r_profile()`.
+`file.edit("~/.Rprofile")`.
 
 ``` r
 library(openalexR)
@@ -78,14 +78,14 @@ There are different
 you can use in `oa_fetch`, depending on which
 [entity](https://docs.openalex.org/about-the-data) you’re interested in:
 works, authors, venues, institutions, or concepts. We show a few
-examples before.
+examples below.
 
 ### Works
 
-**Goal**: Download all information about certain publications (given
-DOIs).
+**Goal**: Download all information about a givens set of publications
+(known DOIs).
 
-Use `doi` as a [**works**
+Use `doi` as a [works
 filter](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#works-filters)
 (either the canonical form with <https://doi.org/> or without):
 
@@ -106,7 +106,7 @@ oa_fetch(
 | W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis                    | Massimo Aria     | Corrado Cuccurullo | Journal of Informetrics | <https://doi.org/10.1016/j.joi.2017.08.007>      | FALSE | Data science, Information retrieval                                |
 | W3206431085 | PMLB v1.0: an open-source dataset collection for benchmarking machine learning methods | Joseph D. Romano | Jason H. Moore     | Bioinformatics          | <https://doi.org/10.1093/bioinformatics/btab727> | TRUE  | Benchmarking, Python (programming language), Benchmark (surveying) |
 
-**Goal**: Download all works published by a set of authors (given
+**Goal**: Download all works published by a set of authors (known
 ORCIDs).
 
 Use `author.orcid` as a filter (for now, we need to provide the
@@ -170,9 +170,8 @@ oa_fetch(
 **Goal**: Download author information when we know their ORCID.
 
 Here, instead of `author.orcid` like earlier, we have to use `orcid` as
-an argument. This may be a little confusing, but again, because this is
-a different entity (**authors** instead of **works**), we have to use a
-[different set of
+an argument. This may be a little confusing, but again, a different
+entity (**authors** instead of **works**) requires a [different set of
 filters](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#authors-filters).
 
 ``` r
@@ -191,7 +190,7 @@ oa_fetch(
 
 **Goal**: Acquire information on the authors of this package.
 
-We can also filter by other
+We can filter by other
 [filters](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#authors-filters)
 such as `display_name` and `has_orcid`:
 
@@ -215,21 +214,20 @@ oa_fetch(
 II](https://explore.openalex.org/institutions/I71267560) (OpenAlex ID:
 I71267560) and have published at least 500 publications.
 
-Let’s first check how many records match the query, then set
-`count_only = FALSE` to download the entire collection. We can do this
-by first defining a list of arguments, then adding `count_only` (default
-`FALSE`) to this list:
+Let’s first check how many records match the query, then download the
+entire collection. We can do this by first defining a list of arguments,
+then adding `count_only` (default `FALSE`) to this list:
 
 ``` r
 my_arguments <- list(
   entity = "authors",
   last_known_institution.id = "I71267560",
   works_count = ">499"
-  )
+)
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #>      count db_response_time_ms page per_page
-#> [1,]    24                  31    1        1
+#> [1,]    24                   6    1        1
 do.call(oa_fetch, my_arguments) %>% 
   show_authors() %>%
   knitr::kable()
@@ -269,7 +267,8 @@ concept_df %>%
   facet_wrap(~ display_name) +
   geom_line(size = 0.7) +
   scale_color_brewer(palette = "Dark2") +
-  labs(x = NULL, y = "Works count") +
+  labs(x = NULL, y = "Works count",
+       title = "We know what happened in 2020.") +
   guides(color = "none") +
   gghighlight(max(works_count) > 99500) +
   NULL
@@ -303,7 +302,8 @@ italy_insts %>%
   geom_col() +
   scale_fill_viridis_d(option = "E") +
   guides(fill = "none") +
-  labs(x = "Total citations", y = NULL) +
+  labs(x = "Total citations", y = NULL,
+       title = "Italian references.") +
   coord_cartesian(expand = FALSE)
 ```
 
@@ -342,7 +342,8 @@ jours %>%
   scale_fill_brewer(palette = "Set1") +
   scale_y_continuous(breaks = 50) +
   guides(fill = "none") +
-  labs(y = NULL, x = NULL)
+  labs(y = NULL, x = NULL,
+       title = "Journal clocks.")
 ```
 
 <img src="man/figures/README-big-journals-1.png" width="100%" />
