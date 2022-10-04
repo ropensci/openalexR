@@ -13,3 +13,4 @@
 ^\.github$
 ^\.git$
 ^vignettes/articles$
+^data-raw$
