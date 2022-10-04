@@ -74,3 +74,14 @@ oa_progress <- function(n, text = "converting") {
     total = n, clear = FALSE, width = 60
   )
 }
+
+asl <- function(z) {
+  if (length(z) > 1) return(z)
+
+  z_low <- tolower(z)
+  if (z_low == "true" || z_low == "false") {
+    return(z_low)
+  } else {
+    return(z)
+  }
+}
