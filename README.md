@@ -6,6 +6,11 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/massimoaria/openalexR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/massimoaria/openalexR/actions/workflows/R-CMD-check.yaml)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/openalexR)](https://cran.r-project.org/package=openalexR)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/openalexR)](https://CRAN.R-project.org/package=openalexR)
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 
 <!-- badges: end -->
 
@@ -68,13 +73,21 @@ theme_set(theme_classic())
 
 ## Examples
 
-### From DOIs
+There are different
+[filters](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists)/arguments
+you can use in `oa_fetch`, depending on which
+[entity](https://docs.openalex.org/about-the-data) you’re interested in:
+works, authors, venues, institutions, or concepts. We show a few
+examples before.
+
+### Works
 
 **Goal**: Download all information about certain publications (given
 DOIs).
 
-Use `doi` as a filter (either the canonical form with <https://doi.org/>
-or without):
+Use `doi` as a [**works**
+filter](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#works-filters)
+(either the canonical form with <https://doi.org/> or without):
 
 ``` r
 oa_fetch(
@@ -93,29 +106,11 @@ oa_fetch(
 | W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis                    | Massimo Aria     | Corrado Cuccurullo | Journal of Informetrics | <https://doi.org/10.1016/j.joi.2017.08.007>      | FALSE | Data science, Information retrieval                                |
 | W3206431085 | PMLB v1.0: an open-source dataset collection for benchmarking machine learning methods | Joseph D. Romano | Jason H. Moore     | Bioinformatics          | <https://doi.org/10.1093/bioinformatics/btab727> | TRUE  | Benchmarking, Python (programming language), Benchmark (surveying) |
 
-### From ORCIDs
-
-**Goal**: Download author information when we know their ORCID.
-
-``` r
-oa_fetch(
-  entity = "authors",
-  orcid = c("0000-0003-3737-6565", "0000-0002-8517-9411")
-) %>%
-  show_authors() %>%
-  knitr::kable()
-```
-
-| short_id    | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
-|:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------|
-| A923435168  | Massimo Aria | 0000-0002-8517-9411 |         131 |           2765 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
-| A2610192943 | Trang T. Le  | 0000-0003-3737-6565 |          80 |            563 | University of Pennsylvania       | Genetics, Internal medicine, Statistics  |
-
 **Goal**: Download all works published by a set of authors (given
 ORCIDs).
 
 Use `author.orcid` as a filter (for now, we need to provide the
-canonical form with `https://orcid.org/`):
+canonical form with <https://orcid.org/>):
 
 ``` r
 orcids <- c("0000-0003-3737-6565", "0000-0002-8517-9411")
@@ -139,11 +134,6 @@ oa_fetch(
 | W2952824318 | A Nonlinear Simulation Framework Supports Adjusting for Age When Analyzing BrainAGE                                                       | Trang T. Le           | Tulsa Investigators | Frontiers in Aging Neuroscience | <https://doi.org/10.3389/fnagi.2018.00317>      | TRUE  | Correlation, Mood, Contrast (vision)                        |
 | W2408216567 | Foundations and trends in performance management. A twenty-five years bibliometric analysis in business and public administration domains | Corrado Cuccurullo    | Fabrizia Sarto      | Scientometrics                  | <https://doi.org/10.1007/s11192-016-1948-8>     | FALSE | Administration (probate law), Bibliometrics, Trend analysis |
 | W2281330131 | Coopetition and sustainable competitive advantage. The case of tourist destinations                                                       | Valentina Della Corte | Massimo Aria        | Tourism Management              | <https://doi.org/10.1016/j.tourman.2015.12.009> | FALSE | Competitive advantage, Tourism                              |
-
-### Other filters
-
-*Learn more* about [supported filters for each
-entity](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists).
 
 **Goal**: Download all works that have been cited more than 50 times,
 published between 2020 and 2021, and include the strings “bibliometric
@@ -175,6 +165,51 @@ oa_fetch(
 | W3044902155 | Financial literacy: A systematic review and bibliometric analysis                                                             | Kirti Goyal         | Satish Kumar       | International Journal of Consumer Studies | <https://doi.org/10.1111/ijcs.12605>            | FALSE | Financial literacy, Content analysis, Citation                |
 | W3011866596 | A Bibliometric Analysis of COVID-19 Research Activity: A Call for Increased Output                                            | Mohamad A. Chahrour | Hussein H. Khachfe | Cureus                                    | <https://doi.org/10.7759/cureus.7357>           | TRUE  | Observational study, Gross domestic product, Population       |
 
+### Authors
+
+**Goal**: Download author information when we know their ORCID.
+
+Here, instead of `author.orcid` like earlier, we have to use `orcid` as
+an argument. This may be a little confusing, but again, because this is
+a different entity (**authors** instead of **works**), we have to use a
+[different set of
+filters](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#authors-filters).
+
+``` r
+oa_fetch(
+  entity = "authors",
+  orcid = c("0000-0003-3737-6565", "0000-0002-8517-9411")
+) %>%
+  show_authors() %>%
+  knitr::kable()
+```
+
+| short_id    | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
+|:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------|
+| A923435168  | Massimo Aria | 0000-0002-8517-9411 |         131 |           2765 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
+| A2610192943 | Trang T. Le  | 0000-0003-3737-6565 |          80 |            563 | University of Pennsylvania       | Genetics, Internal medicine, Statistics  |
+
+**Goal**: Acquire information on the authors of this package.
+
+We can also filter by other
+[filters](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#authors-filters)
+such as `display_name` and `has_orcid`:
+
+``` r
+oa_fetch(
+  entity = "authors",
+  display_name = c("Massimo Aria", "Trang T. Le"),
+  has_orcid = "true"
+) %>%
+  show_authors() %>%
+  knitr::kable()
+```
+
+| short_id    | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
+|:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------|
+| A923435168  | Massimo Aria | 0000-0002-8517-9411 |         131 |           2765 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
+| A2610192943 | Trang T. Le  | 0000-0003-3737-6565 |          80 |            563 | University of Pennsylvania       | Genetics, Internal medicine, Statistics  |
+
 **Goal**: Download all authors’ records of scholars who work at the
 [University of Naples Federico
 II](https://explore.openalex.org/institutions/I71267560) (OpenAlex ID:
@@ -194,7 +229,7 @@ my_arguments <- list(
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #>      count db_response_time_ms page per_page
-#> [1,]    24                   5    1        1
+#> [1,]    24                  31    1        1
 do.call(oa_fetch, my_arguments) %>% 
   show_authors() %>%
   knitr::kable()
@@ -202,31 +237,12 @@ do.call(oa_fetch, my_arguments) %>%
 
 | short_id    | display_name             | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                         |
 |:------------|:-------------------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------------------|
-| A2061787601 | Luca Lista               | 0000-0001-6471-5492 |        2474 |          30032 | University of Naples Federico II | Nuclear physics, Particle physics, Quantum mechanics |
+| A2061787601 | Luca Lista               | 0000-0001-6471-5492 |        2474 |          35430 | University of Naples Federico II | Nuclear physics, Particle physics, Quantum mechanics |
 | A2600338221 | Alberto Orso Maria Iorio | 0000-0002-3798-1135 |        1182 |          19226 | University of Naples Federico II | Nuclear physics, Particle physics, Quantum mechanics |
 | A2011452631 | Leonardo Merola          | NA                  |        1115 |          17072 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
 | A3113327292 | Vincenzo Canale          | NA                  |         989 |          13994 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
 | A223517670  | Ettore Novellino         | 0000-0002-2181-2142 |         962 |          16840 | University of Naples Federico II | Biochemistry, Genetics, Organic chemistry            |
 | A2062713547 | G. De Nardo              | NA                  |         959 |          12219 | University of Naples Federico II | Particle physics, Nuclear physics, Quantum mechanics |
-
-You can also filter by other
-[filters](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#authors-filters)
-such as `display_name`, `has_orcid`, and `orcid`:
-
-``` r
-oa_fetch(
-  entity = "authors",
-  display_name = c("Massimo Aria", "Trang T. Le"),
-  has_orcid = "true"
-) %>%
-  show_authors() %>%
-  knitr::kable()
-```
-
-| short_id    | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
-|:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------|
-| A923435168  | Massimo Aria | 0000-0002-8517-9411 |         131 |           2765 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
-| A2610192943 | Trang T. Le  | 0000-0003-3737-6565 |          80 |            563 | University of Pennsylvania       | Genetics, Internal medicine, Statistics  |
 
 ## Example analyses
 
@@ -243,22 +259,6 @@ concept_df <- oa_fetch(
   ancestors.id = "https://openalex.org/C86803240", # Biology
   works_count = ">1000000"
 )
-concept_df %>% 
-  filter(display_name == "Virology") %>% 
-  pull(counts_by_year)
-#> [[1]]
-#>    year works_count cited_by_count
-#> 1  2022       56837        1401108
-#> 2  2021      118190        2053128
-#> 3  2020      139659        1680939
-#> 4  2019       53129        1149304
-#> 5  2018       51521        1093844
-#> 6  2017       51588        1080097
-#> 7  2016       57196        1095530
-#> 8  2015       55614        1120017
-#> 9  2014       56277        1184085
-#> 10 2013       54790        1120909
-#> 11 2012       52773        1021389
 
 concept_df %>% 
   select(display_name, counts_by_year) %>% 
@@ -278,7 +278,7 @@ concept_df %>%
 
 <img src="man/figures/README-biological-concepts-1.png" width="100%" />
 
-**Goal**: Rank institutions in Italy by total number of citations
+**Goal**: Rank institutions in Italy by total number of citations.
 
 We want download all records regarding Italian institutions
 (country_code:it) that are classified as educational (type:education).
@@ -295,11 +295,9 @@ italy_insts <- oa_fetch(
 #> Requesting url: https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation
 #> About to get a total of 2 pages of results with a total of 231 records.
 
-# this is easier with forcats
-italy_insts$display_name <- with(italy_insts, reorder(display_name, cited_by_count)) 
-
 italy_insts %>% 
   slice_max(cited_by_count, n = 8) %>% 
+  mutate(display_name = forcats::fct_reorder(display_name, cited_by_count)) %>%
   ggplot() +
   aes(x = cited_by_count, y = display_name, fill = display_name) +
   geom_col() +
@@ -311,7 +309,7 @@ italy_insts %>%
 
 <img src="man/figures/README-italy-insts-1.png" width="100%" />
 
-**Goal**: Visualize big journals’ topics
+**Goal**: Visualize big journals’ topics.
 
 We first download all records regarding journals that have published
 more than 300,000 works, then visualize their scored concepts:

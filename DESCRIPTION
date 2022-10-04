@@ -34,7 +34,6 @@ Suggests:
     rmarkdown,
     tidyr,
     purrr,
-    gghighlight,
     ggplot2
 VignetteBuilder: 
     knitr

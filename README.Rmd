@@ -18,7 +18,8 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/massimoaria/openalexR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/massimoaria/openalexR/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/massimoaria/openalexR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/massimoaria/openalexR/actions/workflows/R-CMD-check.yaml) `r badger::badge_cran_download("openalexR", "grand-total")` [![CRAN status](https://www.r-pkg.org/badges/version/openalexR)](https://CRAN.R-project.org/package=openalexR)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 
 <!-- badges: end -->
 
@@ -66,10 +67,14 @@ theme_set(theme_classic())
 
 ## Examples
 
-### From DOIs
+There are different [filters](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists)/arguments you can use in `oa_fetch`, depending on which [entity](https://docs.openalex.org/about-the-data) you're interested in: works, authors, venues, institutions, or concepts.
+We show a few examples before.
+
+### Works
+
 **Goal**: Download all information about certain publications (given DOIs).
 
-Use `doi` as a filter (either the canonical form with <https://doi.org/> or without):
+Use `doi` as a [**works** filter](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#works-filters) (either the canonical form with <https://doi.org/> or without):
 
 ```{r}
 oa_fetch(
@@ -81,22 +86,9 @@ oa_fetch(
   knitr::kable()
 ```
 
-### From ORCIDs
-
-**Goal**: Download author information when we know their ORCID.
-
-```{r}
-oa_fetch(
-  entity = "authors",
-  orcid = c("0000-0003-3737-6565", "0000-0002-8517-9411")
-) %>%
-  show_authors() %>%
-  knitr::kable()
-```
-
 **Goal**: Download all works published by a set of authors (given ORCIDs).
 
-Use `author.orcid` as a filter (for now, we need to provide the canonical form with `https://orcid.org/`):
+Use `author.orcid` as a filter (for now, we need to provide the canonical form with <https://orcid.org/>):
 
 ```{r}
 orcids <- c("0000-0003-3737-6565", "0000-0002-8517-9411")
@@ -109,10 +101,6 @@ oa_fetch(
   show_works() %>% 
   knitr::kable()
 ```
-
-### Other filters
-
-_Learn more_ about [supported filters for each entity](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists).
 
 **Goal**: Download all works that have been cited more than 50 times, published between 2020 and 2021, and include the strings "bibliometric analysis" or "science mapping" in the title.
 Maybe we also want the results to be sorted by total citations in a descending order.
@@ -128,6 +116,36 @@ oa_fetch(
   verbose = TRUE
 ) %>%
   show_works() %>%
+  knitr::kable()
+```
+
+### Authors
+
+**Goal**: Download author information when we know their ORCID.
+
+Here, instead of `author.orcid` like earlier, we have to use `orcid` as an argument.
+This may be a little confusing, but again, because this is a different entity (**authors** instead of **works**), we have to use a [different set of filters](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#authors-filters).
+
+```{r}
+oa_fetch(
+  entity = "authors",
+  orcid = c("0000-0003-3737-6565", "0000-0002-8517-9411")
+) %>%
+  show_authors() %>%
+  knitr::kable()
+```
+
+**Goal**: Acquire information on the authors of this package.
+
+We can also filter by other [filters](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#authors-filters) such as `display_name` and `has_orcid`:
+
+```{r}
+oa_fetch(
+  entity = "authors",
+  display_name = c("Massimo Aria", "Trang T. Le"),
+  has_orcid = "true"
+) %>%
+  show_authors() %>%
   knitr::kable()
 ```
 
@@ -149,25 +167,9 @@ do.call(oa_fetch, my_arguments) %>%
   knitr::kable()
 ```
 
-
-You can also filter by other [filters](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#authors-filters) such as `display_name`, `has_orcid`, and `orcid`:
-
-```{r}
-oa_fetch(
-  entity = "authors",
-  display_name = c("Massimo Aria", "Trang T. Le"),
-  has_orcid = "true"
-) %>%
-  show_authors() %>%
-  knitr::kable()
-```
-
-
-
-
 ## Example analyses
 
-**Goal**: track the popularity of _Biology_ concepts over time.
+**Goal**: track the popularity of *Biology* concepts over time.
 
 We first download the records of all level-1 concepts/keywords that concern over one million works:
 
@@ -179,9 +181,6 @@ concept_df <- oa_fetch(
   ancestors.id = "https://openalex.org/C86803240", # Biology
   works_count = ">1000000"
 )
-concept_df %>% 
-  filter(display_name == "Virology") %>% 
-  pull(counts_by_year)
 
 concept_df %>% 
   select(display_name, counts_by_year) %>% 
@@ -198,7 +197,7 @@ concept_df %>%
   NULL
 ```
 
-**Goal**: Rank institutions in Italy by total number of citations
+**Goal**: Rank institutions in Italy by total number of citations.
 
 We want download all records regarding Italian institutions (country_code:it) that are classified as educational (type:education).
 Again, we check how many records match the query then download the collection:
@@ -211,11 +210,9 @@ italy_insts <- oa_fetch(
   verbose = TRUE
 )
 
-# this is easier with forcats
-italy_insts$display_name <- with(italy_insts, reorder(display_name, cited_by_count)) 
-
 italy_insts %>% 
   slice_max(cited_by_count, n = 8) %>% 
+  mutate(display_name = forcats::fct_reorder(display_name, cited_by_count)) %>%
   ggplot() +
   aes(x = cited_by_count, y = display_name, fill = display_name) +
   geom_col() +
@@ -225,7 +222,7 @@ italy_insts %>%
   coord_cartesian(expand = FALSE)
 ```
 
-**Goal**: Visualize big journals' topics
+**Goal**: Visualize big journals' topics.
 
 We first download all records regarding journals that have published more than 300,000 works, then visualize their scored concepts:
 
@@ -258,8 +255,8 @@ jours %>%
   labs(y = NULL, x = NULL)
 ```
 
-
 ## Snowball search
+
 TODO
 
 ## About OpenAlex
