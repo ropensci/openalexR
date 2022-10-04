@@ -5,23 +5,30 @@
 \title{Generate an OpenAlex query from a set of parameters}
 \usage{
 oa_query(
-  ...,
+  filter = NULL,
+  multiple_id = FALSE,
   identifier = NULL,
   entity = if (is.null(entity)) id_type(identifier[[1]]),
   search = NULL,
   sort = NULL,
   group_by = NULL,
   endpoint = "https://api.openalex.org/",
-  verbose = FALSE
+  verbose = FALSE,
+  ...
 )
 }
 \arguments{
-\item{\dots}{Filter arguments. Filters narrow the list down to just entities that meet a particular condition--specifically, a particular value for a particular attribute.
-Filters are formatted as attribute = value. The complete list of filter attributes for each entity can be found
+\item{filter}{Character string.
+Filters narrow the list down to just entities that meet a particular
+condition--specifically, a particular value for a particular attribute.
+Filters are formatted as attribute = value.
+The complete list of filter attributes for each entity can be found at
+\href{https://docs.openalex.org/api/get-lists-of-entities#filter}{https://docs.openalex.org/api/get-lists-of-entities#filter}
 For example, `cited_by_count = ">100"`,
 `title.search = c("bibliometric analysis", "science mapping")`,
-or `to_publication_date = "2021-12-31"`.
-at \href{https://docs.openalex.org/api/get-lists-of-entities#filter}{https://docs.openalex.org/api/get-lists-of-entities#filter}}
+or `to_publication_date = "2021-12-31"`.}
+
+\item{multiple_id}{Logical. Whether there are multiple identifiers.}
 
 \item{identifier}{Character. It indicates an item identifier.}
 
@@ -43,6 +50,8 @@ https://docs.openalex.org/api/get-groups-of-entities}
 \item{endpoint}{is character. It indicates the url of the OpenAlex Endpoint API server. The default value is endpoint = "https://api.openalex.org/".}
 
 \item{verbose}{is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=FALSE}.}
+
+\item{\dots}{Additional filter arguments.}
 }
 \value{
 a character containing the query in OpenAlex format.

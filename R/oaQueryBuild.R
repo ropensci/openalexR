@@ -2,16 +2,20 @@
 #'
 #' It generates a valid query, written following the OpenAlex API Language, from a set of parameters.
 #'
+#' @param filter Character string.
+#' Filters narrow the list down to just entities that meet a particular
+#' condition--specifically, a particular value for a particular attribute.
+#' Filters are formatted as attribute = value.
+#' The complete list of filter attributes for each entity can be found at
+#' \href{https://docs.openalex.org/api/get-lists-of-entities#filter}{https://docs.openalex.org/api/get-lists-of-entities#filter}
+#' For example, `cited_by_count = ">100"`,
+#' `title.search = c("bibliometric analysis", "science mapping")`,
+#' or `to_publication_date = "2021-12-31"`.
+#' @param multiple_id Logical. Whether there are multiple identifiers.
 #' @param identifier Character. It indicates an item identifier.
 #' @param entity Character. It indicates the scholarly entity of the search.
 #' The argument can be one of c("works", "authors", "venues", "institutions", "concepts").
 #' If not provided, `entity` is guessed from `identifier`.
-#' @param \dots Filter arguments. Filters narrow the list down to just entities that meet a particular condition--specifically, a particular value for a particular attribute.
-#' Filters are formatted as attribute = value. The complete list of filter attributes for each entity can be found
-#' For example, `cited_by_count = ">100"`,
-#' `title.search = c("bibliometric analysis", "science mapping")`,
-#' or `to_publication_date = "2021-12-31"`.
-#' at \href{https://docs.openalex.org/api/get-lists-of-entities#filter}{https://docs.openalex.org/api/get-lists-of-entities#filter}
 #' @param sort Character. Property to sort by.
 #' For example: "display_name" for venues or "cited_by_count:desc" for works.
 #' See more at <https://docs.openalex.org/api/get-lists-of-entities/sort-entity-lists>.
@@ -22,6 +26,7 @@
 #' To filter using search, append .search to the end of the property you're filtering for.
 #' @param endpoint is character. It indicates the url of the OpenAlex Endpoint API server. The default value is endpoint = "https://api.openalex.org/".
 #' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=FALSE}.
+#' @param \dots Additional filter arguments.
 #'
 #' @return a character containing the query in OpenAlex format.
 #'
@@ -95,27 +100,19 @@
 #' @export
 #'
 
-oa_query <- function(...,
+oa_query <- function(filter = NULL,
+                     multiple_id = FALSE,
                      identifier = NULL, ## identifier of a work, author, venue, etc.
                      entity = if (is.null(entity)) id_type(identifier[[1]]),
                      search = NULL,
                      sort = NULL,
                      group_by = NULL,
                      endpoint = "https://api.openalex.org/",
-                     verbose = FALSE) {
+                     verbose = FALSE,
+                     ...) {
 
   entity <- match.arg(entity, oa_entities())
-  filter <- list(...)
-  multiple_id <- length(identifier) > 1
-
-  # if multiple identifiers are provided, use openalex_id or doi as a filter property
-  if (multiple_id){
-    if (regexpr("https://doi.org",identifier[[1]])>-1){
-      filter <-  c(filter, list(doi = identifier))
-    } else{
-      filter <-  c(filter, list(openalex_id = identifier))
-    }
-  }
+  filter <- c(filter, list(...))
 
   if (length(filter) > 0 || multiple_id) {
     flt_ready <- mapply(append_flt, filter, names(filter))
@@ -149,7 +146,7 @@ oa_query <- function(...,
     query = query
   )
 
-  if (verbose) print(query_url)
+  if (verbose) message("Requesting url: ", query_url)
 
   query_url
 }
