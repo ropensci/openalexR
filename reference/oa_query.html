@@ -29,6 +29,9 @@
     <a class="dropdown-item" href="../articles/institution.html">Transition towards Open Access</a>
   </div>
 </li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -57,26 +60,35 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">oa_query</span><span class="op">(</span></span>
-<span>  <span class="va">...</span>,</span>
+<span>  filter <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  multiple_id <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  identifier <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  entity <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">entity</span><span class="op">)</span><span class="op">)</span> <span class="fu">id_type</span><span class="op">(</span><span class="va">identifier</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,</span>
 <span>  search <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  sort <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  group_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  endpoint <span class="op">=</span> <span class="st">"https://api.openalex.org/"</span>,</span>
-<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>...</dt>
-<dd><p>Filter arguments. Filters narrow the list down to just entities that meet a particular condition--specifically, a particular value for a particular attribute.
-Filters are formatted as attribute = value. The complete list of filter attributes for each entity can be found
+    <dl><dt>filter</dt>
+<dd><p>Character string.
+Filters narrow the list down to just entities that meet a particular
+condition--specifically, a particular value for a particular attribute.
+Filters are formatted as attribute = value.
+The complete list of filter attributes for each entity can be found at
+<a href="https://docs.openalex.org/api/get-lists-of-entities#filter" class="external-link">https://docs.openalex.org/api/get-lists-of-entities#filter</a>
 For example, `cited_by_count = "&gt;100"`,
 `title.search = c("bibliometric analysis", "science mapping")`,
-or `to_publication_date = "2021-12-31"`.
-at <a href="https://docs.openalex.org/api/get-lists-of-entities#filter" class="external-link">https://docs.openalex.org/api/get-lists-of-entities#filter</a></p></dd>
+or `to_publication_date = "2021-12-31"`.</p></dd>
+
+
+<dt>multiple_id</dt>
+<dd><p>Logical. Whether there are multiple identifiers.</p></dd>
 
 
 <dt>identifier</dt>
@@ -112,6 +124,10 @@ https://docs.openalex.org/api/get-groups-of-entities</p></dd>
 
 <dt>verbose</dt>
 <dd><p>is a logical. If TRUE, information about the querying process will be plotted on screen. Default is <code>verbose=FALSE</code>.</p></dd>
+
+
+<dt>...</dt>
+<dd><p>Additional filter arguments.</p></dd>
 
 </dl></div>
     <div class="section level2">
