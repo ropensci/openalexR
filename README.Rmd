@@ -9,7 +9,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  out.width = "100%",
+  dpi = 300
 )
 ```
 
@@ -18,9 +19,12 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/massimoaria/openalexR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/massimoaria/openalexR/actions/workflows/R-CMD-check.yaml)
+
 <!-- badges: end -->
 
-**openalexR** helps you interface with the [OpenAlex](https://openalex.org) API to retrieve bibliographic infomation about publications, authors, venues, institutions and concepts with 4 main functions:
+**openalexR** helps you interface with the [OpenAlex](https://openalex.org) API to retrieve bibliographic infomation about publications, authors, venues, institutions and concepts with 5 main functions:
+
+-   `oa_fetch()`: composes three functions below so the user can execute everything in one step, *i.e.*, `oa_query |> oa_request |> oa2df`
 
 -   `oa_query()`: generates a valid query, written following the OpenAlex API syntax, from a set of arguments provided by the user.
 
@@ -28,11 +32,9 @@ knitr::opts_chunk$set(
 
 -   `oa2df()`: converts the JSON object in classical bibliographic tibble/data frame.
 
--   `oa_fetch()`: composes three functions above so the user can execute everything in one step, *i.e.*, `oa_query |> oa_request |> oa2df`
-
 -   `oa_random()`: to get random entity, e.g., `oa_random("works")` gives a different work each time you run it
 
-## Installation
+## Setup
 
 You can install the developer version of the openalexR from [GitHub](https://github.com) with:
 
@@ -55,77 +57,22 @@ options(openalexR.mailto = "example@email.com")
 
 Bonus point if you put this in your `.Rprofile` with `usethis::edit_r_profile()`.
 
-## Package loading
-
 ```{r warning=FALSE, message=FALSE}
 library(openalexR)
 library(dplyr)
+library(ggplot2)
+theme_set(theme_classic())
 ```
 
-## Works (think papers, publications)
+## Examples
 
-This paper:
+### From DOIs
+**Goal**: Download all information about certain publications (given DOIs).
 
-    Aria, M., & Cuccurullo, C. (2017). bibliometrix: 
-    An R-tool for comprehensive science mapping analysis. 
-    Journal of informetrics, 11(4), 959-975.
-
-is associated to the [OpenAlex-id](https://docs.openalex.org/about-the-data#the-openalex-id) **W2755950973**. If you know your paper's OpenAlex ID, all you need to do is passing `identifier = <openalex id>` as an argument in `oa_fetch()`:
-
-```{r}
-paper_id <- oa_fetch(
-  identifier = "W2755950973",
-  entity = "works",
-  verbose = TRUE
-)
-dplyr::glimpse(paper_id)
-```
-
-`oa_fetch()` is a composition of functions: `oa_query |> oa_request |> oa2df`. As results, `oa_query()` returns the query string including the OpenAlex endpoint API server address (default). `oa_request()` downloads the bibliographic records matching the query. Finally, `oa2df()` converts the final result list to a tibble. The final result is a complicated tibble, but we can use `show_works()` to display a simplified version:
-
-```{r}
-paper_id %>% 
-  show_works() %>%
-  knitr::kable()
-```
-
-### External id formats
-
-OpenAlex endpoint accepts OpenAlex IDs and other [external IDs](https://docs.openalex.org/api/get-single-entities#id-formats) (*e.g.*, DOI, ISSN) in several formats, including Digital Object Identifier (DOI) and Persistent Identifiers (PIDs).
+Use `doi` as a filter (either the canonical form with <https://doi.org/> or without):
 
 ```{r}
 oa_fetch(
-  # identifier = "https://doi.org/10.1016/j.joi.2017.08.007", # would also work (PIDs)
-  identifier = "doi:10.1016/j.joi.2017.08.007",
-  entity = "works"
-) %>% 
-  show_works() %>%
-  knitr::kable()
-```
-
-### More than one publications/authors
-
-[https://api.openalex.org/authors/https://orcid.org/](https://api.openalex.org/authors/https://orcid.org/0000-0003-1613-5981)
-
-If you know the OpenAlex IDs of these entities, you can also feed them into the `identifier` argument.
-
-```{r}
-oa_fetch(
-  identifier = c("W2741809807", "W2755950973"),
-  # identifier = c("https://doi.org/10.1016/j.joi.2017.08.007", "https://doi.org/10.1016/j.joi.2017.08.007"), # TODO
-  entity = "works",
-  verbose = TRUE
-) %>% 
-  show_works() %>%
-  knitr::kable()
-
-```
-
-However, if you only know their external identifies, say, DOIs, you would need to use `doi` as a filter (either the canonical form with <https://doi.org/> or without should work):
-
-```{r}
-oa_fetch(
-  # identifier = c("W2741809807", "W2755950973"),
   doi = c("10.1016/j.joi.2017.08.007", "https://doi.org/10.1093/bioinformatics/btab727"),
   entity = "works",
   verbose = TRUE
@@ -134,22 +81,24 @@ oa_fetch(
   knitr::kable()
 ```
 
-### Filters
+### From ORCIDs
 
-In most cases, we are interested in downloading a collection of items that meet one or more inclusion/exclusion criteria (filters). Supported attributes for each endpoints are listed [here](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists).
-
-**Example**: We want to download all works published by a set of authors.
-We can do this by filtering on the authorships.author.id/author.id or  authorships.author.orcid/author.orcid attribute (see more on attributes [here](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#works-attribute-filters)):
+**Goal**: Download author information when we know their ORCID.
 
 ```{r}
 oa_fetch(
-  entity = "works",
-  author.id = c("A923435168", "A2208157607"),
-  verbose = TRUE
-) %>% 
-  show_works() %>% 
+  entity = "authors",
+  orcid = c("0000-0003-3737-6565", "0000-0002-8517-9411")
+) %>%
+  show_authors() %>%
   knitr::kable()
+```
 
+**Goal**: Download all works published by a set of authors (given ORCIDs).
+
+Use `author.orcid` as a filter (for now, we need to provide the canonical form with `https://orcid.org/`):
+
+```{r}
 orcids <- c("0000-0003-3737-6565", "0000-0002-8517-9411")
 canonical_orcids <- paste0("https://orcid.org/", orcids)
 oa_fetch(
@@ -161,63 +110,31 @@ oa_fetch(
   knitr::kable()
 ```
 
-**Example**: We want to download all works that have been cited more than 50 times, published between 2020 and 2021, and include the strings "bibliometric analysis" or "science mapping" in the title.
+### Other filters
+
+_Learn more_ about [supported filters for each entity](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists).
+
+**Goal**: Download all works that have been cited more than 50 times, published between 2020 and 2021, and include the strings "bibliometric analysis" or "science mapping" in the title.
 Maybe we also want the results to be sorted by total citations in a descending order.
 
-Setting the argument `count_only = TRUE`, the function `oa_request()` returns the number of items matching the query without downloading the collection.
-
 ```{r}
 oa_fetch(
-  identifier = NULL,
   entity = "works",
   title.search = c("bibliometric analysis", "science mapping"),
   cited_by_count = ">50", 
   from_publication_date = "2020-01-01",
   to_publication_date = "2021-12-31",
-  search = NULL,
   sort = "cited_by_count:desc",
-  endpoint = "https://api.openalex.org/",
-  count_only = TRUE,
   verbose = TRUE
-)
-```
-
-We can now download the records and transform it into a tibble/data frame by setting `count_only = FALSE` (also the default value):
-
-```{r}
-oa_fetch(
-  entity = "works",
-  title.search = c("bibliometric analysis", "science mapping"),
-  cited_by_count = ">50", 
-  from_publication_date = "2020-01-01",
-  to_publication_date = "2021-12-31",
-  sort = "cited_by_count:desc",
-  count_only = FALSE
 ) %>%
   show_works() %>%
   knitr::kable()
 ```
 
-Read on to see how we can shorten these two function calls.
+**Goal**: Download all authors' records of scholars who work at the [University of Naples Federico II](https://explore.openalex.org/institutions/I71267560) (OpenAlex ID: I71267560) and have published at least 500 publications.
 
-## Authors
-
-Similarly to work, we can use identifier to pass in authors' OpenAlex ID.
-
-**Example**: We want more information on authors with IDs **A923435168** and **A2208157607**.
-
-```{r}
-oa_fetch(
-  identifier = c("A923435168", "A2208157607"),
-  verbose = TRUE
-) %>%
-  show_authors() %>%
-  knitr::kable()
-```
-
-**Example**: We want download all authors' records of scholars who work at the University of Naples Federico II (OpenAlex ID: I71267560) and who have published more than 499 works.
-
-Let's first check how many records match the query, then set `count_only = FALSE` to download the entire collection. We can do this by first defining a list of arguments, then adding `count_only` (default `FALSE`) to this list:
+Let's first check how many records match the query, then set `count_only = FALSE` to download the entire collection.
+We can do this by first defining a list of arguments, then adding `count_only` (default `FALSE`) to this list:
 
 ```{r}
 my_arguments <- list(
@@ -232,131 +149,131 @@ do.call(oa_fetch, my_arguments) %>%
   knitr::kable()
 ```
 
+
 You can also filter by other [filters](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#authors-filters) such as `display_name`, `has_orcid`, and `orcid`:
 
 ```{r}
 oa_fetch(
   entity = "authors",
-  display_name = "Massimo Aria",
+  display_name = c("Massimo Aria", "Trang T. Le"),
   has_orcid = "true"
-) %>%
-  show_authors() %>%
-  knitr::kable()
-
-oa_fetch(
-  entity = "authors",
-  orcid = "0000-0002-8517-9411"
 ) %>%
   show_authors() %>%
   knitr::kable()
 ```
 
-## Institutions
 
-**Example**: We want download all records regarding Italian institutions (country_code:it) that are classified as educational (type:education). Again, we check how many records match the query then download the collection:
 
-```{r}
-italian_insts <- list(
+
+## Example analyses
+
+**Goal**: track the popularity of _Biology_ concepts over time.
+
+We first download the records of all level-1 concepts/keywords that concern over one million works:
+
+```{r biological-concepts}
+library(gghighlight)
+concept_df <- oa_fetch(
+  entity = "concepts",
+  level = 1,
+  ancestors.id = "https://openalex.org/C86803240", # Biology
+  works_count = ">1000000"
+)
+concept_df %>% 
+  filter(display_name == "Virology") %>% 
+  pull(counts_by_year)
+
+concept_df %>% 
+  select(display_name, counts_by_year) %>% 
+  tidyr::unnest(counts_by_year) %>% 
+  filter(year < 2022) %>% 
+  ggplot() +
+  aes(x = year, y = works_count, color = display_name) +
+  facet_wrap(~ display_name) +
+  geom_line(size = 0.7) +
+  scale_color_brewer(palette = "Dark2") +
+  labs(x = NULL, y = "Works count") +
+  guides(color = "none") +
+  gghighlight(max(works_count) > 99500) +
+  NULL
+```
+
+**Goal**: Rank institutions in Italy by total number of citations
+
+We want download all records regarding Italian institutions (country_code:it) that are classified as educational (type:education).
+Again, we check how many records match the query then download the collection:
+
+```{r italy-insts, fig.height=3.5, fig.width=7}
+italy_insts <- oa_fetch(
   entity = "institutions",
   country_code = "it",
   type = "education",
   verbose = TRUE
 )
 
-do.call(oa_fetch, c(italian_insts, list(count_only = TRUE)))
-dplyr::glimpse(do.call(oa_fetch, italian_insts))
+# this is easier with forcats
+italy_insts$display_name <- with(italy_insts, reorder(display_name, cited_by_count)) 
+
+italy_insts %>% 
+  slice_max(cited_by_count, n = 8) %>% 
+  ggplot() +
+  aes(x = cited_by_count, y = display_name, fill = display_name) +
+  geom_col() +
+  scale_fill_viridis_d(option = "E") +
+  guides(fill = "none") +
+  labs(x = "Total citations", y = NULL) +
+  coord_cartesian(expand = FALSE)
 ```
 
-## Venues (think journals)
+**Goal**: Visualize big journals' topics
 
-**Example**: We want download all records regarding journals that have published more than 100,000 works:
+We first download all records regarding journals that have published more than 300,000 works, then visualize their scored concepts:
 
-```{r}
-big_journals <- list(
+```{r big-journals, fig.height=8, fig.width=8}
+jours <- oa_fetch(
   entity = "venues",
-  works_count = ">100000",
+  works_count = ">300000",
   verbose = TRUE
 )
 
-do.call(oa_fetch, c(big_journals, list(count_only = TRUE)))
-dplyr::glimpse(do.call(oa_fetch, big_journals))
+jours %>% 
+  distinct(display_name, .keep_all = TRUE) %>% 
+  select(jour = display_name, x_concepts) %>% 
+  tidyr::unnest(x_concepts) %>% 
+  filter(level == 0) %>% 
+  tidyr::complete(jour, display_name, fill = list(score = 0)) %>% 
+  group_by(jour) %>% 
+  ggplot() +
+  aes(fill = jour, y = score, x= display_name, group = jour) +
+  facet_wrap(~ jour) +
+  geom_col(color = "grey20") +
+  coord_polar(clip = "off") +
+  theme_bw() +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.text.x = element_text(size = 8)) +
+  scale_fill_brewer(palette = "Set1") +
+  scale_y_continuous(breaks = 50) +
+  guides(fill = "none") +
+  labs(y = NULL, x = NULL)
 ```
 
-## Concepts (think theme, keywords)
 
-**Example**: We want to download the records of all the concepts that concern at least one million works:
+## Snowball search
+TODO
 
-```{r}
-popular_concepts <- list(
-  entity = "concepts",
-  works_count = ">1000000",
-  verbose = TRUE
-)
-
-do.call(oa_fetch, c(popular_concepts, list(count_only = TRUE)))
-dplyr::glimpse(do.call(oa_fetch, popular_concepts))
-```
-
-## Other examples
-
-*Get all works citing a particular work*
-
-We can download all publications citing another publication by using the filter attribute **cites**.
-
-For example, if we want to download all publications citing the article Aria and Cuccurullo (2017), we have just to set the argument filter as `cites = "W2755950973"` where "W2755950973" is the OA id for the article by Aria and Cuccurullo.
-
-```{r}
-aria_count <- oa_fetch(
-  entity = "works",
-  cites = "W2755950973",
-  count_only = TRUE,
-  verbose = TRUE
-) 
-aria_count
-```
-
-This query will return a collection of `r aria_count["count"]` publications.
-Among these articles, let's download the ones published in the following year:
-
-```{r}
-oa_fetch(
-  entity = "works",
-  cites = "W2755950973",
-  publication_year = 2018,
-  count_only = FALSE,
-  verbose = TRUE
-) %>% 
-  dplyr::glimpse()
-```
-
-## Convert an OpenAlex data frame to a bibliometrix object
-
-The bibliometrix R-package (<https://www.bibliometrix.org>) provides a set of tools for quantitative research in bibliometrics and scientometrics. Today it represents one of the most used science mapping software in the world. In a recent survey on bibliometric analysis tools, Moral-Muñoz et al. (2020) wrote: "At this moment, maybe Bibliometrix and its Shiny platform contain the more extensive set of techniques implemented, and together with the easiness of its interface, could be a great software for practitioners".
-
-The function **oa2bibliometrix** converts a bibliographic data frame of works into a bibliometrix object. This object can be used as input collection of a science mapping workflow.
-
-```{r}
-bib_ls <- list(
-  identifier = NULL,
-  entity = "works",
-  cites = "W2755950973",
-  from_publication_date = "2022-01-01",
-  to_publication_date = "2022-03-31"
-)
-
-do.call(oa_fetch, c(bib_ls, list(count_only = TRUE)))
-do.call(oa_fetch, bib_ls) %>% 
-  oa2bibliometrix() %>% 
-  dplyr::glimpse()
-```
-
-# About OpenAlex
+## About OpenAlex
 
 ![oar-img](man/figures/oar.jpeg)
 
-<div style="text-align: right"> Schema credits: [@dhimmel](https://github.com/dhimmel) </div>
+::: {style="text-align: right"}
+Schema credits: [\@dhimmel](https://github.com/dhimmel)
+:::
 
-[OpenAlex](https://openalex.org) is a fully open catalog of the global research system. It's named after the ancient [Library of Alexandria](https://en.wikipedia.org/wiki/Library_of_Alexandria). The OpenAlex dataset describes scholarly entities and how those entities are connected to each other. There are five types of entities:
+[OpenAlex](https://openalex.org) is a fully open catalog of the global research system.
+It's named after the ancient [Library of Alexandria](https://en.wikipedia.org/wiki/Library_of_Alexandria).
+The OpenAlex dataset describes scholarly entities and how those entities are connected to each other.
+There are five types of entities:
 
 -   **Works** are papers, books, datasets, etc; they cite other works
 
