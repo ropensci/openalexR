@@ -14,7 +14,8 @@
 #' @return A list containing 2 elements:
 #' - nodes: dataframe with publication records
 #' - edges: publication link dataframe of 2 columns `from, to`
-#' such that a row `A, B` means A cites B.
+#' such that a row `A, B` means A -> B means A cites B.
+#' In bibliometrics, the "citation action" comes from A to B.
 #'
 #' @export
 #'
@@ -150,7 +151,7 @@ to_disk <- function(snowball){
     dplyr::filter(.data$to %in% ids) %>%
     dplyr::group_by(id = .data$to) %>%
     dplyr::summarise(
-      cited_by = paste(.data$from, collapse = ", "),
+      cited_by = paste(.data$from, collapse = ";"),
       .groups = "drop"
     )
 
