@@ -49,7 +49,7 @@ oaAuthors2df <- function(data, verbose = TRUE) {
   }
 
   if (length(data) == 0 || is.null(data[[1]]$id)) {
-    message("The list does not contain a valid OpenAlex collection.")
+    message("One list does not contain a valid OpenAlex collection")
     return()
   }
 

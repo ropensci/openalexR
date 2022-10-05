@@ -57,7 +57,7 @@ oaWorks2df <- function(data, abstract = TRUE, verbose = TRUE) {
   }
 
   if (length(data) == 0 || is.null(data[[1]]$id)) {
-    message("the list does not contain a valid OpenAlex collection")
+    message("One list does not contain a valid OpenAlex collection")
     return()
   }
 
