@@ -14,7 +14,7 @@ oa_snowball(
 )
 }
 \arguments{
-\item{identifier}{Character. It indicates a vector of openalex_id identifiers.}
+\item{identifier}{Character vector of openalex_id identifiers.}
 
 \item{id_type}{Type of OpenAlex IDs to return. Defaults to "short",
 which remove the prefix https://openalex.org/ in the works' IDs,
@@ -22,14 +22,19 @@ for example, W2755950973.
 If "original", the OpenAlex IDs are kept as are,
 for example, https://openalex.org/W2755950973}
 
-\item{mailto}{is a character. To get into the polite pool, the arguments mailto have to give OpenAlex an email where they can contact you.}
+\item{mailto}{Character string. Gives OpenAlex an email to enter the polite pool.}
 
-\item{endpoint}{is character. It indicates the url of the OpenAlex Endpoint API server. The default value is endpoint = "https://api.openalex.org/".}
+\item{endpoint}{Character. URL of the OpenAlex Endpoint API server.
+Defaults to endpoint = "https://api.openalex.org/".}
 
-\item{verbose}{is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=FALSE}.}
+\item{verbose}{Logical. If TRUE, information about the querying process will
+be plotted on screen. Default to \code{verbose = FALSE}.}
 }
 \value{
-A list containing 2 objects: relationship links among documents (from -> to); data frame with publication records.
+A list containing 2 elements:
+- nodes: dataframe with publication records
+- edges: publication link dataframe of 2 columns `from, to`
+such that a row `A, B` means A cites B.
 }
 \description{
 A function to perform a snowball search

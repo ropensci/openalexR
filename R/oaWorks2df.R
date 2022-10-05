@@ -1,12 +1,11 @@
-utils::globalVariables("progress_bar")
 #' Convert OpenAlex collection of works from list format to data frame
 #'
 #' It converts bibliographic collection of works gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
 #' The function converts a list of works obtained using \code{oa_request} into a data frame/tibble.
 #'
-#' @param data is a list. data is the output of the function \code{oa_request}.
-#' @param abstract Logical. If TRUE, the function returns also the abstract of each item. Default is \code{abstract=TRUE}.
-#' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.
+#' @param abstract Logical. If TRUE, the function returns also the abstract of each item.
+#' Defaults to TRUE.
+#' @inheritParams oa2df
 #'
 #' @return a data.frame.
 #'

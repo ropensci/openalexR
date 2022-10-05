@@ -7,9 +7,10 @@
 oaInstitutions2df(data, verbose = TRUE)
 }
 \arguments{
-\item{data}{is a list. data is the output of the function \code{oa_request}.}
+\item{data}{List. Output of \code{oa_request}.}
 
-\item{verbose}{is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.}
+\item{verbose}{Logical. If TRUE, information about the querying process will
+be plotted on screen. Default to \code{verbose = FALSE}.}
 }
 \value{
 a data.frame.

@@ -3,20 +3,13 @@
 #' It converts bibliographic collections gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
 #' The function converts a collection of records about works, authors, institutions, venues or concepts obtained using \code{oa_request} into a data frame/tibble.
 #'
-#' @param data is a list. data is the output of the function \code{oa_request}.
-#' @param entity is a character. It indicates the scholarly entity of the search. The argument can be equal to
-#' entity = c("works", "authors", "venues", "institutions", "concepts"). The default value is entity = works".
-#' @param abstract Logical. If TRUE, the function returns also the abstract of each item. Default is \code{abstract=TRUE}.
-#' The argument is ignored if entity is different from "works".
-#' @param count_only Logical. If TRUE, the function returns only the number of item matching the query. Default is \code{count_only=FALSE}.
-#' @param group_by Character. Property to group by.
-#' For example: "oa_status" for works.
-#' https://docs.openalex.org/api/get-groups-of-entities
-#' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.
-#' @return a data.frame.
-#'
-#' For more extensive information about OpenAlex API, please visit: \href{https://docs.openalex.org/api}{https://docs.openalex.org/api}
-#'
+#' @param data List. Output of \code{oa_request}.
+#' @param entity Character. Scholarly entity of the search.
+#' The argument can be one of c("works", "authors", "venues", "institutions", "concepts").
+#' @param abstract Logical. If TRUE, the function returns also the abstract of each item.
+#' Ignored if entity is different from "works". Defaults to TRUE.
+#' @inheritParams oa_query
+#' @inheritParams oa_request
 #'
 #' @examples
 #' \dontrun{

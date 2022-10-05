@@ -1,6 +1,3 @@
-# library(progress)
-utils::globalVariables("progress_bar")
-
 #' Available entities in the OpenAlex database
 #'
 #' @return Character vector of 5 entity options.
@@ -103,7 +100,7 @@ oa_fetch <- function(...,
   if (output == "dataframe") output <- "tibble"
   filter <- list(...)
 
-  # if multiple identifiers are provided, use openalex_id or doi as a filter property
+  # if multiple identifiers are provided, use openalex_id or doi as a filter attribute
   multiple_id <- length(identifier) > 1
   if (multiple_id) filter <- c(filter, list(openalex_id = identifier))
 
@@ -157,19 +154,25 @@ oa_fetch <- function(...,
   )
 }
 
-
-#' Get bibliographic records from OpenAlex databases
+#' Get bibliographic records from OpenAlex database
 #'
-#' It gets bibliographic records from OpenAlex database \href{https://openalex.org/}{https://openalex.org/}.
+#' `oa_request` makes a request and downloads bibliographic records from OpenAlex database \href{https://openalex.org/}{https://openalex.org/}.
 #' The function \code{oa_request} queries OpenAlex database using a query formulated through the function \code{oa_query}.
 #'
-#' @param query_url is a character. It contains a search query formulated using the OpenAlex API language. A query can be automatically generated using the function \code{oa_query}.
-#' @param per_page is a numeric. It indicates how many items to download per page. The per-page argument can assume any number between 1 and 200. Default is \code{per_page=200}.
-#' @param count_only is a logical. If TRUE, the function returns only the number of item matching the query. Default is \code{count_only=FALSE}.
-#' @param mailto is a character. To get into the polite pool, the arguments mailto have to give OpenAlex an email where they can contact you.
-#' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=FALSE}.
+#' @param query_url Character string.
+#' A search query formulated using the OpenAlex API language and
+#' can be generated with \code{oa_query}.
+#' @param per_page Numeric. Number of items to download per page.
+#' The per-page argument can assume any number between 1 and 200.
+#' Defaults to 200.
+#' @param count_only Logical.
+#' If TRUE, the function returns only the number of item matching the query.
+#' Defaults to FALSE.
+#' @param mailto Character string. Gives OpenAlex an email to enter the polite pool.
+#' @param verbose Logical.
+#' If TRUE, print information about the querying process. Defaults to TRUE.
 #'
-#' @return a data.frame or a list.
+#' @return a data.frame or a list of bibliographic records.
 #'
 #' For more extensive information about OpenAlex API, please visit: \href{https://docs.openalex.org/api}{https://docs.openalex.org/api}
 #'

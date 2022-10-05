@@ -11,13 +11,14 @@ oa_random(
 )
 }
 \arguments{
-\item{entity}{Character. It indicates the scholarly entity of the search.
+\item{entity}{Character. Scholarly entity of the search.
 The argument can be one of c("works", "authors", "venues", "institutions", "concepts").
 If not provided, `entity` is guessed from `identifier`.}
 
 \item{output}{Character. Type of output, either a list or a tibble/data.frame.}
 
-\item{endpoint}{is character. It indicates the url of the OpenAlex Endpoint API server. The default value is endpoint = "https://api.openalex.org/".}
+\item{endpoint}{Character. URL of the OpenAlex Endpoint API server.
+Defaults to endpoint = "https://api.openalex.org/".}
 }
 \value{
 A data.frame or a list. One row or one element.

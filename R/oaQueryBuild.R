@@ -7,30 +7,35 @@
 #' condition--specifically, a particular value for a particular attribute.
 #' Filters are formatted as attribute = value.
 #' The complete list of filter attributes for each entity can be found at
-#' \href{https://docs.openalex.org/api/get-lists-of-entities#filter}{https://docs.openalex.org/api/get-lists-of-entities#filter}
+#' <https://docs.openalex.org/api/get-lists-of-entities#filter>.
 #' For example, `cited_by_count = ">100"`,
 #' `title.search = c("bibliometric analysis", "science mapping")`,
 #' or `to_publication_date = "2021-12-31"`.
 #' @param multiple_id Logical. Whether there are multiple identifiers.
-#' @param identifier Character. It indicates an item identifier.
-#' @param entity Character. It indicates the scholarly entity of the search.
+#' @param identifier Character. OpenAlex ID(s) as item identifier(s).
+#' See more at <https://docs.openalex.org/about-the-data#the-openalex-id>.
+#' @param entity Character. Scholarly entity of the search.
 #' The argument can be one of c("works", "authors", "venues", "institutions", "concepts").
 #' If not provided, `entity` is guessed from `identifier`.
-#' @param sort Character. Property to sort by.
+#' @param sort Character. Attribute to sort by.
 #' For example: "display_name" for venues or "cited_by_count:desc" for works.
 #' See more at <https://docs.openalex.org/api/get-lists-of-entities/sort-entity-lists>.
-#' @param group_by Character. Property to group by.
+#' @param group_by Character. Attribute to group by.
 #' For example: "oa_status" for works.
-#' https://docs.openalex.org/api/get-groups-of-entities
-#' @param search Character. Search is just another kind of filter, one that all five endpoints support. But unlike the other filters, search doesn't require an exact match.
-#' To filter using search, append .search to the end of the property you're filtering for.
-#' @param endpoint is character. It indicates the url of the OpenAlex Endpoint API server. The default value is endpoint = "https://api.openalex.org/".
-#' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=FALSE}.
+#' See more at <https://docs.openalex.org/api/get-groups-of-entities>.
+#' @param search Character. Search is just another kind of filter, one that all five endpoints support.
+#' But unlike the other filters, search doesn't require an exact match.
+#' To filter using search, append .search to the end of the attribute you're filtering for.
+#' @param endpoint Character. URL of the OpenAlex Endpoint API server.
+#' Defaults to endpoint = "https://api.openalex.org/".
+#' @param verbose Logical. If TRUE, information about the querying process will
+#' be plotted on screen. Default to \code{verbose = FALSE}.
 #' @param \dots Additional filter arguments.
 #'
 #' @return a character containing the query in OpenAlex format.
 #'
-#' For more extensive information about OpenAlex API, please visit: \href{https://docs.openalex.org/api}{https://docs.openalex.org/api}
+#' For more extensive information about OpenAlex API, please visit:
+#' <https://docs.openalex.org/api>.
 #'
 #'
 #' @examples
@@ -103,7 +108,7 @@
 oa_query <- function(filter = NULL,
                      multiple_id = FALSE,
                      identifier = NULL, ## identifier of a work, author, venue, etc.
-                     entity = if (is.null(entity)) id_type(identifier[[1]]),
+                     entity = if (is.null(identifier)) NULL else id_type(identifier[[1]]),
                      search = NULL,
                      sort = NULL,
                      group_by = NULL,

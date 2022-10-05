@@ -1,11 +1,9 @@
-utils::globalVariables("progress_bar")
 #' Convert OpenAlex collection of concepts' records from list format to data frame
 #'
 #' It converts bibliographic collection of concepts' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
 #' The function converts a list of concepts' records obtained using \code{oa_request} into a data frame/tibble.
 #'
-#' @param data is a list. data is the output of the function \code{oa_request}.
-#' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.
+#' @inheritParams oa2df
 #'
 #' @return a data.frame.
 #'
