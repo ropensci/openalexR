@@ -113,6 +113,7 @@ oa_query <- function(filter = NULL,
 
   entity <- match.arg(entity, oa_entities())
   filter <- c(filter, list(...))
+  filter <- lapply(filter, asl)
 
   if (length(filter) > 0 || multiple_id) {
     flt_ready <- mapply(append_flt, filter, names(filter))

@@ -83,7 +83,7 @@ oa_fetch(
   doi = c("10.1016/j.joi.2017.08.007", "https://doi.org/10.1093/bioinformatics/btab727"),
   entity = "works",
   verbose = TRUE
-) %>% 
+) %>%
   show_works() %>%
   knitr::kable()
 ```
@@ -99,8 +99,8 @@ oa_fetch(
   entity = "works",
   author.orcid = canonical_orcids,
   verbose = TRUE
-) %>% 
-  show_works() %>% 
+) %>%
+  show_works() %>%
   knitr::kable()
 ```
 
@@ -111,7 +111,7 @@ Maybe we also want the results to be sorted by total citations in a descending o
 oa_fetch(
   entity = "works",
   title.search = c("bibliometric analysis", "science mapping"),
-  cited_by_count = ">50", 
+  cited_by_count = ">50",
   from_publication_date = "2020-01-01",
   to_publication_date = "2021-12-31",
   sort = "cited_by_count:desc",
@@ -145,7 +145,7 @@ We can filter by other [filters](https://docs.openalex.org/api/get-lists-of-enti
 oa_fetch(
   entity = "authors",
   display_name = c("Massimo Aria", "Trang T. Le"),
-  has_orcid = "true"
+  has_orcid = TRUE
 ) %>%
   show_authors() %>%
   knitr::kable()
@@ -164,7 +164,7 @@ my_arguments <- list(
 )
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
-do.call(oa_fetch, my_arguments) %>% 
+do.call(oa_fetch, my_arguments) %>%
   show_authors() %>%
   knitr::kable()
 ```
@@ -184,26 +184,28 @@ concept_df <- oa_fetch(
   works_count = ">1000000"
 )
 
-concept_df %>% 
-  select(display_name, counts_by_year) %>% 
-  tidyr::unnest(counts_by_year) %>% 
-  filter(year < 2022) %>% 
+concept_df %>%
+  select(display_name, counts_by_year) %>%
+  tidyr::unnest(counts_by_year) %>%
+  filter(year < 2022) %>%
   ggplot() +
   aes(x = year, y = works_count, color = display_name) +
-  facet_wrap(~ display_name) +
+  facet_wrap(~display_name) +
   geom_line(size = 0.7) +
   scale_color_brewer(palette = "Dark2") +
-  labs(x = NULL, y = "Works count",
-       title = "We know what happened in 2020.") +
+  labs(
+    x = NULL, y = "Works count",
+    title = "We know what happened in 2020"
+  ) +
   guides(color = "none") +
-  gghighlight(max(works_count) > 99500) +
-  NULL
+  gghighlight(max(works_count) > 99500)
 ```
 
 **Goal**: Rank institutions in Italy by total number of citations.
 
 We want download all records regarding Italian institutions (country_code:it) that are classified as educational (type:education).
 Again, we check how many records match the query then download the collection:
+
 
 ```{r italy-insts, fig.height=3.5, fig.width=7}
 italy_insts <- oa_fetch(
@@ -213,51 +215,90 @@ italy_insts <- oa_fetch(
   verbose = TRUE
 )
 
-italy_insts %>% 
-  slice_max(cited_by_count, n = 8) %>% 
+italy_insts %>%
+  slice_max(cited_by_count, n = 8) %>%
   mutate(display_name = forcats::fct_reorder(display_name, cited_by_count)) %>%
   ggplot() +
   aes(x = cited_by_count, y = display_name, fill = display_name) +
   geom_col() +
   scale_fill_viridis_d(option = "E") +
   guides(fill = "none") +
-  labs(x = "Total citations", y = NULL,
-       title = "Italian references.") +
+  labs(
+    x = "Total citations", y = NULL,
+    title = "Italian references"
+  ) +
   coord_cartesian(expand = FALSE)
+```
+
+And what do they publish on?
+
+```{r concept-cloud, fig.height=5, fig.width=7}
+concept_cloud <- italy_insts %>% 
+  select(inst_id = id, x_concepts) %>% 
+  tidyr::unnest(x_concepts) %>% 
+  filter(level == 1) %>% 
+  select(display_name, score) %>% 
+  group_by(display_name) %>% 
+  summarise(score = sum(score))
+
+pal <- c("black", scales::brewer_pal(palette = "Set1")(5))
+set.seed(1)
+wordcloud::wordcloud(
+  concept_cloud$display_name, 
+  concept_cloud$score,
+  scale = c(2, .4),
+  colors = pal
+)
 ```
 
 **Goal**: Visualize big journals' topics.
 
 We first download all records regarding journals that have published more than 300,000 works, then visualize their scored concepts:
 
-```{r big-journals, fig.height=8, fig.width=8}
+```{r big-journals, message=FALSE, fig.height=8, fig.width=8}
 jours <- oa_fetch(
   entity = "venues",
   works_count = ">300000",
   verbose = TRUE
-)
+) %>%
+  distinct(display_name, .keep_all = TRUE) %>%
+  select(jour = display_name, x_concepts) %>%
+  tidyr::unnest(x_concepts) %>%
+  filter(level == 0) %>%
+  left_join(concept_abbrev) %>%
+  mutate(abbreviation = gsub(" ", "<br>", abbreviation)) %>%
+  tidyr::complete(jour, abbreviation, fill = list(score = 0)) %>%
+  group_by(jour) %>%
+  mutate(
+    color = if_else(score > 10, "#1A1A1A", "#D9D9D9"), # CCCCCC
+    label = paste0("<span style='color:", color, "'>", abbreviation, "</span>")
+  )
 
-jours %>% 
-  distinct(display_name, .keep_all = TRUE) %>% 
-  select(jour = display_name, x_concepts) %>% 
-  tidyr::unnest(x_concepts) %>% 
-  filter(level == 0) %>% 
-  tidyr::complete(jour, display_name, fill = list(score = 0)) %>% 
-  group_by(jour) %>% 
+jours %>%
   ggplot() +
-  aes(fill = jour, y = score, x= display_name, group = jour) +
-  facet_wrap(~ jour) +
+  aes(fill = jour, y = score, x = abbreviation, group = jour) +
+  facet_wrap(~jour) +
+  geom_hline(yintercept = c(45, 90), colour = "grey90", size = 0.2) +
+  geom_segment(
+    aes(x = abbreviation, xend = abbreviation, y = 0, yend = 100),
+    color = "grey95"
+  ) +
   geom_col(color = "grey20") +
   coord_polar(clip = "off") +
   theme_bw() +
-  theme(axis.text.y = element_blank(),
-        axis.ticks.y = element_blank(),
-        axis.text.x = element_text(size = 8)) +
+  theme(
+    panel.grid = element_blank(),
+    panel.border = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks.y = element_blank()
+  ) +
+  ggtext::geom_richtext(
+    aes(y = 120, label = label),
+    fill = NA, label.color = NA, size = 3
+  ) +
   scale_fill_brewer(palette = "Set1") +
-  scale_y_continuous(breaks = 50) +
   guides(fill = "none") +
-  labs(y = NULL, x = NULL,
-       title = "Journal clocks.")
+  labs(y = NULL, x = NULL, title = "Journal clocks")
 ```
 
 ## Snowball search
@@ -268,9 +309,9 @@ TODO
 
 ![oar-img](man/figures/oar.jpeg)
 
-::: {style="text-align: right"}
+<div style="text-align: right">
 Schema credits: [\@dhimmel](https://github.com/dhimmel)
-:::
+</div>
 
 [OpenAlex](https://openalex.org) is a fully open catalog of the global research system.
 It's named after the ancient [Library of Alexandria](https://en.wikipedia.org/wiki/Library_of_Alexandria).

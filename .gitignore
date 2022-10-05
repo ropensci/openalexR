@@ -9,3 +9,4 @@ docs
 # somehow these files were generate every time I "check" the package
 vignettes/*.R
 vignettes/*.html
+concept-abbre.csv

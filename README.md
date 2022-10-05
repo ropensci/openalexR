@@ -94,7 +94,7 @@ oa_fetch(
   doi = c("10.1016/j.joi.2017.08.007", "https://doi.org/10.1093/bioinformatics/btab727"),
   entity = "works",
   verbose = TRUE
-) %>% 
+) %>%
   show_works() %>%
   knitr::kable()
 #> Requesting url: https://api.openalex.org/works?filter=doi%3A10.1016%2Fj.joi.2017.08.007%7Chttps%3A%2F%2Fdoi.org%2F10.1093%2Fbioinformatics%2Fbtab727
@@ -119,8 +119,8 @@ oa_fetch(
   entity = "works",
   author.orcid = canonical_orcids,
   verbose = TRUE
-) %>% 
-  show_works() %>% 
+) %>%
+  show_works() %>%
   knitr::kable()
 #> Requesting url: https://api.openalex.org/works?filter=author.orcid%3Ahttps%3A%2F%2Forcid.org%2F0000-0003-3737-6565%7Chttps%3A%2F%2Forcid.org%2F0000-0002-8517-9411
 #> About to get a total of 2 pages of results with a total of 211 records.
@@ -144,7 +144,7 @@ results to be sorted by total citations in a descending order.
 oa_fetch(
   entity = "works",
   title.search = c("bibliometric analysis", "science mapping"),
-  cited_by_count = ">50", 
+  cited_by_count = ">50",
   from_publication_date = "2020-01-01",
   to_publication_date = "2021-12-31",
   sort = "cited_by_count:desc",
@@ -185,7 +185,7 @@ oa_fetch(
 
 | short_id    | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
 |:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------|
-| A923435168  | Massimo Aria | 0000-0002-8517-9411 |         131 |           2765 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
+| A923435168  | Massimo Aria | 0000-0002-8517-9411 |         131 |           2985 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
 | A2610192943 | Trang T. Le  | 0000-0003-3737-6565 |          80 |            563 | University of Pennsylvania       | Genetics, Internal medicine, Statistics  |
 
 **Goal**: Acquire information on the authors of this package.
@@ -198,7 +198,7 @@ such as `display_name` and `has_orcid`:
 oa_fetch(
   entity = "authors",
   display_name = c("Massimo Aria", "Trang T. Le"),
-  has_orcid = "true"
+  has_orcid = TRUE
 ) %>%
   show_authors() %>%
   knitr::kable()
@@ -206,7 +206,7 @@ oa_fetch(
 
 | short_id    | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
 |:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------|
-| A923435168  | Massimo Aria | 0000-0002-8517-9411 |         131 |           2765 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
+| A923435168  | Massimo Aria | 0000-0002-8517-9411 |         131 |           2985 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
 | A2610192943 | Trang T. Le  | 0000-0003-3737-6565 |          80 |            563 | University of Pennsylvania       | Genetics, Internal medicine, Statistics  |
 
 **Goal**: Download all authors’ records of scholars who work at the
@@ -227,8 +227,8 @@ my_arguments <- list(
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #>      count db_response_time_ms page per_page
-#> [1,]    24                   6    1        1
-do.call(oa_fetch, my_arguments) %>% 
+#> [1,]    24                  17    1        1
+do.call(oa_fetch, my_arguments) %>%
   show_authors() %>%
   knitr::kable()
 ```
@@ -239,7 +239,7 @@ do.call(oa_fetch, my_arguments) %>%
 | A2600338221 | Alberto Orso Maria Iorio | 0000-0002-3798-1135 |        1182 |          19226 | University of Naples Federico II | Nuclear physics, Particle physics, Quantum mechanics |
 | A2011452631 | Leonardo Merola          | NA                  |        1115 |          17072 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
 | A3113327292 | Vincenzo Canale          | NA                  |         989 |          13994 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
-| A223517670  | Ettore Novellino         | 0000-0002-2181-2142 |         962 |          16840 | University of Naples Federico II | Biochemistry, Genetics, Organic chemistry            |
+| A223517670  | Ettore Novellino         | 0000-0002-2181-2142 |         962 |          17659 | University of Naples Federico II | Biochemistry, Genetics, Organic chemistry            |
 | A2062713547 | G. De Nardo              | NA                  |         959 |          12219 | University of Naples Federico II | Particle physics, Nuclear physics, Quantum mechanics |
 
 ## Example analyses
@@ -258,20 +258,21 @@ concept_df <- oa_fetch(
   works_count = ">1000000"
 )
 
-concept_df %>% 
-  select(display_name, counts_by_year) %>% 
-  tidyr::unnest(counts_by_year) %>% 
-  filter(year < 2022) %>% 
+concept_df %>%
+  select(display_name, counts_by_year) %>%
+  tidyr::unnest(counts_by_year) %>%
+  filter(year < 2022) %>%
   ggplot() +
   aes(x = year, y = works_count, color = display_name) +
-  facet_wrap(~ display_name) +
+  facet_wrap(~display_name) +
   geom_line(size = 0.7) +
   scale_color_brewer(palette = "Dark2") +
-  labs(x = NULL, y = "Works count",
-       title = "We know what happened in 2020.") +
+  labs(
+    x = NULL, y = "Works count",
+    title = "We know what happened in 2020"
+  ) +
   guides(color = "none") +
-  gghighlight(max(works_count) > 99500) +
-  NULL
+  gghighlight(max(works_count) > 99500)
 #> label_key: display_name
 ```
 
@@ -294,20 +295,45 @@ italy_insts <- oa_fetch(
 #> Requesting url: https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation
 #> About to get a total of 2 pages of results with a total of 231 records.
 
-italy_insts %>% 
-  slice_max(cited_by_count, n = 8) %>% 
+italy_insts %>%
+  slice_max(cited_by_count, n = 8) %>%
   mutate(display_name = forcats::fct_reorder(display_name, cited_by_count)) %>%
   ggplot() +
   aes(x = cited_by_count, y = display_name, fill = display_name) +
   geom_col() +
   scale_fill_viridis_d(option = "E") +
   guides(fill = "none") +
-  labs(x = "Total citations", y = NULL,
-       title = "Italian references.") +
+  labs(
+    x = "Total citations", y = NULL,
+    title = "Italian references"
+  ) +
   coord_cartesian(expand = FALSE)
 ```
 
 <img src="man/figures/README-italy-insts-1.png" width="100%" />
+
+And what do they publish on?
+
+``` r
+concept_cloud <- italy_insts %>% 
+  select(inst_id = id, x_concepts) %>% 
+  tidyr::unnest(x_concepts) %>% 
+  filter(level == 1) %>% 
+  select(display_name, score) %>% 
+  group_by(display_name) %>% 
+  summarise(score = sum(score))
+
+pal <- c("black", scales::brewer_pal(palette = "Set1")(5))
+set.seed(1)
+wordcloud::wordcloud(
+  concept_cloud$display_name, 
+  concept_cloud$score,
+  scale = c(2, .4),
+  colors = pal
+)
+```
+
+<img src="man/figures/README-concept-cloud-1.png" width="100%" />
 
 **Goal**: Visualize big journals’ topics.
 
@@ -319,31 +345,45 @@ jours <- oa_fetch(
   entity = "venues",
   works_count = ">300000",
   verbose = TRUE
-)
-#> Requesting url: https://api.openalex.org/venues?filter=works_count%3A%3E300000
-#> About to get a total of 1 pages of results with a total of 10 records.
+) %>%
+  distinct(display_name, .keep_all = TRUE) %>%
+  select(jour = display_name, x_concepts) %>%
+  tidyr::unnest(x_concepts) %>%
+  filter(level == 0) %>%
+  left_join(concept_abbrev) %>%
+  mutate(abbreviation = gsub(" ", "<br>", abbreviation)) %>%
+  tidyr::complete(jour, abbreviation, fill = list(score = 0)) %>%
+  group_by(jour) %>%
+  mutate(
+    color = if_else(score > 10, "#1A1A1A", "#D9D9D9"), # CCCCCC
+    label = paste0("<span style='color:", color, "'>", abbreviation, "</span>")
+  )
 
-jours %>% 
-  distinct(display_name, .keep_all = TRUE) %>% 
-  select(jour = display_name, x_concepts) %>% 
-  tidyr::unnest(x_concepts) %>% 
-  filter(level == 0) %>% 
-  tidyr::complete(jour, display_name, fill = list(score = 0)) %>% 
-  group_by(jour) %>% 
+jours %>%
   ggplot() +
-  aes(fill = jour, y = score, x= display_name, group = jour) +
-  facet_wrap(~ jour) +
+  aes(fill = jour, y = score, x = abbreviation, group = jour) +
+  facet_wrap(~jour) +
+  geom_hline(yintercept = c(45, 90), colour = "grey90", size = 0.2) +
+  geom_segment(
+    aes(x = abbreviation, xend = abbreviation, y = 0, yend = 100),
+    color = "grey95"
+  ) +
   geom_col(color = "grey20") +
   coord_polar(clip = "off") +
   theme_bw() +
-  theme(axis.text.y = element_blank(),
-        axis.ticks.y = element_blank(),
-        axis.text.x = element_text(size = 8)) +
+  theme(
+    panel.grid = element_blank(),
+    panel.border = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks.y = element_blank()
+  ) +
+  ggtext::geom_richtext(
+    aes(y = 120, label = label),
+    fill = NA, label.color = NA, size = 3
+  ) +
   scale_fill_brewer(palette = "Set1") +
-  scale_y_continuous(breaks = 50) +
   guides(fill = "none") +
-  labs(y = NULL, x = NULL,
-       title = "Journal clocks.")
+  labs(y = NULL, x = NULL, title = "Journal clocks")
 ```
 
 <img src="man/figures/README-big-journals-1.png" width="100%" />
