@@ -7,7 +7,7 @@ and convert the result to a tibble/data frame.}
 \usage{
 oa_snowball(
   identifier = NULL,
-  output = c("tibble", "dataframe"),
+  id_type = c("short", "original"),
   mailto = oa_email(),
   endpoint = "https://api.openalex.org/",
   verbose = FALSE
@@ -16,7 +16,11 @@ oa_snowball(
 \arguments{
 \item{identifier}{Character. It indicates a vector of openalex_id identifiers.}
 
-\item{output}{a tibble/data.frame.}
+\item{id_type}{Type of OpenAlex IDs to return. Defaults to "short",
+which remove the prefix https://openalex.org/ in the works' IDs,
+for example, W2755950973.
+If "original", the OpenAlex IDs are kept as are,
+for example, https://openalex.org/W2755950973}
 
 \item{mailto}{is a character. To get into the polite pool, the arguments mailto have to give OpenAlex an email where they can contact you.}
 
@@ -36,7 +40,6 @@ and convert the result to a tibble/data frame.
 
 snowball_docs <- oa_snowball(
   identifier = c("W2741809807", "W2755950973"),
-  endpoint = "https://api.openalex.org/",
   verbose = TRUE
 )
 }

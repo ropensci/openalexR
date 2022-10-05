@@ -85,3 +85,7 @@ asl <- function(z) {
     return(z)
   }
 }
+
+shorten_oaid <- function(id) {
+  gsub("https://openalex.org/", "", id)
+}

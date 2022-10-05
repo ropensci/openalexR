@@ -1,21 +1,19 @@
 test_that("oa_snowball works", {
   skip_on_cran()
 
-  work_ids <- c("W2741809807")
+  work_ids <- c("W3045921891", "W3046863325")
   multi_works <- oa_snowball(
     identifier = work_ids,
     verbose = TRUE
-  )$data
+  )$nodes
 
   expect_equal(
-    multi_works$id[multi_works$role=="target"],
-    paste0("https://openalex.org/", work_ids)
+    sort(multi_works$id[multi_works$role=="target"]),
+    sort(work_ids)
   )
 
   snowball_docs <- oa_snowball(
-    identifier = c("W4295757800", "W4296128995", "W4297497355"),
-    endpoint = "https://api.openalex.org/",
-    verbose = TRUE
+    identifier = c("W4295757800", "W4296128995", "W4297497355")
   )
 
   expect_true(is.list(snowball_docs))
