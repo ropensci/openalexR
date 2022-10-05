@@ -50,11 +50,11 @@ oa2df <- function(data, entity, abstract = TRUE, count_only = FALSE, group_by = 
   if (count_only && length(data) == 4) return(unlist(data))
 
   switch(entity,
-    works = oaWorks2df(data, abstract, verbose),
-    authors = oaAuthors2df(data, verbose),
-    institutions = oaInstitutions2df(data, verbose),
-    venues = oaVenues2df(data, verbose),
-    concepts = oaConcepts2df(data, verbose)
+    works = works2df(data, abstract, verbose),
+    authors = authors2df(data, verbose),
+    institutions = institutions2df(data, verbose),
+    venues = venues2df(data, verbose),
+    concepts = concepts2df(data, verbose)
   )
 }
 
@@ -110,7 +110,7 @@ oa2df <- function(data, entity, abstract = TRUE, count_only = FALSE, group_by = 
 #'
 #' # @export
 
-oaWorks2df <- function(data, abstract = TRUE, verbose = TRUE) {
+works2df <- function(data, abstract = TRUE, verbose = TRUE) {
 
   if (!is.null(data$id)) {
     data <- list(data)
@@ -258,7 +258,7 @@ abstract_build <- function(ab) {
 #' }
 #'
 #' # @export
-oaAuthors2df <- function(data, verbose = TRUE) {
+authors2df <- function(data, verbose = TRUE) {
   # replace NULL with NA
   data <- simple_rapply(data, function(x) if (is.null(x)) NA else x)
 
@@ -356,7 +356,7 @@ oaAuthors2df <- function(data, verbose = TRUE) {
 #' }
 #'
 #' # @export
-oaInstitutions2df <- function(data, verbose = TRUE) {
+institutions2df <- function(data, verbose = TRUE) {
 
   # replace NULL with NA
   data <- simple_rapply(data, `%||%`, y = NA)
@@ -457,7 +457,7 @@ oaInstitutions2df <- function(data, verbose = TRUE) {
 #' }
 #'
 #' # @export
-oaVenues2df <- function(data, verbose = TRUE) {
+venues2df <- function(data, verbose = TRUE) {
 
   # replace NULL with NA
   data <- simple_rapply(data, function(x) if (is.null(x)) NA else x)
@@ -548,7 +548,7 @@ oaVenues2df <- function(data, verbose = TRUE) {
 #' }
 #'
 #' # @export
-oaConcepts2df <- function(data, verbose = TRUE) {
+concepts2df <- function(data, verbose = TRUE) {
 
   # replace NULL with NA
   data <- simple_rapply(data, `%||%`, y = NA)
