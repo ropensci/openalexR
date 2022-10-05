@@ -11,7 +11,8 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 [![CRAN
 status](https://www.r-pkg.org/badges/version/openalexR)](https://CRAN.R-project.org/package=openalexR)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/openalexR)](https://cran.r-project.org/package=openalexR)
-
+[![Codecov test
+coverage](https://codecov.io/gh/massimoaria/openalexR/branch/main/graph/badge.svg)](https://app.codecov.io/gh/massimoaria/openalexR?branch=main)
 <!-- badges: end -->
 
 **openalexR** helps you interface with the
@@ -225,7 +226,7 @@ my_arguments <- list(
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #>      count db_response_time_ms page per_page
-#> [1,]    24                 210    1        1
+#> [1,]    24                   9    1        1
 do.call(oa_fetch, my_arguments) %>%
   show_authors() %>%
   knitr::kable()

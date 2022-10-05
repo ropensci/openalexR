@@ -34,7 +34,8 @@ Suggests:
     rmarkdown,
     tidyr,
     purrr,
-    ggplot2
+    ggplot2,
+    covr
 VignetteBuilder: 
     knitr
 Encoding: UTF-8

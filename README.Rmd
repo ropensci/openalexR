@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN status](https://www.r-pkg.org/badges/version/openalexR)](https://CRAN.R-project.org/package=openalexR)
 `r badger::badge_cran_download("openalexR", "grand-total")` 
-
+[![Codecov test coverage](https://codecov.io/gh/massimoaria/openalexR/branch/main/graph/badge.svg)](https://app.codecov.io/gh/massimoaria/openalexR?branch=main)
 <!-- badges: end -->
 
 **openalexR** helps you interface with the [OpenAlex](https://openalex.org) API to retrieve bibliographic infomation about publications, authors, venues, institutions and concepts with 5 main functions:
