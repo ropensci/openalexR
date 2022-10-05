@@ -80,8 +80,8 @@ oa_random <- function(entity = oa_entities(),
 #' )
 #'
 #' oa_fetch(
-#' identifier = c("A923435168", "A2208157607"),
-#' verbose = TRUE
+#'   identifier = c("A923435168", "A2208157607"),
+#'   verbose = TRUE
 #' )
 #' }
 oa_fetch <- function(...,
@@ -120,7 +120,7 @@ oa_fetch <- function(...,
   final_res <- list()
   for (i in seq_along(list_id)) {
     filter_i <- filter
-    if (length(large_filter) > 0){
+    if (length(large_filter) > 0) {
       filter_i[[large_filter]] <- list_id[[i]]
     }
 
@@ -151,8 +151,10 @@ oa_fetch <- function(...,
       )
     )
   }
-
-  do.call(rbind, final_res)
+  switch(output,
+    list = unlist(final_res, recursive = FALSE),
+    tibble = do.call(rbind, final_res)
+  )
 }
 
 
