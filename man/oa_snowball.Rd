@@ -10,7 +10,8 @@ oa_snowball(
   id_type = c("short", "original"),
   mailto = oa_email(),
   endpoint = "https://api.openalex.org/",
-  verbose = FALSE
+  verbose = FALSE,
+  ...
 )
 }
 \arguments{
@@ -29,6 +30,10 @@ Defaults to endpoint = "https://api.openalex.org/".}
 
 \item{verbose}{Logical. If TRUE, information about the querying process will
 be plotted on screen. Default to \code{verbose = FALSE}.}
+
+\item{...}{Additional arguments to pass to `oa_fetch`, e.g., additional filters
+these arguments are only used in the search of articles cite and are cited by
+the given articles in `identifiers`.}
 }
 \value{
 A list containing 2 elements:
@@ -45,6 +50,7 @@ and convert the result to a tibble/data frame.
 
 snowball_docs <- oa_snowball(
   identifier = c("W2741809807", "W2755950973"),
+  from_publication_date = "2022-01-01",
   verbose = TRUE
 )
 }

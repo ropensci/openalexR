@@ -7,6 +7,9 @@
 #' If "original", the OpenAlex IDs are kept as are,
 #' for example, https://openalex.org/W2755950973
 #' @inheritParams oa_fetch
+#' @param ... Additional arguments to pass to `oa_fetch`, e.g., additional filters
+#' these arguments are only used in the search of articles cite and are cited by
+#' the given articles in `identifiers`.
 #'
 #' @return A list containing 2 elements:
 #' - nodes: dataframe with publication records
@@ -20,6 +23,7 @@
 #'
 #' snowball_docs <- oa_snowball(
 #'   identifier = c("W2741809807", "W2755950973"),
+#'   from_publication_date = "2022-01-01",
 #'   verbose = TRUE
 #' )
 #' }
@@ -27,7 +31,8 @@ oa_snowball <- function(identifier = NULL,
                         id_type = c("short", "original"),
                         mailto = oa_email(),
                         endpoint = "https://api.openalex.org/",
-                        verbose = FALSE) {
+                        verbose = FALSE,
+                        ...) {
 
   id_type <- match.arg(id_type)
   identifier <- shorten_oaid(identifier)
@@ -50,7 +55,8 @@ oa_snowball <- function(identifier = NULL,
     output = "tibble",
     endpoint = endpoint,
     mailto = mailto,
-    verbose = verbose
+    verbose = verbose,
+    ...
   )
 
   # collecting all documents cited by the target papers
@@ -61,7 +67,8 @@ oa_snowball <- function(identifier = NULL,
     output = "tibble",
     endpoint = endpoint,
     mailto = mailto,
-    verbose = verbose
+    verbose = verbose,
+    ...
   )
 
   # merging all documents in a single data frame
