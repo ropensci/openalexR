@@ -101,7 +101,7 @@ oa_fetch(
 #> About to get a total of 1 pages of results with a total of 2 records.
 ```
 
-| short_id    | display_name                                                                           | first_author     | last_author        | so                      | url                                              | is_oa | top_concepts                                                       |
+| id          | display_name                                                                           | first_author     | last_author        | so                      | url                                              | is_oa | top_concepts                                                       |
 |:------------|:---------------------------------------------------------------------------------------|:-----------------|:-------------------|:------------------------|:-------------------------------------------------|:------|:-------------------------------------------------------------------|
 | W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis                    | Massimo Aria     | Corrado Cuccurullo | Journal of Informetrics | <https://doi.org/10.1016/j.joi.2017.08.007>      | FALSE | Data science, Information retrieval                                |
 | W3206431085 | PMLB v1.0: an open-source dataset collection for benchmarking machine learning methods | Joseph D. Romano | Jason H. Moore     | Bioinformatics          | <https://doi.org/10.1093/bioinformatics/btab727> | TRUE  | Benchmarking, Python (programming language), Benchmark (surveying) |
@@ -109,24 +109,22 @@ oa_fetch(
 **Goal**: Download all works published by a set of authors (known
 ORCIDs).
 
-Use `author.orcid` as a filter (for now, we need to provide the
-canonical form with <https://orcid.org/>):
+Use `author.orcid` as a filter (either canonical form with
+<https://orcid.org/> or without will work):
 
 ``` r
-orcids <- c("0000-0003-3737-6565", "0000-0002-8517-9411")
-canonical_orcids <- paste0("https://orcid.org/", orcids)
 oa_fetch(
   entity = "works",
-  author.orcid = canonical_orcids,
+  author.orcid = c("0000-0003-3737-6565", "0000-0002-8517-9411"),
   verbose = TRUE
 ) %>%
   show_works() %>%
   knitr::kable()
-#> Requesting url: https://api.openalex.org/works?filter=author.orcid%3Ahttps%3A%2F%2Forcid.org%2F0000-0003-3737-6565%7Chttps%3A%2F%2Forcid.org%2F0000-0002-8517-9411
+#> Requesting url: https://api.openalex.org/works?filter=author.orcid%3A0000-0003-3737-6565%7C0000-0002-8517-9411
 #> About to get a total of 2 pages of results with a total of 211 records.
 ```
 
-| short_id    | display_name                                                                                                                              | first_author          | last_author         | so                              | url                                             | is_oa | top_concepts                                                |
+| id          | display_name                                                                                                                              | first_author          | last_author         | so                              | url                                             | is_oa | top_concepts                                                |
 |:------------|:------------------------------------------------------------------------------------------------------------------------------------------|:----------------------|:--------------------|:--------------------------------|:------------------------------------------------|:------|:------------------------------------------------------------|
 | W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis                                                                       | Massimo Aria          | Corrado Cuccurullo  | Journal of Informetrics         | <https://doi.org/10.1016/j.joi.2017.08.007>     | FALSE | Data science, Information retrieval                         |
 | W2955219525 | Scaling tree-based automated machine learning to biomedical big data with a feature set selector                                          | Trang T. Le           | Jason H. Moore      | Bioinformatics                  | <https://doi.org/10.1093/bioinformatics/btz470> | TRUE  | Pipeline (software), Scalability, Feature (linguistics)     |
@@ -156,14 +154,14 @@ oa_fetch(
 #> About to get a total of 1 pages of results with a total of 33 records.
 ```
 
-| short_id    | display_name                                                                                                                  | first_author        | last_author        | so                                        | url                                             | is_oa | top_concepts                                                  |
+| id          | display_name                                                                                                                  | first_author        | last_author        | so                                        | url                                             | is_oa | top_concepts                                                  |
 |:------------|:------------------------------------------------------------------------------------------------------------------------------|:--------------------|:-------------------|:------------------------------------------|:------------------------------------------------|:------|:--------------------------------------------------------------|
 | W3160856016 | How to conduct a bibliometric analysis: An overview and guidelines                                                            | Naveen Donthu       | Weng Marc Lim      | Journal of Business Research              | <https://doi.org/10.1016/j.jbusres.2021.04.070> | TRUE  | Bibliometrics, Field (mathematics), Resource (disambiguation) |
 | W3038273726 | Investigating the emerging COVID-19 research trends in the field of business and management: A bibliometric analysis approach | Surabhi Verma       | Anders Gustafsson  | Journal of Business Research              | <https://doi.org/10.1016/j.jbusres.2020.06.057> | TRUE  | Bibliometrics, Field (mathematics), MEDLINE                   |
 | W2990450011 | Forty-five years of Journal of Business Research: A bibliometric analysis                                                     | Naveen Donthu       | Debidutta Pattnaik | Journal of Business Research              | <https://doi.org/10.1016/j.jbusres.2019.10.039> | FALSE | Bibliometrics                                                 |
 | W3001491100 | Software tools for conducting bibliometric analysis in science: An up-to-date review                                          | Jose A. Moral-Munoz | Manuel Cobo        | Profesional De La Informacion             | <https://doi.org/10.3145/epi.2020.ene.03>       | TRUE  | Software, Bibliometrics                                       |
-| W3044902155 | Financial literacy: A systematic review and bibliometric analysis                                                             | Kirti Goyal         | Satish Kumar       | International Journal of Consumer Studies | <https://doi.org/10.1111/ijcs.12605>            | FALSE | Financial literacy, Content analysis, Citation                |
 | W3011866596 | A Bibliometric Analysis of COVID-19 Research Activity: A Call for Increased Output                                            | Mohamad A. Chahrour | Hussein H. Khachfe | Cureus                                    | <https://doi.org/10.7759/cureus.7357>           | TRUE  | Observational study, Gross domestic product, Population       |
+| W3044902155 | Financial literacy: A systematic review and bibliometric analysis                                                             | Kirti Goyal         | Satish Kumar       | International Journal of Consumer Studies | <https://doi.org/10.1111/ijcs.12605>            | FALSE | Financial literacy, Content analysis, Citation                |
 
 ### Authors
 
@@ -183,10 +181,10 @@ oa_fetch(
   knitr::kable()
 ```
 
-| short_id    | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
+| id          | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
 |:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------|
 | A923435168  | Massimo Aria | 0000-0002-8517-9411 |         131 |           2985 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
-| A2610192943 | Trang T. Le  | 0000-0003-3737-6565 |          80 |            563 | University of Pennsylvania       | Genetics, Internal medicine, Statistics  |
+| A2610192943 | Trang T. Le  | 0000-0003-3737-6565 |          80 |            600 | University of Pennsylvania       | Genetics, Internal medicine, Statistics  |
 
 **Goal**: Acquire information on the authors of this package.
 
@@ -204,10 +202,10 @@ oa_fetch(
   knitr::kable()
 ```
 
-| short_id    | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
+| id          | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
 |:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------|
 | A923435168  | Massimo Aria | 0000-0002-8517-9411 |         131 |           2985 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
-| A2610192943 | Trang T. Le  | 0000-0003-3737-6565 |          80 |            563 | University of Pennsylvania       | Genetics, Internal medicine, Statistics  |
+| A2610192943 | Trang T. Le  | 0000-0003-3737-6565 |          80 |            600 | University of Pennsylvania       | Genetics, Internal medicine, Statistics  |
 
 **Goal**: Download all authors’ records of scholars who work at the
 [University of Naples Federico
@@ -227,16 +225,16 @@ my_arguments <- list(
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #>      count db_response_time_ms page per_page
-#> [1,]    24                  17    1        1
+#> [1,]    24                 210    1        1
 do.call(oa_fetch, my_arguments) %>%
   show_authors() %>%
   knitr::kable()
 ```
 
-| short_id    | display_name             | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                         |
+| id          | display_name             | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                         |
 |:------------|:-------------------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------------------|
 | A2061787601 | Luca Lista               | 0000-0001-6471-5492 |        2474 |          35430 | University of Naples Federico II | Nuclear physics, Particle physics, Quantum mechanics |
-| A2600338221 | Alberto Orso Maria Iorio | 0000-0002-3798-1135 |        1182 |          19226 | University of Naples Federico II | Nuclear physics, Particle physics, Quantum mechanics |
+| A2600338221 | Alberto Orso Maria Iorio | 0000-0002-3798-1135 |        1182 |          22395 | University of Naples Federico II | Nuclear physics, Particle physics, Quantum mechanics |
 | A2011452631 | Leonardo Merola          | NA                  |        1115 |          17072 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
 | A3113327292 | Vincenzo Canale          | NA                  |         989 |          13994 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
 | A223517670  | Ettore Novellino         | 0000-0002-2181-2142 |         962 |          17659 | University of Naples Federico II | Biochemistry, Genetics, Organic chemistry            |

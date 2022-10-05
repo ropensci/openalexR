@@ -33,7 +33,7 @@ oa_fetch(
   knitr::kable()
 ```
 
-We will use the first ror, <https://ror.org/00b30xv10>, as one of the filters for our query.
+We will use the first ror, [00b30xv10](https://ror.org/00b30xv10), as one of the filters for our query.
 
 ***Alternatively***, we could go to the autocomplete endpoint at <https://explore.openalex.org/> to search for "University of Pennsylvania" and find the ror [there](https://explore.openalex.org/institutions/I79576946)!
 
@@ -43,7 +43,7 @@ The only difference here is that, instead of grouping by `is_oa`, we're interest
 ```{r}
 open_access <- oa_fetch(
   entity = "works",
-  institutions.ror = "https://ror.org/00b30xv10",
+  institutions.ror = "00b30xv10",
   type = "journal-article",
   from_publication_date = "2012-08-24",
   is_paratext = "false",
@@ -54,7 +54,7 @@ open_access <- oa_fetch(
 
 closed_access <- oa_fetch(
   entity = "works",
-  institutions.ror = "https://ror.org/00b30xv10",
+  institutions.ror = "00b30xv10",
   type = "journal-article",
   from_publication_date = "2012-08-24",
   is_paratext = "false",

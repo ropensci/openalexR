@@ -90,14 +90,12 @@ oa_fetch(
 
 **Goal**: Download all works published by a set of authors (known ORCIDs).
 
-Use `author.orcid` as a filter (for now, we need to provide the canonical form with <https://orcid.org/>):
+Use `author.orcid` as a filter (either canonical form with <https://orcid.org/> or without will work):
 
 ```{r}
-orcids <- c("0000-0003-3737-6565", "0000-0002-8517-9411")
-canonical_orcids <- paste0("https://orcid.org/", orcids)
 oa_fetch(
   entity = "works",
-  author.orcid = canonical_orcids,
+  author.orcid = c("0000-0003-3737-6565", "0000-0002-8517-9411"),
   verbose = TRUE
 ) %>%
   show_works() %>%
