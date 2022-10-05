@@ -10,7 +10,7 @@ test_that("oa_snowball works", {
   flat_snow <- to_disk(multi_works)
 
   expect_equal(
-    sort(multi_nodes$id[multi_nodes$role=="target"]),
+    sort(multi_nodes$id[multi_nodes$oa_input]),
     sort(work_ids)
   )
 

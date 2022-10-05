@@ -12,7 +12,9 @@
 #' the given articles in `identifiers`.
 #'
 #' @return A list containing 2 elements:
-#' - nodes: dataframe with publication records
+#' - nodes: dataframe with publication records.
+#' The last column `oa_input` indicates whether the work was
+#' one of the input `identifier`(s).
 #' - edges: publication link dataframe of 2 columns `from, to`
 #' such that a row `A, B` means A -> B means A cites B.
 #' In bibliometrics, the "citation action" comes from A to B.
@@ -94,12 +96,10 @@ oa_snowball <- function(identifier = NULL,
     )
   }
 
-  citing$role <- "citing"
-  cited$role <- "cited"
-  paper$role <- "target"
+  citing$oa_input <- FALSE
+  cited$oa_input <- FALSE
+  paper$oa_input <- TRUE
   nodes <- rbind(citing, cited, paper)
-  both_ids <- intersect(citing$id, cited$id)
-  nodes[nodes$id %in% both_ids, "role"] <- "both"
   nodes <- nodes[!duplicated(nodes$id), ]
 
   # relationships/edges
@@ -146,7 +146,7 @@ to_disk <- function(snowball){
   .data <- dplyr::.data
 
   nodes <- snowball$nodes
-  ids <- nodes[nodes$role == "target", "id", drop = TRUE]
+  ids <- nodes$id[nodes$oa_input]
   collapse_citations <- snowball$edges %>%
     dplyr::filter(.data$to %in% ids) %>%
     dplyr::group_by(id = .data$to) %>%
