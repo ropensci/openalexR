@@ -44,7 +44,7 @@
 #' @export
 #'
 oa2bibliometrix <- function(df) {
-  df$id_oa <- gsub("https://openalex.org/", "", df$id)
+  df$id_oa <- shorten_oaid(df$id)
   names(df)[names(df) == "id"] <- "id_url"
 
   if (substr(df$id_oa[1], 1, 1) != "W") {
@@ -86,7 +86,7 @@ oa2bibliometrix <- function(df) {
   df$SO <- toupper(df$so)
   df$DT <- toupper(df$type)
   df$DB <- "openalex"
-  df$JI <- gsub("https://openalex.org/", "", df$so_id)
+  df$JI <- shorten_oaid(df$so_id)
   df$J9 <- df$JI
   df$PY <- df$publication_year
   df$TC <- df$cited_by_count

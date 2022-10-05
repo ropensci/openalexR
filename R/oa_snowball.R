@@ -88,6 +88,8 @@ oa_snowball <- function(identifier = NULL,
   cited$role <- "cited"
   paper$role <- "target"
   nodes <- rbind(citing, cited, paper)
+  both_ids <- intersect(citing$id, cited$id)
+  nodes[nodes$id %in% both_ids, "role"] <- "both"
   nodes <- nodes[!duplicated(nodes$id), ]
 
   # relationships/edges
@@ -100,4 +102,49 @@ oa_snowball <- function(identifier = NULL,
   }
 
   list(nodes = nodes, edges = edges)
+}
+
+#' Flatten snowball result
+#'
+#' |  id|title |...|cited_by_count| referenced_works   |cited_by |...|
+#' | 100|foo   |...|             1| 98, 99             |101      |...|
+#' | 200|bar   |...|             2| 198, 199           |201, 202 |...|
+#' | 300|wug   |...|             2| 296, 297, 298, 299 |301, 302 |...|
+#'
+#' @param snowball List result from `oa_snowball`.
+#'
+#' @return Tibble/data.frame of works with additional `cited_by` column.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' flat_snow <- to_disk(oa_snowball(
+#'   identifier = "W1516819724",
+#'   verbose = TRUE
+#' ))
+#'
+#' flat_snow[, c("id", "cited_by")]
+#' }
+to_disk <- function(snowball){
+  if (!requireNamespace("dplyr", quietly = TRUE)) {
+    stop(
+      "Package \"dplyr\" must be installed to use this function.",
+      call. = FALSE
+    )
+  }
+  `%>%` <- dplyr::`%>%`
+  .data <- dplyr::.data
+
+  nodes <- snowball$nodes
+  ids <- nodes[nodes$role == "target", "id", drop = TRUE]
+  collapse_citations <- snowball$edges %>%
+    dplyr::filter(.data$to %in% ids) %>%
+    dplyr::group_by(id = .data$to) %>%
+    dplyr::summarise(
+      cited_by = paste(.data$from, collapse = ", "),
+      .groups = "drop"
+    )
+
+  snowball$nodes %>%
+    dplyr::left_join(collapse_citations, by = "id")
 }
