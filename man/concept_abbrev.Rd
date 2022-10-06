@@ -13,5 +13,6 @@ concept_abbrev
 }
 \description{
 0-level concepts and corresponding abbreviations.
+Reference: https://www.ncbi.nlm.nih.gov/nlmcatalog/journals/
 }
 \keyword{datasets}

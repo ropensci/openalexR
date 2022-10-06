@@ -14,26 +14,24 @@ oa2df(
 )
 }
 \arguments{
-\item{data}{is a list. data is the output of the function \code{oa_request}.}
+\item{data}{List. Output of \code{oa_request}.}
 
-\item{entity}{is a character. It indicates the scholarly entity of the search. The argument can be equal to
-entity = c("works", "authors", "venues", "institutions", "concepts"). The default value is entity = works".}
+\item{entity}{Character. Scholarly entity of the search.
+The argument can be one of c("works", "authors", "venues", "institutions", "concepts").}
 
-\item{abstract}{Logical. If TRUE, the function returns also the abstract of each item. Default is \code{abstract=TRUE}.
-The argument is ignored if entity is different from "works".}
+\item{abstract}{Logical. If TRUE, the function returns also the abstract of each item.
+Ignored if entity is different from "works". Defaults to TRUE.}
 
-\item{count_only}{Logical. If TRUE, the function returns only the number of item matching the query. Default is \code{count_only=FALSE}.}
+\item{count_only}{Logical.
+If TRUE, the function returns only the number of item matching the query.
+Defaults to FALSE.}
 
-\item{group_by}{Character. Property to group by.
+\item{group_by}{Character. Attribute to group by.
 For example: "oa_status" for works.
-https://docs.openalex.org/api/get-groups-of-entities}
+See more at <https://docs.openalex.org/api/get-groups-of-entities>.}
 
-\item{verbose}{is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=TRUE}.}
-}
-\value{
-a data.frame.
-
-For more extensive information about OpenAlex API, please visit: \href{https://docs.openalex.org/api}{https://docs.openalex.org/api}
+\item{verbose}{Logical. If TRUE, information about the querying process will
+be plotted on screen. Default to \code{verbose = FALSE}.}
 }
 \description{
 It converts bibliographic collections gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.

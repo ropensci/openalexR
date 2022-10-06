@@ -1,6 +1,3 @@
-# library(progress)
-utils::globalVariables("progress_bar")
-
 #' Available entities in the OpenAlex database
 #'
 #' @return Character vector of 5 entity options.
@@ -8,35 +5,6 @@ oa_entities <- function() {
   c("works", "authors", "venues", "institutions", "concepts")
 }
 
-#' oa_fetch but for a random query
-#'
-#' @inheritParams oa_fetch
-#'
-#' @return A data.frame or a list. One row or one element.
-#' Result of the random query.
-#' @export
-#'
-#' @examples
-#' oa_random()
-oa_random <- function(entity = oa_entities(),
-                      output = c("tibble", "dataframe", "list"),
-                      endpoint = "https://api.openalex.org/") {
-  output <- match.arg(output)
-  entity <- match.arg(entity, oa_entities())
-  if (output == "dataframe") output <- "tibble"
-
-  query_url <- paste0(endpoint, entity, "/random")
-  res <- oa_request(query_url)
-
-  final_res <- switch(output,
-    list = res,
-    tibble = oa2df(res,
-      entity = entity
-    )
-  )
-
-  final_res
-}
 #' A composition function to perform query building, requesting,
 #' and convert the result to a tibble/data frame.
 #' @inheritParams oa_query
@@ -80,8 +48,8 @@ oa_random <- function(entity = oa_entities(),
 #' )
 #'
 #' oa_fetch(
-#' identifier = c("A923435168", "A2208157607"),
-#' verbose = TRUE
+#'   identifier = c("A923435168", "A2208157607"),
+#'   verbose = TRUE
 #' )
 #' }
 oa_fetch <- function(...,
@@ -103,7 +71,7 @@ oa_fetch <- function(...,
   if (output == "dataframe") output <- "tibble"
   filter <- list(...)
 
-  # if multiple identifiers are provided, use openalex_id or doi as a filter property
+  # if multiple identifiers are provided, use openalex_id or doi as a filter attribute
   multiple_id <- length(identifier) > 1
   if (multiple_id) filter <- c(filter, list(openalex_id = identifier))
 
@@ -120,7 +88,7 @@ oa_fetch <- function(...,
   final_res <- list()
   for (i in seq_along(list_id)) {
     filter_i <- filter
-    if (length(large_filter) > 0){
+    if (length(large_filter) > 0) {
       filter_i[[large_filter]] <- list_id[[i]]
     }
 
@@ -151,23 +119,31 @@ oa_fetch <- function(...,
       )
     )
   }
-
-  do.call(rbind, final_res)
+  switch(output,
+    list = unlist(final_res, recursive = FALSE),
+    tibble = do.call(rbind, final_res)
+  )
 }
 
-
-#' Get bibliographic records from OpenAlex databases
+#' Get bibliographic records from OpenAlex database
 #'
-#' It gets bibliographic records from OpenAlex database \href{https://openalex.org/}{https://openalex.org/}.
+#' `oa_request` makes a request and downloads bibliographic records from OpenAlex database \href{https://openalex.org/}{https://openalex.org/}.
 #' The function \code{oa_request} queries OpenAlex database using a query formulated through the function \code{oa_query}.
 #'
-#' @param query_url is a character. It contains a search query formulated using the OpenAlex API language. A query can be automatically generated using the function \code{oa_query}.
-#' @param per_page is a numeric. It indicates how many items to download per page. The per-page argument can assume any number between 1 and 200. Default is \code{per_page=200}.
-#' @param count_only is a logical. If TRUE, the function returns only the number of item matching the query. Default is \code{count_only=FALSE}.
-#' @param mailto is a character. To get into the polite pool, the arguments mailto have to give OpenAlex an email where they can contact you.
-#' @param verbose is a logical. If TRUE, information about the querying process will be plotted on screen. Default is \code{verbose=FALSE}.
+#' @param query_url Character string.
+#' A search query formulated using the OpenAlex API language and
+#' can be generated with \code{oa_query}.
+#' @param per_page Numeric. Number of items to download per page.
+#' The per-page argument can assume any number between 1 and 200.
+#' Defaults to 200.
+#' @param count_only Logical.
+#' If TRUE, the function returns only the number of item matching the query.
+#' Defaults to FALSE.
+#' @param mailto Character string. Gives OpenAlex an email to enter the polite pool.
+#' @param verbose Logical.
+#' If TRUE, print information about the querying process. Defaults to TRUE.
 #'
-#' @return a data.frame or a list.
+#' @return a data.frame or a list of bibliographic records.
 #'
 #' For more extensive information about OpenAlex API, please visit: \href{https://docs.openalex.org/api}{https://docs.openalex.org/api}
 #'
@@ -364,6 +340,194 @@ oa_request <- function(query_url,
   unlist(data, recursive = FALSE)
 }
 
+#' Generate an OpenAlex query from a set of parameters
+#'
+#' It generates a valid query, written following the OpenAlex API Language, from a set of parameters.
+#'
+#' @param filter Character string.
+#' Filters narrow the list down to just entities that meet a particular
+#' condition--specifically, a particular value for a particular attribute.
+#' Filters are formatted as attribute = value.
+#' The complete list of filter attributes for each entity can be found at
+#' <https://docs.openalex.org/api/get-lists-of-entities#filter>.
+#' For example, `cited_by_count = ">100"`,
+#' `title.search = c("bibliometric analysis", "science mapping")`,
+#' or `to_publication_date = "2021-12-31"`.
+#' @param multiple_id Logical. Whether there are multiple identifiers.
+#' @param identifier Character. OpenAlex ID(s) as item identifier(s).
+#' See more at <https://docs.openalex.org/about-the-data#the-openalex-id>.
+#' @param entity Character. Scholarly entity of the search.
+#' The argument can be one of c("works", "authors", "venues", "institutions", "concepts").
+#' If not provided, `entity` is guessed from `identifier`.
+#' @param sort Character. Attribute to sort by.
+#' For example: "display_name" for venues or "cited_by_count:desc" for works.
+#' See more at <https://docs.openalex.org/api/get-lists-of-entities/sort-entity-lists>.
+#' @param group_by Character. Attribute to group by.
+#' For example: "oa_status" for works.
+#' See more at <https://docs.openalex.org/api/get-groups-of-entities>.
+#' @param search Character. Search is just another kind of filter, one that all five endpoints support.
+#' But unlike the other filters, search doesn't require an exact match.
+#' To filter using search, append .search to the end of the attribute you're filtering for.
+#' @param endpoint Character. URL of the OpenAlex Endpoint API server.
+#' Defaults to endpoint = "https://api.openalex.org/".
+#' @param verbose Logical. If TRUE, information about the querying process will
+#' be plotted on screen. Default to \code{verbose = FALSE}.
+#' @param \dots Additional filter arguments.
+#'
+#' @return a character containing the query in OpenAlex format.
+#'
+#' For more extensive information about OpenAlex API, please visit:
+#' <https://docs.openalex.org/api>.
+#'
+#'
+#' @examples
+#' \dontrun{
+#'
+#' query_auth <- oa_query(identifier = "A923435168", verbose = TRUE)
+#'
+#' ### EXAMPLE 1: Full record about an entity.
+#'
+#' # Query to obtain allinformation about a particular work/author/institution/etc.:
+#'
+#' #  The following paper is associated to the OpenAlex-id W2755950973.
+#'
+#' #  Aria, M., & Cuccurullo, C. (2017). bibliometrix:
+#' #   An R-tool for comprehensive science mapping analysis.
+#' #   Journal of informetrics, 11(4), 959-975.
+#'
+#' query_work <- oa_query(
+#'   identifier = "W2755950973",
+#'   endpoint = "https://api.openalex.org/",
+#'   verbose = TRUE
+#' )
+#'
+#'
+#' #  The author Massimo Aria is associated to the OpenAlex-id A923435168:
+#'
+#' query_auth <- oa_query(identifier = "A923435168", verbose = TRUE)
+#'
+#'
+#' ### EXAMPLE 2: all works citing a particular work.
+#'
+#' # Query to search all works citing the article:
+#' #  Aria, M., & Cuccurullo, C. (2017). bibliometrix:
+#' #   An R-tool for comprehensive science mapping analysis.
+#' #   Journal of informetrics, 11(4), 959-975.
+#'
+#' #  published in 2021.
+#' #  The paper is associated to the OpenAlex id W2755950973.
+#'
+#' #  Results have to be sorted by relevance score in a descending order.
+#'
+#' query1 <- oa_query(
+#'   entity = "works",
+#'   cites = "W2755950973",
+#'   from_publication_date = "2021-01-01",
+#'   to_publication_date = "2021-12-31",
+#'   verbose = TRUE
+#' )
+#'
+#' ### EXAMPLE 3: All works matching a string in their title
+#'
+#' # Query to search all works containing the exact string
+#' # "bibliometric analysis" OR "science mapping" in the title, published in the first half of 2021.
+#'
+#' # Results have to be sorted by relevance score in a descending order.
+#'
+#' query2 <- oa_query(
+#'   entity = "works",
+#'   title.search = c("bibliometric analysis", "science mapping"),
+#'   from_publication_date = "2021-01-01",
+#'   to_publication_date = "2021-06-30",
+#'   sort = "cited_by_count:desc",
+#'   verbose = TRUE
+#' )
+#' }
+#'
+#' @export
+#'
+
+oa_query <- function(filter = NULL,
+                     multiple_id = FALSE,
+                     identifier = NULL, ## identifier of a work, author, venue, etc.
+                     entity = if (is.null(identifier)) NULL else id_type(identifier[[1]]),
+                     search = NULL,
+                     sort = NULL,
+                     group_by = NULL,
+                     endpoint = "https://api.openalex.org/",
+                     verbose = FALSE,
+                     ...) {
+
+  entity <- match.arg(entity, oa_entities())
+  filter <- c(filter, list(...))
+  filter <- lapply(filter, asl)
+
+  if (length(filter) > 0 || multiple_id) {
+    flt_ready <- mapply(append_flt, filter, names(filter))
+    flt_ready[sapply(flt_ready, is.null)] <- NULL
+    flt_ready <- paste0(flt_ready, collapse = ",")
+  } else {
+    flt_ready <- list()
+  }
+
+  if (is.null(identifier) || multiple_id) {
+    if (is.null(filter) & (is.null(search))) {
+      message("Identifier is missing, please specify filter or search argument.")
+      return()
+    }
+
+    path <- entity
+    query <- list(
+      filter = flt_ready,
+      search = search,
+      sort = sort,
+      group_by = group_by
+    )
+  } else {
+    path <- paste(entity, identifier, sep = "/")
+    query <- NULL
+  }
+
+  query_url <- httr::modify_url(
+    endpoint,
+    path = path,
+    query = query
+  )
+
+  if (verbose) message("Requesting url: ", query_url)
+
+  query_url
+}
+
+#' oa_fetch but for a random query
+#'
+#' @inheritParams oa_fetch
+#'
+#' @return A data.frame or a list. One row or one element.
+#' Result of the random query.
+#' @export
+#'
+#' @examples
+#' oa_random()
+oa_random <- function(entity = oa_entities(),
+                      output = c("tibble", "dataframe", "list"),
+                      endpoint = "https://api.openalex.org/") {
+  output <- match.arg(output)
+  entity <- match.arg(entity, oa_entities())
+  if (output == "dataframe") output <- "tibble"
+
+  query_url <- paste0(endpoint, entity, "/random")
+  res <- oa_request(query_url)
+
+  final_res <- switch(output,
+                      list = res,
+                      tibble = oa2df(res,
+                                     entity = entity
+                      )
+  )
+
+  final_res
+}
 
 api_request <- function(query_url, ua, query = query) {
   res <- httr::GET(query_url, ua, query = query)

@@ -14,3 +14,4 @@
 ^\.git$
 ^vignettes/articles$
 ^data-raw$
+^codecov\.yml$

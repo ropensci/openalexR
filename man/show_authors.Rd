@@ -15,6 +15,7 @@ If you want the entire table, set `simp_fun = identity`}
 }
 \value{
 Simplified tibble to display.
+The first column, `id` is the short-form OpenAlex ID of the authors.
 }
 \description{
 This function is mostly for the package's internal use,
