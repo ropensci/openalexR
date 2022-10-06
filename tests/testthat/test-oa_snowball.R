@@ -15,8 +15,13 @@ test_that("oa_snowball works", {
   )
 
   expect_equal(nrow(flat_snow), nrow(multi_nodes))
-  expect_equal(ncol(flat_snow), ncol(multi_nodes) + 1)
-  expect_true("cited_by" %in% names(flat_snow))
+  expect_equal(ncol(flat_snow), ncol(multi_nodes) + 6)
+  expect_true(all(
+    c("cited_by", "citing", "connection",
+      "forward_count", "backward_count", "connection_count") %in%
+      names(flat_snow)
+  ))
+
   expect_s3_class(flat_snow, "data.frame")
 })
 
