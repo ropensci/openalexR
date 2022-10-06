@@ -87,7 +87,8 @@ If you want the entire table, set `simp_fun = identity`</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>Simplified tibble to display.</p>
+<p>Simplified tibble to display.
+The first column, `id` is the short-form OpenAlex ID of the authors.</p>
     </div>
 
     <div class="section level2">
@@ -100,7 +101,7 @@ If you want the entire table, set `simp_fun = identity`</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Requesting url: https://api.openalex.org/authors?filter=openalex_id%3AA923435168%7CA2208157607</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> About to get a total of 1 pages of results with a total of 2 records.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 7</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   short_id    display_name orcid               works_c…¹ cited…² affil…³ top_c…⁴</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   id          display_name orcid               works_c…¹ cited…² affil…³ top_c…⁴</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> A923435168  Massimo Aria 0000-0002-8517-9411       131    <span style="text-decoration: underline;">2</span>985 Univer… Statis…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> A2208157607 Jason Priem  0000-0001-6187-6610        49    <span style="text-decoration: underline;">1</span>623 HortRe… World …</span>

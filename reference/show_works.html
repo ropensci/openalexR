@@ -87,7 +87,8 @@ If you want the entire table, set `simp_fun = identity`.</p></dd>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>Simplified tibble to display.</p>
+<p>Simplified tibble to display.
+The first column, `id` is the short-form OpenAlex ID of the works</p>
     </div>
 
     <div class="section level2">
@@ -100,7 +101,7 @@ If you want the entire table, set `simp_fun = identity`.</p></dd>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Requesting url: https://api.openalex.org/works?filter=openalex_id%3AW2741809807%7CW2755950973</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> About to get a total of 1 pages of results with a total of 2 records.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 8</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   short_id    display_name             first…¹ last_…² so    url   is_oa top_c…³</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   id          display_name             first…¹ last_…² so    url   is_oa top_c…³</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> W2755950973 bibliometrix : An R-too… Massim… Corrad… Jour… http… FALSE Data s…</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> W2741809807 The state of OA: a larg… Heathe… Stefan… PeerJ http… TRUE  Citati…</span>
