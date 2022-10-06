@@ -36,7 +36,6 @@ oa_snowball <- function(identifier = NULL,
                         endpoint = "https://api.openalex.org/",
                         verbose = FALSE,
                         ...) {
-
   id_type <- match.arg(id_type)
   identifier <- shorten_oaid(identifier)
 
@@ -75,7 +74,7 @@ oa_snowball <- function(identifier = NULL,
   )
 
   # merging all documents in a single data frame
-  if (is.null(citing)){
+  if (is.null(citing)) {
     citing <- paper[0, TRUE]
     citing_rel <- NULL
   } else {
@@ -86,7 +85,7 @@ oa_snowball <- function(identifier = NULL,
     citing_rel <- citing_rel[shorten_oaid(citing_rel$to) %in% identifier, ]
   }
 
-  if (is.null(cited)){
+  if (is.null(cited)) {
     cited <- paper[0, TRUE]
     cited_rel <- NULL
   } else {
@@ -99,13 +98,15 @@ oa_snowball <- function(identifier = NULL,
   citing$oa_input <- FALSE
   cited$oa_input <- FALSE
   paper$oa_input <- TRUE
-  nodes <- rbind(citing, cited, paper)
+  nodes <- rbind(paper, citing, cited)
   nodes <- nodes[!duplicated(nodes$id), ]
 
   # relationships/edges
   edges <- rbind(citing_rel, cited_rel)
+  # remove duplicates when two input identifiers cite each other
+  edges <- edges[!duplicated(edges), ]
 
-  if (id_type == "short"){
+  if (id_type == "short") {
     edges$to <- shorten_oaid(edges$to)
     edges$from <- shorten_oaid(edges$from)
     nodes$id <- shorten_oaid(nodes$id)
@@ -133,28 +134,49 @@ oa_snowball <- function(identifier = NULL,
 #'   verbose = TRUE
 #' ))
 #'
-#' flat_snow[, c("id", "cited_by")]
+#' flat_snow[, c("id", "connection", "connection_count")]
 #' }
-to_disk <- function(snowball){
-  if (!requireNamespace("dplyr", quietly = TRUE)) {
-    stop(
-      "Package \"dplyr\" must be installed to use this function.",
-      call. = FALSE
-    )
-  }
-  `%>%` <- dplyr::`%>%`
-  .data <- dplyr::.data
-
+to_disk <- function(snowball) {
   nodes <- snowball$nodes
   ids <- nodes$id[nodes$oa_input]
-  collapse_citations <- snowball$edges %>%
-    dplyr::filter(.data$to %in% ids) %>%
-    dplyr::group_by(id = .data$to) %>%
-    dplyr::summarise(
-      cited_by = paste(.data$from, collapse = ";"),
-      .groups = "drop"
-    )
+  edges_df <- snowball$edges
 
-  snowball$nodes %>%
-    dplyr::left_join(collapse_citations, by = "id")
+  citing <- do.call(rbind.data.frame, by(
+    edges_df, list(edges_df$from),
+    function(x) {
+      list(
+        id = unique(x$from),
+        backward_count = nrow(x),
+        citing = paste(x$to, collapse = ";")
+      )
+    }
+  ))
+
+  cited_by <- do.call(rbind.data.frame, by(
+    edges_df, list(edges_df$to),
+    function(x) {
+      list(
+        id = unique(x$to),
+        forward_count = nrow(x),
+        cited_by = paste(x$from, collapse = ";")
+      )
+    }
+  ))
+
+  nodes_augmented <- merge(
+    merge(nodes, citing, all.x = TRUE),
+    cited_by, all.x = TRUE
+  )
+
+  nodes_augmented$connection <- apply(
+    nodes_augmented[, c("citing", "cited_by")], 1,
+    function(x) paste(x[!is.na(x)], collapse = ";")
+  )
+
+  nodes_augmented[is.na(nodes_augmented$backward_count), "backward_count"] <- 0
+  nodes_augmented[is.na(nodes_augmented$forward_count), "forward_count"] <- 0
+  nodes_augmented$connection_count <-
+    nodes_augmented$backward_count + nodes_augmented$forward_count
+
+  nodes_augmented
 }
