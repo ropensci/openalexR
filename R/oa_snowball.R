@@ -124,7 +124,20 @@ oa_snowball <- function(identifier = NULL,
 #'
 #' @param snowball List result from `oa_snowball`.
 #'
-#' @return Tibble/data.frame of works with additional `cited_by` column.
+#' @return Tibble/data.frame of works with additional columns:
+#' append `citing`, `backward_count`, `cited_by`, `forward_count`, `connection`,
+#' and `connection_count.` For each work/row, these counts are WITHIN one
+#' snowball search, and so `forward_count` <= `cited_by_count`.
+#'
+#' Consider the universe of all works linked to a set of starting works, (`oa_input = TRUE`)
+#' for each work/row i:
+#' - citing: works in the universe that i cites
+#' - backward_count: number of works in the universe that i cites
+#' - cited_by: works that i is cited by
+#' - forward_count: number of works in the universe that i is cited by
+#' - connection: works in the universe linked to i
+#' - connection_count: number of works in the universe linked to i (degree of i)
+#'
 #' @export
 #'
 #' @examples
@@ -146,8 +159,8 @@ to_disk <- function(snowball) {
     function(x) {
       list(
         id = unique(x$from),
-        backward_count = nrow(x),
-        citing = paste(x$to, collapse = ";")
+        citing = paste(x$to, collapse = ";"),
+        backward_count = nrow(x)
       )
     }
   ))
@@ -157,8 +170,8 @@ to_disk <- function(snowball) {
     function(x) {
       list(
         id = unique(x$to),
-        forward_count = nrow(x),
-        cited_by = paste(x$from, collapse = ";")
+        cited_by = paste(x$from, collapse = ";"),
+        forward_count = nrow(x)
       )
     }
   ))
