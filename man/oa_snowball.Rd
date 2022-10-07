@@ -11,6 +11,8 @@ oa_snowball(
   mailto = oa_email(),
   endpoint = "https://api.openalex.org/",
   verbose = FALSE,
+  citing_filter = list(),
+  cited_by_filter = list(),
   ...
 )
 }
@@ -31,9 +33,12 @@ Defaults to endpoint = "https://api.openalex.org/".}
 \item{verbose}{Logical. If TRUE, information about the querying process will
 be plotted on screen. Default to \code{verbose = FALSE}.}
 
-\item{...}{Additional arguments to pass to `oa_fetch`, e.g., additional filters
-these arguments are only used in the search of articles cite and are cited by
-the given articles in `identifiers`.}
+\item{citing_filter}{filters used in the search of works citing the input works.}
+
+\item{cited_by_filter}{filters used in the search of works cited by the input works.}
+
+\item{...}{Additional arguments to pass to `oa_fetch` when querying the
+input works, such as `doi`.}
 }
 \value{
 A list containing 2 elements:

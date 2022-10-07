@@ -6,10 +6,12 @@
 #' for example, W2755950973.
 #' If "original", the OpenAlex IDs are kept as are,
 #' for example, https://openalex.org/W2755950973
+#' @param citing_filter filters used in the search of works citing the input works.
+#' @param cited_by_filter filters used in the search of works cited by the input works.
+#' @param ... Additional arguments to pass to `oa_fetch` when querying the
+#' input works, such as `doi`.
 #' @inheritParams oa_fetch
-#' @param ... Additional arguments to pass to `oa_fetch`, e.g., additional filters
-#' these arguments are only used in the search of articles cite and are cited by
-#' the given articles in `identifiers`.
+#'
 #'
 #' @return A list containing 2 elements:
 #' - nodes: dataframe with publication records.
@@ -35,43 +37,29 @@ oa_snowball <- function(identifier = NULL,
                         mailto = oa_email(),
                         endpoint = "https://api.openalex.org/",
                         verbose = FALSE,
+                        citing_filter = list(),
+                        cited_by_filter = list(),
                         ...) {
   id_type <- match.arg(id_type)
-  identifier <- shorten_oaid(identifier)
-
-  # collecting records about the target papers
-  paper <- oa_fetch(
+  base_args <- list(
     entity = "works",
-    identifier = identifier,
     output = "tibble",
     endpoint = endpoint,
     mailto = mailto,
     verbose = verbose
   )
 
-  # fetching all documents citing the target papers
-  if (verbose) message("Collecting all documents citing the target papers...")
-  citing <- oa_fetch(
-    entity = "works",
-    cites = identifier,
-    output = "tibble",
-    endpoint = endpoint,
-    mailto = mailto,
-    verbose = verbose,
-    ...
-  )
+  # collecting records about the target papers
+  paper <- do.call(oa_fetch, c(base_args, list(identifier = identifier), list(...)))
 
-  # collecting all documents cited by the target papers
+  # fetching documents citing the target papers
+  identifier <- shorten_oaid(paper$id)
+  if (verbose) message("Collecting all documents citing the target papers...")
+  citing <- do.call(oa_fetch, c(base_args, list(cites = identifier), citing_filter))
+
+  # fetching documents cited by the target papers
   if (verbose) message("Collecting all documents cited by the target papers...")
-  cited <- oa_fetch(
-    entity = "works",
-    cited_by = identifier,
-    output = "tibble",
-    endpoint = endpoint,
-    mailto = mailto,
-    verbose = verbose,
-    ...
-  )
+  cited <- do.call(oa_fetch, c(base_args, list(cited_by = identifier), cited_by_filter))
 
   # merging all documents in a single data frame
   if (is.null(citing)) {
