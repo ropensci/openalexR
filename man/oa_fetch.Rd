@@ -13,7 +13,7 @@ oa_fetch(
   sort = NULL,
   group_by = NULL,
   output = c("tibble", "dataframe", "list"),
-  abstract = TRUE,
+  abstract = FALSE,
   endpoint = "https://api.openalex.org/",
   per_page = 200,
   count_only = FALSE,
@@ -45,7 +45,8 @@ See more at <https://docs.openalex.org/api/get-groups-of-entities>.}
 
 \item{output}{Character. Type of output, either a list or a tibble/data.frame.}
 
-\item{abstract}{Logical. If TRUE, the function returns also the abstract of each item. Default is \code{abstract = TRUE}.
+\item{abstract}{Logical. If TRUE, the function returns also the abstract of each item.
+Default to \code{abstract = FALSE}.
 The argument is ignored if entity is different from "works".}
 
 \item{endpoint}{Character. URL of the OpenAlex Endpoint API server.

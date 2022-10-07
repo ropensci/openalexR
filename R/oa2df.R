@@ -185,7 +185,7 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
     if (abstract && !is.na(paper$abstract_inverted_index[1])) {
       ab <- abstract_build(paper$abstract_inverted_index)
     } else {
-      ab <- ""
+      ab <- NA
     }
 
     list_df[[i]] <- tibble::as_tibble(

@@ -9,7 +9,8 @@ oa_entities <- function() {
 #' and convert the result to a tibble/data frame.
 #' @inheritParams oa_query
 #' @inheritParams oa_request
-#' @param abstract Logical. If TRUE, the function returns also the abstract of each item. Default is \code{abstract = TRUE}.
+#' @param abstract Logical. If TRUE, the function returns also the abstract of each item.
+#' Default to \code{abstract = FALSE}.
 #' The argument is ignored if entity is different from "works".
 #' @param output Character. Type of output, either a list or a tibble/data.frame.
 #'
@@ -59,7 +60,7 @@ oa_fetch <- function(...,
                      sort = NULL,
                      group_by = NULL,
                      output = c("tibble", "dataframe", "list"),
-                     abstract = TRUE,
+                     abstract = FALSE,
                      endpoint = "https://api.openalex.org/",
                      per_page = 200,
                      count_only = FALSE,
@@ -457,14 +458,13 @@ oa_query <- function(filter = NULL,
                      endpoint = "https://api.openalex.org/",
                      verbose = FALSE,
                      ...) {
-
   entity <- match.arg(entity, oa_entities())
   filter <- c(filter, list(...))
-  filter <- lapply(filter, asl)
 
   if (length(filter) > 0 || multiple_id) {
+    filter[sapply(filter, is.null)] <- NULL
+    filter <- lapply(filter, asl)
     flt_ready <- mapply(append_flt, filter, names(filter))
-    flt_ready[sapply(flt_ready, is.null)] <- NULL
     flt_ready <- paste0(flt_ready, collapse = ",")
   } else {
     flt_ready <- list()
