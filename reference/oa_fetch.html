@@ -73,7 +73,7 @@ and convert the result to a tibble/data frame.</p>
 <span>  sort <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  group_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  output <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tibble"</span>, <span class="st">"dataframe"</span>, <span class="st">"list"</span><span class="op">)</span>,</span>
-<span>  abstract <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  abstract <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  endpoint <span class="op">=</span> <span class="st">"https://api.openalex.org/"</span>,</span>
 <span>  per_page <span class="op">=</span> <span class="fl">200</span>,</span>
 <span>  count_only <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -122,7 +122,8 @@ See more at &lt;https://docs.openalex.org/api/get-groups-of-entities&gt;.</p></d
 
 
 <dt>abstract</dt>
-<dd><p>Logical. If TRUE, the function returns also the abstract of each item. Default is <code>abstract = TRUE</code>.
+<dd><p>Logical. If TRUE, the function returns also the abstract of each item.
+Default to <code>abstract = FALSE</code>.
 The argument is ignored if entity is different from "works".</p></dd>
 
 
