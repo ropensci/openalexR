@@ -141,7 +141,8 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
     sub_identical <- paper[
       c(
         "id", "display_name", "publication_date", "doi", "type",
-        "cited_by_count", "publication_year", "cited_by_api_url"
+        "cited_by_count", "publication_year", "cited_by_api_url",
+        "is_paratext", "is_retracted"
       )
     ]
     sub_biblio <- paper$biblio
@@ -201,7 +202,7 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
     "so", "so_id", "publisher", "issn", "url", "first_page", "last_page",
     "volume", "issue", "is_oa", "cited_by_count", "counts_by_year",
     "publication_year", "cited_by_api_url", "ids", "doi", "type",
-    "referenced_works", "related_works", "concepts"
+    "referenced_works", "related_works", "is_paratext", "is_retracted", "concepts"
   )
 
   do.call(rbind.data.frame, list_df)[, col_order]
