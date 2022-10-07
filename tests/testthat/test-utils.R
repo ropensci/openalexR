@@ -26,3 +26,10 @@ test_that("asl works", {
   expect_equal(asl("TRUEFA"), "TRUEFA")
 })
 
+test_that("shorten_oaid works", {
+  expect_equal(shorten_oaid(c(
+    "https://openalex.org/W3045921891",
+    "https://openalex.org/W3046863325",
+    "W3045921891"
+  )), c("W3045921891", "W3046863325", "W3045921891"))
+})
