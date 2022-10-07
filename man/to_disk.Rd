@@ -10,7 +10,19 @@ to_disk(snowball)
 \item{snowball}{List result from `oa_snowball`.}
 }
 \value{
-Tibble/data.frame of works with additional `cited_by` column.
+Tibble/data.frame of works with additional columns:
+append `citing`, `backward_count`, `cited_by`, `forward_count`, `connection`,
+and `connection_count.` For each work/row, these counts are WITHIN one
+snowball search, and so `forward_count` <= `cited_by_count`.
+
+Consider the universe of all works linked to a set of starting works, (`oa_input = TRUE`)
+for each work/row i:
+- citing: works in the universe that i cites
+- backward_count: number of works in the universe that i cites
+- cited_by: works that i is cited by
+- forward_count: number of works in the universe that i is cited by
+- connection: works in the universe linked to i
+- connection_count: number of works in the universe linked to i (degree of i)
 }
 \description{
 |  id|title |...|cited_by_count| referenced_works   |cited_by |...|
@@ -25,6 +37,6 @@ flat_snow <- to_disk(oa_snowball(
   verbose = TRUE
 ))
 
-flat_snow[, c("id", "cited_by")]
+flat_snow[, c("id", "connection", "connection_count")]
 }
 }
