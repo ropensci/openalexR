@@ -1,6 +1,8 @@
 #' A function to perform a snowball search
 #' and convert the result to a tibble/data frame.
 #' @param identifier Character vector of openalex_id identifiers.
+#' @param ... Additional arguments to pass to `oa_fetch` when querying the
+#' input works, such as `doi`.
 #' @param id_type Type of OpenAlex IDs to return. Defaults to "short",
 #' which remove the prefix https://openalex.org/ in the works' IDs,
 #' for example, W2755950973.
@@ -8,8 +10,6 @@
 #' for example, https://openalex.org/W2755950973
 #' @param citing_filter filters used in the search of works citing the input works.
 #' @param cited_by_filter filters used in the search of works cited by the input works.
-#' @param ... Additional arguments to pass to `oa_fetch` when querying the
-#' input works, such as `doi`.
 #' @inheritParams oa_fetch
 #'
 #'
@@ -28,18 +28,19 @@
 #'
 #' snowball_docs <- oa_snowball(
 #'   identifier = c("W2741809807", "W2755950973"),
-#'   from_publication_date = "2022-01-01",
+#'   citing_filter = list(from_publication_date = "2022-01-01"),
+#'   cited_by_filter = list(),
 #'   verbose = TRUE
 #' )
 #' }
 oa_snowball <- function(identifier = NULL,
+                        ...,
                         id_type = c("short", "original"),
                         mailto = oa_email(),
                         endpoint = "https://api.openalex.org/",
                         verbose = FALSE,
                         citing_filter = list(),
-                        cited_by_filter = list(),
-                        ...) {
+                        cited_by_filter = list()) {
   id_type <- match.arg(id_type)
   base_args <- list(
     entity = "works",
