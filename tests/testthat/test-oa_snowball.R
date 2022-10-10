@@ -4,7 +4,7 @@ test_that("oa_snowball works", {
   work_ids <- c("W3045921891", "W3046863325")
   multi_works <- oa_snowball(identifier = work_ids)
   multi_nodes <- multi_works$nodes
-  flat_snow <- show_snowball(multi_works)
+  flat_snow <- oa2df(multi_works, "snowball")
 
   expect_equal(
     sort(multi_nodes$id[multi_nodes$oa_input]),

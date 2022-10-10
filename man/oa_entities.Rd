@@ -12,3 +12,6 @@ Character vector of 5 entity options.
 \description{
 Available entities in the OpenAlex database
 }
+\examples{
+oa_entities()
+}

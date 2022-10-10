@@ -62,8 +62,8 @@ Defaults to FALSE.}
 
 \item{mailto}{Character string. Gives OpenAlex an email to enter the polite pool.}
 
-\item{verbose}{Logical. If TRUE, information about the querying process will
-be plotted on screen. Default to \code{verbose = FALSE}.}
+\item{verbose}{Logical. If TRUE, print information on querying process.
+Default to \code{verbose = FALSE}.}
 }
 \value{
 A data.frame or a list. Result of the query.
