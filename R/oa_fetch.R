@@ -1,6 +1,9 @@
 #' Available entities in the OpenAlex database
 #'
 #' @return Character vector of 5 entity options.
+#' @export
+#' @examples
+#' oa_entities()
 oa_entities <- function() {
   c("works", "authors", "venues", "institutions", "concepts")
 }
