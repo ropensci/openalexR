@@ -374,8 +374,8 @@ oa_request <- function(query_url,
 #' To filter using search, append .search to the end of the attribute you're filtering for.
 #' @param endpoint Character. URL of the OpenAlex Endpoint API server.
 #' Defaults to endpoint = "https://api.openalex.org/".
-#' @param verbose Logical. If TRUE, information about the querying process will
-#' be plotted on screen. Default to \code{verbose = FALSE}.
+#' @param verbose Logical. If TRUE, print information on querying process.
+#' Default to \code{verbose = FALSE}.
 #' @param \dots Additional filter arguments.
 #'
 #' @return a character containing the query in OpenAlex format.
