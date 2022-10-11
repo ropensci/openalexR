@@ -132,10 +132,10 @@ oa_fetch(
 ### Filters
 
 In most cases, we are interested in downloading a collection of items that meet one or more inclusion/exclusion criteria (filters).
-Supported attributes for each endpoints are listed [here](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists).
+Supported filters for each entity are listed [here](https://massimoaria.github.io/openalexR/articles/Filters.html).
 
 **Example**: We want to download all works published by a set of authors.
-We can do this by filtering on the authorships.author.id/author.id or authorships.author.orcid/author.orcid attribute (see more on attributes [here](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#works-attribute-filters)):
+We can do this by filtering on the authorships.author.id/author.id or authorships.author.orcid/author.orcid attribute (see more on  [works attributes](https://massimoaria.github.io/openalexR/articles/Filters.html#works)):
 
 ```{r}
 oa_fetch(
@@ -229,7 +229,7 @@ do.call(oa_fetch, my_arguments) %>%
   knitr::kable()
 ```
 
-You can also filter by other [filters](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#authors-filters) such as `display_name`, `has_orcid`, and `orcid`:
+You can also use other filters such as `display_name`, `has_orcid`, and `orcid`:
 
 ```{r}
 oa_fetch(

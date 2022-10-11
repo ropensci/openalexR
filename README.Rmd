@@ -69,14 +69,14 @@ theme_set(theme_classic())
 
 ## Examples
 
-There are different [filters](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists)/arguments you can use in `oa_fetch`, depending on which [entity](https://docs.openalex.org/about-the-data) you're interested in: works, authors, venues, institutions, or concepts.
+There are different [filters](https://massimoaria.github.io/openalexR/articles/Filters)/arguments you can use in `oa_fetch`, depending on which [entity](https://docs.openalex.org/about-the-data) you're interested in: works, authors, venues, institutions, or concepts.
 We show a few examples below.
 
 ### Works
 
 **Goal**: Download all information about a givens set of publications (known DOIs).
 
-Use `doi` as a [works filter](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#works-filters) (either the canonical form with <https://doi.org/> or without):
+Use `doi` as a [works filter](https://massimoaria.github.io/openalexR/articles/Filters.html#works) (either the canonical form with <https://doi.org/> or without):
 
 ```{r}
 oa_fetch(
@@ -124,7 +124,7 @@ oa_fetch(
 **Goal**: Download author information when we know their ORCID.
 
 Here, instead of `author.orcid` like earlier, we have to use `orcid` as an argument.
-This may be a little confusing, but again, a different entity (**authors** instead of **works**) requires a [different set of filters](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#authors-filters).
+This may be a little confusing, but again, a different entity (**authors** instead of **works**) requires a [different set of filters](https://massimoaria.github.io/openalexR/articles/Filters.html#authors).
 
 ```{r}
 oa_fetch(
@@ -137,7 +137,7 @@ oa_fetch(
 
 **Goal**: Acquire information on the authors of this package.
 
-We can filter by other [filters](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#authors-filters) such as `display_name` and `has_orcid`:
+We can use other filters such as `display_name` and `has_orcid`:
 
 ```{r}
 oa_fetch(
