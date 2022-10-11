@@ -26,6 +26,7 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/A_Brief_Introduction_to_openalexR.html">A Brief Introduction to openalexR</a>
     <a class="dropdown-item" href="../articles/About-the-tibble-output.html">About the tibble output</a>
+    <a class="dropdown-item" href="../articles/Filters.html">Filters</a>
     <a class="dropdown-item" href="../articles/institution.html">Transition towards Open Access</a>
   </div>
 </li>
@@ -96,14 +97,15 @@ Result of the random query.</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">oa_random</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 1 × 28</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   id        displ…¹ author ab    publi…² relev…³ so    so_id publi…⁴ issn  url  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lis&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> https://… 国核技… &lt;df&gt;   <span style="color: #BB0000;">NA</span>    2014-0… <span style="color: #BB0000;">NA</span>      中国… <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>      &lt;lgl&gt; http…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 17 more variables: first_page &lt;chr&gt;, last_page &lt;chr&gt;, volume &lt;lgl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   issue &lt;chr&gt;, is_oa &lt;lgl&gt;, cited_by_count &lt;int&gt;, counts_by_year &lt;lgl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   publication_year &lt;int&gt;, cited_by_api_url &lt;chr&gt;, ids &lt;list&gt;, doi &lt;lgl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   type &lt;lgl&gt;, referenced_works &lt;lgl&gt;, related_works &lt;lgl&gt;, is_paratext &lt;lgl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   is_retracted &lt;lgl&gt;, concepts &lt;list&gt;, and abbreviated variable names</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ¹​display_name, ²​publication_date, ³​relevance_score, ⁴​publisher</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lis&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> https://… Dental… &lt;df&gt;   In s… 2009-0… <span style="color: #BB0000;">NA</span>      Jour… http… Medkno… &lt;chr&gt; http…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 17 more variables: first_page &lt;chr&gt;, last_page &lt;chr&gt;, volume &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   issue &lt;chr&gt;, is_oa &lt;lgl&gt;, cited_by_count &lt;int&gt;, counts_by_year &lt;list&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   publication_year &lt;int&gt;, cited_by_api_url &lt;chr&gt;, ids &lt;list&gt;, doi &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   type &lt;chr&gt;, referenced_works &lt;list&gt;, related_works &lt;list&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   is_paratext &lt;lgl&gt;, is_retracted &lt;lgl&gt;, concepts &lt;list&gt;, and abbreviated</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   variable names ¹​display_name, ²​publication_date, ³​relevance_score,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ⁴​publisher</span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
