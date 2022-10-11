@@ -52,8 +52,8 @@ See more at <https://docs.openalex.org/api/get-groups-of-entities>.}
 \item{endpoint}{Character. URL of the OpenAlex Endpoint API server.
 Defaults to endpoint = "https://api.openalex.org/".}
 
-\item{verbose}{Logical. If TRUE, information about the querying process will
-be plotted on screen. Default to \code{verbose = FALSE}.}
+\item{verbose}{Logical. If TRUE, print information on querying process.
+Default to \code{verbose = FALSE}.}
 
 \item{\dots}{Additional filter arguments.}
 }

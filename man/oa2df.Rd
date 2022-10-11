@@ -30,8 +30,8 @@ Defaults to FALSE.}
 For example: "oa_status" for works.
 See more at <https://docs.openalex.org/api/get-groups-of-entities>.}
 
-\item{verbose}{Logical. If TRUE, information about the querying process will
-be plotted on screen. Default to \code{verbose = FALSE}.}
+\item{verbose}{Logical. If TRUE, print information on querying process.
+Default to \code{verbose = FALSE}.}
 }
 \description{
 It converts bibliographic collections gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.

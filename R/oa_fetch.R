@@ -1,6 +1,9 @@
 #' Available entities in the OpenAlex database
 #'
 #' @return Character vector of 5 entity options.
+#' @export
+#' @examples
+#' oa_entities()
 oa_entities <- function() {
   c("works", "authors", "venues", "institutions", "concepts")
 }
@@ -53,9 +56,9 @@ oa_entities <- function() {
 #'   verbose = TRUE
 #' )
 #' }
-oa_fetch <- function(...,
-                     identifier = NULL, ## identifier of a work, author, venue, etc.
+oa_fetch <- function(identifier = NULL, ## identifier of a work, author, venue, etc.
                      entity = if (is.null(identifier)) NULL else id_type(identifier[[1]]),
+                     ...,
                      search = NULL,
                      sort = NULL,
                      group_by = NULL,
@@ -371,8 +374,8 @@ oa_request <- function(query_url,
 #' To filter using search, append .search to the end of the attribute you're filtering for.
 #' @param endpoint Character. URL of the OpenAlex Endpoint API server.
 #' Defaults to endpoint = "https://api.openalex.org/".
-#' @param verbose Logical. If TRUE, information about the querying process will
-#' be plotted on screen. Default to \code{verbose = FALSE}.
+#' @param verbose Logical. If TRUE, print information on querying process.
+#' Default to \code{verbose = FALSE}.
 #' @param \dots Additional filter arguments.
 #'
 #' @return a character containing the query in OpenAlex format.

@@ -1,0 +1,177 @@
+---
+title: "Filters"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+In your `oa_fetch` calls, you can specify additional arguments to *filter* your search result.
+Available arguments/filters for each entity and associated example values are in the tables below.
+
+**Note**: `x_concepts.id` in all entities are experimental.
+
+See the [original documentation](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists) from Open Alex.
+
+## Available arguments by entity
+
+### Works
+
+| Filter                                  | Example value                                                                              |
+|-----------------------------------------|--------------------------------------------------------------------------------------------|
+| `publication_year`                      | 2018                                                                                       |
+| `publication_date`                      | \"2018-02-13\"                                                                             |
+| `host_venue.issn`                       | \"2167-8359\"                                                                              |
+| `host_venue.license`                    | \"cc-by\"                                                                                  |
+| `host_venue.publisher`                  | \"PeerJ\"                                                                                  |
+| `host_venue.type`                       | \"journal\"                                                                                |
+| `type`                                  | \"journal-article\"                                                                        |
+| `is_paratext`                           | TRUE                                                                                       |
+| `open_access.oa_status`                 | \"gold\"                                                                                   |
+| `open_access.is_oa`                     | TRUE                                                                                       |
+| `authorships.author.id`                 | \"A1969205032\"                                                                            |
+| `authorships.author.orcid`              | \"0000-0003-1613-5981\"                                                                    |
+| `authorships.institutions.id`           | \"I4200000001\"                                                                            |
+| `authorships.institutions.ror`          | \"02nr0ka47\"                                                                              |
+| `authorships.institutions.country_code` | \"US\"                                                                                     |
+| `authorships.institutions.type`         | \"nonprofit\"                                                                              |
+| `cited_by_count`                        | 382                                                                                        |
+| `is_retracted`                          | FALSE                                                                                      |
+| `concepts.id`                           | \"C2778793908\"                                                                            |
+| `concepts.wikidata`                     | \"<https://www.wikidata.org/wiki/Q5122404>\"                                               |
+| `doi`                                   | \"10.7717/peerj.4375\"                                                                     |
+| `ids.mag`                               | 2741809807                                                                                 |
+| `ids.pmid`                              | \"<https://pubmed.ncbi.nlm.nih.gov/23638343/>\"                                            |
+| `ids.pmcid`                             | \"<https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3628373/>\"**                              |
+| `alternate_host_venues.license`         | \"cc-by\"                                                                                  |
+| `alternate_host_venues.version`         | \"submittedVersion\"                                                                       |
+| `alternate_host_venues.venue_id`        | \"V1983995261\"                                                                            |
+| `display_name.search`                   | \"wombat\"                                                                                 |
+| `abstract.search`                       | \"artificial intelligence\"                                                                |
+| `fulltext.search`                       | \"climate change\"                                                                         |
+| `raw_affiliation_string.search`         | \"department of political science university of Amsterdam\"                                |
+| `has_abstract`                          | TRUE                                                                                       |
+| `has_doi`                               | FALSE                                                                                      |
+| `has_ngrams`                            | TRUE                                                                                       |
+| `has_references`                        | TRUE                                                                                       |
+| `cites`                                 | \"W2741809807\"                                                                            |
+| `cited_by`                              | \"W2766808518\"                                                                            |
+| `related_to`                            | \"W2486144666\"                                                                            |
+| `from_publication_date`                 | \"2022-08-01\"                                                                             |
+| `to_publication_date`                   | \"2022-08-11\"                                                                             |
+| `has_oa_accepted_or_published_version`  | TRUE                                                                                       |
+| `has_oa_submitted_version`              | TRUE                                                                                       |
+| `works_count`                           | \">99\"                                                                                    |
+| `cited_by_count`                        | \">1000\"                                                                                  |
+
+### Authors
+
+| Filter                                  | Example value                                                                              |
+|-----------------------------------------|--------------------------------------------------------------------------------------------|
+| `last_known_institution.id`             | \"I4200000001\"                                                                            |
+| `last_known_institution.ror`            | \"02nr0ka47\"                                                                              |
+| `last_known_institution.country_code`   | \"CA\"                                                                                     |
+| `last_known_institution.type`           | \"nonprofit\"                                                                              |
+| `openalex`                              | \"A2208157607\"                                                                            |
+| `orcid`                                 | \"0000-0001-6187-6610\"                                                                    |
+| `mag`                                   | \"2208157607\"                                                                             |
+| `twitter`                               | \"jasonpriem\"                                                                             |
+| `wikipedia`                             | \"<https://en.wikipedia.org/wiki/Jennifer_Doudna>\"                                        |
+| `scopus`                                | \"<http://www.scopus.com/inward/authorDetails.url?authorID=36455008000&partnerID=MN8TOARS>\" |
+| `x_concepts.id`                         | \"C41008148\"                                                                              |
+| `display_name.search`                   | \"tupolev\"                                                                                |
+| `has_orcid`                             | TRUE                                                                                       |
+
+### Venues
+
+| Filter                                  | Example value                                                                              |
+|-----------------------------------------|--------------------------------------------------------------------------------------------|
+| `issn`                                  | \"2167-8359\"                                                                              |
+| `publisher`                             | \"Peerj\"                                                                                  |
+| `works_count`                           | 20184                                                                                      |
+| `cited_by_count`                        | 133702                                                                                     |
+| `x_concepts.id`                         | \"C185592680\"                                                                             |
+| `is_oa`                                 | TRUE                                                                                       |
+| `is_in_doaj`                            | TRUE                                                                                       |
+| `openalex`                              | \"V1983995261\"                                                                            |
+| `issn_l`                                | \"2167-8359\"                                                                              |
+| `issn`                                  | \"2167-8359\"                                                                              |
+| `mag`                                   | 1983995261                                                                                 |
+| `display_name.search`                   | \"Neurology\"                                                                              |
+| `has_issn`                              | FALSE                                                                                      |
+
+### Institutions
+
+| Filter                                  | Example value                                                                              |
+|-----------------------------------------|--------------------------------------------------------------------------------------------|
+| `country_code`                          | \"CN\"                                                                                     |
+| `type`                                  | \"education\"                                                                              |
+| `works_count`                           | \"<999\"                                                                                   |
+| `cited_by_count`                        | \">20000\"                                                                                 |
+| `x_concepts.id`                         | \"C41008148\"                                                                              |
+| `display_name.search`                   | \"technology\"                                                                             |
+| `has_ror`                               | FALSE                                                                                      |
+| `openalex`                              | \"C41008148\"                                                                              |
+| `ror`                                   | \"0130frc33\"                                                                              |
+| `mag`                                   | \"114027177\"                                                                              |
+| `grid`                                  | \"grid.10698.36\"                                                                          |
+| `wikipedia`                             | \"<https://en.wikipedia.org/wiki/University%20of%20North%20Carolina%20at%20Chapel%20Hill>\"|
+| `wikidata`                              | \"<https://www.wikidata.org/wiki/Q192334>\"                                                |
+
+### Concepts
+
+| Filter                                  | Example value                                                                              |
+|-----------------------------------------|--------------------------------------------------------------------------------------------|
+| `level`                                 | 3                                                                                          |
+| `works_count`                           | \"<999\"                                                                                   |
+| `cited_by_count`                        | \">10000\"                                                                                 |
+| `ancestors.id`                          | \"C161191863\"                                                                             |
+| `openalex`                              | \"C2522767166\"                                                                            |
+| `wikidata_id`                           | \"Q14565201\"                                                                              |
+| `mag`                                   | \"2778407487114027177\"                                                                    |
+| `wikipedia`                             | \"<https://en.wikipedia.org/wiki/Altmetrics>\"                                             |
+| `umls_aui`                              |                                                                                            |
+| `umls_cui`                              |                                                                                            |
+| `display_name.search`                   | \"electrodynamics\"                                                                        |
+| `has_wikidata`                          | FALSE                                                                                      |
+
+
+
+## Examples
+
+```{r examples}
+library(openalexR)
+
+lib_concepts <- oa_fetch(
+  entity = "concepts", 
+  level = 3,
+  works_count = "<999",
+  cited_by_count = ">10000",
+  ancestors.id = "C161191863",
+  has_wikidata = TRUE
+)
+dplyr::glimpse(lib_concepts)
+
+tech_insts <- oa_fetch(
+  entity = "institutions", 
+  country_code = "CN",
+  x_concepts.id = "C41008148",
+  display_name.search = "technology",
+  has_ror = FALSE
+)
+dplyr::glimpse(tech_insts)
+
+peer_venues <- oa_fetch(
+  entity = "venues", 
+  publisher = "Peerj",
+  x_concepts.id = "C185592680",
+  is_oa = TRUE,
+  is_in_doaj = TRUE
+)
+dplyr::glimpse(peer_venues)
+```
+

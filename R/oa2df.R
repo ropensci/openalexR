@@ -54,7 +54,8 @@ oa2df <- function(data, entity, abstract = TRUE, count_only = FALSE, group_by = 
     authors = authors2df(data, verbose),
     institutions = institutions2df(data, verbose),
     venues = venues2df(data, verbose),
-    concepts = concepts2df(data, verbose)
+    concepts = concepts2df(data, verbose),
+    snowball = snowball2df(data)
   )
 }
 
@@ -608,4 +609,87 @@ concepts2df <- function(data, verbose = TRUE) {
   )
 
   do.call(rbind, list_df)[, col_order]
+}
+
+
+#' Flatten snowball result
+#'
+#' |  id|title |...|cited_by_count| referenced_works   |cited_by |...|
+#' | 100|foo   |...|             1| 98, 99             |101      |...|
+#' | 200|bar   |...|             2| 198, 199           |201, 202 |...|
+#' | 300|wug   |...|             2| 296, 297, 298, 299 |301, 302 |...|
+#'
+#' @param data List result from `oa_snowball`.
+#' @param verbose Logical. If TRUE, print information on wrangling process.
+#'
+#' @return Tibble/data.frame of works with additional columns:
+#' append `citing`, `backward_count`, `cited_by`, `forward_count`, `connection`,
+#' and `connection_count.` For each work/row, these counts are WITHIN one
+#' data search, and so `forward_count` <= `cited_by_count`.
+#'
+#' Consider the universe of all works linked to a set of starting works, (`oa_input = TRUE`)
+#' for each work/row i:
+#' - citing: works in the universe that i cites
+#' - backward_count: number of works in the universe that i cites
+#' - cited_by: works that i is cited by
+#' - forward_count: number of works in the universe that i is cited by
+#' - connection: works in the universe linked to i
+#' - connection_count: number of works in the universe linked to i (degree of i)
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' flat_snow <- snowball2df(oa_snowball(
+#'   identifier = "W1516819724",
+#'   verbose = TRUE
+#' ))
+#'
+#' flat_snow[, c("id", "connection", "connection_count")]
+#' }
+snowball2df <- function(data, verbose = FALSE) {
+  nodes <- data$nodes
+  ids <- nodes$id[nodes$oa_input]
+  edges_df <- data$edges
+
+  citing <- do.call(rbind.data.frame, by(
+    edges_df, list(edges_df$from),
+    function(x) {
+      list(
+        id = unique(x$from),
+        citing = paste(x$to, collapse = ";"),
+        backward_count = nrow(x)
+      )
+    }
+  ))
+
+  cited_by <- do.call(rbind.data.frame, by(
+    edges_df, list(edges_df$to),
+    function(x) {
+      list(
+        id = unique(x$to),
+        cited_by = paste(x$from, collapse = ";"),
+        forward_count = nrow(x)
+      )
+    }
+  ))
+
+  if (verbose) message("Appending new columns...")
+
+  nodes_augmented <- merge(
+    merge(nodes, citing, all.x = TRUE),
+    cited_by, all.x = TRUE
+  )
+
+  nodes_augmented$connection <- apply(
+    nodes_augmented[, c("citing", "cited_by")], 1,
+    function(x) paste(x[!is.na(x)], collapse = ";")
+  )
+
+  nodes_augmented[is.na(nodes_augmented$backward_count), "backward_count"] <- 0
+  nodes_augmented[is.na(nodes_augmented$forward_count), "forward_count"] <- 0
+  nodes_augmented$connection_count <-
+    nodes_augmented$backward_count + nodes_augmented$forward_count
+
+  nodes_augmented
 }

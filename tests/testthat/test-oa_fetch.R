@@ -11,7 +11,6 @@ test_that("oa_request returns list", {
   skip_on_cran()
 
   query_url <- "https://api.openalex.org/authors?filter=openalex%3AA923435168%7CA2208157607"
-
   expect_type(oa_request(query_url), "list")
 })
 
@@ -19,10 +18,7 @@ test_that("oa_fetch works", {
   skip_on_cran()
 
   work_ids <- c("W2741809807")
-  multi_works <- oa_fetch(
-    identifier = work_ids,
-    verbose = TRUE
-  )
+  multi_works <- oa_fetch(identifier = work_ids, output = "dataframe", mailto = "example@email.com")
   expect_equal(
     sort(multi_works$id),
     paste0("https://openalex.org/", sort(work_ids))
@@ -202,11 +198,16 @@ test_that("oa_fetch can combine (OR) more than 50 ORCIDs in a filter", {
 
   many_orcid_results <- oa_fetch(entity = "authors", orcid = valid_orcids)
 
-  expect_s3_class(
-    many_orcid_results,
-    "data.frame"
-  )
+  expect_s3_class(many_orcid_results, "data.frame")
   # https://orcid.org/0000-0002-4147-892X corresponds to two openalex id
   expect_true(nrow(many_orcid_results) >= length(valid_orcids))
 })
 
+test_that("oa_random works", {
+  skip_on_cran()
+
+  random_works <- oa_random("works")
+  expect_type(random_works, "list")
+  expect_s3_class(random_works, "data.frame")
+  expect_equal(nrow(random_works), 1)
+})

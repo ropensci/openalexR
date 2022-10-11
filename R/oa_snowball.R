@@ -1,6 +1,8 @@
 #' A function to perform a snowball search
 #' and convert the result to a tibble/data frame.
 #' @param identifier Character vector of openalex_id identifiers.
+#' @param ... Additional arguments to pass to `oa_fetch` when querying the
+#' input works, such as `doi`.
 #' @param id_type Type of OpenAlex IDs to return. Defaults to "short",
 #' which remove the prefix https://openalex.org/ in the works' IDs,
 #' for example, W2755950973.
@@ -8,8 +10,6 @@
 #' for example, https://openalex.org/W2755950973
 #' @param citing_filter filters used in the search of works citing the input works.
 #' @param cited_by_filter filters used in the search of works cited by the input works.
-#' @param ... Additional arguments to pass to `oa_fetch` when querying the
-#' input works, such as `doi`.
 #' @inheritParams oa_fetch
 #'
 #'
@@ -28,18 +28,19 @@
 #'
 #' snowball_docs <- oa_snowball(
 #'   identifier = c("W2741809807", "W2755950973"),
-#'   from_publication_date = "2022-01-01",
+#'   citing_filter = list(from_publication_date = "2022-01-01"),
+#'   cited_by_filter = list(),
 #'   verbose = TRUE
 #' )
 #' }
 oa_snowball <- function(identifier = NULL,
+                        ...,
                         id_type = c("short", "original"),
                         mailto = oa_email(),
                         endpoint = "https://api.openalex.org/",
                         verbose = FALSE,
                         citing_filter = list(),
-                        cited_by_filter = list(),
-                        ...) {
+                        cited_by_filter = list()) {
   id_type <- match.arg(id_type)
   base_args <- list(
     entity = "works",
@@ -101,83 +102,4 @@ oa_snowball <- function(identifier = NULL,
   }
 
   list(nodes = nodes, edges = edges)
-}
-
-#' Flatten snowball result
-#'
-#' |  id|title |...|cited_by_count| referenced_works   |cited_by |...|
-#' | 100|foo   |...|             1| 98, 99             |101      |...|
-#' | 200|bar   |...|             2| 198, 199           |201, 202 |...|
-#' | 300|wug   |...|             2| 296, 297, 298, 299 |301, 302 |...|
-#'
-#' @param snowball List result from `oa_snowball`.
-#'
-#' @return Tibble/data.frame of works with additional columns:
-#' append `citing`, `backward_count`, `cited_by`, `forward_count`, `connection`,
-#' and `connection_count.` For each work/row, these counts are WITHIN one
-#' snowball search, and so `forward_count` <= `cited_by_count`.
-#'
-#' Consider the universe of all works linked to a set of starting works, (`oa_input = TRUE`)
-#' for each work/row i:
-#' - citing: works in the universe that i cites
-#' - backward_count: number of works in the universe that i cites
-#' - cited_by: works that i is cited by
-#' - forward_count: number of works in the universe that i is cited by
-#' - connection: works in the universe linked to i
-#' - connection_count: number of works in the universe linked to i (degree of i)
-#'
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' flat_snow <- to_disk(oa_snowball(
-#'   identifier = "W1516819724",
-#'   verbose = TRUE
-#' ))
-#'
-#' flat_snow[, c("id", "connection", "connection_count")]
-#' }
-to_disk <- function(snowball) {
-  nodes <- snowball$nodes
-  ids <- nodes$id[nodes$oa_input]
-  edges_df <- snowball$edges
-
-  citing <- do.call(rbind.data.frame, by(
-    edges_df, list(edges_df$from),
-    function(x) {
-      list(
-        id = unique(x$from),
-        citing = paste(x$to, collapse = ";"),
-        backward_count = nrow(x)
-      )
-    }
-  ))
-
-  cited_by <- do.call(rbind.data.frame, by(
-    edges_df, list(edges_df$to),
-    function(x) {
-      list(
-        id = unique(x$to),
-        cited_by = paste(x$from, collapse = ";"),
-        forward_count = nrow(x)
-      )
-    }
-  ))
-
-  nodes_augmented <- merge(
-    merge(nodes, citing, all.x = TRUE),
-    cited_by, all.x = TRUE
-  )
-
-  nodes_augmented$connection <- apply(
-    nodes_augmented[, c("citing", "cited_by")], 1,
-    function(x) paste(x[!is.na(x)], collapse = ";")
-  )
-
-  nodes_augmented[is.na(nodes_augmented$backward_count), "backward_count"] <- 0
-  nodes_augmented[is.na(nodes_augmented$forward_count), "forward_count"] <- 0
-  nodes_augmented$connection_count <-
-    nodes_augmented$backward_count + nodes_augmented$forward_count
-
-  nodes_augmented
 }

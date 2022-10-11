@@ -7,17 +7,20 @@ and convert the result to a tibble/data frame.}
 \usage{
 oa_snowball(
   identifier = NULL,
+  ...,
   id_type = c("short", "original"),
   mailto = oa_email(),
   endpoint = "https://api.openalex.org/",
   verbose = FALSE,
   citing_filter = list(),
-  cited_by_filter = list(),
-  ...
+  cited_by_filter = list()
 )
 }
 \arguments{
 \item{identifier}{Character vector of openalex_id identifiers.}
+
+\item{...}{Additional arguments to pass to `oa_fetch` when querying the
+input works, such as `doi`.}
 
 \item{id_type}{Type of OpenAlex IDs to return. Defaults to "short",
 which remove the prefix https://openalex.org/ in the works' IDs,
@@ -30,15 +33,12 @@ for example, https://openalex.org/W2755950973}
 \item{endpoint}{Character. URL of the OpenAlex Endpoint API server.
 Defaults to endpoint = "https://api.openalex.org/".}
 
-\item{verbose}{Logical. If TRUE, information about the querying process will
-be plotted on screen. Default to \code{verbose = FALSE}.}
+\item{verbose}{Logical. If TRUE, print information on querying process.
+Default to \code{verbose = FALSE}.}
 
 \item{citing_filter}{filters used in the search of works citing the input works.}
 
 \item{cited_by_filter}{filters used in the search of works cited by the input works.}
-
-\item{...}{Additional arguments to pass to `oa_fetch` when querying the
-input works, such as `doi`.}
 }
 \value{
 A list containing 2 elements:
@@ -58,7 +58,8 @@ and convert the result to a tibble/data frame.
 
 snowball_docs <- oa_snowball(
   identifier = c("W2741809807", "W2755950973"),
-  from_publication_date = "2022-01-01",
+  citing_filter = list(from_publication_date = "2022-01-01"),
+  cited_by_filter = list(),
   verbose = TRUE
 )
 }

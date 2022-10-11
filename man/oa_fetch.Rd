@@ -6,9 +6,9 @@
 and convert the result to a tibble/data frame.}
 \usage{
 oa_fetch(
-  ...,
   identifier = NULL,
   entity = if (is.null(identifier)) NULL else id_type(identifier[[1]]),
+  ...,
   search = NULL,
   sort = NULL,
   group_by = NULL,
@@ -22,14 +22,14 @@ oa_fetch(
 )
 }
 \arguments{
-\item{...}{Additional filter arguments.}
-
 \item{identifier}{Character. OpenAlex ID(s) as item identifier(s).
 See more at <https://docs.openalex.org/about-the-data#the-openalex-id>.}
 
 \item{entity}{Character. Scholarly entity of the search.
 The argument can be one of c("works", "authors", "venues", "institutions", "concepts").
 If not provided, `entity` is guessed from `identifier`.}
+
+\item{...}{Additional filter arguments.}
 
 \item{search}{Character. Search is just another kind of filter, one that all five endpoints support.
 But unlike the other filters, search doesn't require an exact match.
@@ -62,8 +62,8 @@ Defaults to FALSE.}
 
 \item{mailto}{Character string. Gives OpenAlex an email to enter the polite pool.}
 
-\item{verbose}{Logical. If TRUE, information about the querying process will
-be plotted on screen. Default to \code{verbose = FALSE}.}
+\item{verbose}{Logical. If TRUE, print information on querying process.
+Default to \code{verbose = FALSE}.}
 }
 \value{
 A data.frame or a list. Result of the query.

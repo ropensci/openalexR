@@ -69,13 +69,12 @@ Bonus point if you put this in your `.Rprofile` with
 library(openalexR)
 library(dplyr)
 library(ggplot2)
-theme_set(theme_classic())
 ```
 
 ## Examples
 
 There are different
-[filters](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists)/arguments
+[filters](https://massimoaria.github.io/openalexR/articles/Filters)/arguments
 you can use in `oa_fetch`, depending on which
 [entity](https://docs.openalex.org/about-the-data) you’re interested in:
 works, authors, venues, institutions, or concepts. We show a few
@@ -87,7 +86,7 @@ examples below.
 (known DOIs).
 
 Use `doi` as a [works
-filter](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#works-filters)
+filter](https://massimoaria.github.io/openalexR/articles/Filters.html#works)
 (either the canonical form with <https://doi.org/> or without):
 
 ``` r
@@ -125,14 +124,14 @@ oa_fetch(
 #> About to get a total of 2 pages of results with a total of 211 records.
 ```
 
-| id          | display_name                                                                                                                              | first_author          | last_author         | so                              | url                                             | is_oa | top_concepts                                                |
-|:------------|:------------------------------------------------------------------------------------------------------------------------------------------|:----------------------|:--------------------|:--------------------------------|:------------------------------------------------|:------|:------------------------------------------------------------|
-| W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis                                                                       | Massimo Aria          | Corrado Cuccurullo  | Journal of Informetrics         | <https://doi.org/10.1016/j.joi.2017.08.007>     | FALSE | Data science, Information retrieval                         |
-| W2955219525 | Scaling tree-based automated machine learning to biomedical big data with a feature set selector                                          | Trang T. Le           | Jason H. Moore      | Bioinformatics                  | <https://doi.org/10.1093/bioinformatics/btz470> | TRUE  | Pipeline (software), Scalability, Feature (linguistics)     |
-| W1979874437 | Analysis of powered two-wheeler crashes in Italy by classification trees and rules discovery                                              | Alfonso Montella      | Filomena Mauriello  | Accident Analysis & Prevention  | <https://doi.org/10.1016/j.aap.2011.04.025>     | FALSE | Crash, Identification (biology), Decision tree              |
-| W2952824318 | A Nonlinear Simulation Framework Supports Adjusting for Age When Analyzing BrainAGE                                                       | Trang T. Le           | Tulsa Investigators | Frontiers in Aging Neuroscience | <https://doi.org/10.3389/fnagi.2018.00317>      | TRUE  | Correlation, Mood, Contrast (vision)                        |
-| W2408216567 | Foundations and trends in performance management. A twenty-five years bibliometric analysis in business and public administration domains | Corrado Cuccurullo    | Fabrizia Sarto      | Scientometrics                  | <https://doi.org/10.1007/s11192-016-1948-8>     | FALSE | Administration (probate law), Bibliometrics, Trend analysis |
-| W2281330131 | Coopetition and sustainable competitive advantage. The case of tourist destinations                                                       | Valentina Della Corte | Massimo Aria        | Tourism Management              | <https://doi.org/10.1016/j.tourman.2015.12.009> | FALSE | Competitive advantage, Tourism                              |
+| id          | display_name                                                                                                                              | first_author          | last_author         | so                              | url                                             | is_oa | top_concepts                                                   |
+|:------------|:------------------------------------------------------------------------------------------------------------------------------------------|:----------------------|:--------------------|:--------------------------------|:------------------------------------------------|:------|:---------------------------------------------------------------|
+| W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis                                                                       | Massimo Aria          | Corrado Cuccurullo  | Journal of Informetrics         | <https://doi.org/10.1016/j.joi.2017.08.007>     | FALSE | Data science, Information retrieval                            |
+| W2955219525 | Scaling tree-based automated machine learning to biomedical big data with a feature set selector                                          | Trang T. Le           | Jason H. Moore      | Bioinformatics                  | <https://doi.org/10.1093/bioinformatics/btz470> | TRUE  | Pipeline (software), Scalability, Feature (linguistics)        |
+| W1979874437 | Analysis of powered two-wheeler crashes in Italy by classification trees and rules discovery                                              | Alfonso Montella      | Filomena Mauriello  | Accident Analysis & Prevention  | <https://doi.org/10.1016/j.aap.2011.04.025>     | FALSE | Crash, Identification (biology), Decision tree                 |
+| W2952824318 | A Nonlinear Simulation Framework Supports Adjusting for Age When Analyzing BrainAGE                                                       | Trang T. Le           | Tulsa Investigators | Frontiers in Aging Neuroscience | <https://doi.org/10.3389/fnagi.2018.00317>      | TRUE  | Correlation, Mood, Contrast (vision)                           |
+| W2408216567 | Foundations and trends in performance management. A twenty-five years bibliometric analysis in business and public administration domains | Corrado Cuccurullo    | Fabrizia Sarto      | Scientometrics                  | <https://doi.org/10.1007/s11192-016-1948-8>     | FALSE | Administration (probate law), Bibliometrics, Public management |
+| W2281330131 | Coopetition and sustainable competitive advantage. The case of tourist destinations                                                       | Valentina Della Corte | Massimo Aria        | Tourism Management              | <https://doi.org/10.1016/j.tourman.2015.12.009> | FALSE | Competitive advantage, Tourism, Game theory                    |
 
 **Goal**: Download all works that have been cited more than 50 times,
 published between 2020 and 2021, and include the strings “bibliometric
@@ -152,7 +151,7 @@ oa_fetch(
   show_works() %>%
   knitr::kable()
 #> Requesting url: https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc
-#> About to get a total of 1 pages of results with a total of 33 records.
+#> About to get a total of 1 pages of results with a total of 35 records.
 ```
 
 | id          | display_name                                                                                                                  | first_author        | last_author        | so                                        | url                                             | is_oa | top_concepts                                                  |
@@ -171,7 +170,7 @@ oa_fetch(
 Here, instead of `author.orcid` like earlier, we have to use `orcid` as
 an argument. This may be a little confusing, but again, a different
 entity (**authors** instead of **works**) requires a [different set of
-filters](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#authors-filters).
+filters](https://massimoaria.github.io/openalexR/articles/Filters.html#authors).
 
 ``` r
 oa_fetch(
@@ -189,9 +188,7 @@ oa_fetch(
 
 **Goal**: Acquire information on the authors of this package.
 
-We can filter by other
-[filters](https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#authors-filters)
-such as `display_name` and `has_orcid`:
+We can use other filters such as `display_name` and `has_orcid`:
 
 ``` r
 oa_fetch(
@@ -226,7 +223,7 @@ my_arguments <- list(
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #>      count db_response_time_ms page per_page
-#> [1,]    24                   9    1        1
+#> [1,]    24                   5    1        1
 do.call(oa_fetch, my_arguments) %>%
   show_authors() %>%
   knitr::kable()
@@ -236,8 +233,8 @@ do.call(oa_fetch, my_arguments) %>%
 |:------------|:-------------------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------------------|
 | A2061787601 | Luca Lista               | 0000-0001-6471-5492 |        2474 |          35430 | University of Naples Federico II | Nuclear physics, Particle physics, Quantum mechanics |
 | A2600338221 | Alberto Orso Maria Iorio | 0000-0002-3798-1135 |        1182 |          22395 | University of Naples Federico II | Nuclear physics, Particle physics, Quantum mechanics |
-| A2011452631 | Leonardo Merola          | NA                  |        1115 |          17072 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
-| A3113327292 | Vincenzo Canale          | NA                  |         989 |          13994 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
+| A2011452631 | Leonardo Merola          | NA                  |        1115 |          19510 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
+| A3113327292 | Vincenzo Canale          | NA                  |         989 |          15938 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
 | A223517670  | Ettore Novellino         | 0000-0002-2181-2142 |         962 |          17659 | University of Naples Federico II | Biochemistry, Genetics, Organic chemistry            |
 | A2062713547 | G. De Nardo              | NA                  |         959 |          12219 | University of Naples Federico II | Particle physics, Nuclear physics, Quantum mechanics |
 
@@ -314,18 +311,18 @@ italy_insts %>%
 And what do they publish on?
 
 ``` r
-concept_cloud <- italy_insts %>% 
-  select(inst_id = id, x_concepts) %>% 
-  tidyr::unnest(x_concepts) %>% 
-  filter(level == 1) %>% 
-  select(display_name, score) %>% 
-  group_by(display_name) %>% 
+concept_cloud <- italy_insts %>%
+  select(inst_id = id, x_concepts) %>%
+  tidyr::unnest(x_concepts) %>%
+  filter(level == 1) %>%
+  select(display_name, score) %>%
+  group_by(display_name) %>%
   summarise(score = sum(score))
 
 pal <- c("black", scales::brewer_pal(palette = "Set1")(5))
 set.seed(1)
 wordcloud::wordcloud(
-  concept_cloud$display_name, 
+  concept_cloud$display_name,
   concept_cloud$score,
   scale = c(2, .4),
   colors = pal
@@ -371,6 +368,8 @@ jours %>%
   coord_polar(clip = "off") +
   theme_bw() +
   theme(
+    plot.background = element_rect(fill = "transparent", colour = NA),
+    panel.background = element_rect(fill = "transparent", colour = NA),
     panel.grid = element_blank(),
     panel.border = element_blank(),
     axis.text = element_blank(),

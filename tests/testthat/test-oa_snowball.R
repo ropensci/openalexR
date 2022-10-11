@@ -2,12 +2,9 @@ test_that("oa_snowball works", {
   skip_on_cran()
 
   work_ids <- c("W3045921891", "W3046863325")
-  multi_works <- oa_snowball(
-    identifier = work_ids,
-    verbose = TRUE
-  )
+  multi_works <- oa_snowball(identifier = work_ids)
   multi_nodes <- multi_works$nodes
-  flat_snow <- to_disk(multi_works)
+  flat_snow <- oa2df(multi_works, "snowball")
 
   expect_equal(
     sort(multi_nodes$id[multi_nodes$oa_input]),
@@ -40,11 +37,7 @@ test_that("oa_snowball works for DOIs", {
     "https://doi.org/10.1038/s41586-022-05258-z"
   )
 
-  snowball_doi <- oa_snowball(
-    doi = work_dois,
-    verbose = TRUE
-  )
-
+  snowball_doi <- oa_snowball(doi = work_dois)
   doi_nodes <- snowball_doi$nodes
   dois_in <- doi_nodes$doi[doi_nodes$oa_input]
 
