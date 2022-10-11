@@ -69,7 +69,6 @@ Bonus point if you put this in your `.Rprofile` with
 library(openalexR)
 library(dplyr)
 library(ggplot2)
-theme_set(theme_classic())
 ```
 
 ## Examples
@@ -224,7 +223,7 @@ my_arguments <- list(
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #>      count db_response_time_ms page per_page
-#> [1,]    24                  54    1        1
+#> [1,]    24                   5    1        1
 do.call(oa_fetch, my_arguments) %>%
   show_authors() %>%
   knitr::kable()
@@ -312,18 +311,18 @@ italy_insts %>%
 And what do they publish on?
 
 ``` r
-concept_cloud <- italy_insts %>% 
-  select(inst_id = id, x_concepts) %>% 
-  tidyr::unnest(x_concepts) %>% 
-  filter(level == 1) %>% 
-  select(display_name, score) %>% 
-  group_by(display_name) %>% 
+concept_cloud <- italy_insts %>%
+  select(inst_id = id, x_concepts) %>%
+  tidyr::unnest(x_concepts) %>%
+  filter(level == 1) %>%
+  select(display_name, score) %>%
+  group_by(display_name) %>%
   summarise(score = sum(score))
 
 pal <- c("black", scales::brewer_pal(palette = "Set1")(5))
 set.seed(1)
 wordcloud::wordcloud(
-  concept_cloud$display_name, 
+  concept_cloud$display_name,
   concept_cloud$score,
   scale = c(2, .4),
   colors = pal
@@ -369,6 +368,8 @@ jours %>%
   coord_polar(clip = "off") +
   theme_bw() +
   theme(
+    plot.background = element_rect(fill = "transparent", colour = NA),
+    panel.background = element_rect(fill = "transparent", colour = NA),
     panel.grid = element_blank(),
     panel.border = element_blank(),
     axis.text = element_blank(),
