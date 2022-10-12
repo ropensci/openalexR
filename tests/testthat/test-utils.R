@@ -27,9 +27,11 @@ test_that("asl works", {
 })
 
 test_that("shorten_oaid works", {
-  expect_equal(shorten_oaid(c(
+  c(
     "https://openalex.org/W3045921891",
     "https://openalex.org/W3046863325",
     "W3045921891"
-  )), c("W3045921891", "W3046863325", "W3045921891"))
+  ) |>
+    shorten_oaid() |>
+    expect_equal(c("W3045921891", "W3046863325", "W3045921891"))
 })

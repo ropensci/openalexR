@@ -13,13 +13,14 @@ test_that("oa_snowball works", {
 
   expect_equal(nrow(flat_snow), nrow(multi_nodes))
   expect_equal(ncol(flat_snow), ncol(multi_nodes) + 6)
-  expect_true(all(
-    c(
-      "cited_by", "citing", "connection",
-      "forward_count", "backward_count", "connection_count"
-    ) %in%
-      names(flat_snow)
-  ))
+
+  c(
+    "cited_by", "citing", "connection",
+    "forward_count", "backward_count", "connection_count"
+  ) |>
+    `%in%`(names(flat_snow)) |>
+    all() |>
+    expect_true()
 
   expect_s3_class(flat_snow, "data.frame")
 })
@@ -44,4 +45,28 @@ test_that("oa_snowball works for DOIs", {
   expect_true(is.list(snowball_doi))
   expect_true(any(grepl(work_dois[[1]], dois_in)))
   expect_true(any(grepl(work_dois[[2]], dois_in)))
+})
+
+test_that("oa_snowball works for author orcids", {
+  orcids <- c("0000-0003-3737-6565", "0000-0002-8517-9411")
+
+  # find publications by these two authors this year
+  snowball_orcid <- oa_snowball(
+    author.orcid = orcids,
+    from_publication_date = "2022-01-01",
+    to_publication_date = "2022-12-31",
+    citing_filter = list(from_publication_date = "2022-10-01"),
+    cited_by_filter = list(from_publication_date = "2021-10-01")
+  )
+
+  nodes <- snowball_orcid$nodes
+  orcids_in <- sapply(nodes$author[nodes$oa_input], function(x) x$au_orcid)
+  either_orcid <- paste(orcids, collapse = "|")
+
+  expect_true(is.list(snowball_orcid))
+
+  orcids_in |>
+    sapply(function(x) any(grepl(either_orcid, x))) |>
+    all() |>
+    expect_true()
 })
