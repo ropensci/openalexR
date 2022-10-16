@@ -317,10 +317,12 @@ oa_request <- function(query_url,
     return(list())
   }
 
+  pg_plural <- if (n_pages > 1) " pages" else " page"
+
   if (verbose) {
     message(
-      "About to get a total of ", n_pages, " pages of results",
-      " with a total of ", n_items, " records."
+      "Getting ", n_pages, pg_plural, " of results",
+      " with a total of ", n_items, " records..."
     )
   }
 
