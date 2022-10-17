@@ -164,15 +164,12 @@ Setting the argument `count_only = TRUE`, the function `oa_request()` returns th
 
 ```{r}
 oa_fetch(
-  identifier = NULL,
   entity = "works",
   title.search = c("bibliometric analysis", "science mapping"),
   cited_by_count = ">50", 
   from_publication_date = "2020-01-01",
   to_publication_date = "2021-12-31",
-  search = NULL,
   sort = "cited_by_count:desc",
-  endpoint = "https://api.openalex.org/",
   count_only = TRUE,
   verbose = TRUE
 )

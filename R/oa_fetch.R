@@ -26,7 +26,6 @@ oa_entities <- function() {
 #' paper_meta <- oa_fetch(
 #'   identifier = "W2755950973",
 #'   entity = "works",
-#'   endpoint = "https://api.openalex.org/",
 #'   count_only = TRUE,
 #'   abstract = TRUE,
 #'   verbose = TRUE
@@ -317,10 +316,12 @@ oa_request <- function(query_url,
     return(list())
   }
 
+  pg_plural <- if (n_pages > 1) " pages" else " page"
+
   if (verbose) {
     message(
-      "About to get a total of ", n_pages, " pages of results",
-      " with a total of ", n_items, " records."
+      "Getting ", n_pages, pg_plural, " of results",
+      " with a total of ", n_items, " records..."
     )
   }
 
@@ -401,7 +402,6 @@ oa_request <- function(query_url,
 #'
 #' query_work <- oa_query(
 #'   identifier = "W2755950973",
-#'   endpoint = "https://api.openalex.org/",
 #'   verbose = TRUE
 #' )
 #'

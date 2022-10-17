@@ -65,13 +65,14 @@ See the [original documentation](https://docs.openalex.org/api/get-lists-of-enti
 | `to_publication_date`                   | \"2022-08-11\"                                                                             |
 | `has_oa_accepted_or_published_version`  | TRUE                                                                                       |
 | `has_oa_submitted_version`              | TRUE                                                                                       |
-| `works_count`                           | \">99\"                                                                                    |
-| `cited_by_count`                        | \">1000\"                                                                                  |
+
 
 ### Authors
 
 | Filter                                  | Example value                                                                              |
 |-----------------------------------------|--------------------------------------------------------------------------------------------|
+| `works_count`                           | \">99\"                                                                                    |
+| `cited_by_count`                        | \">1000\"                                                                                  |
 | `last_known_institution.id`             | \"I4200000001\"                                                                            |
 | `last_known_institution.ror`            | \"02nr0ka47\"                                                                              |
 | `last_known_institution.country_code`   | \"CA\"                                                                                     |

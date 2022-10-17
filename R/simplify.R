@@ -71,14 +71,8 @@ show_authors <- function(x, simp_func = utils::head){
 #'
 show_works <- function(x, simp_func = utils::head){
   x$id <- sapply(strsplit(x$id, split= "/"), function(y) utils::tail(y, 1))
-  x$first_author <- sapply(
-    x$author,
-    function(y) y[y$author_position == "first", "au_display_name"]
-  )
-  x$last_author <- sapply(
-    x$author,
-    function(y) y[y$author_position == "last", "au_display_name"]
-  )
+  x$first_author <- sapply(x$author, get_auth_position, position = "first")
+  x$last_author <- sapply(x$author, get_auth_position, position = "last")
 
   x$top_concepts <- sapply(
     x$concepts,
@@ -95,4 +89,10 @@ show_works <- function(x, simp_func = utils::head){
   )
 
   simp_func(x[, simp_cols])
+}
+
+get_auth_position <- function(y, position = "first"){
+  last <- y[y$author_position == position, "au_display_name"]
+  if (length(last) == 0) return(NA_character_)
+  last
 }

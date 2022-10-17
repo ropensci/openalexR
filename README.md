@@ -98,13 +98,13 @@ oa_fetch(
   show_works() %>%
   knitr::kable()
 #> Requesting url: https://api.openalex.org/works?filter=doi%3A10.1016%2Fj.joi.2017.08.007%7Chttps%3A%2F%2Fdoi.org%2F10.1093%2Fbioinformatics%2Fbtab727
-#> About to get a total of 1 pages of results with a total of 2 records.
+#> Getting 1 page of results with a total of 2 records...
 ```
 
 | id          | display_name                                                                           | first_author     | last_author        | so                      | url                                              | is_oa | top_concepts                                                       |
 |:------------|:---------------------------------------------------------------------------------------|:-----------------|:-------------------|:------------------------|:-------------------------------------------------|:------|:-------------------------------------------------------------------|
-| W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis                    | Massimo Aria     | Corrado Cuccurullo | Journal of Informetrics | <https://doi.org/10.1016/j.joi.2017.08.007>      | FALSE | Data science, Information retrieval                                |
-| W3206431085 | PMLB v1.0: an open-source dataset collection for benchmarking machine learning methods | Joseph D. Romano | Jason H. Moore     | Bioinformatics          | <https://doi.org/10.1093/bioinformatics/btab727> | TRUE  | Benchmarking, Python (programming language), Benchmark (surveying) |
+| W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis                    | Massimo Aria     | Corrado Cuccurullo | Journal of Informetrics | <https://doi.org/10.1016/j.joi.2017.08.007>      | FALSE | Workflow, Bibliometrics, Software                                  |
+| W3206431085 | PMLB v1.0: an open-source dataset collection for benchmarking machine learning methods | Joseph D. Romano | Jason H. Moore     | Bioinformatics          | <https://doi.org/10.1093/bioinformatics/btab727> | TRUE  | Python (programming language), Benchmarking, Benchmark (surveying) |
 
 **Goal**: Download all works published by a set of authors (known
 ORCIDs).
@@ -121,12 +121,12 @@ oa_fetch(
   show_works() %>%
   knitr::kable()
 #> Requesting url: https://api.openalex.org/works?filter=author.orcid%3A0000-0003-3737-6565%7C0000-0002-8517-9411
-#> About to get a total of 2 pages of results with a total of 211 records.
+#> Getting 2 pages of results with a total of 211 records...
 ```
 
 | id          | display_name                                                                                                                              | first_author          | last_author         | so                              | url                                             | is_oa | top_concepts                                                   |
 |:------------|:------------------------------------------------------------------------------------------------------------------------------------------|:----------------------|:--------------------|:--------------------------------|:------------------------------------------------|:------|:---------------------------------------------------------------|
-| W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis                                                                       | Massimo Aria          | Corrado Cuccurullo  | Journal of Informetrics         | <https://doi.org/10.1016/j.joi.2017.08.007>     | FALSE | Data science, Information retrieval                            |
+| W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis                                                                       | Massimo Aria          | Corrado Cuccurullo  | Journal of Informetrics         | <https://doi.org/10.1016/j.joi.2017.08.007>     | FALSE | Workflow, Bibliometrics, Software                              |
 | W2955219525 | Scaling tree-based automated machine learning to biomedical big data with a feature set selector                                          | Trang T. Le           | Jason H. Moore      | Bioinformatics                  | <https://doi.org/10.1093/bioinformatics/btz470> | TRUE  | Pipeline (software), Scalability, Feature (linguistics)        |
 | W1979874437 | Analysis of powered two-wheeler crashes in Italy by classification trees and rules discovery                                              | Alfonso Montella      | Filomena Mauriello  | Accident Analysis & Prevention  | <https://doi.org/10.1016/j.aap.2011.04.025>     | FALSE | Crash, Identification (biology), Decision tree                 |
 | W2952824318 | A Nonlinear Simulation Framework Supports Adjusting for Age When Analyzing BrainAGE                                                       | Trang T. Le           | Tulsa Investigators | Frontiers in Aging Neuroscience | <https://doi.org/10.3389/fnagi.2018.00317>      | TRUE  | Correlation, Mood, Contrast (vision)                           |
@@ -151,15 +151,15 @@ oa_fetch(
   show_works() %>%
   knitr::kable()
 #> Requesting url: https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc
-#> About to get a total of 1 pages of results with a total of 35 records.
+#> Getting 1 page of results with a total of 41 records...
 ```
 
 | id          | display_name                                                                                                                  | first_author        | last_author        | so                                        | url                                             | is_oa | top_concepts                                                  |
 |:------------|:------------------------------------------------------------------------------------------------------------------------------|:--------------------|:-------------------|:------------------------------------------|:------------------------------------------------|:------|:--------------------------------------------------------------|
 | W3160856016 | How to conduct a bibliometric analysis: An overview and guidelines                                                            | Naveen Donthu       | Weng Marc Lim      | Journal of Business Research              | <https://doi.org/10.1016/j.jbusres.2021.04.070> | TRUE  | Bibliometrics, Field (mathematics), Resource (disambiguation) |
 | W3038273726 | Investigating the emerging COVID-19 research trends in the field of business and management: A bibliometric analysis approach | Surabhi Verma       | Anders Gustafsson  | Journal of Business Research              | <https://doi.org/10.1016/j.jbusres.2020.06.057> | TRUE  | Bibliometrics, Field (mathematics), MEDLINE                   |
-| W2990450011 | Forty-five years of Journal of Business Research: A bibliometric analysis                                                     | Naveen Donthu       | Debidutta Pattnaik | Journal of Business Research              | <https://doi.org/10.1016/j.jbusres.2019.10.039> | FALSE | Bibliometrics                                                 |
-| W3001491100 | Software tools for conducting bibliometric analysis in science: An up-to-date review                                          | Jose A. Moral-Munoz | Manuel Cobo        | Profesional De La Informacion             | <https://doi.org/10.3145/epi.2020.ene.03>       | TRUE  | Software, Bibliometrics                                       |
+| W2990450011 | Forty-five years of Journal of Business Research: A bibliometric analysis                                                     | Naveen Donthu       | Debidutta Pattnaik | Journal of Business Research              | <https://doi.org/10.1016/j.jbusres.2019.10.039> | FALSE | Publishing, Bibliometrics, Empirical research                 |
+| W3001491100 | Software tools for conducting bibliometric analysis in science: An up-to-date review                                          | Jose A. Moral-Munoz | Manuel Cobo        | Profesional De La Informacion             | <https://doi.org/10.3145/epi.2020.ene.03>       | TRUE  | Bibliometrics, Visualization, Set (abstract data type)        |
 | W3011866596 | A Bibliometric Analysis of COVID-19 Research Activity: A Call for Increased Output                                            | Mohamad A. Chahrour | Hussein H. Khachfe | Cureus                                    | <https://doi.org/10.7759/cureus.7357>           | TRUE  | Observational study, Gross domestic product, Population       |
 | W3044902155 | Financial literacy: A systematic review and bibliometric analysis                                                             | Kirti Goyal         | Satish Kumar       | International Journal of Consumer Studies | <https://doi.org/10.1111/ijcs.12605>            | FALSE | Financial literacy, Content analysis, Citation                |
 
@@ -223,7 +223,7 @@ my_arguments <- list(
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #>      count db_response_time_ms page per_page
-#> [1,]    24                   5    1        1
+#> [1,]    24                   6    1        1
 do.call(oa_fetch, my_arguments) %>%
   show_authors() %>%
   knitr::kable()
@@ -236,7 +236,7 @@ do.call(oa_fetch, my_arguments) %>%
 | A2011452631 | Leonardo Merola          | NA                  |        1115 |          19510 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
 | A3113327292 | Vincenzo Canale          | NA                  |         989 |          15938 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
 | A223517670  | Ettore Novellino         | 0000-0002-2181-2142 |         962 |          17659 | University of Naples Federico II | Biochemistry, Genetics, Organic chemistry            |
-| A2062713547 | G. De Nardo              | NA                  |         959 |          12219 | University of Naples Federico II | Particle physics, Nuclear physics, Quantum mechanics |
+| A2062713547 | G. De Nardo              | NA                  |         959 |          12590 | University of Naples Federico II | Particle physics, Nuclear physics, Quantum mechanics |
 
 ## Example analyses
 
@@ -269,6 +269,8 @@ concept_df %>%
   ) +
   guides(color = "none") +
   gghighlight(max(works_count) > 99500)
+#> Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+#> Please use `linewidth` instead.
 #> label_key: display_name
 ```
 
@@ -289,7 +291,7 @@ italy_insts <- oa_fetch(
   verbose = TRUE
 )
 #> Requesting url: https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation
-#> About to get a total of 2 pages of results with a total of 231 records.
+#> Getting 2 pages of results with a total of 231 records...
 
 italy_insts %>%
   slice_max(cited_by_count, n = 8) %>%
@@ -382,6 +384,8 @@ jours %>%
   scale_fill_brewer(palette = "Set1") +
   guides(fill = "none") +
   labs(y = NULL, x = NULL, title = "Journal clocks")
+#> Warning in RColorBrewer::brewer.pal(n, pal): n too large, allowed maximum for palette Set1 is 9
+#> Returning the palette you asked for with that many colors
 ```
 
 <img src="man/figures/README-big-journals-1.png" width="100%" />
