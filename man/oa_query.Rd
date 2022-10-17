@@ -83,7 +83,6 @@ query_auth <- oa_query(identifier = "A923435168", verbose = TRUE)
 
 query_work <- oa_query(
   identifier = "W2755950973",
-  endpoint = "https://api.openalex.org/",
   verbose = TRUE
 )
 

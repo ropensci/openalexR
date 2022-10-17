@@ -26,7 +26,6 @@ oa_entities <- function() {
 #' paper_meta <- oa_fetch(
 #'   identifier = "W2755950973",
 #'   entity = "works",
-#'   endpoint = "https://api.openalex.org/",
 #'   count_only = TRUE,
 #'   abstract = TRUE,
 #'   verbose = TRUE
@@ -403,7 +402,6 @@ oa_request <- function(query_url,
 #'
 #' query_work <- oa_query(
 #'   identifier = "W2755950973",
-#'   endpoint = "https://api.openalex.org/",
 #'   verbose = TRUE
 #' )
 #'

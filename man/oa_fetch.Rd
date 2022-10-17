@@ -78,7 +78,6 @@ and convert the result to a tibble/data frame.
 paper_meta <- oa_fetch(
   identifier = "W2755950973",
   entity = "works",
-  endpoint = "https://api.openalex.org/",
   count_only = TRUE,
   abstract = TRUE,
   verbose = TRUE
