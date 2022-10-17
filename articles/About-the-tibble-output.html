@@ -108,7 +108,7 @@
 <span>  count_only <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Requesting url: https://api.openalex.org/institutions?filter=country_code%3ACA%2Ccited_by_count%3A%3E4000000</span></span>
-<span><span class="co">#&gt; About to get a total of 1 pages of results with a total of 11 records.</span></span>
+<span><span class="co">#&gt; Getting 1 page of results with a total of 11 records...</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">institutions</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 22</span></span></span>
@@ -239,16 +239,20 @@
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="va">multi_insts</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 2</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># Rowwise: </span></span></span>
-<span><span class="co">#&gt;   openalex_id institutions</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>      </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> W3038273726 <span style="color: #949494;">&lt;chr [2]&gt;</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> W2990450011 <span style="color: #949494;">&lt;chr [2]&gt;</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> W3001491100 <span style="color: #949494;">&lt;chr [2]&gt;</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> W3011866596 <span style="color: #949494;">&lt;chr [1]&gt;</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> W3044902155 <span style="color: #949494;">&lt;chr [1]&gt;</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> W3000910650 <span style="color: #949494;">&lt;chr [3]&gt;</span></span></span>
+<span><span class="co">#&gt;    openalex_id institutions</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> W3038273726 <span style="color: #949494;">&lt;chr [2]&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> W2990450011 <span style="color: #949494;">&lt;chr [2]&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> W3001491100 <span style="color: #949494;">&lt;chr [2]&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> W3011866596 <span style="color: #949494;">&lt;chr [1]&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> W3044902155 <span style="color: #949494;">&lt;chr [1]&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> W3000910650 <span style="color: #949494;">&lt;chr [3]&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> W2990688366 <span style="color: #949494;">&lt;chr [3]&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> W2986617680 <span style="color: #949494;">&lt;chr [2]&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> W3000049009 <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> W3042215340 <span style="color: #949494;">&lt;chr [3]&gt;</span></span></span>
 <span></span>
 <span><span class="co"># institutions of the first work</span></span>
 <span><span class="va">multi_insts</span><span class="op">[</span><span class="fl">1</span>, <span class="st">"institutions"</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
