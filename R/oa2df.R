@@ -179,7 +179,7 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
       }
       first_inst <- prepend(first_inst, "institution")
       aff_raw <- list(au_affiliation_raw = l$raw_affiliation_string[1])
-      l_author <- prepend(l$author, "au")
+      l_author <- if (length(l$author) > 0) prepend(l$author, "au") else list()
       c(l_author, l["author_position"], aff_raw, first_inst)
     })))
 
