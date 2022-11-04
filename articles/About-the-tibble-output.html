@@ -93,12 +93,21 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/massimoaria/openalexR" class="external-link">openalexR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>
-<p>The default output from an <code>oa_fetch</code> call is a tibble. This object type allows each row to be one unit of entity (article, institution, etc.), which is often helpful for downstream wrangling. It combines complex output elements in <a href="https://dcl-prog.stanford.edu/list-columns.html" class="external-link">list columns</a>, which can be <strong>extracted</strong> or <strong>exploded</strong> with <code><a href="https://dplyr.tidyverse.org/reference/rowwise.html" class="external-link">dplyr::rowwise</a></code> or <code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map</a></code>.</p>
-<p>Of course, you can instead set <code>output = "list"</code> in your <code>oa_fetch</code> call if you are more comfortable working with list.</p>
+<p>The default output from an <code>oa_fetch</code> call is a tibble.
+This object type allows each row to be one unit of entity (article,
+institution, etc.), which is often helpful for downstream wrangling. It
+combines complex output elements in <a href="https://dcl-prog.stanford.edu/list-columns.html" class="external-link">list columns</a>,
+which can be <strong>extracted</strong> or <strong>exploded</strong>
+with <code><a href="https://dplyr.tidyverse.org/reference/rowwise.html" class="external-link">dplyr::rowwise</a></code> or <code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map</a></code>.</p>
+<p>Of course, you can instead set <code>output = "list"</code> in your
+<code>oa_fetch</code> call if you are more comfortable working with
+list.</p>
 <div class="section level2">
 <h2 id="example-1-institutions">Example 1: institutions<a class="anchor" aria-label="anchor" href="#example-1-institutions"></a>
 </h2>
-<p>Suppose we queried Open Alex to obtain information on large Canadian institutions and now want to <strong>extract their latitudes and longitudes</strong>.</p>
+<p>Suppose we queried Open Alex to obtain information on large Canadian
+institutions and now want to <strong>extract their latitudes and
+longitudes</strong>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">institutions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/oa_fetch.html">oa_fetch</a></span><span class="op">(</span></span>
 <span>  entity <span class="op">=</span> <span class="st">"institutions"</span>,</span>
@@ -131,7 +140,12 @@
 <div class="section level3">
 <h3 id="dplyrrowwise">dplyr::rowwise<a class="anchor" aria-label="anchor" href="#dplyrrowwise"></a>
 </h3>
-<p>The use of <a href="https://dplyr.tidyverse.org/articles/rowwise.html" class="external-link"><code>rowwise</code></a> used to be <a href="https://community.rstudio.com/t/dplyr-alternatives-to-rowwise/8071" class="external-link">discouraged</a>, but the tidyverse team has now recognized its importance in many workflows, and so <code>rowwise</code> is here to stay. We think <code>rowwise</code> pairs very naturally with our list columns output.</p>
+<p>The use of <a href="https://dplyr.tidyverse.org/articles/rowwise.html" class="external-link"><code>rowwise</code></a>
+used to be <a href="https://community.rstudio.com/t/dplyr-alternatives-to-rowwise/8071" class="external-link">discouraged</a>,
+but the tidyverse team has now recognized its importance in many
+workflows, and so <code>rowwise</code> is here to stay. We think
+<code>rowwise</code> pairs very naturally with our list columns
+output.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">institutions</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rowwise.html" class="external-link">rowwise</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -161,7 +175,10 @@
 <div class="section level3">
 <h3 id="purrrmap">purrr::map<a class="anchor" aria-label="anchor" href="#purrrmap"></a>
 </h3>
-<p>Alternatively, you can use any function in the <code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map</a></code> family. As you can see below, the syntax is a little less natural, but you <em>may</em> gain some performance advantage if you have a really large dataframe.</p>
+<p>Alternatively, you can use any function in the
+<code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map</a></code> family. As you can see below, the syntax is a
+little less natural, but you <em>may</em> gain some performance
+advantage if you have a really large dataframe.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">institutions</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
@@ -189,7 +206,8 @@
 <div class="section level3">
 <h3 id="baselapply">base::lapply<a class="anchor" aria-label="anchor" href="#baselapply"></a>
 </h3>
-<p>Similar to the purrr approach, you can use the base functions in the <code>lapply</code> family, for example:</p>
+<p>Similar to the purrr approach, you can use the base functions in the
+<code>lapply</code> family, for example:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">institutions</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
@@ -218,7 +236,10 @@
 <div class="section level2">
 <h2 id="example-2-works">Example 2: works<a class="anchor" aria-label="anchor" href="#example-2-works"></a>
 </h2>
-<p>Suppose we have a tibble of <strong>works</strong> output and would like to find the institutions corresponding with the works’ authors. In this case, each work may have more than one affiliated institutions. We will store the result in a list column:</p>
+<p>Suppose we have a tibble of <strong>works</strong> output and would
+like to find the institutions corresponding with the works’ authors. In
+this case, each work may have more than one affiliated institutions. We
+will store the result in a list column:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">works</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/oa_fetch.html">oa_fetch</a></span><span class="op">(</span></span>
 <span>  entity <span class="op">=</span> <span class="st">"works"</span>,</span>
@@ -239,20 +260,21 @@
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="va">multi_insts</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 11 × 2</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># Rowwise: </span></span></span>
 <span><span class="co">#&gt;    openalex_id institutions</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>      </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> W3038273726 <span style="color: #949494;">&lt;chr [2]&gt;</span>   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> W2990450011 <span style="color: #949494;">&lt;chr [2]&gt;</span>   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> W3001491100 <span style="color: #949494;">&lt;chr [2]&gt;</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> W3011866596 <span style="color: #949494;">&lt;chr [1]&gt;</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> W3044902155 <span style="color: #949494;">&lt;chr [1]&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> W3044902155 <span style="color: #949494;">&lt;chr [1]&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> W3011866596 <span style="color: #949494;">&lt;chr [1]&gt;</span>   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> W3000910650 <span style="color: #949494;">&lt;chr [3]&gt;</span>   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> W2990688366 <span style="color: #949494;">&lt;chr [3]&gt;</span>   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> W2986617680 <span style="color: #949494;">&lt;chr [2]&gt;</span>   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> W3000049009 <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> W3042215340 <span style="color: #949494;">&lt;chr [3]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> W3042215340 <span style="color: #949494;">&lt;chr [3]&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> W2999558594 <span style="color: #949494;">&lt;chr [2]&gt;</span></span></span>
 <span></span>
 <span><span class="co"># institutions of the first work</span></span>
 <span><span class="va">multi_insts</span><span class="op">[</span><span class="fl">1</span>, <span class="st">"institutions"</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>

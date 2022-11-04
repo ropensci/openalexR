@@ -90,14 +90,20 @@
 
     
     
-<p>Following the template in OpenAlex’s <a href="https://github.com/ourresearch/openalex-api-tutorials/blob/develop/notebooks/institutions/oa-percentage.ipynb" class="external-link">oa-percentage tutorial</a>, this vignette uses openalexR to answer:</p>
-<p><strong>How many of recent journal articles from the University of Pennsylvania are open access? And how many aren’t?</strong></p>
+<p>Following the template in OpenAlex’s <a href="https://github.com/ourresearch/openalex-api-tutorials/blob/develop/notebooks/institutions/oa-percentage.ipynb" class="external-link">oa-percentage
+tutorial</a>, this vignette uses openalexR to answer:</p>
+<p><strong>How many of recent journal articles from the University of
+Pennsylvania are open access? And how many aren’t?</strong></p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/massimoaria/openalexR" class="external-link">openalexR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
-<p>We first need to find the <a href="https://docs.openalex.org/about-the-data/institution#id" class="external-link">openalex.id</a> for University of Pennsylvania. We can do this by fetching for the <em>institutions</em> <code>entity</code> and put <em>“University of Pennsylvania”</em> in <code>display_name</code> or <code>display_name.search</code>:</p>
+<p>We first need to find the <a href="https://docs.openalex.org/about-the-data/institution#id" class="external-link">openalex.id</a>
+for University of Pennsylvania. We can do this by fetching for the
+<em>institutions</em> <code>entity</code> and put <em>“University of
+Pennsylvania”</em> in <code>display_name</code> or
+<code>display_name.search</code>:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/oa_fetch.html">oa_fetch</a></span><span class="op">(</span></span>
 <span>  entity <span class="op">=</span> <span class="st">"inst"</span>, <span class="co"># same as "institutions"</span></span>
@@ -136,7 +142,8 @@
 <td align="left"><a href="https://ror.org/01spssf70" class="external-link uri">https://ror.org/01spssf70</a></td>
 </tr>
 <tr class="even">
-<td align="left">Raymond and Ruth Perelman School of Medicine at the University of Pennsylvania</td>
+<td align="left">Raymond and Ruth Perelman School of Medicine at the
+University of Pennsylvania</td>
 <td align="left">NA</td>
 </tr>
 <tr class="odd">
@@ -145,9 +152,18 @@
 </tr>
 </tbody>
 </table>
-<p>We will use the first ror, <a href="https://ror.org/00b30xv10" class="external-link">00b30xv10</a>, as one of the filters for our query.</p>
-<p><strong><em>Alternatively</em></strong>, we could go to the autocomplete endpoint at <a href="https://explore.openalex.org/" class="external-link uri">https://explore.openalex.org/</a> to search for “University of Pennsylvania” and find the ror <a href="https://explore.openalex.org/institutions/I79576946" class="external-link">there</a>!</p>
-<p>All other filters are straightforward and explained in detailed in the original jupyter notebook <a href="https://github.com/ourresearch/openalex-api-tutorials/blob/develop/notebooks/institutions/oa-percentage.ipynb" class="external-link">tutorial</a>. The only difference here is that, instead of grouping by <code>is_oa</code>, we’re interested in the “trend” over the years, so we’re going to group by <code>publication_year</code>, and perform the query twice, one for <code>is_oa = "true"</code> and one for <code>is_oa = "false"</code> .</p>
+<p>We will use the first ror, <a href="https://ror.org/00b30xv10" class="external-link">00b30xv10</a>, as one of the filters
+for our query.</p>
+<p><strong><em>Alternatively</em></strong>, we could go to the
+autocomplete endpoint at <a href="https://explore.openalex.org/" class="external-link uri">https://explore.openalex.org/</a> to search for “University
+of Pennsylvania” and find the ror <a href="https://explore.openalex.org/institutions/I79576946" class="external-link">there</a>!</p>
+<p>All other filters are straightforward and explained in detailed in
+the original jupyter notebook <a href="https://github.com/ourresearch/openalex-api-tutorials/blob/develop/notebooks/institutions/oa-percentage.ipynb" class="external-link">tutorial</a>.
+The only difference here is that, instead of grouping by
+<code>is_oa</code>, we’re interested in the “trend” over the years, so
+we’re going to group by <code>publication_year</code>, and perform the
+query twice, one for <code>is_oa = "true"</code> and one for
+<code>is_oa = "false"</code> .</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">open_access</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/oa_fetch.html">oa_fetch</a></span><span class="op">(</span></span>
 <span>  entity <span class="op">=</span> <span class="st">"works"</span>,</span>
@@ -177,19 +193,20 @@
 <span></span>
 <span><span class="va">uf_df</span></span>
 <span><span class="co">#&gt;     key count_ca key_display_name count_oa</span></span>
-<span><span class="co">#&gt; 1  2021     4419             2021     7540</span></span>
-<span><span class="co">#&gt; 2  2022     3541             2022     2868</span></span>
-<span><span class="co">#&gt; 3  2020     3190             2020     6992</span></span>
-<span><span class="co">#&gt; 4  2019     2753             2019     5970</span></span>
-<span><span class="co">#&gt; 5  2015     2714             2015     4847</span></span>
-<span><span class="co">#&gt; 6  2017     2708             2017     5445</span></span>
-<span><span class="co">#&gt; 7  2014     2671             2014     4613</span></span>
-<span><span class="co">#&gt; 8  2013     2599             2013     4348</span></span>
-<span><span class="co">#&gt; 9  2016     2597             2016     5093</span></span>
-<span><span class="co">#&gt; 10 2018     2519             2018     5593</span></span>
-<span><span class="co">#&gt; 11 2012      818             2012     1247</span></span>
-<span><span class="co">#&gt; 12 2023        1             2023        4</span></span></code></pre></div>
-<p>Finally, we compare the number of open vs. closed access articles over the years:</p>
+<span><span class="co">#&gt; 1  2021     4371             2021     7591</span></span>
+<span><span class="co">#&gt; 2  2022     3635             2022     3002</span></span>
+<span><span class="co">#&gt; 3  2020     3180             2020     7004</span></span>
+<span><span class="co">#&gt; 4  2019     2758             2019     5965</span></span>
+<span><span class="co">#&gt; 5  2015     2709             2015     4852</span></span>
+<span><span class="co">#&gt; 6  2017     2704             2017     5449</span></span>
+<span><span class="co">#&gt; 7  2014     2666             2014     4618</span></span>
+<span><span class="co">#&gt; 8  2016     2596             2016     5094</span></span>
+<span><span class="co">#&gt; 9  2013     2587             2013     4360</span></span>
+<span><span class="co">#&gt; 10 2018     2521             2018     5592</span></span>
+<span><span class="co">#&gt; 11 2012      816             2012     1249</span></span>
+<span><span class="co">#&gt; 12 2023        1             2023        5</span></span></code></pre></div>
+<p>Finally, we compare the number of open vs. closed access articles
+over the years:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">uf_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">key</span> <span class="op">&lt;=</span> <span class="fl">2021</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="co"># we do not yet have complete data for 2022 and after</span></span>

@@ -92,12 +92,13 @@
     
 <p> </p>
 <p><a href="https://github.com/massimoaria/openalexR" class="external-link uri"><em>https://github.com/massimoaria/openalexR</em></a></p>
-<p><em>Latest version: 1.0.1, 2022-10-19</em></p>
+<p><em>Latest version: 1.0.1, 2022-11-04</em></p>
 <p> </p>
 <p><strong>by Massimo Aria</strong></p>
 <p>Full Professor in Social Statistics</p>
 <p>PhD in Computational Statistics</p>
-<p>Laboratory and Research Group STAD Statistics, Technology, Data Analysis</p>
+<p>Laboratory and Research Group STAD Statistics, Technology, Data
+Analysis</p>
 <p>Department of Economics and Statistics</p>
 <p>University of Naples Federico II</p>
 <p>email <a href="mailto:aria@unina.it" class="email">aria@unina.it</a></p>
@@ -106,13 +107,25 @@
 <div class="section level2">
 <h2 id="an-r-package-to-gather-bibliographic-data-from-openalex">An R-package to gather bibliographic data from OpenAlex<a class="anchor" aria-label="anchor" href="#an-r-package-to-gather-bibliographic-data-from-openalex"></a>
 </h2>
-<p><strong>openalexR</strong> helps you interface with the <a href="https://openalex.org" class="external-link">OpenAlex</a> API to retrieve bibliographic infomation about publications, authors, venues, institutions and concepts with 4 main functions:</p>
+<p><strong>openalexR</strong> helps you interface with the <a href="https://openalex.org" class="external-link">OpenAlex</a> API to retrieve bibliographic
+infomation about publications, authors, venues, institutions and
+concepts with 4 main functions:</p>
 <ul>
-<li><p><code><a href="../reference/oa_query.html">oa_query()</a></code>: generates a valid query, written following the OpenAlex API syntax, from a set of arguments provided by the user.</p></li>
-<li><p><code><a href="../reference/oa_request.html">oa_request()</a></code>: downloads a collection of entities matching the query created by <code><a href="../reference/oa_query.html">oa_query()</a></code> or manually written by the user, and returns a JSON object in a list format.</p></li>
-<li><p><code><a href="../reference/oa2df.html">oa2df()</a></code>: converts the JSON object in classical bibliographic tibble/data frame.</p></li>
-<li><p><code><a href="../reference/oa_fetch.html">oa_fetch()</a></code>: composes three functions above so the user can execute everything in one step, <em>i.e.</em>, <code>oa_query |&gt; oa_request |&gt; oa2df</code></p></li>
-<li><p><code><a href="../reference/oa_random.html">oa_random()</a></code>: to get random entity, e.g., <code>oa_random("works")</code> gives a different work each time you run it</p></li>
+<li><p><code><a href="../reference/oa_query.html">oa_query()</a></code>: generates a valid query, written
+following the OpenAlex API syntax, from a set of arguments provided by
+the user.</p></li>
+<li><p><code><a href="../reference/oa_request.html">oa_request()</a></code>: downloads a collection of entities
+matching the query created by <code><a href="../reference/oa_query.html">oa_query()</a></code> or manually
+written by the user, and returns a JSON object in a list
+format.</p></li>
+<li><p><code><a href="../reference/oa2df.html">oa2df()</a></code>: converts the JSON object in classical
+bibliographic tibble/data frame.</p></li>
+<li><p><code><a href="../reference/oa_fetch.html">oa_fetch()</a></code>: composes three functions above so the
+user can execute everything in one step, <em>i.e.</em>,
+<code>oa_query |&gt; oa_request |&gt; oa2df</code></p></li>
+<li><p><code><a href="../reference/oa_random.html">oa_random()</a></code>: to get random entity, e.g.,
+<code>oa_random("works")</code> gives a different work each time you run
+it</p></li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/massimoaria/openalexR" class="external-link">openalexR</a></span><span class="op">)</span></span>
@@ -124,7 +137,10 @@
 <pre><code>Aria, M., &amp; Cuccurullo, C. (2017). bibliometrix: 
 An R-tool for comprehensive science mapping analysis. 
 Journal of informetrics, 11(4), 959-975.</code></pre>
-<p>is associated to the <a href="https://docs.openalex.org/about-the-data#the-openalex-id" class="external-link">OpenAlex-id</a> <strong>W2755950973</strong>. If you know your paper’s OpenAlex ID, all you need to do is passing <code>identifier = &lt;openalex id&gt;</code> as an argument in <code><a href="../reference/oa_fetch.html">oa_fetch()</a></code>:</p>
+<p>is associated to the <a href="https://docs.openalex.org/about-the-data#the-openalex-id" class="external-link">OpenAlex-id</a>
+<strong>W2755950973</strong>. If you know your paper’s OpenAlex ID, all
+you need to do is passing <code>identifier = &lt;openalex id&gt;</code>
+as an argument in <code><a href="../reference/oa_fetch.html">oa_fetch()</a></code>:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">paper_id</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/oa_fetch.html">oa_fetch</a></span><span class="op">(</span></span>
 <span>  identifier <span class="op">=</span> <span class="st">"W2755950973"</span>,</span>
@@ -152,7 +168,7 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <span><span class="co">## $ volume           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "11"</span></span>
 <span><span class="co">## $ issue            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "4"</span></span>
 <span><span class="co">## $ is_oa            <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> FALSE</span></span>
-<span><span class="co">## $ cited_by_count   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 1800</span></span>
+<span><span class="co">## $ cited_by_count   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 1846</span></span>
 <span><span class="co">## $ counts_by_year   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[6 x 2]&gt;]</span></span>
 <span><span class="co">## $ publication_year <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 2017</span></span>
 <span><span class="co">## $ cited_by_api_url <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://api.openalex.org/works?filter=cites:W2755950…</span></span>
@@ -160,25 +176,32 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <span><span class="co">## $ doi              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://doi.org/10.1016/j.joi.2017.08.007"</span></span>
 <span><span class="co">## $ type             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "journal-article"</span></span>
 <span><span class="co">## $ referenced_works <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;"https://openalex.org/W767067438", "https://openale…</span></span>
-<span><span class="co">## $ related_works    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;"https://openalex.org/W1513692756", "https://openale…</span></span>
+<span><span class="co">## $ related_works    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;"https://openalex.org/W1996408511", "https://openale…</span></span>
 <span><span class="co">## $ is_paratext      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> FALSE</span></span>
 <span><span class="co">## $ is_retracted     <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> FALSE</span></span>
-<span><span class="co">## $ concepts         <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[10 x 5]&gt;]</span></span></code></pre>
-<p><code><a href="../reference/oa_fetch.html">oa_fetch()</a></code> is a composition of functions: <code>oa_query |&gt; oa_request |&gt; oa2df</code>. As results, <code><a href="../reference/oa_query.html">oa_query()</a></code> returns the query string including the OpenAlex endpoint API server address (default). <code><a href="../reference/oa_request.html">oa_request()</a></code> downloads the bibliographic records matching the query. Finally, <code><a href="../reference/oa2df.html">oa2df()</a></code> converts the final result list to a tibble. The final result is a complicated tibble, but we can use <code><a href="../reference/show_works.html">show_works()</a></code> to display a simplified version:</p>
+<span><span class="co">## $ concepts         <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[2 x 5]&gt;]</span></span></code></pre>
+<p><code><a href="../reference/oa_fetch.html">oa_fetch()</a></code> is a composition of functions:
+<code>oa_query |&gt; oa_request |&gt; oa2df</code>. As results,
+<code><a href="../reference/oa_query.html">oa_query()</a></code> returns the query string including the OpenAlex
+endpoint API server address (default). <code><a href="../reference/oa_request.html">oa_request()</a></code>
+downloads the bibliographic records matching the query. Finally,
+<code><a href="../reference/oa2df.html">oa2df()</a></code> converts the final result list to a tibble. The
+final result is a complicated tibble, but we can use
+<code><a href="../reference/show_works.html">show_works()</a></code> to display a simplified version:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">paper_id</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/show_works.html">show_works</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
+<table style="width:100%;" class="table">
 <colgroup>
-<col width="5%">
-<col width="31%">
-<col width="5%">
-<col width="8%">
-<col width="11%">
-<col width="19%">
-<col width="2%">
-<col width="15%">
+<col width="6%">
+<col width="34%">
+<col width="6%">
+<col width="9%">
+<col width="12%">
+<col width="21%">
+<col width="3%">
+<col width="6%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">id</th>
@@ -192,19 +215,22 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 </tr></thead>
 <tbody><tr class="odd">
 <td align="left">W2755950973</td>
-<td align="left">bibliometrix : An R-tool for comprehensive science mapping analysis</td>
+<td align="left">bibliometrix : An R-tool for comprehensive science
+mapping analysis</td>
 <td align="left">Massimo Aria</td>
 <td align="left">Corrado Cuccurullo</td>
 <td align="left">Journal of Informetrics</td>
 <td align="left"><a href="https://doi.org/10.1016/j.joi.2017.08.007" class="external-link uri">https://doi.org/10.1016/j.joi.2017.08.007</a></td>
 <td align="left">FALSE</td>
-<td align="left">Workflow, Bibliometrics, Software</td>
+<td align="left">Data science</td>
 </tr></tbody>
 </table>
 <div class="section level4">
 <h4 id="external-id-formats">External id formats<a class="anchor" aria-label="anchor" href="#external-id-formats"></a>
 </h4>
-<p>OpenAlex endpoint accepts OpenAlex IDs and other <a href="https://docs.openalex.org/api/get-single-entities#id-formats" class="external-link">external IDs</a> (<em>e.g.</em>, DOI, ISSN) in several formats, including Digital Object Identifier (DOI) and Persistent Identifiers (PIDs).</p>
+<p>OpenAlex endpoint accepts OpenAlex IDs and other <a href="https://docs.openalex.org/api/get-single-entities#id-formats" class="external-link">external
+IDs</a> (<em>e.g.</em>, DOI, ISSN) in several formats, including Digital
+Object Identifier (DOI) and Persistent Identifiers (PIDs).</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/oa_fetch.html">oa_fetch</a></span><span class="op">(</span></span>
 <span>  <span class="co"># identifier = "https://doi.org/10.1016/j.joi.2017.08.007", # would also work (PIDs)</span></span>
@@ -213,16 +239,16 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/show_works.html">show_works</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
+<table style="width:100%;" class="table">
 <colgroup>
-<col width="5%">
-<col width="31%">
-<col width="5%">
-<col width="8%">
-<col width="11%">
-<col width="19%">
-<col width="2%">
-<col width="15%">
+<col width="6%">
+<col width="34%">
+<col width="6%">
+<col width="9%">
+<col width="12%">
+<col width="21%">
+<col width="3%">
+<col width="6%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">id</th>
@@ -236,13 +262,14 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 </tr></thead>
 <tbody><tr class="odd">
 <td align="left">W2755950973</td>
-<td align="left">bibliometrix : An R-tool for comprehensive science mapping analysis</td>
+<td align="left">bibliometrix : An R-tool for comprehensive science
+mapping analysis</td>
 <td align="left">Massimo Aria</td>
 <td align="left">Corrado Cuccurullo</td>
 <td align="left">Journal of Informetrics</td>
 <td align="left"><a href="https://doi.org/10.1016/j.joi.2017.08.007" class="external-link uri">https://doi.org/10.1016/j.joi.2017.08.007</a></td>
 <td align="left">FALSE</td>
-<td align="left">Workflow, Bibliometrics, Software</td>
+<td align="left">Data science</td>
 </tr></tbody>
 </table>
 </div>
@@ -250,7 +277,8 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <h4 id="more-than-one-publicationsauthors">More than one publications/authors<a class="anchor" aria-label="anchor" href="#more-than-one-publicationsauthors"></a>
 </h4>
 <p><a href="https://api.openalex.org/authors/https://orcid.org/0000-0003-1613-5981" class="external-link">https://api.openalex.org/authors/https://orcid.org/</a></p>
-<p>If you know the OpenAlex IDs of these entities, you can also feed them into the <code>identifier</code> argument.</p>
+<p>If you know the OpenAlex IDs of these entities, you can also feed
+them into the <code>identifier</code> argument.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/oa_fetch.html">oa_fetch</a></span><span class="op">(</span></span>
 <span>  identifier <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"W2741809807"</span>, <span class="st">"W2755950973"</span><span class="op">)</span>,</span>
@@ -286,17 +314,19 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <tbody>
 <tr class="odd">
 <td align="left">W2755950973</td>
-<td align="left">bibliometrix : An R-tool for comprehensive science mapping analysis</td>
+<td align="left">bibliometrix : An R-tool for comprehensive science
+mapping analysis</td>
 <td align="left">Massimo Aria</td>
 <td align="left">Corrado Cuccurullo</td>
 <td align="left">Journal of Informetrics</td>
 <td align="left"><a href="https://doi.org/10.1016/j.joi.2017.08.007" class="external-link uri">https://doi.org/10.1016/j.joi.2017.08.007</a></td>
 <td align="left">FALSE</td>
-<td align="left">Workflow, Bibliometrics, Software</td>
+<td align="left">Data science</td>
 </tr>
 <tr class="even">
 <td align="left">W2741809807</td>
-<td align="left">The state of OA: a large-scale analysis of the prevalence and impact of Open Access articles</td>
+<td align="left">The state of OA: a large-scale analysis of the
+prevalence and impact of Open Access articles</td>
 <td align="left">Heather A. Piwowar</td>
 <td align="left">Stefanie Haustein</td>
 <td align="left">PeerJ</td>
@@ -306,7 +336,10 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 </tr>
 </tbody>
 </table>
-<p>However, if you only know their external identifies, say, DOIs, you would need to use <code>doi</code> as a filter (either the canonical form with <a href="https://doi.org/" class="external-link uri">https://doi.org/</a> or without should work):</p>
+<p>However, if you only know their external identifies, say, DOIs, you
+would need to use <code>doi</code> as a filter (either the canonical
+form with <a href="https://doi.org/" class="external-link uri">https://doi.org/</a> or
+without should work):</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/oa_fetch.html">oa_fetch</a></span><span class="op">(</span></span>
 <span>  <span class="co"># identifier = c("W2741809807", "W2755950973"),</span></span>
@@ -342,23 +375,26 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <tbody>
 <tr class="odd">
 <td align="left">W2755950973</td>
-<td align="left">bibliometrix : An R-tool for comprehensive science mapping analysis</td>
+<td align="left">bibliometrix : An R-tool for comprehensive science
+mapping analysis</td>
 <td align="left">Massimo Aria</td>
 <td align="left">Corrado Cuccurullo</td>
 <td align="left">Journal of Informetrics</td>
 <td align="left"><a href="https://doi.org/10.1016/j.joi.2017.08.007" class="external-link uri">https://doi.org/10.1016/j.joi.2017.08.007</a></td>
 <td align="left">FALSE</td>
-<td align="left">Workflow, Bibliometrics, Software</td>
+<td align="left">Data science</td>
 </tr>
 <tr class="even">
 <td align="left">W3206431085</td>
-<td align="left">PMLB v1.0: an open-source dataset collection for benchmarking machine learning methods</td>
+<td align="left">PMLB v1.0: an open-source dataset collection for
+benchmarking machine learning methods</td>
 <td align="left">Joseph D. Romano</td>
 <td align="left">Jason H. Moore</td>
 <td align="left">Bioinformatics</td>
 <td align="left"><a href="https://doi.org/10.1093/bioinformatics/btab727" class="external-link uri">https://doi.org/10.1093/bioinformatics/btab727</a></td>
 <td align="left">TRUE</td>
-<td align="left">Python (programming language), Benchmarking, Benchmark (surveying)</td>
+<td align="left">Benchmarking, Python (programming language), Benchmark
+(surveying)</td>
 </tr>
 </tbody>
 </table>
@@ -366,8 +402,14 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <div class="section level4">
 <h4 id="filters">Filters<a class="anchor" aria-label="anchor" href="#filters"></a>
 </h4>
-<p>In most cases, we are interested in downloading a collection of items that meet one or more inclusion/exclusion criteria (filters). Supported filters for each entity are listed <a href="https://massimoaria.github.io/openalexR/articles/Filters.html">here</a>.</p>
-<p><strong>Example</strong>: We want to download all works published by a set of authors. We can do this by filtering on the authorships.author.id/author.id or authorships.author.orcid/author.orcid attribute (see more on <a href="https://massimoaria.github.io/openalexR/articles/Filters.html#works">works attributes</a>):</p>
+<p>In most cases, we are interested in downloading a collection of items
+that meet one or more inclusion/exclusion criteria (filters). Supported
+filters for each entity are listed <a href="https://massimoaria.github.io/openalexR/articles/Filters.html">here</a>.</p>
+<p><strong>Example</strong>: We want to download all works published by
+a set of authors. We can do this by filtering on the
+authorships.author.id/author.id or authorships.author.orcid/author.orcid
+attribute (see more on <a href="https://massimoaria.github.io/openalexR/articles/Filters.html#works">works
+attributes</a>):</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/oa_fetch.html">oa_fetch</a></span><span class="op">(</span></span>
 <span>  entity <span class="op">=</span> <span class="st">"works"</span>,</span>
@@ -402,17 +444,19 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <tbody>
 <tr class="odd">
 <td align="left">W2755950973</td>
-<td align="left">bibliometrix : An R-tool for comprehensive science mapping analysis</td>
+<td align="left">bibliometrix : An R-tool for comprehensive science
+mapping analysis</td>
 <td align="left">Massimo Aria</td>
 <td align="left">Corrado Cuccurullo</td>
 <td align="left">Journal of Informetrics</td>
 <td align="left"><a href="https://doi.org/10.1016/j.joi.2017.08.007" class="external-link uri">https://doi.org/10.1016/j.joi.2017.08.007</a></td>
 <td align="left">FALSE</td>
-<td align="left">Workflow, Bibliometrics, Software</td>
+<td align="left">Data science</td>
 </tr>
 <tr class="even">
 <td align="left">W2741809807</td>
-<td align="left">The state of OA: a large-scale analysis of the prevalence and impact of Open Access articles</td>
+<td align="left">The state of OA: a large-scale analysis of the
+prevalence and impact of Open Access articles</td>
 <td align="left">Heather A. Piwowar</td>
 <td align="left">Stefanie Haustein</td>
 <td align="left">PeerJ</td>
@@ -422,7 +466,8 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 </tr>
 <tr class="odd">
 <td align="left">W2122130843</td>
-<td align="left">Scientometrics 2.0: New metrics of scholarly impact on the social Web</td>
+<td align="left">Scientometrics 2.0: New metrics of scholarly impact on
+the social Web</td>
 <td align="left">Jason Priem</td>
 <td align="left">Bradely H. Hemminger</td>
 <td align="left">First Monday</td>
@@ -435,14 +480,16 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <td align="left">How and why scholars cite on Twitter</td>
 <td align="left">Jason Priem</td>
 <td align="left">Kaitlin L. Costello</td>
-<td align="left">Proceedings Of The Association For Information Science And Technology</td>
+<td align="left">Proceedings Of The Association For Information Science
+And Technology</td>
 <td align="left"><a href="https://doi.org/10.1002/meet.14504701201" class="external-link uri">https://doi.org/10.1002/meet.14504701201</a></td>
 <td align="left">TRUE</td>
-<td align="left">Conversation, Citation, Social media</td>
+<td align="left">Citation, Conversation, Social media</td>
 </tr>
 <tr class="odd">
 <td align="left">W2038196424</td>
-<td align="left">Coverage and adoption of altmetrics sources in the bibliometric community</td>
+<td align="left">Coverage and adoption of altmetrics sources in the
+bibliometric community</td>
 <td align="left">Stefanie Haustein</td>
 <td align="left">Jens Terliesner</td>
 <td align="left">Scientometrics</td>
@@ -498,27 +545,31 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <tbody>
 <tr class="odd">
 <td align="left">W2755950973</td>
-<td align="left">bibliometrix : An R-tool for comprehensive science mapping analysis</td>
+<td align="left">bibliometrix : An R-tool for comprehensive science
+mapping analysis</td>
 <td align="left">Massimo Aria</td>
 <td align="left">Corrado Cuccurullo</td>
 <td align="left">Journal of Informetrics</td>
 <td align="left"><a href="https://doi.org/10.1016/j.joi.2017.08.007" class="external-link uri">https://doi.org/10.1016/j.joi.2017.08.007</a></td>
 <td align="left">FALSE</td>
-<td align="left">Workflow, Bibliometrics, Software</td>
+<td align="left">Data science</td>
 </tr>
 <tr class="even">
 <td align="left">W2955219525</td>
-<td align="left">Scaling tree-based automated machine learning to biomedical big data with a feature set selector</td>
+<td align="left">Scaling tree-based automated machine learning to
+biomedical big data with a feature set selector</td>
 <td align="left">Trang T. Le</td>
 <td align="left">Jason H. Moore</td>
 <td align="left">Bioinformatics</td>
 <td align="left"><a href="https://doi.org/10.1093/bioinformatics/btz470" class="external-link uri">https://doi.org/10.1093/bioinformatics/btz470</a></td>
 <td align="left">TRUE</td>
-<td align="left">Pipeline (software), Scalability, Feature (linguistics)</td>
+<td align="left">Pipeline (software), Scalability, Feature
+(linguistics)</td>
 </tr>
 <tr class="odd">
 <td align="left">W1979874437</td>
-<td align="left">Analysis of powered two-wheeler crashes in Italy by classification trees and rules discovery</td>
+<td align="left">Analysis of powered two-wheeler crashes in Italy by
+classification trees and rules discovery</td>
 <td align="left">Alfonso Montella</td>
 <td align="left">Filomena Mauriello</td>
 <td align="left">Accident Analysis &amp; Prevention</td>
@@ -528,7 +579,8 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 </tr>
 <tr class="even">
 <td align="left">W2952824318</td>
-<td align="left">A Nonlinear Simulation Framework Supports Adjusting for Age When Analyzing BrainAGE</td>
+<td align="left">A Nonlinear Simulation Framework Supports Adjusting for
+Age When Analyzing BrainAGE</td>
 <td align="left">Trang T. Le</td>
 <td align="left">Tulsa Investigators</td>
 <td align="left">Frontiers in Aging Neuroscience</td>
@@ -538,17 +590,21 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 </tr>
 <tr class="odd">
 <td align="left">W2408216567</td>
-<td align="left">Foundations and trends in performance management. A twenty-five years bibliometric analysis in business and public administration domains</td>
+<td align="left">Foundations and trends in performance management. A
+twenty-five years bibliometric analysis in business and public
+administration domains</td>
 <td align="left">Corrado Cuccurullo</td>
 <td align="left">Fabrizia Sarto</td>
 <td align="left">Scientometrics</td>
 <td align="left"><a href="https://doi.org/10.1007/s11192-016-1948-8" class="external-link uri">https://doi.org/10.1007/s11192-016-1948-8</a></td>
 <td align="left">FALSE</td>
-<td align="left">Administration (probate law), Bibliometrics, Public management</td>
+<td align="left">Administration (probate law), Bibliometrics, Public
+management</td>
 </tr>
 <tr class="even">
 <td align="left">W2281330131</td>
-<td align="left">Coopetition and sustainable competitive advantage. The case of tourist destinations</td>
+<td align="left">Coopetition and sustainable competitive advantage. The
+case of tourist destinations</td>
 <td align="left">Valentina Della Corte</td>
 <td align="left">Massimo Aria</td>
 <td align="left">Tourism Management</td>
@@ -558,8 +614,14 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 </tr>
 </tbody>
 </table>
-<p><strong>Example</strong>: We want to download all works that have been cited more than 50 times, published between 2020 and 2021, and include the strings “bibliometric analysis” or “science mapping” in the title. Maybe we also want the results to be sorted by total citations in a descending order.</p>
-<p>Setting the argument <code>count_only = TRUE</code>, the function <code><a href="../reference/oa_request.html">oa_request()</a></code> returns the number of items matching the query without downloading the collection.</p>
+<p><strong>Example</strong>: We want to download all works that have
+been cited more than 50 times, published between 2020 and 2021, and
+include the strings “bibliometric analysis” or “science mapping” in the
+title. Maybe we also want the results to be sorted by total citations in
+a descending order.</p>
+<p>Setting the argument <code>count_only = TRUE</code>, the function
+<code><a href="../reference/oa_request.html">oa_request()</a></code> returns the number of items matching the query
+without downloading the collection.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/oa_fetch.html">oa_fetch</a></span><span class="op">(</span></span>
 <span>  entity <span class="op">=</span> <span class="st">"works"</span>,</span>
@@ -573,8 +635,10 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Requesting url: https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&amp;sort=cited_by_count%3Adesc</span></span></code></pre>
 <pre><code><span><span class="co">##      count db_response_time_ms page per_page</span></span>
-<span><span class="co">## [1,]    41                  22    1        1</span></span></code></pre>
-<p>We can now download the records and transform it into a tibble/data frame by setting <code>count_only = FALSE</code> (also the default value):</p>
+<span><span class="co">## [1,]    43                  28    1        1</span></span></code></pre>
+<p>We can now download the records and transform it into a tibble/data
+frame by setting <code>count_only = FALSE</code> (also the default
+value):</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/oa_fetch.html">oa_fetch</a></span><span class="op">(</span></span>
 <span>  entity <span class="op">=</span> <span class="st">"works"</span>,</span>
@@ -611,17 +675,21 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <tbody>
 <tr class="odd">
 <td align="left">W3160856016</td>
-<td align="left">How to conduct a bibliometric analysis: An overview and guidelines</td>
+<td align="left">How to conduct a bibliometric analysis: An overview and
+guidelines</td>
 <td align="left">Naveen Donthu</td>
 <td align="left">Weng Marc Lim</td>
 <td align="left">Journal of Business Research</td>
 <td align="left"><a href="https://doi.org/10.1016/j.jbusres.2021.04.070" class="external-link uri">https://doi.org/10.1016/j.jbusres.2021.04.070</a></td>
 <td align="left">TRUE</td>
-<td align="left">Bibliometrics, Field (mathematics), Resource (disambiguation)</td>
+<td align="left">Bibliometrics, Field (mathematics), Resource
+(disambiguation)</td>
 </tr>
 <tr class="even">
 <td align="left">W3038273726</td>
-<td align="left">Investigating the emerging COVID-19 research trends in the field of business and management: A bibliometric analysis approach</td>
+<td align="left">Investigating the emerging COVID-19 research trends in
+the field of business and management: A bibliometric analysis
+approach</td>
 <td align="left">Surabhi Verma</td>
 <td align="left">Anders Gustafsson</td>
 <td align="left">Journal of Business Research</td>
@@ -631,43 +699,48 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 </tr>
 <tr class="odd">
 <td align="left">W2990450011</td>
-<td align="left">Forty-five years of Journal of Business Research: A bibliometric analysis</td>
+<td align="left">Forty-five years of Journal of Business Research: A
+bibliometric analysis</td>
 <td align="left">Naveen Donthu</td>
 <td align="left">Debidutta Pattnaik</td>
 <td align="left">Journal of Business Research</td>
 <td align="left"><a href="https://doi.org/10.1016/j.jbusres.2019.10.039" class="external-link uri">https://doi.org/10.1016/j.jbusres.2019.10.039</a></td>
 <td align="left">FALSE</td>
-<td align="left">Publishing, Bibliometrics, Empirical research</td>
+<td align="left">Bibliometrics</td>
 </tr>
 <tr class="even">
 <td align="left">W3001491100</td>
-<td align="left">Software tools for conducting bibliometric analysis in science: An up-to-date review</td>
+<td align="left">Software tools for conducting bibliometric analysis in
+science: An up-to-date review</td>
 <td align="left">Jose A. Moral-Munoz</td>
 <td align="left">Manuel Cobo</td>
 <td align="left">Profesional De La Informacion</td>
 <td align="left"><a href="https://doi.org/10.3145/epi.2020.ene.03" class="external-link uri">https://doi.org/10.3145/epi.2020.ene.03</a></td>
 <td align="left">TRUE</td>
-<td align="left">Bibliometrics, Visualization, Set (abstract data type)</td>
+<td align="left">Bibliometrics, Software</td>
 </tr>
 <tr class="odd">
-<td align="left">W3011866596</td>
-<td align="left">A Bibliometric Analysis of COVID-19 Research Activity: A Call for Increased Output</td>
-<td align="left">Mohamad A. Chahrour</td>
-<td align="left">Hussein H. Khachfe</td>
-<td align="left">Cureus</td>
-<td align="left"><a href="https://doi.org/10.7759/cureus.7357" class="external-link uri">https://doi.org/10.7759/cureus.7357</a></td>
-<td align="left">TRUE</td>
-<td align="left">Observational study, Gross domestic product, Population</td>
-</tr>
-<tr class="even">
 <td align="left">W3044902155</td>
-<td align="left">Financial literacy: A systematic review and bibliometric analysis</td>
+<td align="left">Financial literacy: A systematic review and
+bibliometric analysis</td>
 <td align="left">Kirti Goyal</td>
 <td align="left">Satish Kumar</td>
 <td align="left">International Journal of Consumer Studies</td>
 <td align="left"><a href="https://doi.org/10.1111/ijcs.12605" class="external-link uri">https://doi.org/10.1111/ijcs.12605</a></td>
 <td align="left">FALSE</td>
-<td align="left">Financial literacy, Content analysis, Citation</td>
+<td align="left">Financial literacy, Citation, Content analysis</td>
+</tr>
+<tr class="even">
+<td align="left">W3011866596</td>
+<td align="left">A Bibliometric Analysis of COVID-19 Research Activity:
+A Call for Increased Output</td>
+<td align="left">Mohamad A. Chahrour</td>
+<td align="left">Hussein H. Khachfe</td>
+<td align="left">Cureus</td>
+<td align="left"><a href="https://doi.org/10.7759/cureus.7357" class="external-link uri">https://doi.org/10.7759/cureus.7357</a></td>
+<td align="left">TRUE</td>
+<td align="left">Observational study, Gross domestic product,
+Population</td>
 </tr>
 </tbody>
 </table>
@@ -677,8 +750,10 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <div class="section level3">
 <h3 id="authors">Authors<a class="anchor" aria-label="anchor" href="#authors"></a>
 </h3>
-<p>Similarly to work, we can use identifier to pass in authors’ OpenAlex ID.</p>
-<p><strong>Example</strong>: We want more information on authors with IDs <strong>A923435168</strong> and <strong>A2208157607</strong>.</p>
+<p>Similarly to work, we can use identifier to pass in authors’ OpenAlex
+ID.</p>
+<p><strong>Example</strong>: We want more information on authors with
+IDs <strong>A923435168</strong> and <strong>A2208157607</strong>.</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/oa_fetch.html">oa_fetch</a></span><span class="op">(</span></span>
 <span>  identifier <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"A923435168"</span>, <span class="st">"A2208157607"</span><span class="op">)</span>,</span>
@@ -713,7 +788,7 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <td align="left">Massimo Aria</td>
 <td align="left">0000-0002-8517-9411</td>
 <td align="right">131</td>
-<td align="right">3052</td>
+<td align="right">3081</td>
 <td align="left">University of Naples Federico II</td>
 <td align="left">Statistics, Internal medicine, Pathology</td>
 </tr>
@@ -722,14 +797,19 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <td align="left">Jason Priem</td>
 <td align="left">0000-0001-6187-6610</td>
 <td align="right">49</td>
-<td align="right">1616</td>
+<td align="right">1621</td>
 <td align="left">HortResearch</td>
 <td align="left">World Wide Web, Library science, Law</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Example</strong>: We want download all authors’ records of scholars who work at the University of Naples Federico II (OpenAlex ID: I71267560) and who have published more than 499 works.</p>
-<p>Let’s first check how many records match the query, then set <code>count_only = FALSE</code> to download the entire collection. We can do this by first defining a list of arguments, then adding <code>count_only</code> (default <code>FALSE</code>) to this list:</p>
+<p><strong>Example</strong>: We want download all authors’ records of
+scholars who work at the University of Naples Federico II (OpenAlex ID:
+I71267560) and who have published more than 499 works.</p>
+<p>Let’s first check how many records match the query, then set
+<code>count_only = FALSE</code> to download the entire collection. We
+can do this by first defining a list of arguments, then adding
+<code>count_only</code> (default <code>FALSE</code>) to this list:</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my_arguments</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  entity <span class="op">=</span> <span class="st">"authors"</span>,</span>
@@ -739,7 +819,7 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">my_arguments</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>count_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##      count db_response_time_ms page per_page</span></span>
-<span><span class="co">## [1,]    24                  35    1        1</span></span></code></pre>
+<span><span class="co">## [1,]    26                  53    1        1</span></span></code></pre>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="va">my_arguments</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/show_authors.html">show_authors</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -768,44 +848,48 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <td align="left">A2061787601</td>
 <td align="left">Luca Lista</td>
 <td align="left">0000-0001-6471-5492</td>
-<td align="right">2474</td>
-<td align="right">34624</td>
+<td align="right">2475</td>
+<td align="right">34406</td>
 <td align="left">University of Naples Federico II</td>
-<td align="left">Nuclear physics, Particle physics, Quantum mechanics</td>
+<td align="left">Nuclear physics, Particle physics, Quantum
+mechanics</td>
 </tr>
 <tr class="even">
 <td align="left">A2600338221</td>
 <td align="left">Alberto Orso Maria Iorio</td>
 <td align="left">0000-0002-3798-1135</td>
-<td align="right">1182</td>
-<td align="right">21371</td>
+<td align="right">1183</td>
+<td align="right">21215</td>
 <td align="left">University of Naples Federico II</td>
-<td align="left">Nuclear physics, Particle physics, Quantum mechanics</td>
+<td align="left">Nuclear physics, Particle physics, Quantum
+mechanics</td>
 </tr>
 <tr class="odd">
 <td align="left">A2011452631</td>
 <td align="left">Leonardo Merola</td>
 <td align="left">NA</td>
 <td align="right">1115</td>
-<td align="right">19510</td>
+<td align="right">18776</td>
 <td align="left">University of Naples Federico II</td>
-<td align="left">Quantum mechanics, Particle physics, Nuclear physics</td>
+<td align="left">Quantum mechanics, Particle physics, Nuclear
+physics</td>
 </tr>
 <tr class="even">
 <td align="left">A3113327292</td>
 <td align="left">Vincenzo Canale</td>
 <td align="left">NA</td>
 <td align="right">989</td>
-<td align="right">15938</td>
+<td align="right">15167</td>
 <td align="left">University of Naples Federico II</td>
-<td align="left">Quantum mechanics, Particle physics, Nuclear physics</td>
+<td align="left">Quantum mechanics, Particle physics, Nuclear
+physics</td>
 </tr>
 <tr class="odd">
 <td align="left">A223517670</td>
 <td align="left">Ettore Novellino</td>
 <td align="left">0000-0002-2181-2142</td>
 <td align="right">962</td>
-<td align="right">17796</td>
+<td align="right">17863</td>
 <td align="left">University of Naples Federico II</td>
 <td align="left">Biochemistry, Genetics, Organic chemistry</td>
 </tr>
@@ -814,13 +898,15 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <td align="left">G. De Nardo</td>
 <td align="left">NA</td>
 <td align="right">959</td>
-<td align="right">12590</td>
+<td align="right">12481</td>
 <td align="left">University of Naples Federico II</td>
-<td align="left">Particle physics, Nuclear physics, Quantum mechanics</td>
+<td align="left">Particle physics, Nuclear physics, Quantum
+mechanics</td>
 </tr>
 </tbody>
 </table>
-<p>You can also use other filters such as <code>display_name</code>, <code>has_orcid</code>, and <code>orcid</code>:</p>
+<p>You can also use other filters such as <code>display_name</code>,
+<code>has_orcid</code>, and <code>orcid</code>:</p>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/oa_fetch.html">oa_fetch</a></span><span class="op">(</span></span>
 <span>  entity <span class="op">=</span> <span class="st">"authors"</span>,</span>
@@ -853,7 +939,7 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <td align="left">Massimo Aria</td>
 <td align="left">0000-0002-8517-9411</td>
 <td align="right">131</td>
-<td align="right">3052</td>
+<td align="right">3081</td>
 <td align="left">University of Naples Federico II</td>
 <td align="left">Statistics, Internal medicine, Pathology</td>
 </tr></tbody>
@@ -889,7 +975,7 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <td align="left">Massimo Aria</td>
 <td align="left">0000-0002-8517-9411</td>
 <td align="right">131</td>
-<td align="right">3052</td>
+<td align="right">3081</td>
 <td align="left">University of Naples Federico II</td>
 <td align="left">Statistics, Internal medicine, Pathology</td>
 </tr></tbody>
@@ -898,7 +984,10 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <div class="section level3">
 <h3 id="institutions">Institutions<a class="anchor" aria-label="anchor" href="#institutions"></a>
 </h3>
-<p><strong>Example</strong>: We want download all records regarding Italian institutions (country_code:it) that are classified as educational (type:education). Again, we check how many records match the query then download the collection:</p>
+<p><strong>Example</strong>: We want download all records regarding
+Italian institutions (country_code:it) that are classified as
+educational (type:education). Again, we check how many records match the
+query then download the collection:</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">italian_insts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  entity <span class="op">=</span> <span class="st">"institutions"</span>,</span>
@@ -910,7 +999,7 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">italian_insts</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>count_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Requesting url: https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation</span></span></code></pre>
 <pre><code><span><span class="co">##      count db_response_time_ms page per_page</span></span>
-<span><span class="co">## [1,]   231                   2    1        1</span></span></code></pre>
+<span><span class="co">## [1,]   231                  24    1        1</span></span></code></pre>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="va">italian_insts</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Requesting url: https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation</span></span></code></pre>
@@ -932,18 +1021,19 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <span><span class="co">## $ image_thumbnail_url       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://upload.wikimedia.org/wikipedia/en/t…</span></span>
 <span><span class="co">## $ associated_institutions   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[1 x 24]&gt;], [&lt;data.frame[1 x 12…</span></span>
 <span><span class="co">## $ relevance_score           <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span>
-<span><span class="co">## $ works_count               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 165603, 132005, 130418, 128817, 92557, 87745…</span></span>
-<span><span class="co">## $ cited_by_count            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 11231777, 10143653, 10142430, 9566705, 62711…</span></span>
+<span><span class="co">## $ works_count               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 165790, 132204, 130596, 128957, 92689, 87865…</span></span>
+<span><span class="co">## $ cited_by_count            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 11250805, 10156402, 10165184, 9583041, 62895…</span></span>
 <span><span class="co">## $ counts_by_year            <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[11 x 3]&gt;], [&lt;data.frame[11 x 3…</span></span>
 <span><span class="co">## $ works_api_url             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://api.openalex.org/works?filter=insti…</span></span>
 <span><span class="co">## $ x_concepts                <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[14 x 5]&gt;], [&lt;data.frame[15 x 5…</span></span>
-<span><span class="co">## $ updated_date              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "2022-10-18T23:27:34.167609", "2022-10-18T22…</span></span>
+<span><span class="co">## $ updated_date              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "2022-11-03T23:15:21.576635", "2022-11-03T22…</span></span>
 <span><span class="co">## $ created_date              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "2016-06-24", "2016-06-24", "2016-06-24", "2…</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="venues-think-journals">Venues (think journals)<a class="anchor" aria-label="anchor" href="#venues-think-journals"></a>
 </h3>
-<p><strong>Example</strong>: We want download all records regarding journals that have published more than 100,000 works:</p>
+<p><strong>Example</strong>: We want download all records regarding
+journals that have published more than 100,000 works:</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">big_journals</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  entity <span class="op">=</span> <span class="st">"venues"</span>,</span>
@@ -954,33 +1044,34 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">big_journals</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>count_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Requesting url: https://api.openalex.org/venues?filter=works_count%3A%3E100000</span></span></code></pre>
 <pre><code><span><span class="co">##      count db_response_time_ms page per_page</span></span>
-<span><span class="co">## [1,]    50                  10    1        1</span></span></code></pre>
+<span><span class="co">## [1,]    91                  22    1        1</span></span></code></pre>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="va">big_journals</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Requesting url: https://api.openalex.org/venues?filter=works_count%3A%3E100000</span></span></code></pre>
-<pre><code><span><span class="co">## Getting 1 page of results with a total of 50 records...</span></span></code></pre>
-<pre><code><span><span class="co">## Rows: 50</span></span>
+<pre><code><span><span class="co">## Getting 1 page of results with a total of 91 records...</span></span></code></pre>
+<pre><code><span><span class="co">## Rows: 91</span></span>
 <span><span class="co">## Columns: 15</span></span>
-<span><span class="co">## $ id              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://openalex.org/V3121261024", "https://openalex.…</span></span>
-<span><span class="co">## $ display_name    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Research Papers in Economics", "Social Science Resear…</span></span>
-<span><span class="co">## $ publisher       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> NA, "Social Science Electronic Publishing", NA, "Wiley…</span></span>
-<span><span class="co">## $ issn            <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> NA, "1556-5068", &lt;"1611-3349", "0302-9743"&gt;, &lt;"1431-5…</span></span>
-<span><span class="co">## $ issn_l          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> NA, "1556-5068", "0302-9743", "0931-7597", "0140-6736…</span></span>
-<span><span class="co">## $ is_oa           <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, FALSE, FALSE, FALSE, FALSE, NA, FALSE, FALSE, FALS…</span></span>
-<span><span class="co">## $ is_in_doaj      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, FALSE, FALSE, FALSE, FALSE, NA, FALSE, FALSE, FALS…</span></span>
-<span><span class="co">## $ ids             <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;tbl_df[2 x 2]&gt;], [&lt;tbl_df[3 x 2]&gt;], [&lt;tbl_df[5 x 2]…</span></span>
-<span><span class="co">## $ homepage_url    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "http://www.repec.org/", NA, "http://www.springer.com/…</span></span>
+<span><span class="co">## $ id              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://openalex.org/V4306463091", "https://openalex.…</span></span>
+<span><span class="co">## $ display_name    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "De Gruyter eBooks", "Springer Berlin Heidelberg eBook…</span></span>
+<span><span class="co">## $ publisher       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "De Gruyter", "Springer Nature", "Informa", "Elsevier"…</span></span>
+<span><span class="co">## $ issn            <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> NA, NA, NA, NA, NA, NA, NA, "1556-5068", NA, &lt;"1611-3…</span></span>
+<span><span class="co">## $ issn_l          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> NA, NA, NA, NA, NA, NA, NA, "1556-5068", NA, "0302-97…</span></span>
+<span><span class="co">## $ is_oa           <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA, NA, NA, NA, NA, NA, FALSE, NA, FALSE, FALSE, F…</span></span>
+<span><span class="co">## $ is_in_doaj      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA, NA, NA, NA, NA, NA, FALSE, NA, FALSE, FALSE, F…</span></span>
+<span><span class="co">## $ ids             <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;tbl_df[1 x 2]&gt;], [&lt;tbl_df[1 x 2]&gt;], [&lt;tbl_df[1 x 2]…</span></span>
+<span><span class="co">## $ homepage_url    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> NA, NA, NA, NA, "http://www.repec.org/", NA, NA, NA, N…</span></span>
 <span><span class="co">## $ relevance_score <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…</span></span>
-<span><span class="co">## $ works_count     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 742721, 606019, 522714, 492035, 483658, 447158, 433660…</span></span>
-<span><span class="co">## $ cited_by_count  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 1565972, 1566374, 5063531, 71655, 7345338, 997581, 201…</span></span>
+<span><span class="co">## $ works_count     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 940830, 906356, 906174, 787148, 715952, 705841, 656017…</span></span>
+<span><span class="co">## $ cited_by_count  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 391567, 2547089, 1607669, 2797568, 1502240, 781807, 97…</span></span>
 <span><span class="co">## $ counts_by_year  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[11 x 3]&gt;], [&lt;data.frame[11 x 3]&gt;], [&lt;dat…</span></span>
-<span><span class="co">## $ x_concepts      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[21 x 5]&gt;], [&lt;data.frame[19 x 5]&gt;], [&lt;dat…</span></span>
+<span><span class="co">## $ x_concepts      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[2 x 5]&gt;], [&lt;data.frame[3 x 5]&gt;], [&lt;data.…</span></span>
 <span><span class="co">## $ works_api_url   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://api.openalex.org/works?filter=host_venue.id:V…</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="concepts-think-theme-keywords">Concepts (think theme, keywords)<a class="anchor" aria-label="anchor" href="#concepts-think-theme-keywords"></a>
 </h3>
-<p><strong>Example</strong>: We want to download the records of all the concepts that concern at least one million works:</p>
+<p><strong>Example</strong>: We want to download the records of all the
+concepts that concern at least one million works:</p>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">popular_concepts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  entity <span class="op">=</span> <span class="st">"concepts"</span>,</span>
@@ -991,28 +1082,28 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">popular_concepts</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>count_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Requesting url: https://api.openalex.org/concepts?filter=works_count%3A%3E1000000</span></span></code></pre>
 <pre><code><span><span class="co">##      count db_response_time_ms page per_page</span></span>
-<span><span class="co">## [1,]   148                   8    1        1</span></span></code></pre>
+<span><span class="co">## [1,]   235                   7    1        1</span></span></code></pre>
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="va">popular_concepts</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Requesting url: https://api.openalex.org/concepts?filter=works_count%3A%3E1000000</span></span></code></pre>
-<pre><code><span><span class="co">## Getting 1 page of results with a total of 148 records...</span></span></code></pre>
-<pre><code><span><span class="co">## Rows: 148</span></span>
+<pre><code><span><span class="co">## Getting 2 pages of results with a total of 235 records...</span></span></code></pre>
+<pre><code><span><span class="co">## Rows: 235</span></span>
 <span><span class="co">## Columns: 17</span></span>
 <span><span class="co">## $ id                         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://openalex.org/C41008148", "https://…</span></span>
-<span><span class="co">## $ display_name               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Computer science", "Medicine", "Chemistry"…</span></span>
+<span><span class="co">## $ display_name               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Computer science", "Medicine", "Biology", …</span></span>
 <span><span class="co">## $ display_name_international <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[1 x 185]&gt;], [&lt;data.frame[1 x …</span></span>
 <span><span class="co">## $ description                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "theoretical study of the formal foundation…</span></span>
 <span><span class="co">## $ description_international  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[1 x 40]&gt;], [&lt;data.frame[1 x 4…</span></span>
 <span><span class="co">## $ wikidata                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://www.wikidata.org/wiki/Q21198", "ht…</span></span>
-<span><span class="co">## $ level                      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0…</span></span>
+<span><span class="co">## $ level                      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0…</span></span>
 <span><span class="co">## $ ids                        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;tbl_df[5 x 2]&gt;], [&lt;tbl_df[5 x 2]&gt;], [&lt;tb…</span></span>
 <span><span class="co">## $ image_url                  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://upload.wikimedia.org/wikipedia/com…</span></span>
 <span><span class="co">## $ image_thumbnail_url        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://upload.wikimedia.org/wikipedia/com…</span></span>
-<span><span class="co">## $ ancestors                  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> NA, NA, NA, NA, NA, NA, NA, [&lt;data.frame[2…</span></span>
+<span><span class="co">## $ ancestors                  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, [&lt;…</span></span>
 <span><span class="co">## $ related_concepts           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[93 x 5]&gt;], [&lt;data.frame[51 x …</span></span>
 <span><span class="co">## $ relevance_score            <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…</span></span>
-<span><span class="co">## $ works_count                <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 41363895, 37697170, 21071084, 17852796, 173…</span></span>
-<span><span class="co">## $ cited_by_count             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 220861636, 384765884, 340825284, 159564956,…</span></span>
+<span><span class="co">## $ works_count                <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 76438272, 57432534, 41618599, 38239154, 337…</span></span>
+<span><span class="co">## $ cited_by_count             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 389697531, 575917707, 631574250, 394311091,…</span></span>
 <span><span class="co">## $ counts_by_year             <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[11 x 3]&gt;], [&lt;data.frame[11 x …</span></span>
 <span><span class="co">## $ works_api_url              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://api.openalex.org/works?filter=conc…</span></span></code></pre>
 </div>
@@ -1020,8 +1111,12 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <h3 id="other-examples">Other examples<a class="anchor" aria-label="anchor" href="#other-examples"></a>
 </h3>
 <p><em>Get all works citing a particular work</em></p>
-<p>We can download all publications citing another publication by using the filter attribute <strong>cites</strong>.</p>
-<p>For example, if we want to download all publications citing the article Aria and Cuccurullo (2017), we have just to set the argument filter as <code>cites = "W2755950973"</code> where “W2755950973” is the OA id for the article by Aria and Cuccurullo.</p>
+<p>We can download all publications citing another publication by using
+the filter attribute <strong>cites</strong>.</p>
+<p>For example, if we want to download all publications citing the
+article Aria and Cuccurullo (2017), we have just to set the argument
+filter as <code>cites = "W2755950973"</code> where “W2755950973” is the
+OA id for the article by Aria and Cuccurullo.</p>
 <div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">aria_count</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/oa_fetch.html">oa_fetch</a></span><span class="op">(</span></span>
 <span>  entity <span class="op">=</span> <span class="st">"works"</span>,</span>
@@ -1033,8 +1128,9 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">aria_count</span></span></code></pre></div>
 <pre><code><span><span class="co">##      count db_response_time_ms page per_page</span></span>
-<span><span class="co">## [1,]  1832                  50    1        1</span></span></code></pre>
-<p>This query will return a collection of NA publications. Among these articles, let’s download the ones published in the following year:</p>
+<span><span class="co">## [1,]  1867                  66    1        1</span></span></code></pre>
+<p>This query will return a collection of NA publications. Among these
+articles, let’s download the ones published in the following year:</p>
 <div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/oa_fetch.html">oa_fetch</a></span><span class="op">(</span></span>
 <span>  entity <span class="op">=</span> <span class="st">"works"</span>,</span>
@@ -1064,7 +1160,7 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <span><span class="co">## $ volume           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "13", "329", "13", "101", NA, "4", NA, "4", "9", "4",…</span></span>
 <span><span class="co">## $ issue            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "11", "4-5", "6", "12", NA, "3", NA, "11", NA, "1", "…</span></span>
 <span><span class="co">## $ is_oa            <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> TRUE, FALSE, TRUE, TRUE, FALSE, TRUE, FALSE, TRUE, TR…</span></span>
-<span><span class="co">## $ cited_by_count   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 66, 52, 51, 44, 36, 30, 17, 16, 14, 9, 8, 8, 6, 4, 1,…</span></span>
+<span><span class="co">## $ cited_by_count   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 66, 52, 52, 44, 36, 30, 18, 16, 14, 9, 8, 8, 6, 4, 1,…</span></span>
 <span><span class="co">## $ counts_by_year   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[4 x 2]&gt;], [&lt;data.frame[5 x 2]&gt;], [&lt;data…</span></span>
 <span><span class="co">## $ publication_year <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018,…</span></span>
 <span><span class="co">## $ cited_by_api_url <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://api.openalex.org/works?filter=cites:W2902888…</span></span>
@@ -1080,8 +1176,18 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <div class="section level3">
 <h3 id="convert-an-openalex-data-frame-to-a-bibliometrix-object">Convert an OpenAlex data frame to a bibliometrix object<a class="anchor" aria-label="anchor" href="#convert-an-openalex-data-frame-to-a-bibliometrix-object"></a>
 </h3>
-<p>The bibliometrix R-package (<a href="https://www.bibliometrix.org" class="external-link uri">https://www.bibliometrix.org</a>) provides a set of tools for quantitative research in bibliometrics and scientometrics. Today it represents one of the most used science mapping software in the world. In a recent survey on bibliometric analysis tools, Moral-Muñoz et al. (2020) wrote: “At this moment, maybe Bibliometrix and its Shiny platform contain the more extensive set of techniques implemented, and together with the easiness of its interface, could be a great software for practitioners”.</p>
-<p>The function <strong>oa2bibliometrix</strong> converts a bibliographic data frame of works into a bibliometrix object. This object can be used as input collection of a science mapping workflow.</p>
+<p>The bibliometrix R-package (<a href="https://www.bibliometrix.org" class="external-link uri">https://www.bibliometrix.org</a>) provides a set of tools
+for quantitative research in bibliometrics and scientometrics. Today it
+represents one of the most used science mapping software in the world.
+In a recent survey on bibliometric analysis tools, Moral-Muñoz et
+al. (2020) wrote: “At this moment, maybe Bibliometrix and its Shiny
+platform contain the more extensive set of techniques implemented, and
+together with the easiness of its interface, could be a great software
+for practitioners”.</p>
+<p>The function <strong>oa2bibliometrix</strong> converts a
+bibliographic data frame of works into a bibliometrix object. This
+object can be used as input collection of a science mapping
+workflow.</p>
 <div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">bib_ls</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  identifier <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -1093,52 +1199,52 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">bib_ls</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>count_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##      count db_response_time_ms page per_page</span></span>
-<span><span class="co">## [1,]   245                  14    1        1</span></span></code></pre>
+<span><span class="co">## [1,]   245                  10    1        1</span></span></code></pre>
 <div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="va">bib_ls</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/oa2bibliometrix.html">oa2bibliometrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Rows: 245</span></span>
 <span><span class="co">## Columns: 41</span></span>
-<span><span class="co">## $ AU               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "YONG QIN;ZESHUI XU;XINXIN WANG;MARINKO ŠKARE", "ZHIQ…</span></span>
+<span><span class="co">## $ AU               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "YONG QIN;ZESHUI XU;XINXIN WANG;MARINKO ŠKARE", "YANQ…</span></span>
 <span><span class="co">## $ RP               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "BUSINESS SCHOOL, SICHUAN UNIVERSITY, CHENGDU 610064,…</span></span>
 <span><span class="co">## $ C1               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "BUSINESS SCHOOL, SICHUAN UNIVERSITY, CHENGDU 610064,…</span></span>
 <span><span class="co">## $ AU_UN            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "", "", "", "", "", "", "", "", "", "", "", "", "", "…</span></span>
-<span><span class="co">## $ AU_CO            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "CHINA;CHINA;CHINA;CROATIA", "USA;USA;USA", "ITALY;IT…</span></span>
-<span><span class="co">## $ ID               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "THEMATIC ANALYSIS;CITATION;WORK (PHYSICS);THEMATIC M…</span></span>
+<span><span class="co">## $ AU_CO            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "CHINA;CHINA;CHINA;CROATIA", "CHINA;CHINA;CHINA", "NA…</span></span>
+<span><span class="co">## $ ID               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "THEMATIC ANALYSIS;CITATION;WORK (PHYSICS);BIBLIOMETR…</span></span>
 <span><span class="co">## $ id_url           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://openalex.org/W3208801174", "https://openalex…</span></span>
 <span><span class="co">## $ author           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[4 x 10]&gt;], [&lt;data.frame[3 x 10]&gt;], [&lt;da…</span></span>
-<span><span class="co">## $ publication_date <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "2022-01-01", "2022-03-01", "2022-01-10", "2022-02-01…</span></span>
+<span><span class="co">## $ publication_date <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "2022-01-01", "2022-02-01", "2022-02-22", "2022-03-01…</span></span>
 <span><span class="co">## $ relevance_score  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…</span></span>
 <span><span class="co">## $ so_id            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://openalex.org/V68497187", "https://openalex.o…</span></span>
-<span><span class="co">## $ publisher        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Elsevier", "Elsevier", "Emerald (MCB UP)", "Elsevier…</span></span>
+<span><span class="co">## $ publisher        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Elsevier", "Elsevier", "MDPI AG", "Elsevier", "Emera…</span></span>
 <span><span class="co">## $ issn             <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;"1879-0690", "1364-0321"&gt;, &lt;"0045-6535", "1879-1298…</span></span>
 <span><span class="co">## $ url              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://doi.org/10.1016/j.rser.2021.111780", "https:…</span></span>
-<span><span class="co">## $ first_page       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "111780", "132941", "2239", "133932", "113925", "2508…</span></span>
-<span><span class="co">## $ last_page        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "111780", "132941", "2261", "133932", "113925", "2508…</span></span>
-<span><span class="co">## $ volume           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "153", "291", "124", "297", "301", "19", "39", "157",…</span></span>
-<span><span class="co">## $ issue            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> NA, NA, "7", NA, NA, "5", "6", NA, NA, NA, NA, NA, NA…</span></span>
-<span><span class="co">## $ is_oa            <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> TRUE, FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, TRUE, …</span></span>
+<span><span class="co">## $ first_page       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "111780", "133932", "2508", "132941", "2239", "113925…</span></span>
+<span><span class="co">## $ last_page        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "111780", "133932", "2508", "132941", "2261", "113925…</span></span>
+<span><span class="co">## $ volume           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "153", "297", "19", "291", "124", "301", NA, "39", "1…</span></span>
+<span><span class="co">## $ issue            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> NA, NA, "5", NA, "7", NA, NA, "6", NA, "6", NA, NA, N…</span></span>
+<span><span class="co">## $ is_oa            <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> TRUE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE,…</span></span>
 <span><span class="co">## $ counts_by_year   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[1 x 2]&gt;], [&lt;data.frame[1 x 2]&gt;], [&lt;data…</span></span>
 <span><span class="co">## $ cited_by_api_url <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://api.openalex.org/works?filter=cites:W3208801…</span></span>
-<span><span class="co">## $ ids              <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;tbl_df[3 x 2]&gt;], [&lt;tbl_df[4 x 2]&gt;], [&lt;tbl_df[2 x 2…</span></span>
+<span><span class="co">## $ ids              <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;tbl_df[3 x 2]&gt;], [&lt;tbl_df[3 x 2]&gt;], [&lt;tbl_df[3 x 2…</span></span>
 <span><span class="co">## $ doi              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://doi.org/10.1016/j.rser.2021.111780", "https:…</span></span>
 <span><span class="co">## $ referenced_works <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;"https://openalex.org/W804699578", "https://openale…</span></span>
 <span><span class="co">## $ related_works    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;"https://openalex.org/W1924618820", "https://openal…</span></span>
 <span><span class="co">## $ is_paratext      <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALS…</span></span>
 <span><span class="co">## $ is_retracted     <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALS…</span></span>
-<span><span class="co">## $ concepts         <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[19 x 5]&gt;], [&lt;data.frame[19 x 5]&gt;], [&lt;da…</span></span>
-<span><span class="co">## $ id_oa            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "W3208801174", "W3212020496", "W4205146162", "W421086…</span></span>
+<span><span class="co">## $ concepts         <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[19 x 5]&gt;], [&lt;data.frame[16 x 5]&gt;], [&lt;da…</span></span>
+<span><span class="co">## $ id_oa            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "W3208801174", "W4210864411", "W4214772295", "W321202…</span></span>
 <span><span class="co">## $ CR               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://openalex.org/W804699578;https://openalex.org…</span></span>
 <span><span class="co">## $ TI               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "GREEN ENERGY ADOPTION AND ITS DETERMINANTS: A BIBLIO…</span></span>
 <span><span class="co">## $ AB               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…</span></span>
 <span><span class="co">## $ SO               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "RENEWABLE &amp; SUSTAINABLE ENERGY REVIEWS", "CHEMOSPHER…</span></span>
 <span><span class="co">## $ DT               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "JOURNAL-ARTICLE", "JOURNAL-ARTICLE", "JOURNAL-ARTICL…</span></span>
 <span><span class="co">## $ DB               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "openalex", "openalex", "openalex", "openalex", "open…</span></span>
-<span><span class="co">## $ JI               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "V68497187", "V203465130", "V99313352", "V203465130",…</span></span>
-<span><span class="co">## $ J9               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "V68497187", "V203465130", "V99313352", "V203465130",…</span></span>
+<span><span class="co">## $ JI               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "V68497187", "V203465130", "V15239247", "V203465130",…</span></span>
+<span><span class="co">## $ J9               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "V68497187", "V203465130", "V15239247", "V203465130",…</span></span>
 <span><span class="co">## $ PY               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 2022, 2022, 2022, 2022, 2022, 2022, 2022, 2022, 2022,…</span></span>
-<span><span class="co">## $ TC               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 10, 9, 9, 9, 8, 8, 8, 7, 7, 6, 6, 5, 5, 5, 5, 5, 5, 4…</span></span>
+<span><span class="co">## $ TC               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 11, 11, 10, 9, 9, 8, 8, 8, 7, 7, 6, 6, 6, 6, 5, 5, 5,…</span></span>
 <span><span class="co">## $ SR_FULL          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "YONG QIN, 2022, RENEWABLE &amp; SUSTAINABLE ENERGY REVIE…</span></span>
 <span><span class="co">## $ SR               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "YONG QIN, 2022, RENEWABLE &amp; SUSTAINABLE ENERGY REVIE…</span></span></code></pre>
 </div>
@@ -1152,18 +1258,28 @@ Journal of informetrics, 11(4), 959-975.</code></pre>
 <div style="text-align: right">
 <p>Schema credits: <a href="https://github.com/dhimmel" class="external-link">@dhimmel</a></p>
 </div>
-<p><a href="https://openalex.org" class="external-link">OpenAlex</a> is a fully open catalog of the global research system. It’s named after the ancient <a href="https://en.wikipedia.org/wiki/Library_of_Alexandria" class="external-link">Library of Alexandria</a>. The OpenAlex dataset describes scholarly entities and how those entities are connected to each other. There are five types of entities:</p>
+<p><a href="https://openalex.org" class="external-link">OpenAlex</a> is a fully open catalog
+of the global research system. It’s named after the ancient <a href="https://en.wikipedia.org/wiki/Library_of_Alexandria" class="external-link">Library of
+Alexandria</a>. The OpenAlex dataset describes scholarly entities and
+how those entities are connected to each other. There are five types of
+entities:</p>
 <ul>
-<li><p><strong>Works</strong> are papers, books, datasets, etc; they cite other works</p></li>
+<li><p><strong>Works</strong> are papers, books, datasets, etc; they
+cite other works</p></li>
 <li><p><strong>Authors</strong> are people who create works</p></li>
-<li><p><strong>Venues</strong> are journals and repositories that host works</p></li>
-<li><p><strong>Institutions</strong> are universities and other orgs that are affiliated with works (via authors)</p></li>
-<li><p><strong>Concepts</strong> <em>tag</em> Works with a topic</p></li>
+<li><p><strong>Venues</strong> are journals and repositories that host
+works</p></li>
+<li><p><strong>Institutions</strong> are universities and other orgs
+that are affiliated with works (via authors)</p></li>
+<li><p><strong>Concepts</strong> <em>tag</em> Works with a
+topic</p></li>
 </ul>
 <div class="section level3">
 <h3 id="acknowledgements">Acknowledgements<a class="anchor" aria-label="anchor" href="#acknowledgements"></a>
 </h3>
-<p>Package hex was made with <a href="https://www.midjourney.com/home/" class="external-link">Midjourney</a> and thus inherits a <a href="https://creativecommons.org/licenses/by-nc/4.0/legalcode" class="external-link">CC BY-NC 4.0 license</a>.</p>
+<p>Package hex was made with <a href="https://www.midjourney.com/home/" class="external-link">Midjourney</a> and thus inherits
+a <a href="https://creativecommons.org/licenses/by-nc/4.0/legalcode" class="external-link">CC
+BY-NC 4.0 license</a>.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

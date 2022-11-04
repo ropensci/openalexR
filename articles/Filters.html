@@ -90,9 +90,14 @@
 
     
     
-<p>In your <code>oa_fetch</code> calls, you can specify additional arguments to <em>filter</em> your search result. Available arguments/filters for each entity and associated example values are in the tables below.</p>
-<p><strong>Note</strong>: <code>x_concepts.id</code> in all entities are experimental.</p>
-<p>See the <a href="https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists" class="external-link">original documentation</a> from Open Alex.</p>
+<p>In your <code>oa_fetch</code> calls, you can specify additional
+arguments to <em>filter</em> your search result. Available
+arguments/filters for each entity and associated example values are in
+the tables below.</p>
+<p><strong>Note</strong>: <code>x_concepts.id</code> in all entities are
+experimental.</p>
+<p>See the <a href="https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists" class="external-link">original
+documentation</a> from Open Alex.</p>
 <div class="section level2">
 <h2 id="available-arguments-by-entity">Available arguments by entity<a class="anchor" aria-label="anchor" href="#available-arguments-by-entity"></a>
 </h2>
@@ -360,6 +365,10 @@
 <h3 id="venues">Venues<a class="anchor" aria-label="anchor" href="#venues"></a>
 </h3>
 <table class="table">
+<colgroup>
+<col width="30%">
+<col width="69%">
+</colgroup>
 <thead><tr class="header">
 <th>Filter</th>
 <th>Example value</th>
@@ -492,6 +501,10 @@
 <h3 id="concepts">Concepts<a class="anchor" aria-label="anchor" href="#concepts"></a>
 </h3>
 <table class="table">
+<colgroup>
+<col width="30%">
+<col width="69%">
+</colgroup>
 <thead><tr class="header">
 <th>Filter</th>
 <th>Example value</th>
@@ -579,8 +592,8 @@
 <span><span class="co">#&gt; $ ancestors                  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[8 x 4]&gt;], [&lt;data.frame[6 x 4]…</span></span>
 <span><span class="co">#&gt; $ related_concepts           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[6 x 5]&gt;], [&lt;data.frame[9 x 5]&gt;…</span></span>
 <span><span class="co">#&gt; $ relevance_score            <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA, NA</span></span>
-<span><span class="co">#&gt; $ works_count                <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 898, 629, 615</span></span>
-<span><span class="co">#&gt; $ cited_by_count             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 10178, 12557, 17359</span></span>
+<span><span class="co">#&gt; $ works_count                <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 977, 691, 643</span></span>
+<span><span class="co">#&gt; $ cited_by_count             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 11806, 11566, 15428</span></span>
 <span><span class="co">#&gt; $ counts_by_year             <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[11 x 3]&gt;], [&lt;data.frame[11 x 3…</span></span>
 <span><span class="co">#&gt; $ works_api_url              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://api.openalex.org/works?filter=con…</span></span>
 <span></span>
@@ -608,13 +621,13 @@
 <span><span class="co">#&gt; $ image_url                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://upload.wikimedia.org/wikipedia/com…</span></span>
 <span><span class="co">#&gt; $ image_thumbnail_url       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://upload.wikimedia.org/wikipedia/comm…</span></span>
 <span><span class="co">#&gt; $ associated_institutions   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA, NA, NA</span></span>
-<span><span class="co">#&gt; $ relevance_score           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 3790.9620, 846.0349, 622.0819, 284.6682</span></span>
-<span><span class="co">#&gt; $ works_count               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 7697, 1053, 525, 582</span></span>
-<span><span class="co">#&gt; $ cited_by_count            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 240839, 10045, 3656, 1118</span></span>
+<span><span class="co">#&gt; $ relevance_score           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 3804.2832, 847.2902, 623.1375, 286.6695</span></span>
+<span><span class="co">#&gt; $ works_count               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 7715, 1053, 525, 586</span></span>
+<span><span class="co">#&gt; $ cited_by_count            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 242499, 10075, 3670, 1134</span></span>
 <span><span class="co">#&gt; $ counts_by_year            <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[11 x 3]&gt;], [&lt;data.frame[11 x 3…</span></span>
 <span><span class="co">#&gt; $ works_api_url             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://api.openalex.org/works?filter=insti…</span></span>
 <span><span class="co">#&gt; $ x_concepts                <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[23 x 5]&gt;], [&lt;data.frame[16 x 5]…</span></span>
-<span><span class="co">#&gt; $ updated_date              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "2022-10-19T02:08:45.188976", "2022-10-19T03…</span></span>
+<span><span class="co">#&gt; $ updated_date              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "2022-11-04T00:30:25.608030", "2022-11-04T02…</span></span>
 <span><span class="co">#&gt; $ created_date              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "2018-05-17", "2016-06-24", "2016-06-24", "2…</span></span>
 <span></span>
 <span><span class="va">peer_venues</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/oa_fetch.html">oa_fetch</a></span><span class="op">(</span></span>
@@ -637,10 +650,10 @@
 <span><span class="co">#&gt; $ ids             <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;tbl_df[4 x 2]&gt;], [&lt;tbl_df[3 x 2]&gt;]</span></span>
 <span><span class="co">#&gt; $ homepage_url    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "http://www.peerj.com/", "https://peerj.com/physical-c…</span></span>
 <span><span class="co">#&gt; $ relevance_score <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA</span></span>
-<span><span class="co">#&gt; $ works_count     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 21094, 18</span></span>
-<span><span class="co">#&gt; $ cited_by_count  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 161044, 79</span></span>
+<span><span class="co">#&gt; $ works_count     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 21165, 19</span></span>
+<span><span class="co">#&gt; $ cited_by_count  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 162826, 79</span></span>
 <span><span class="co">#&gt; $ counts_by_year  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[11 x 3]&gt;], [&lt;data.frame[3 x 3]&gt;]</span></span>
-<span><span class="co">#&gt; $ x_concepts      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[16 x 5]&gt;], [&lt;data.frame[33 x 5]&gt;]</span></span>
+<span><span class="co">#&gt; $ x_concepts      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[16 x 5]&gt;], [&lt;data.frame[34 x 5]&gt;]</span></span>
 <span><span class="co">#&gt; $ works_api_url   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://api.openalex.org/works?filter=host_venue.id:V…</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
