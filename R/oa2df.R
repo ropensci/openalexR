@@ -112,7 +112,6 @@ oa2df <- function(data, entity, abstract = TRUE, count_only = FALSE, group_by = 
 #' # @export
 
 works2df <- function(data, abstract = TRUE, verbose = TRUE) {
-
   if (!is.null(data$id)) {
     data <- list(data)
   }
@@ -179,7 +178,12 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
       }
       first_inst <- prepend(first_inst, "institution")
       aff_raw <- list(au_affiliation_raw = l$raw_affiliation_string[1])
-      l_author <- if (length(l$author) > 0) prepend(l$author, "au") else list()
+      l_author <- l_author <- if (length(l$author) > 0) {
+        prepend(l$author, "au")
+      } else {
+        empty_list(c("au_id", "au_display_name", "au_orcid"))
+      }
+
       c(l_author, l["author_position"], aff_raw, first_inst)
     })))
 
