@@ -10,6 +10,7 @@
 #' Ignored if entity is different from "works". Defaults to TRUE.
 #' @inheritParams oa_query
 #' @inheritParams oa_request
+#' @return A tibble/dataframe result of the original OpenAlex result list.
 #'
 #' @examples
 #' \dontrun{
@@ -38,16 +39,17 @@
 #' )
 #'
 #' oa2df(res, entity = "works")
-#'
 #' }
 #'
 #' @export
 oa2df <- function(data, entity, abstract = TRUE, count_only = FALSE, group_by = NULL, verbose = TRUE) {
-  if (!is.null(group_by)){
+  if (!is.null(group_by)) {
     return(do.call(rbind.data.frame, data))
   }
 
-  if (count_only && length(data) == 4) return(unlist(data))
+  if (count_only && length(data) == 4) {
+    return(unlist(data))
+  }
 
   switch(entity,
     works = works2df(data, abstract, verbose),
@@ -110,7 +112,7 @@ oa2df <- function(data, entity, abstract = TRUE, count_only = FALSE, group_by = 
 #' }
 #'
 #' # @export
-
+#'
 works2df <- function(data, abstract = TRUE, verbose = TRUE) {
   if (!is.null(data$id)) {
     data <- list(data)
@@ -216,11 +218,11 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
 abstract_build <- function(ab) {
   w <- rep(names(ab), lengths(ab))
   ind <- unlist(ab)
-  if (is.null(ind)){
-    ab <- ""
-  } else {
-    ab <- paste(w[order(ind)], collapse = " ", sep = "")
+  if (is.null(ind)) {
+    return("")
   }
+
+  paste(w[order(ind)], collapse = " ", sep = "")
 }
 
 
@@ -290,8 +292,11 @@ authors2df <- function(data, verbose = TRUE) {
     item <- data[[i]]
 
     sub_identical <- item[
-      c("id", "works_count", "display_name", "orcid",
-        "works_api_url", "cited_by_count")]
+      c(
+        "id", "works_count", "display_name", "orcid",
+        "works_api_url", "cited_by_count"
+      )
+    ]
 
     sub_id <- list(
       ids = subs_na(item$ids, type = "col_df"),
@@ -300,11 +305,13 @@ authors2df <- function(data, verbose = TRUE) {
 
     sub_flat <- lapply(
       item[c("display_name_alternatives")],
-      subs_na, type = "flat"
+      subs_na,
+      type = "flat"
     )
     sub_rbind_dfs <- lapply(
       item[c("counts_by_year", "x_concepts")],
-      subs_na, type = "rbind_df"
+      subs_na,
+      type = "rbind_df"
     )
 
     sub_affiliation <- item$last_known_institution
@@ -314,7 +321,8 @@ authors2df <- function(data, verbose = TRUE) {
     sub_affiliation <- prepend(sub_affiliation, "affiliation")
 
     list_df[[i]] <- tibble::as_tibble(
-      c(sub_identical, sub_id, sub_flat, sub_rbind_dfs, sub_affiliation))
+      c(sub_identical, sub_id, sub_flat, sub_rbind_dfs, sub_affiliation)
+    )
   }
 
   col_order <- c(
@@ -385,10 +393,13 @@ institutions2df <- function(data, verbose = TRUE) {
 
     item <- data[[i]]
     sub_identical <- item[
-      c("id", "ror", "works_api_url", "type", "works_count",
+      c(
+        "id", "ror", "works_api_url", "type", "works_count",
         "display_name", "country_code", "homepage_url",
         "image_url", "image_thumbnail_url", "cited_by_count",
-        "updated_date", "created_date")]
+        "updated_date", "created_date"
+      )
+    ]
 
     sub_id <- list(
       ids = subs_na(item$ids, type = "col_df"),
@@ -397,21 +408,25 @@ institutions2df <- function(data, verbose = TRUE) {
 
     sub_flat <- lapply(
       item[c("display_name_alternatives", "display_name_acronyms")],
-      subs_na, type = "flat"
+      subs_na,
+      type = "flat"
     )
 
     sub_row <- lapply(
       item[c("international", "geo", "associated_institutions")],
-      subs_na, type = "row_df"
+      subs_na,
+      type = "row_df"
     )
 
     sub_rbind_dfs <- lapply(
       item[c("counts_by_year", "x_concepts")],
-      subs_na, type = "rbind_df"
+      subs_na,
+      type = "rbind_df"
     )
 
     list_df[[i]] <- tibble::as_tibble(
-      c(sub_flat, sub_row, sub_identical, sub_id, sub_rbind_dfs))
+      c(sub_flat, sub_row, sub_identical, sub_id, sub_rbind_dfs)
+    )
   }
 
 
@@ -487,12 +502,16 @@ venues2df <- function(data, verbose = TRUE) {
     item <- data[[i]]
 
     sub_identical <- item[
-      c("id", "display_name", "publisher", "works_count", "cited_by_count",
-        "is_oa", "is_in_doaj", "homepage_url", "works_api_url")]
+      c(
+        "id", "display_name", "publisher", "works_count", "cited_by_count",
+        "is_oa", "is_in_doaj", "homepage_url", "works_api_url"
+      )
+    ]
 
     sub_flat <- lapply(
       item[c("issn_l", "issn")],
-      subs_na, type = "flat"
+      subs_na,
+      type = "flat"
     )
 
     sub_id <- list(
@@ -502,11 +521,13 @@ venues2df <- function(data, verbose = TRUE) {
 
     sub_rbind_dfs <- lapply(
       item[c("counts_by_year", "x_concepts")],
-      subs_na, type = "rbind_df"
+      subs_na,
+      type = "rbind_df"
     )
 
     list_df[[i]] <- tibble::as_tibble(
-      c(sub_identical, sub_flat, sub_id, sub_rbind_dfs))
+      c(sub_identical, sub_flat, sub_id, sub_rbind_dfs)
+    )
   }
 
   col_order <- c(
@@ -578,9 +599,12 @@ concepts2df <- function(data, verbose = TRUE) {
     item <- data[[i]]
 
     sub_identical <- item[
-      c("id", "display_name", "wikidata", "level", "description",
-        "image_url", "image_thumbnail_url",  "works_count", "cited_by_count",
-        "works_api_url")]
+      c(
+        "id", "display_name", "wikidata", "level", "description",
+        "image_url", "image_thumbnail_url", "works_count", "cited_by_count",
+        "works_api_url"
+      )
+    ]
 
     sub_id <- list(
       ids = subs_na(item$ids, type = "col_df"),
@@ -589,12 +613,14 @@ concepts2df <- function(data, verbose = TRUE) {
 
     sub_rbind_dfs <- lapply(
       item[c("counts_by_year", "ancestors", "related_concepts")],
-      subs_na, type = "rbind_df"
+      subs_na,
+      type = "rbind_df"
     )
 
     sub_row <- lapply(
       item$international[c("display_name", "description")],
-      subs_na, type = "row_df"
+      subs_na,
+      type = "row_df"
     )
     names(sub_row) <- paste(names(sub_row), "international", sep = "_")
 
@@ -682,7 +708,8 @@ snowball2df <- function(data, verbose = FALSE) {
 
   nodes_augmented <- merge(
     merge(nodes, citing, all.x = TRUE),
-    cited_by, all.x = TRUE
+    cited_by,
+    all.x = TRUE
   )
 
   nodes_augmented$connection <- apply(
