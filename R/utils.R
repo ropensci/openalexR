@@ -89,3 +89,7 @@ asl <- function(z) {
 shorten_oaid <- function(id) {
   gsub("https://openalex.org/", "", id)
 }
+
+shorten_orcid <- function(id) {
+  gsub("https://orcid.org/", "", id)
+}

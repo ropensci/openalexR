@@ -2,7 +2,10 @@ test_that("Invalid filter errors out", {
   skip_on_cran()
 
   # open_alex is not a valid filter
-  query_url <- "https://api.openalex.org/authors?filter=open_alex%3AA923435168%7CA2208157607"
+  query_url <- paste0(
+    "https://api.openalex.org/authors?",
+    "filter=open_alex%3AA923435168%7CA2208157607"
+  )
 
   expect_error(oa_request(query_url))
 })
@@ -10,15 +13,35 @@ test_that("Invalid filter errors out", {
 test_that("oa_request returns list", {
   skip_on_cran()
 
-  query_url <- "https://api.openalex.org/authors?filter=openalex%3AA923435168%7CA2208157607"
+  query_url <- paste0(
+    "https://api.openalex.org/authors?",
+    "filter=openalex%3AA923435168%7CA2208157607"
+  )
+
   expect_type(oa_request(query_url), "list")
+})
+
+test_that("oa_request gives messages for unexpected input", {
+  skip_on_cran()
+
+  query_url <- paste0(
+    "https://api.openalex.org/authors?",
+    "filter=openalex%3AA923435168%7CA2208157607"
+  )
+  expect_message(oa_request(query_url, verbose = TRUE))
+  expect_message(oa_request(query_url, mailto = 123))
 })
 
 test_that("oa_fetch works", {
   skip_on_cran()
 
-  work_ids <- c("W2741809807")
-  multi_works <- oa_fetch(identifier = work_ids, output = "dataframe", mailto = "example@email.com")
+  work_ids <- c("W2741809807", "W3046863325")
+  multi_works <- oa_fetch(
+    identifier = work_ids,
+    output = "dataframe",
+    mailto = "example@email.com"
+  )
+
   expect_equal(
     sort(multi_works$id),
     paste0("https://openalex.org/", sort(work_ids))
@@ -59,7 +82,8 @@ test_that("oa_fetch authors can deal with NA institutions", {
   expect_s3_class(
     oa_fetch(
       entity = "authors",
-      orcid = "0000-0001-7482-0480"),
+      orcid = "0000-0001-7482-0480"
+    ),
     "data.frame"
   )
 
@@ -67,7 +91,8 @@ test_that("oa_fetch authors can deal with NA institutions", {
     oa_fetch(
       entity = "authors",
       orcid = "0000-0001-7482-0480",
-      output = "list"),
+      output = "list"
+    ),
     "list"
   )
 })
@@ -126,7 +151,8 @@ test_that("oa_fetch can combine (OR) more than 50 DOIs in a filter", {
     "https://doi.org/10.1007/s11356-021-13094-3",
     "https://doi.org/10.1016/j.coesh.2019.10.008",
     "https://doi.org/10.1016/j.net.2020.08.005",
-    "https://doi.org/10.1016/j.iot.2020.100318")
+    "https://doi.org/10.1016/j.iot.2020.100318"
+  )
 
   many_doi_results <- oa_fetch(entity = "works", doi = valid_dois)
 

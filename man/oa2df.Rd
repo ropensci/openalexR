@@ -33,6 +33,9 @@ See more at <https://docs.openalex.org/api/get-groups-of-entities>.}
 \item{verbose}{Logical. If TRUE, print information on querying process.
 Default to \code{verbose = FALSE}.}
 }
+\value{
+A tibble/dataframe result of the original OpenAlex result list.
+}
 \description{
 It converts bibliographic collections gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
 The function converts a collection of records about works, authors, institutions, venues or concepts obtained using \code{oa_request} into a data frame/tibble.
@@ -64,7 +67,6 @@ res <- oa_request(
 )
 
 oa2df(res, entity = "works")
-
 }
 
 }

@@ -28,7 +28,8 @@ for example, W2755950973.
 If "original", the OpenAlex IDs are kept as are,
 for example, https://openalex.org/W2755950973}
 
-\item{mailto}{Character string. Gives OpenAlex an email to enter the polite pool.}
+\item{mailto}{Character string.
+Gives OpenAlex an email to enter the polite pool.}
 
 \item{endpoint}{Character. URL of the OpenAlex Endpoint API server.
 Defaults to endpoint = "https://api.openalex.org/".}

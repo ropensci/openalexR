@@ -60,13 +60,13 @@ test_that("oa_snowball works for author orcids", {
   )
 
   nodes <- snowball_orcid$nodes
-  orcids_in <- sapply(nodes$author[nodes$oa_input], function(x) x$au_orcid)
+  orcids_in <- lapply(nodes$author[nodes$oa_input], function(x) x$au_orcid)
   either_orcid <- paste(orcids, collapse = "|")
 
   expect_true(is.list(snowball_orcid))
 
   orcids_in |>
-    sapply(function(x) any(grepl(either_orcid, x))) |>
+    vapply(function(x) any(grepl(either_orcid, x)), logical(1)) |>
     all() |>
     expect_true()
 })

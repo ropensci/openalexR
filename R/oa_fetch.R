@@ -85,7 +85,10 @@ oa_fetch <- function(identifier = NULL, ## identifier of a work, author, venue, 
   if (length(large_filter) == 0) {
     list_id <- list(`1` = NULL)
   } else {
-    list_id <- split(filter[[large_filter]], ceiling(seq_along(filter[[large_filter]]) / 50))
+    list_id <- split(
+      filter[[large_filter]],
+      ceiling(seq_along(filter[[large_filter]]) / 50)
+    )
   }
 
   final_res <- list()
@@ -130,8 +133,10 @@ oa_fetch <- function(identifier = NULL, ## identifier of a work, author, venue, 
 
 #' Get bibliographic records from OpenAlex database
 #'
-#' `oa_request` makes a request and downloads bibliographic records from OpenAlex database \href{https://openalex.org/}{https://openalex.org/}.
-#' The function \code{oa_request} queries OpenAlex database using a query formulated through the function \code{oa_query}.
+#' `oa_request` makes a request and downloads bibliographic records from
+#' OpenAlex database \href{https://openalex.org/}{https://openalex.org/}.
+#' The function \code{oa_request} queries OpenAlex database using a query
+#' formulated through the function \code{oa_query}.
 #'
 #' @param query_url Character string.
 #' A search query formulated using the OpenAlex API language and
@@ -142,13 +147,15 @@ oa_fetch <- function(identifier = NULL, ## identifier of a work, author, venue, 
 #' @param count_only Logical.
 #' If TRUE, the function returns only the number of item matching the query.
 #' Defaults to FALSE.
-#' @param mailto Character string. Gives OpenAlex an email to enter the polite pool.
+#' @param mailto Character string.
+#' Gives OpenAlex an email to enter the polite pool.
 #' @param verbose Logical.
 #' If TRUE, print information about the querying process. Defaults to TRUE.
 #'
 #' @return a data.frame or a list of bibliographic records.
 #'
-#' For more extensive information about OpenAlex API, please visit: \href{https://docs.openalex.org/api}{https://docs.openalex.org/api}
+#' For more extensive information about OpenAlex API, please visit:
+#' \href{https://docs.openalex.org/api}{https://docs.openalex.org/api}
 #'
 #'
 #' @examples
@@ -277,6 +284,7 @@ oa_request <- function(query_url,
                        count_only = FALSE,
                        mailto = oa_email(),
                        verbose = FALSE) {
+
   ua <- httr::user_agent(cfg()$user_agent)
 
   # building query...
@@ -465,7 +473,8 @@ oa_query <- function(filter = NULL,
   filter <- c(filter, list(...))
 
   if (length(filter) > 0 || multiple_id) {
-    filter[sapply(filter, is.null)] <- NULL
+    null_locations <- vapply(filter, is.null, logical(1))
+    filter[null_locations] <- NULL # remove NULL elements
     filter <- lapply(filter, asl)
     flt_ready <- mapply(append_flt, filter, names(filter))
     flt_ready <- paste0(flt_ready, collapse = ",")
@@ -474,7 +483,7 @@ oa_query <- function(filter = NULL,
   }
 
   if (is.null(identifier) || multiple_id) {
-    if (is.null(filter) & (is.null(search))) {
+    if (length(filter) == 0 && is.null(search)) {
       message("Identifier is missing, please specify filter or search argument.")
       return()
     }
@@ -523,10 +532,10 @@ oa_random <- function(entity = oa_entities(),
   res <- oa_request(query_url)
 
   final_res <- switch(output,
-                      list = res,
-                      tibble = oa2df(res,
-                                     entity = entity
-                      )
+    list = res,
+    tibble = oa2df(res,
+      entity = entity
+    )
   )
 
   final_res
@@ -553,7 +562,10 @@ api_request <- function(query_url, ua, query = query) {
     return(list())
   }
 
-  parsed <- jsonlite::fromJSON(httr::content(res, "text", encoding = "UTF-8"), simplifyVector = FALSE)
+  parsed <- jsonlite::fromJSON(
+    httr::content(res, "text", encoding = "UTF-8"),
+    simplifyVector = FALSE
+  )
 
   if (httr::http_error(res)) {
     stop(

@@ -60,7 +60,8 @@ Defaults to 200.}
 If TRUE, the function returns only the number of item matching the query.
 Defaults to FALSE.}
 
-\item{mailto}{Character string. Gives OpenAlex an email to enter the polite pool.}
+\item{mailto}{Character string.
+Gives OpenAlex an email to enter the polite pool.}
 
 \item{verbose}{Logical. If TRUE, print information on querying process.
 Default to \code{verbose = FALSE}.}
