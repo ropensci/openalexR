@@ -27,15 +27,15 @@ knitr::opts_chunk$set(
 
 **openalexR** helps you interface with the [OpenAlex](https://openalex.org) API to retrieve bibliographic infomation about publications, authors, venues, institutions and concepts with 5 main functions:
 
--   `oa_fetch()`: composes three functions below so the user can execute everything in one step, *i.e.*, `oa_query |> oa_request |> oa2df`
+-   `oa_fetch`: composes three functions below so the user can execute everything in one step, *i.e.*, `oa_query |> oa_request |> oa2df`
 
--   `oa_query()`: generates a valid query, written following the OpenAlex API syntax, from a set of arguments provided by the user.
+-   `oa_query`: generates a valid query, written following the OpenAlex API syntax, from a set of arguments provided by the user.
 
--   `oa_request()`: downloads a collection of entities matching the query created by `oa_query()` or manually written by the user, and returns a JSON object in a list format.
+-   `oa_request`: downloads a collection of entities matching the query created by `oa_query` or manually written by the user, and returns a JSON object in a list format.
 
--   `oa2df()`: converts the JSON object in classical bibliographic tibble/data frame.
+-   `oa2df`: converts the JSON object in classical bibliographic tibble/data frame.
 
--   `oa_random()`: get random entity, _e.g._, `oa_random("works")` gives a different work each time you run it
+-   `oa_random`: get random entity, _e.g._, `oa_random("works")` gives a different work each time you run it
 
 ## Setup
 

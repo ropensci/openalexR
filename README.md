@@ -20,21 +20,21 @@ coverage](https://codecov.io/gh/massimoaria/openalexR/branch/main/graph/badge.sv
 infomation about publications, authors, venues, institutions and
 concepts with 5 main functions:
 
--   `oa_fetch()`: composes three functions below so the user can execute
+-   `oa_fetch`: composes three functions below so the user can execute
     everything in one step, *i.e.*, `oa_query |> oa_request |> oa2df`
 
--   `oa_query()`: generates a valid query, written following the
-    OpenAlex API syntax, from a set of arguments provided by the user.
+-   `oa_query`: generates a valid query, written following the OpenAlex
+    API syntax, from a set of arguments provided by the user.
 
--   `oa_request()`: downloads a collection of entities matching the
-    query created by `oa_query()` or manually written by the user, and
-    returns a JSON object in a list format.
+-   `oa_request`: downloads a collection of entities matching the query
+    created by `oa_query` or manually written by the user, and returns a
+    JSON object in a list format.
 
--   `oa2df()`: converts the JSON object in classical bibliographic
+-   `oa2df`: converts the JSON object in classical bibliographic
     tibble/data frame.
 
--   `oa_random()`: get random entity, *e.g.*, `oa_random("works")` gives
-    a different work each time you run it
+-   `oa_random`: get random entity, *e.g.*, `oa_random("works")` gives a
+    different work each time you run it
 
 ## Setup
 
@@ -223,7 +223,7 @@ my_arguments <- list(
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #>      count db_response_time_ms page per_page
-#> [1,]    27                  47    1        1
+#> [1,]    27                  59    1        1
 do.call(oa_fetch, my_arguments) %>%
   show_authors() %>%
   knitr::kable()
