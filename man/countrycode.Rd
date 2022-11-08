@@ -16,6 +16,7 @@ A data frame with 250 rows and 3 variables:
 countrycode
 }
 \description{
-Data frame contains the list of countries and their alpha-2 and aplha-3 codes.\cr
+Data frame contains the list of countries and their alpha-2 and
+aplha-3 codes.\cr
 }
 \keyword{datasets}
