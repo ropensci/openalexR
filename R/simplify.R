@@ -25,19 +25,20 @@
 #' ))
 #'
 show_authors <- function(x, simp_func = utils::head){
-  x$id <- sapply(strsplit(x$id, split= "/"), function(y) utils::tail(y, 1))
+  x$id <- vapply(x$id, shorten_oaid, character(1), USE.NAMES = FALSE)
 
   if (any(!is.na(x$orcid))){
-    x$orcid <- sapply(strsplit(x$orcid, split= "/"), function(y) utils::tail(y, 1))
+    x$orcid <- vapply(x$orcid, shorten_orcid, character(1), USE.NAMES = FALSE)
   }
 
-  x$top_concepts <- sapply(
+  x$top_concepts <- vapply(
     x$x_concepts,
     function(y) {
       if (is.logical(y)) return(NA)
       op_level <- min(1, max(y$level))
       paste(utils::head(y[y$level == op_level, "display_name"], 3), collapse = ", ")
-    }
+    },
+    character(1)
   )
 
   simp_func(x[, c("id", "display_name", "orcid", "works_count",
@@ -70,17 +71,20 @@ show_authors <- function(x, simp_func = utils::head){
 #' ))
 #'
 show_works <- function(x, simp_func = utils::head){
-  x$id <- sapply(strsplit(x$id, split= "/"), function(y) utils::tail(y, 1))
-  x$first_author <- sapply(x$author, get_auth_position, position = "first")
-  x$last_author <- sapply(x$author, get_auth_position, position = "last")
+  x$id <- vapply(x$id, shorten_oaid, character(1), USE.NAMES = FALSE)
+  x$first_author <- vapply(
+    x$author, get_auth_position, character(1), position = "first")
+  x$last_author <- vapply(
+    x$author, get_auth_position, character(1), position = "last")
 
-  x$top_concepts <- sapply(
+  x$top_concepts <- vapply(
     x$concepts,
     function(y) {
       if (is.logical(y)) return(NA)
       op_level <- min(2, max(y$level))
       paste(utils::head(y[y$level == op_level, "display_name"], 3), collapse = ", ")
-    }
+    },
+    character(1)
   )
 
   simp_cols <- intersect(

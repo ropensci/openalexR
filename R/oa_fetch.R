@@ -85,7 +85,10 @@ oa_fetch <- function(identifier = NULL, ## identifier of a work, author, venue, 
   if (length(large_filter) == 0) {
     list_id <- list(`1` = NULL)
   } else {
-    list_id <- split(filter[[large_filter]], ceiling(seq_along(filter[[large_filter]]) / 50))
+    list_id <- split(
+      filter[[large_filter]],
+      ceiling(seq_along(filter[[large_filter]]) / 50)
+    )
   }
 
   final_res <- list()
@@ -465,7 +468,8 @@ oa_query <- function(filter = NULL,
   filter <- c(filter, list(...))
 
   if (length(filter) > 0 || multiple_id) {
-    filter[sapply(filter, is.null)] <- NULL
+    null_locations <- vapply(filter, is.null, logical(1))
+    filter[null_locations] <- NULL # remove NULL elements
     filter <- lapply(filter, asl)
     flt_ready <- mapply(append_flt, filter, names(filter))
     flt_ready <- paste0(flt_ready, collapse = ",")
@@ -523,10 +527,10 @@ oa_random <- function(entity = oa_entities(),
   res <- oa_request(query_url)
 
   final_res <- switch(output,
-                      list = res,
-                      tibble = oa2df(res,
-                                     entity = entity
-                      )
+    list = res,
+    tibble = oa2df(res,
+      entity = entity
+    )
   )
 
   final_res
@@ -553,7 +557,10 @@ api_request <- function(query_url, ua, query = query) {
     return(list())
   }
 
-  parsed <- jsonlite::fromJSON(httr::content(res, "text", encoding = "UTF-8"), simplifyVector = FALSE)
+  parsed <- jsonlite::fromJSON(
+    httr::content(res, "text", encoding = "UTF-8"),
+    simplifyVector = FALSE
+  )
 
   if (httr::http_error(res)) {
     stop(
