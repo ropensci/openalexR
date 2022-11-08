@@ -25,7 +25,8 @@ Defaults to 200.}
 If TRUE, the function returns only the number of item matching the query.
 Defaults to FALSE.}
 
-\item{mailto}{Character string. Gives OpenAlex an email to enter the polite pool.}
+\item{mailto}{Character string.
+Gives OpenAlex an email to enter the polite pool.}
 
 \item{verbose}{Logical.
 If TRUE, print information about the querying process. Defaults to TRUE.}
@@ -33,11 +34,14 @@ If TRUE, print information about the querying process. Defaults to TRUE.}
 \value{
 a data.frame or a list of bibliographic records.
 
-For more extensive information about OpenAlex API, please visit: \href{https://docs.openalex.org/api}{https://docs.openalex.org/api}
+For more extensive information about OpenAlex API, please visit:
+\href{https://docs.openalex.org/api}{https://docs.openalex.org/api}
 }
 \description{
-`oa_request` makes a request and downloads bibliographic records from OpenAlex database \href{https://openalex.org/}{https://openalex.org/}.
-The function \code{oa_request} queries OpenAlex database using a query formulated through the function \code{oa_query}.
+`oa_request` makes a request and downloads bibliographic records from
+OpenAlex database \href{https://openalex.org/}{https://openalex.org/}.
+The function \code{oa_request} queries OpenAlex database using a query
+formulated through the function \code{oa_query}.
 }
 \examples{
 \dontrun{
