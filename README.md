@@ -223,7 +223,7 @@ my_arguments <- list(
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #>      count db_response_time_ms page per_page
-#> [1,]    26                  53    1        1
+#> [1,]    27                  47    1        1
 do.call(oa_fetch, my_arguments) %>%
   show_authors() %>%
   knitr::kable()
@@ -363,7 +363,7 @@ jours %>%
   ggplot() +
   aes(fill = jour, y = score, x = abbreviation, group = jour) +
   facet_wrap(~jour) +
-  geom_hline(yintercept = c(45, 90), colour = "grey90", size = 0.2) +
+  geom_hline(yintercept = c(45, 90), colour = "grey90", linewidth = 0.2) +
   geom_segment(
     aes(x = abbreviation, xend = abbreviation, y = 0, yend = 100),
     color = "grey95"
@@ -386,15 +386,56 @@ jours %>%
   scale_fill_brewer(palette = "Set1") +
   guides(fill = "none") +
   labs(y = NULL, x = NULL, title = "Journal clocks")
-#> Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-#> Please use `linewidth` instead.
 ```
 
 <img src="man/figures/README-big-journals-1.png" width="100%" />
 
 ## Snowball search
 
-TODO
+The user can also perform *snowballing* with `oa_snowball`. Snowballing
+is a literature search technique where the researcher starts with a set
+of articles and find articles that cite or were cited by the original
+set. `oa_snowball` returns a list of 2 elements: *nodes* and *edges*.
+Similar to `oa_fetch`, `oa_snowball` finds and returns information on a
+core set of articles satisfying certain criteria, but, unlike
+`oa_fetch`, it also returns information the articles that cite and are
+cited by this core set.
+
+``` r
+library(ggraph)
+library(tidygraph)
+#> 
+#> Attaching package: 'tidygraph'
+#> The following object is masked from 'package:stats':
+#> 
+#>     filter
+
+snowball_docs <- oa_snowball(
+  identifier = c("W1964141474", "W1963991285"),
+  verbose = TRUE
+)
+#> Requesting url: https://api.openalex.org/works?filter=openalex_id%3AW1964141474%7CW1963991285
+#> Getting 1 page of results with a total of 2 records...
+#> Collecting all documents citing the target papers...
+#> Requesting url: https://api.openalex.org/works?filter=cites%3AW1963991285%7CW1964141474
+#> Getting 3 pages of results with a total of 451 records...
+#> Collecting all documents cited by the target papers...
+#> Requesting url: https://api.openalex.org/works?filter=cited_by%3AW1963991285%7CW1964141474
+#> Getting 1 page of results with a total of 87 records...
+
+ggraph(graph = as_tbl_graph(snowball_docs), layout = "stress") +
+  geom_edge_link(aes(alpha = after_stat(index)), show.legend = FALSE) +
+  geom_node_point(aes(fill = oa_input, size = cited_by_count), shape = 21) +
+  geom_node_label(aes(filter = oa_input, label = id), nudge_y = 0.2, size = 3) +
+  scale_edge_width(range = c(0.1, 1.5), guide = "none") +
+  scale_size(range = c(3, 10), guide = "none") +
+  scale_fill_manual(values = c("#1A5878", "#C44237"), na.value = "grey", name = "") +
+  theme_graph() +
+  theme(legend.position = "bottom") +
+  guides(fill = "none")
+```
+
+<img src="man/figures/README-snowballing-1.png" width="100%" />
 
 ## About OpenAlex
 
