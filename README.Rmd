@@ -199,14 +199,17 @@ concept_df %>%
   ggplot() +
   aes(x = year, y = works_count, color = display_name) +
   facet_wrap(~display_name) +
-  geom_line(size = 0.7) +
+  geom_line(linewidth = 0.7) +
   scale_color_brewer(palette = "Dark2") +
   labs(
     x = NULL, y = "Works count",
-    title = "We know what happened in 2020"
+    title = "Virology spiked in 2020."
   ) +
   guides(color = "none") +
-  gghighlight(max(works_count) > 99500)
+  gghighlight(
+    max(works_count) > 244000, 
+    label_params = list(nudge_y = 10^5, segment.color = NA)
+  )
 ```
 
 **Goal**: Rank institutions in Italy by total number of citations.
@@ -266,9 +269,10 @@ We first download all records regarding journals that have published more than 3
 ```{r big-journals, message=FALSE, fig.height=8, fig.width=8}
 jours <- oa_fetch(
   entity = "venues",
-  works_count = ">300000",
+  works_count = ">500000",
   verbose = TRUE
 ) %>%
+  filter(publisher != "Elsevier"|is.na(publisher)) %>%
   distinct(display_name, .keep_all = TRUE) %>%
   select(jour = display_name, x_concepts) %>%
   tidyr::unnest(x_concepts) %>%
@@ -337,6 +341,11 @@ There are five types of entities:
 -   **Institutions** are universities and other orgs that are affiliated with works (via authors)
 
 -   **Concepts** *tag* Works with a topic
+
+## Code of Conduct
+
+Please note that this package is released with a [Contributor Code of Conduct](https://ropensci.org/code-of-conduct/). 
+By contributing to this project, you agree to abide by its terms.
 
 ## Acknowledgements
 
