@@ -133,8 +133,10 @@ oa_fetch <- function(identifier = NULL, ## identifier of a work, author, venue, 
 
 #' Get bibliographic records from OpenAlex database
 #'
-#' `oa_request` makes a request and downloads bibliographic records from OpenAlex database \href{https://openalex.org/}{https://openalex.org/}.
-#' The function \code{oa_request} queries OpenAlex database using a query formulated through the function \code{oa_query}.
+#' `oa_request` makes a request and downloads bibliographic records from
+#' OpenAlex database \href{https://openalex.org/}{https://openalex.org/}.
+#' The function \code{oa_request} queries OpenAlex database using a query
+#' formulated through the function \code{oa_query}.
 #'
 #' @param query_url Character string.
 #' A search query formulated using the OpenAlex API language and
@@ -145,13 +147,15 @@ oa_fetch <- function(identifier = NULL, ## identifier of a work, author, venue, 
 #' @param count_only Logical.
 #' If TRUE, the function returns only the number of item matching the query.
 #' Defaults to FALSE.
-#' @param mailto Character string. Gives OpenAlex an email to enter the polite pool.
+#' @param mailto Character string.
+#' Gives OpenAlex an email to enter the polite pool.
 #' @param verbose Logical.
 #' If TRUE, print information about the querying process. Defaults to TRUE.
 #'
 #' @return a data.frame or a list of bibliographic records.
 #'
-#' For more extensive information about OpenAlex API, please visit: \href{https://docs.openalex.org/api}{https://docs.openalex.org/api}
+#' For more extensive information about OpenAlex API, please visit:
+#' \href{https://docs.openalex.org/api}{https://docs.openalex.org/api}
 #'
 #'
 #' @examples
@@ -280,6 +284,7 @@ oa_request <- function(query_url,
                        count_only = FALSE,
                        mailto = oa_email(),
                        verbose = FALSE) {
+
   ua <- httr::user_agent(cfg()$user_agent)
 
   # building query...
@@ -478,7 +483,7 @@ oa_query <- function(filter = NULL,
   }
 
   if (is.null(identifier) || multiple_id) {
-    if (is.null(filter) & (is.null(search))) {
+    if (length(filter) == 0 && is.null(search)) {
       message("Identifier is missing, please specify filter or search argument.")
       return()
     }
