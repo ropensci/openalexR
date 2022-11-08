@@ -15,3 +15,5 @@
 ^vignettes/articles$
 ^data-raw$
 ^codecov\.yml$
+^dev$
+^codemeta\.json$
