@@ -80,8 +80,8 @@ institutions %>%
   mutate(
     name = display_name,
     openalex_id = stringr::str_extract(id, "I\\d+"),
-    lat = sapply(geo, function(x) x$latitude),
-    lon = sapply(geo, function(x) x$longitude),
+    lat = vapply(geo, function(x) x$latitude, numeric(1)),
+    lon = vapply(geo, function(x) x$longitude, numeric(1)),
     .keep = "none"
   )
 
