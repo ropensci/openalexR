@@ -76,6 +76,11 @@ test_that("Error when input entity can't be matched", {
   )
 })
 
+test_that("oa_fetch instutitions binds associated_institutions correctly", {
+  inst <- oa_fetch(identifier = "I1292875679")
+  expect_true(ncol(inst$associated_institutions[[1]]) >= 6)
+})
+
 test_that("oa_fetch authors can deal with NA institutions", {
   skip_on_cran()
 

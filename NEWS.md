@@ -1,3 +1,6 @@
+# openalexR (development version)
+* Bug fixes
+
 # openalexR 1.0.1
 
 * Improve `snowball` #9.
