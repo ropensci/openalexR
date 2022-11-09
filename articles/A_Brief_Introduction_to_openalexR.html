@@ -33,7 +33,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">openalexR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.2.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -92,7 +92,7 @@
     
 <p> </p>
 <p><a href="https://github.com/massimoaria/openalexR" class="external-link uri"><em>https://github.com/massimoaria/openalexR</em></a></p>
-<p><em>Latest version: 1.0.2, 2022-11-08</em></p>
+<p><em>Latest version: 1.0.2.9000, 2022-11-09</em></p>
 <p> </p>
 <p><strong>by Massimo Aria</strong></p>
 <p>Full Professor in Social Statistics</p>
@@ -635,7 +635,7 @@ without downloading the collection.</p>
 <span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Requesting url: https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&amp;sort=cited_by_count%3Adesc</span></span></code></pre>
 <pre><code><span><span class="co">##      count db_response_time_ms page per_page</span></span>
-<span><span class="co">## [1,]    45                  29    1        1</span></span></code></pre>
+<span><span class="co">## [1,]    45                  34    1        1</span></span></code></pre>
 <p>We can now download the records and transform it into a tibble/data
 frame by setting <code>count_only = FALSE</code> (also the default
 value):</p>
@@ -819,7 +819,7 @@ can do this by first defining a list of arguments, then adding
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">my_arguments</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>count_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##      count db_response_time_ms page per_page</span></span>
-<span><span class="co">## [1,]    27                  56    1        1</span></span></code></pre>
+<span><span class="co">## [1,]    27                  53    1        1</span></span></code></pre>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="va">my_arguments</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/show_authors.html">show_authors</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -999,7 +999,7 @@ query then download the collection:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">italian_insts</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>count_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Requesting url: https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation</span></span></code></pre>
 <pre><code><span><span class="co">##      count db_response_time_ms page per_page</span></span>
-<span><span class="co">## [1,]   231                  29    1        1</span></span></code></pre>
+<span><span class="co">## [1,]   231                  21    1        1</span></span></code></pre>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="va">italian_insts</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Requesting url: https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation</span></span></code></pre>
@@ -1019,14 +1019,14 @@ query then download the collection:</p>
 <span><span class="co">## $ homepage_url              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "http://www.uniroma1.it/", "http://www.unibo…</span></span>
 <span><span class="co">## $ image_url                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://upload.wikimedia.org/wikipedia/en/4…</span></span>
 <span><span class="co">## $ image_thumbnail_url       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://upload.wikimedia.org/wikipedia/en/t…</span></span>
-<span><span class="co">## $ associated_institutions   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[1 x 24]&gt;], [&lt;data.frame[1 x 12…</span></span>
+<span><span class="co">## $ associated_institutions   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[4 x 6]&gt;], [&lt;data.frame[2 x 6]&gt;…</span></span>
 <span><span class="co">## $ relevance_score           <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, …</span></span>
-<span><span class="co">## $ works_count               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 165861, 132262, 130672, 129018, 92740, 87926…</span></span>
-<span><span class="co">## $ cited_by_count            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 11267926, 10170771, 10181095, 9595859, 62998…</span></span>
+<span><span class="co">## $ works_count               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 165861, 132262, 130721, 129018, 92740, 87956…</span></span>
+<span><span class="co">## $ cited_by_count            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 11267926, 10170771, 10189681, 9595859, 62998…</span></span>
 <span><span class="co">## $ counts_by_year            <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[11 x 3]&gt;], [&lt;data.frame[11 x 3…</span></span>
 <span><span class="co">## $ works_api_url             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://api.openalex.org/works?filter=insti…</span></span>
 <span><span class="co">## $ x_concepts                <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[14 x 5]&gt;], [&lt;data.frame[15 x 5…</span></span>
-<span><span class="co">## $ updated_date              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "2022-11-08T10:59:25.916381", "2022-11-08T10…</span></span>
+<span><span class="co">## $ updated_date              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "2022-11-09T08:16:58.975098", "2022-11-09T07…</span></span>
 <span><span class="co">## $ created_date              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "2016-06-24", "2016-06-24", "2016-06-24", "2…</span></span></code></pre>
 </div>
 <div class="section level3">
@@ -1044,7 +1044,7 @@ journals that have published more than 100,000 works:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">big_journals</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>count_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Requesting url: https://api.openalex.org/venues?filter=works_count%3A%3E100000</span></span></code></pre>
 <pre><code><span><span class="co">##      count db_response_time_ms page per_page</span></span>
-<span><span class="co">## [1,]    91                  15    1        1</span></span></code></pre>
+<span><span class="co">## [1,]    91                  23    1        1</span></span></code></pre>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="va">big_journals</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Requesting url: https://api.openalex.org/venues?filter=works_count%3A%3E100000</span></span></code></pre>
@@ -1061,8 +1061,8 @@ journals that have published more than 100,000 works:</p>
 <span><span class="co">## $ ids             <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;tbl_df[1 x 2]&gt;], [&lt;tbl_df[1 x 2]&gt;], [&lt;tbl_df[1 x 2]…</span></span>
 <span><span class="co">## $ homepage_url    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> NA, NA, NA, NA, "http://www.repec.org/", NA, NA, NA, N…</span></span>
 <span><span class="co">## $ relevance_score <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…</span></span>
-<span><span class="co">## $ works_count     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 941059, 908383, 908314, 791579, 715594, 705754, 661208…</span></span>
-<span><span class="co">## $ cited_by_count  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 394363, 2642517, 1623462, 2914549, 1497068, 783058, 98…</span></span>
+<span><span class="co">## $ works_count     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 941059, 909548, 908314, 793638, 715594, 705754, 661208…</span></span>
+<span><span class="co">## $ cited_by_count  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 394363, 2693309, 1623462, 2973676, 1497068, 783058, 98…</span></span>
 <span><span class="co">## $ counts_by_year  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[11 x 3]&gt;], [&lt;data.frame[11 x 3]&gt;], [&lt;dat…</span></span>
 <span><span class="co">## $ x_concepts      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[2 x 5]&gt;], [&lt;data.frame[3 x 5]&gt;], [&lt;data.…</span></span>
 <span><span class="co">## $ works_api_url   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://api.openalex.org/works?filter=host_venue.id:V…</span></span></code></pre>
@@ -1082,7 +1082,7 @@ concepts that concern at least one million works:</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">popular_concepts</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>count_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Requesting url: https://api.openalex.org/concepts?filter=works_count%3A%3E1000000</span></span></code></pre>
 <pre><code><span><span class="co">##      count db_response_time_ms page per_page</span></span>
-<span><span class="co">## [1,]   235                   6    1        1</span></span></code></pre>
+<span><span class="co">## [1,]   235                  21    1        1</span></span></code></pre>
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="va">popular_concepts</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Requesting url: https://api.openalex.org/concepts?filter=works_count%3A%3E1000000</span></span></code></pre>
@@ -1102,8 +1102,8 @@ concepts that concern at least one million works:</p>
 <span><span class="co">## $ ancestors                  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, [&lt;…</span></span>
 <span><span class="co">## $ related_concepts           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[93 x 5]&gt;], [&lt;data.frame[51 x …</span></span>
 <span><span class="co">## $ relevance_score            <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…</span></span>
-<span><span class="co">## $ works_count                <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 76467669, 57454655, 41626176, 38240208, 337…</span></span>
-<span><span class="co">## $ cited_by_count             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 389939670, 576560483, 631975910, 394166225,…</span></span>
+<span><span class="co">## $ works_count                <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 76483217, 57468764, 41629078, 38238885, 337…</span></span>
+<span><span class="co">## $ cited_by_count             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 390036370, 576894917, 632184711, 394028085,…</span></span>
 <span><span class="co">## $ counts_by_year             <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[11 x 3]&gt;], [&lt;data.frame[11 x …</span></span>
 <span><span class="co">## $ works_api_url              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://api.openalex.org/works?filter=conc…</span></span></code></pre>
 </div>
@@ -1128,7 +1128,7 @@ OA id for the article by Aria and Cuccurullo.</p>
 <div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">aria_count</span></span></code></pre></div>
 <pre><code><span><span class="co">##      count db_response_time_ms page per_page</span></span>
-<span><span class="co">## [1,]  1896                  62    1        1</span></span></code></pre>
+<span><span class="co">## [1,]  1898                  67    1        1</span></span></code></pre>
 <p>This query will return a collection of NA publications. Among these
 articles, let’s download the ones published in the following year:</p>
 <div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
@@ -1199,7 +1199,7 @@ workflow.</p>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">bib_ls</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>count_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##      count db_response_time_ms page per_page</span></span>
-<span><span class="co">## [1,]   245                  29    1        1</span></span></code></pre>
+<span><span class="co">## [1,]   245                  12    1        1</span></span></code></pre>
 <div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="va">bib_ls</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/oa2bibliometrix.html">oa2bibliometrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
@@ -1244,7 +1244,7 @@ workflow.</p>
 <span><span class="co">## $ JI               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "V68497187", "V203465130", "V15239247", "V203465130",…</span></span>
 <span><span class="co">## $ J9               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "V68497187", "V203465130", "V15239247", "V203465130",…</span></span>
 <span><span class="co">## $ PY               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 2022, 2022, 2022, 2022, 2022, 2022, 2022, 2022, 2022,…</span></span>
-<span><span class="co">## $ TC               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 11, 11, 10, 9, 9, 8, 8, 8, 7, 7, 6, 6, 6, 6, 6, 5, 5,…</span></span>
+<span><span class="co">## $ TC               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 12, 11, 10, 9, 9, 8, 8, 8, 7, 7, 6, 6, 6, 6, 6, 5, 5,…</span></span>
 <span><span class="co">## $ SR_FULL          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "YONG QIN, 2022, RENEWABLE &amp; SUSTAINABLE ENERGY REVIE…</span></span>
 <span><span class="co">## $ SR               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "YONG QIN, 2022, RENEWABLE &amp; SUSTAINABLE ENERGY REVIE…</span></span></code></pre>
 </div>
