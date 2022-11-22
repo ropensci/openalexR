@@ -95,7 +95,7 @@ oa_snowball <- function(identifier = NULL,
   # remove duplicates when two input identifiers cite each other
   edges <- edges[!duplicated(edges), ]
   # remove edges to/from NA nodes
-  edges <- na.omit(edges)
+  edges <- edges[complete.cases(edges), ]
 
   if (id_type == "short") {
     edges$to <- shorten_oaid(edges$to)
