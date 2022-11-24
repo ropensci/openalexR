@@ -96,12 +96,18 @@
 <p>The default output from an <code>oa_fetch</code> call is a tibble.
 This object type allows each row to be one unit of entity (article,
 institution, etc.), which is often helpful for downstream wrangling. It
-combines complex output elements in <a href="https://dcl-prog.stanford.edu/list-columns.html" class="external-link">list columns</a>,
+<strong>simplifies</strong> and combines complex output elements in <a href="https://dcl-prog.stanford.edu/list-columns.html" class="external-link">list columns</a>,
 which can be <strong>extracted</strong> or <strong>exploded</strong>
 with <code><a href="https://dplyr.tidyverse.org/reference/rowwise.html" class="external-link">dplyr::rowwise</a></code> or <code><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">purrr::map</a></code>.</p>
-<p>Of course, you can instead set <code>output = "list"</code> in your
-<code>oa_fetch</code> call if you are more comfortable working with
-list.</p>
+<p><strong>IMPORTANT</strong>: in “flattening” the list output to a
+tibble, we have made a few decisions to simplify the original nested
+list such as retaining only one affiliation for each author if you’re
+querying <em>Works</em> (details in <a href="https://github.com/massimoaria/openalexR/blob/main/R/oa2df.R" class="external-link"><code>oa_df</code>
+source code</a>). While the tibble output is sufficient in most use
+cases, you may need to obtain the original nested list with all the
+information on an entity for your special research problem. If so,
+please specify <code>output = "list"</code> in your
+<code>oa_fetch</code> call.</p>
 <div class="section level2">
 <h2 id="example-1-institutions">Example 1: institutions<a class="anchor" aria-label="anchor" href="#example-1-institutions"></a>
 </h2>
@@ -238,21 +244,27 @@ advantage if you have a really large dataframe.</p>
 </h2>
 <p>Suppose we have a tibble of <strong>works</strong> output and would
 like to find the institutions corresponding with the works’ authors. In
-this case, each work may have more than one affiliated institutions. We
-will store the result in a list column:</p>
+this case, each work may have more than one affiliated institutions.</p>
+<div class="section level3">
+<h3 id="tibble-output">Tibble output<a class="anchor" aria-label="anchor" href="#tibble-output"></a>
+</h3>
+<p>Assuming that each author is affiliated with only one institution, we
+can call <code>oa_fetch</code> with the default
+<code>output = "tibble"</code>:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">works</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/oa_fetch.html">oa_fetch</a></span><span class="op">(</span></span>
 <span>  entity <span class="op">=</span> <span class="st">"works"</span>,</span>
 <span>  title.search <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bibliometric analysis"</span>, <span class="st">"science mapping"</span><span class="op">)</span>,</span>
-<span>  cited_by_count <span class="op">=</span> <span class="st">"&gt;100"</span>, </span>
+<span>  cited_by_count <span class="op">=</span> <span class="st">"&gt;100"</span>,</span>
 <span>  from_publication_date <span class="op">=</span> <span class="st">"2020-01-01"</span>,</span>
 <span>  to_publication_date <span class="op">=</span> <span class="st">"2021-01-31"</span>,</span>
 <span>  sort <span class="op">=</span> <span class="st">"cited_by_count:desc"</span>,</span>
 <span>  count_only <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">multi_insts</span> <span class="op">&lt;-</span> <span class="va">works</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rowwise.html" class="external-link">rowwise</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>We will store the result in a list column:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">multi_insts</span> <span class="op">&lt;-</span> <span class="va">works</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rowwise.html" class="external-link">rowwise</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
 <span>    openalex_id <span class="op">=</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_extract.html" class="external-link">str_extract</a></span><span class="op">(</span><span class="va">id</span>, <span class="st">"W\\d+"</span><span class="op">)</span>,</span>
 <span>    institutions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">author</span><span class="op">$</span><span class="va">institution_display_name</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -278,9 +290,49 @@ will store the result in a list column:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> W3038187379 <span style="color: #949494;">&lt;chr [10]&gt;</span></span></span>
 <span></span>
 <span><span class="co"># institutions of the first work</span></span>
-<span><span class="va">multi_insts</span><span class="op">[</span><span class="fl">1</span>, <span class="st">"institutions"</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">multi_insts</span><span class="op">[</span><span class="fl">1</span>, <span class="st">"institutions"</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="co">#&gt; rowws_df [1 × 1] (S3: rowwise_df/tbl_df/tbl/data.frame)</span></span>
+<span><span class="co">#&gt;  $ institutions:List of 1</span></span>
+<span><span class="co">#&gt;   ..$ : chr [1:2] "University of Southern Denmark" "BI Norwegian Business School"</span></span>
+<span><span class="co">#&gt;  - attr(*, "groups")= tibble [1 × 1] (S3: tbl_df/tbl/data.frame)</span></span>
+<span><span class="co">#&gt;   ..$ .rows: list&lt;int&gt; [1:1] </span></span>
+<span><span class="co">#&gt;   .. ..$ : int 1</span></span>
+<span><span class="co">#&gt;   .. ..@ ptype: int(0)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="list-output">List output<a class="anchor" aria-label="anchor" href="#list-output"></a>
+</h3>
+<p>If we want to get <em>all</em> the institutions that the authors of
+these works are affiliated with (since one author may be affiliated with
+more than one institution), you would want to work with the list
+output.</p>
+<p>As you can see, the nested list can be more convoluted to work
+with:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">works_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/oa_fetch.html">oa_fetch</a></span><span class="op">(</span></span>
+<span>  entity <span class="op">=</span> <span class="st">"works"</span>,</span>
+<span>  title.search <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bibliometric analysis"</span>, <span class="st">"science mapping"</span><span class="op">)</span>,</span>
+<span>  cited_by_count <span class="op">=</span> <span class="st">"&gt;100"</span>,</span>
+<span>  from_publication_date <span class="op">=</span> <span class="st">"2020-01-01"</span>,</span>
+<span>  to_publication_date <span class="op">=</span> <span class="st">"2021-01-31"</span>,</span>
+<span>  sort <span class="op">=</span> <span class="st">"cited_by_count:desc"</span>,</span>
+<span>  output <span class="op">=</span> <span class="st">"list"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">work_authors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">works_list</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">$</span><span class="va">author</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">unique_insts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span></span>
+<span>  <span class="va">work_authors</span>,</span>
+<span>  \<span class="op">(</span><span class="va">z</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span></span>
+<span>      <span class="va">z</span>, \<span class="op">(</span><span class="va">y</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">y</span><span class="op">$</span><span class="va">institutions</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">$</span><span class="va">display_name</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">unique_insts</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="co">#&gt; [1] "University of Southern Denmark" "BI Norwegian Business School"</span></span></code></pre></div>
+</div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
