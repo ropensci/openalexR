@@ -16,9 +16,11 @@ library(dplyr)
 
 The default output from an `oa_fetch` call is a tibble.
 This object type allows each row to be one unit of entity (article, institution, etc.), which is often helpful for downstream wrangling.
-It combines complex output elements in [list columns](https://dcl-prog.stanford.edu/list-columns.html), which can be **extracted** or **exploded** with `dplyr::rowwise` or `purrr::map`.
+It **simplifies** and combines complex output elements in [list columns](https://dcl-prog.stanford.edu/list-columns.html), which can be **extracted** or **exploded** with `dplyr::rowwise` or `purrr::map`.
 
-Of course, you can instead set `output = "list"` in your `oa_fetch` call if you are more comfortable working with list.
+**IMPORTANT**: in "flattening" the list output to a tibble, we have made a few decisions to simplify the original nested list such as retaining only one affiliation for each author if you're querying *Works* (details in [`oa_df` source code](https://github.com/massimoaria/openalexR/blob/main/R/oa2df.R)).
+While the tibble output is sufficient in most use cases, you may need to obtain the original nested list with all the information on an entity for your special research problem.
+If so, please specify `output = "list"` in your `oa_fetch` call.
 
 ## Example 1: institutions
 
@@ -84,28 +86,34 @@ institutions %>%
     lon = vapply(geo, function(x) x$longitude, numeric(1)),
     .keep = "none"
   )
-
 ```
 
 ## Example 2: works
 
 Suppose we have a tibble of **works** output and would like to find the institutions corresponding with the works' authors.
 In this case, each work may have more than one affiliated institutions.
-We will store the result in a list column:
+
+### Tibble output
+
+Assuming that each author is affiliated with only one institution, we can call `oa_fetch` with the default `output = "tibble"`:
 
 ```{r}
 works <- oa_fetch(
   entity = "works",
   title.search = c("bibliometric analysis", "science mapping"),
-  cited_by_count = ">100", 
+  cited_by_count = ">100",
   from_publication_date = "2020-01-01",
   to_publication_date = "2021-01-31",
   sort = "cited_by_count:desc",
   count_only = FALSE
 )
+```
 
-multi_insts <- works %>% 
-  rowwise() %>% 
+We will store the result in a list column:
+
+```{r}
+multi_insts <- works %>%
+  rowwise() %>%
   mutate(
     openalex_id = stringr::str_extract(id, "W\\d+"),
     institutions = list(unique(author$institution_display_name)),
@@ -115,6 +123,36 @@ multi_insts <- works %>%
 multi_insts
 
 # institutions of the first work
-multi_insts[1, "institutions"][[1]]
+str(multi_insts[1, "institutions"])
+```
 
+### List output
+
+If we want to get *all* the institutions that the authors of these works are affiliated with (since one author may be affiliated with more than one institution), you would want to work with the list output.
+
+As you can see, the nested list can be more convoluted to work with:
+
+```{r}
+works_list <- oa_fetch(
+  entity = "works",
+  title.search = c("bibliometric analysis", "science mapping"),
+  cited_by_count = ">100",
+  from_publication_date = "2020-01-01",
+  to_publication_date = "2021-01-31",
+  sort = "cited_by_count:desc",
+  output = "list"
+)
+
+work_authors <- lapply(works_list, \(x) x$author)
+
+unique_insts <- sapply(
+  work_authors,
+  \(z) unique(unlist(
+    sapply(
+      z, \(y) sapply(y$institutions, \(x) x$display_name)
+    )
+  ))
+)
+
+unique_insts[[1]]
 ```
