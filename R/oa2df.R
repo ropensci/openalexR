@@ -166,6 +166,17 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
       type = "rbind_df"
     )
 
+    # Type conversions for concepts df
+    sub_rbind_dfs$concepts <- lapply(sub_rbind_dfs$concepts, function(x) {
+      if (is.atomic(x) && is.na(x)) {
+        NULL
+      } else if (!is.null(x$score)) {
+        transform(x, score = as.double(score))
+      } else {
+        x
+      }
+    })
+
     sub_venue <- setNames(paper$host_venue[venue_cols], names(venue_cols))
     sub_venue$issn <- subs_na(paper$host_venue$issn, "flat")
 
