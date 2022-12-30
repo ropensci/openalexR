@@ -1,12 +1,12 @@
 pandoc: 2.19.2
-pkgdown: 2.0.6
+pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   A_Brief_Introduction_to_openalexR: A_Brief_Introduction_to_openalexR.html
   About-the-tibble-output: About-the-tibble-output.html
   Filters: Filters.html
   institution: institution.html
-last_built: 2022-11-24T07:38Z
+last_built: 2022-12-30T15:57Z
 urls:
   reference: https://massimoaria.github.io/openalexR/reference
   article: https://massimoaria.github.io/openalexR/articles
