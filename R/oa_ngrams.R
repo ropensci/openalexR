@@ -2,14 +2,12 @@
 #'
 #' @keywords internal
 ngram2df <- function(ngram) {
-  ngram_df <- as.data.frame(rev(ngram$meta))
-  names(ngram_df)[1] <- "id"
-  ngrams_list <- if (length(ngram$ngrams) == 0) {
-    NULL
+  ngram_df <- as.data.frame.list(rev(ngram$meta), col.names = c("id", "doi", "count"))
+  ngram_df$ngrams <- if (length(ngram$ngrams) == 0) {
+    list(NULL)
   } else {
-    do.call(rbind.data.frame, ngram$ngrams)
+    list(ngram$ngrams)
   }
-  ngram_df$ngrams <- list(ngrams_list)
   ngram_df
 }
 
@@ -37,19 +35,8 @@ ngram2df <- function(ngram) {
 #'   slice_max(ngram_count, n = 10, with_ties = FALSE)
 #'
 #' }
-oa_ngrams <- function(works_identifier, mailto = oa_email(), verbose = FALSE) {
+oa_ngrams <- function(works_identifier, ..., verbose = FALSE) {
   query_urls <- paste0("https://api.openalex.org/works/", gsub("^https://openalex.org/", "", works_identifier), "/ngrams")
-
-  ua <- httr::user_agent(cfg()$user_agent)
-
-  query_ls <- list()
-  if (!is.null(mailto)) {
-    if (isValidEmail(mailto)) {
-      query_ls[["mailto"]] <- mailto
-    } else {
-      message(mailto, " is not a valid email address")
-    }
-  }
 
   n <- length(query_urls)
   pb <- oa_progress(n, "OpenAlex downloading")
@@ -57,7 +44,7 @@ oa_ngrams <- function(works_identifier, mailto = oa_email(), verbose = FALSE) {
   final_res <- vector("list", n)
   for (i in seq_along(query_urls)) {
     if (verbose) pb$tick()
-    res <- api_request(query_urls[i], ua, query = query_ls)
+    res <- jsonlite::fromJSON(query_urls[i])
     final_res[[i]] <- ngram2df(res)
   }
   final_res
