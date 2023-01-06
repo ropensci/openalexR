@@ -19,6 +19,7 @@ ngram2df <- function(ngram) {
 #'
 #' @param works_identifier Character. OpenAlex ID(s) of "works" entities as item identifier(s).
 #' These IDs normally start with "W". See more at <https://docs.openalex.org/about-the-data/work#id>.
+#' @param ... Unused.
 #' @inheritParams oa_request
 #'
 #' @return A dataframe of paper metadatada and a list-column of ngrams.
