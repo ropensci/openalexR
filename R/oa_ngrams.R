@@ -2,6 +2,7 @@
 #'
 #' @keywords internal
 ngram2df <- function(ngram) {
+  if (is.null(ngram$meta$doi)) ngram$meta$doi <- NA_character_
   ngram_df <- as.data.frame.list(rev(ngram$meta), col.names = c("id", "doi", "count"))
   ngram_df$ngrams <- if (length(ngram$ngrams) == 0) {
     list(NULL)
@@ -34,6 +35,9 @@ ngram2df <- function(ngram) {
 #' first_paper_ngrams <- ngrams_data$ngrams[[1]]
 #' top_10_ngrams <- first_paper_ngrams %>%
 #'   slice_max(ngram_count, n = 10, with_ties = FALSE)
+#'
+#' # Missing ngrams are `NULL`
+#' oa_ngrams("https://openalex.org/W2284876136")
 #'
 #' }
 oa_ngrams <- function(works_identifier, ..., verbose = FALSE) {
