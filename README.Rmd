@@ -344,6 +344,39 @@ ggraph(graph = as_tbl_graph(snowball_docs), layout = "stress") +
 ```
 
 
+## N-grams
+
+OpenAlex offers (limited) support for [fulltext N-grams](https://docs.openalex.org/api-entities/works/get-n-grams#fulltext-coverage) of Work entities (these have IDs starting with `"W"`). Given a vector of work IDs, `oa_ngrams` returns a dataframe of N-gram data (in the `ngrams` list-column) for each work.
+
+```{r}
+ngrams_data <- oa_ngrams(
+  works_identifier = c("W1964141474", "W1963991285"),
+  verbose = TRUE
+)
+
+ngrams_data
+
+lapply(ngrams_data$ngrams, head, 3)
+
+ngrams_data |>
+  unnest(ngrams) |>
+  filter(ngram_tokens == 2) |>
+  select(id, ngram, ngram_count) |>
+  group_by(id) |>
+  slice_max(ngram_count, n = 10, with_ties = FALSE) |>
+  ggplot(aes(ngram_count, forcats::fct_reorder(ngram, ngram_count))) +
+  geom_col(aes(fill = id), show.legend = FALSE) +
+  facet_wrap(~ id, scales = "free_y") +
+  labs(
+    title = "Top 10 fulltext bigrams",
+    x = "Count",
+    y = NULL
+  )
+```
+
+`oa_ngrams` can sometimes be slow because the N-grams data can get pretty big, but given that the N-grams are `"cached via CDN"`](https://docs.openalex.org/api-entities/works/get-n-grams#api-endpoint), you may also consider parallelizing for this special case.
+
+
 ## About OpenAlex
 
 ![oar-img](man/figures/oar.jpeg)
