@@ -52,6 +52,9 @@
     <loc>https://massimoaria.github.io/openalexR/reference/institutions2df.html</loc>
   </url>
   <url>
+    <loc>https://massimoaria.github.io/openalexR/reference/ngram2df.html</loc>
+  </url>
+  <url>
     <loc>https://massimoaria.github.io/openalexR/reference/oa2bibliometrix.html</loc>
   </url>
   <url>
@@ -62,6 +65,9 @@
   </url>
   <url>
     <loc>https://massimoaria.github.io/openalexR/reference/oa_fetch.html</loc>
+  </url>
+  <url>
+    <loc>https://massimoaria.github.io/openalexR/reference/oa_ngrams.html</loc>
   </url>
   <url>
     <loc>https://massimoaria.github.io/openalexR/reference/oa_query.html</loc>
