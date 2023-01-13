@@ -56,3 +56,34 @@ oa_ngrams <- function(works_identifier, ..., verbose = FALSE) {
 
   tibble::as_tibble(do.call(rbind.data.frame, final_res))
 }
+
+#' @rdname oa_ngrams
+oa_ngrams2 <- function(works_identifier, ..., verbose = FALSE) {
+
+  if (utils::packageVersion("curl") < 5) {
+    stop("`oa_ngrams2()` requires `{curl}` >= 5.0.0")
+  }
+
+  normalized_id <- gsub("^https://openalex.org/", "", works_identifier)
+  if (!all(grepl("^W", normalized_id))) {
+    stop("Invalid Work entity ID(s) at `works_identifier`: ", paste(which(!grepl("^W", normalized_id)), sep = ", "))
+  }
+
+  query_urls <- paste0("https://api.openalex.org/works/", normalized_id, "/ngrams")
+  ngrams_files <- curl::multi_download(query_urls, file.path(tempdir(), works_identifier), progress = verbose)
+  ngrams_success <- ifelse(ngrams_files$success, ngrams_files[ngrams_files$success, "destfile", drop = TRUE], NA)
+
+  ngrams_failed_template <- data.frame(id = NA, doi = NA, count = NA, ngrams = I(list(NULL)))
+  ngrams_list <- lapply(ngrams_success, function(x) {
+    if (is.na(x)) {
+      ngrams_failed_template
+    } else {
+      res <- jsonlite::fromJSON(x)
+      ngram2df(res)
+    }
+  })
+
+  file.remove(ngrams_files$destfile)
+
+  tibble::as_tibble(do.call(rbind.data.frame, ngrams_list))
+}
