@@ -72,6 +72,7 @@ oa_ngrams <- function(works_identifier, ..., verbose = FALSE) {
         ngram2df(jsonlite::fromJSON(x))
       }
     })
+    file.remove(ngrams_files$destfile)
   } else {
     # One-time message
     if (getOption("oa_ngrams.message.curlv5", TRUE)) {
