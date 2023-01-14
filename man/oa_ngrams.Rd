@@ -8,7 +8,7 @@ oa_ngrams(works_identifier, ..., verbose = FALSE)
 }
 \arguments{
 \item{works_identifier}{Character. OpenAlex ID(s) of "works" entities as item identifier(s).
-These IDs normally start with "W". See more at <https://docs.openalex.org/about-the-data/work#id>.}
+These IDs start with "W". See more at <https://docs.openalex.org/about-the-data/work#id>.}
 
 \item{...}{Unused.}
 
@@ -23,6 +23,10 @@ Some work entities in OpenAlex include N-grams (word sequences and their frequen
 The N-grams are obtained from Internet Archive, which uses the spaCy parser to index scholarly works.
 See <https://docs.openalex.org/api/get-n-grams> for coverage and more technical details.
 }
+\note{
+A faster implementation is available for `curl` >= v5.0.0, and `oa_ngrams` will issue a one-time message
+about this. This can be suppressed with `options("oa_ngrams.message.curlv5" = FALSE)`.
+}
 \examples{
 \dontrun{
 
@@ -32,6 +36,9 @@ library(dplyr)
 first_paper_ngrams <- ngrams_data$ngrams[[1]]
 top_10_ngrams <- first_paper_ngrams \%>\%
   slice_max(ngram_count, n = 10, with_ties = FALSE)
+
+# Missing N-grams are `NULL` in the `ngrams` list-column
+oa_ngrams("https://openalex.org/W2284876136")
 
 }
 }

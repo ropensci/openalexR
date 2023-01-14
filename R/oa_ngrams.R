@@ -18,8 +18,11 @@ ngram2df <- function(ngram) {
 #' The N-grams are obtained from Internet Archive, which uses the spaCy parser to index scholarly works.
 #' See <https://docs.openalex.org/api/get-n-grams> for coverage and more technical details.
 #'
+#' @note A faster implementation is available for `curl` >= v5.0.0, and `oa_ngrams` will issue a one-time message
+#' about this. This can be suppressed with `options("oa_ngrams.message.curlv5" = FALSE)`.
+#'
 #' @param works_identifier Character. OpenAlex ID(s) of "works" entities as item identifier(s).
-#' These IDs normally start with "W". See more at <https://docs.openalex.org/about-the-data/work#id>.
+#' These IDs start with "W". See more at <https://docs.openalex.org/about-the-data/work#id>.
 #' @param ... Unused.
 #' @inheritParams oa_request
 #'
@@ -36,54 +39,63 @@ ngram2df <- function(ngram) {
 #' top_10_ngrams <- first_paper_ngrams %>%
 #'   slice_max(ngram_count, n = 10, with_ties = FALSE)
 #'
-#' # Missing ngrams are `NULL`
+#' # Missing N-grams are `NULL` in the `ngrams` list-column
 #' oa_ngrams("https://openalex.org/W2284876136")
 #'
 #' }
 oa_ngrams <- function(works_identifier, ..., verbose = FALSE) {
-  query_urls <- paste0("https://api.openalex.org/works/", gsub("^https://openalex.org/", "", works_identifier), "/ngrams")
 
-  n <- length(query_urls)
-  pb <- oa_progress(n, "OpenAlex downloading")
-
-  final_res <- vector("list", n)
-  for (i in seq_along(query_urls)) {
-    if (verbose) pb$tick()
-    res <- jsonlite::fromJSON(query_urls[i])
-    final_res[[i]] <- ngram2df(res)
-  }
-  final_res
-
-  tibble::as_tibble(do.call(rbind.data.frame, final_res))
-}
-
-#' @rdname oa_ngrams
-oa_ngrams2 <- function(works_identifier, ..., verbose = FALSE) {
-
-  if (utils::packageVersion("curl") < 5) {
-    stop("`oa_ngrams2()` requires `{curl}` >= 5.0.0")
-  }
-
+  # Check if input is ID of Works entity
   normalized_id <- gsub("^https://openalex.org/", "", works_identifier)
   if (!all(grepl("^W", normalized_id))) {
-    stop("Invalid Work entity ID(s) at `works_identifier`: ", paste(which(!grepl("^W", normalized_id)), sep = ", "))
+    stop("Invalid OpenAlex Work entity ID(s) at `works_identifier`: ", paste(which(!grepl("^W", normalized_id)), sep = ", "))
   }
 
+  # Setup for querying
   query_urls <- paste0("https://api.openalex.org/works/", normalized_id, "/ngrams")
-  ngrams_files <- curl::multi_download(query_urls, file.path(tempdir(), works_identifier), progress = verbose)
-  ngrams_success <- ifelse(ngrams_files$success, ngrams_files[ngrams_files$success, "destfile", drop = TRUE], NA)
+  n <- length(query_urls)
 
   ngrams_failed_template <- data.frame(id = NA, doi = NA, count = NA, ngrams = I(list(NULL)))
-  ngrams_list <- lapply(ngrams_success, function(x) {
-    if (is.na(x)) {
-      ngrams_failed_template
-    } else {
-      res <- jsonlite::fromJSON(x)
-      ngram2df(res)
+  pb <- oa_progress(n)
+
+  # Fetch
+  if (utils::packageVersion("curl") >= 5) {
+    # Parallel fetch
+    ngrams_files <- asNamespace("curl")$multi_download(query_urls, file.path(tempdir(), works_identifier), progress = verbose)
+    ngrams_success <- ifelse(ngrams_files$success, ngrams_files$destfile, NA)
+    # Convert
+    ngrams_dfs <- lapply(ngrams_success, function(x) {
+      if (verbose) pb$tick()
+      if (is.na(x)) {
+        ngrams_failed_template
+      } else {
+        ngram2df(jsonlite::fromJSON(x))
+      }
+    })
+  } else {
+    # One-time message
+    if (getOption("oa_ngrams.message.curlv5", TRUE)) {
+      message("Use `{curl}` >= v5.0.0 for a faster implementation of `oa_ngrams`")
+      options("oa_ngrams.message.curlv5" = FALSE)
     }
-  })
+    # Serial fetch
+    pb_dl <- oa_progress(n, "OpenAlex downloading")
+    ngrams_list <- vector("list", n)
+    for (i in seq_len(n)) {
+      if (verbose) pb_dl$tick()
+      ngrams_list[[i]] <- tryCatch(
+        jsonlite::fromJSON(query_urls[i]),
+        error = function(...) ngrams_failed_template
+      )
+    }
+    # Convert
+    ngrams_dfs <- vector("list", n)
+    for (i in seq_len(n)) {
+      if (verbose) pb$tick()
+      ngrams_dfs[[i]] <- ngram2df(ngrams_list[[i]])
+    }
+  }
 
-  file.remove(ngrams_files$destfile)
+  tibble::as_tibble(do.call(rbind.data.frame, ngrams_dfs))
 
-  tibble::as_tibble(do.call(rbind.data.frame, ngrams_list))
 }
