@@ -73,7 +73,7 @@ See &lt;https://docs.openalex.org/api/get-n-grams&gt; for coverage and more tech
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>works_identifier</dt>
 <dd><p>Character. OpenAlex ID(s) of "works" entities as item identifier(s).
-These IDs normally start with "W". See more at &lt;https://docs.openalex.org/about-the-data/work#id&gt;.</p></dd>
+These IDs start with "W". See more at &lt;https://docs.openalex.org/about-the-data/work#id&gt;.</p></dd>
 
 
 <dt>...</dt>
@@ -91,6 +91,11 @@ If TRUE, print information about the querying process. Defaults to TRUE.</p></dd
 
 <p>A dataframe of paper metadatada and a list-column of ngrams.</p>
     </div>
+    <div class="section level2">
+    <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
+    <p>A faster implementation is available for `curl` &gt;= v5.0.0, and `oa_ngrams` will issue a one-time message
+about this. This can be suppressed with `options("oa_ngrams.message.curlv5" = FALSE)`.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
@@ -102,6 +107,9 @@ If TRUE, print information about the querying process. Defaults to TRUE.</p></dd
 <span class="r-in"><span><span class="va">first_paper_ngrams</span> <span class="op">&lt;-</span> <span class="va">ngrams_data</span><span class="op">$</span><span class="va">ngrams</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="va">top_10_ngrams</span> <span class="op">&lt;-</span> <span class="va">first_paper_ngrams</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_max</a></span><span class="op">(</span><span class="va">ngram_count</span>, n <span class="op">=</span> <span class="fl">10</span>, with_ties <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Missing N-grams are `NULL` in the `ngrams` list-column</span></span></span>
+<span class="r-in"><span><span class="fu">oa_ngrams</span><span class="op">(</span><span class="st">"https://openalex.org/W2284876136"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
