@@ -184,7 +184,7 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
     author <- list(do.call(rbind.data.frame, lapply(paper$authorships, function(l) {
       l_inst <- l$institutions
       inst_idx <- lengths(l_inst) > 0
-      if (length(inst_idx) > 0 && any(inst_idx)) {
+      if (length(inst_idx) > 0 && any(l_inst[inst_idx][[1]])) {
         first_inst <- l_inst[inst_idx][[1]]
       } else {
         first_inst <- empty_inst
