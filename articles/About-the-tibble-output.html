@@ -123,7 +123,7 @@ longitudes</strong>.</p>
 <span>  count_only <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Requesting url: https://api.openalex.org/institutions?filter=country_code%3ACA%2Ccited_by_count%3A%3E4000000</span></span>
-<span><span class="co">#&gt; Getting 1 page of results with a total of 11 records...</span></span>
+<span><span class="co">#&gt; Getting 1 page of results with a total of 12 records...</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">institutions</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 22</span></span></span>
@@ -131,8 +131,8 @@ longitudes</strong>.</p>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lis&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> https://op… Univer… &lt;lgl&gt;   &lt;lgl&gt;   &lt;df&gt;    http… &lt;tibble&gt; CA      &lt;df&gt;  educ…</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> https://op… Univer… &lt;lgl&gt;   &lt;chr&gt;   &lt;df&gt;    http… &lt;tibble&gt; CA      &lt;df&gt;  educ…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> https://op… Univer… &lt;chr&gt;   &lt;lgl&gt;   &lt;df&gt;    http… &lt;tibble&gt; CA      &lt;df&gt;  educ…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> https://op… McGill… &lt;lgl&gt;   &lt;lgl&gt;   &lt;df&gt;    http… &lt;tibble&gt; CA      &lt;df&gt;  educ…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> https://op… McGill… &lt;lgl&gt;   &lt;lgl&gt;   &lt;df&gt;    http… &lt;tibble&gt; CA      &lt;df&gt;  educ…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> https://op… Univer… &lt;chr&gt;   &lt;lgl&gt;   &lt;df&gt;    http… &lt;tibble&gt; CA      &lt;df&gt;  educ…</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> https://op… Univer… &lt;lgl&gt;   &lt;chr&gt;   &lt;df&gt;    http… &lt;tibble&gt; CA      &lt;df&gt;  educ…</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> https://op… Univer… &lt;chr&gt;   &lt;chr&gt;   &lt;df&gt;    http… &lt;tibble&gt; CA      &lt;df&gt;  educ…</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># … with 12 more variables: homepage_url &lt;chr&gt;, image_url &lt;chr&gt;,</span></span></span>
@@ -162,21 +162,22 @@ output.</p>
 <span>    lon <span class="op">=</span> <span class="va">geo</span><span class="op">$</span><span class="va">longitude</span>,</span>
 <span>    .keep <span class="op">=</span> <span class="st">"none"</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 11 × 4</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 4</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># Rowwise: </span></span></span>
 <span><span class="co">#&gt;    name                           openalex_id   lat    lon</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> University of Toronto          I185261750   43.7  -<span style="color: #BB0000;">79.4</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> University of British Columbia I141945490   49.3 -<span style="color: #BB0000;">123.</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> University of Alberta          I154425047   53.5 -<span style="color: #BB0000;">114.</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> McGill University              I5023651     45.5  -<span style="color: #BB0000;">73.6</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> McGill University              I5023651     45.5  -<span style="color: #BB0000;">73.6</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> University of Alberta          I154425047   53.5 -<span style="color: #BB0000;">114.</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> University of Calgary          I168635309   51.1 -<span style="color: #BB0000;">114.</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> University of Waterloo         I151746483   43.5  -<span style="color: #BB0000;">80.5</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Western University             I125749732   43.0  -<span style="color: #BB0000;">81.3</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> University of Ottawa           I153718931   45.4  -<span style="color: #BB0000;">75.7</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> University of Montreal         I70931966    45.5  -<span style="color: #BB0000;">73.6</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> McMaster University            I98251732    43.3  -<span style="color: #BB0000;">79.9</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> Université Laval               I43406934    46.8  -<span style="color: #BB0000;">71.3</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> Université Laval               I43406934    46.8  -<span style="color: #BB0000;">71.3</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> Queen's University             I204722609   44.2  -<span style="color: #BB0000;">76.5</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="purrrmap">purrr::map<a class="anchor" aria-label="anchor" href="#purrrmap"></a>
@@ -194,20 +195,21 @@ advantage if you have a really large dataframe.</p>
 <span>    lon <span class="op">=</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_dbl</a></span><span class="op">(</span><span class="va">geo</span>, <span class="op">~</span> <span class="va">.x</span><span class="op">$</span><span class="va">longitude</span><span class="op">)</span>,</span>
 <span>    .keep <span class="op">=</span> <span class="st">"none"</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 11 × 4</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 4</span></span></span>
 <span><span class="co">#&gt;    name                           openalex_id   lat    lon</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> University of Toronto          I185261750   43.7  -<span style="color: #BB0000;">79.4</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> University of British Columbia I141945490   49.3 -<span style="color: #BB0000;">123.</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> University of Alberta          I154425047   53.5 -<span style="color: #BB0000;">114.</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> McGill University              I5023651     45.5  -<span style="color: #BB0000;">73.6</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> McGill University              I5023651     45.5  -<span style="color: #BB0000;">73.6</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> University of Alberta          I154425047   53.5 -<span style="color: #BB0000;">114.</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> University of Calgary          I168635309   51.1 -<span style="color: #BB0000;">114.</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> University of Waterloo         I151746483   43.5  -<span style="color: #BB0000;">80.5</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Western University             I125749732   43.0  -<span style="color: #BB0000;">81.3</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> University of Ottawa           I153718931   45.4  -<span style="color: #BB0000;">75.7</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> University of Montreal         I70931966    45.5  -<span style="color: #BB0000;">73.6</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> McMaster University            I98251732    43.3  -<span style="color: #BB0000;">79.9</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> Université Laval               I43406934    46.8  -<span style="color: #BB0000;">71.3</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> Université Laval               I43406934    46.8  -<span style="color: #BB0000;">71.3</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> Queen's University             I204722609   44.2  -<span style="color: #BB0000;">76.5</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="baselapply">base::lapply<a class="anchor" aria-label="anchor" href="#baselapply"></a>
@@ -223,20 +225,21 @@ advantage if you have a really large dataframe.</p>
 <span>    lon <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">vapply</a></span><span class="op">(</span><span class="va">geo</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="va">x</span><span class="op">$</span><span class="va">longitude</span>, <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>    .keep <span class="op">=</span> <span class="st">"none"</span></span>
 <span>  <span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 11 × 4</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 4</span></span></span>
 <span><span class="co">#&gt;    name                           openalex_id   lat    lon</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> University of Toronto          I185261750   43.7  -<span style="color: #BB0000;">79.4</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> University of British Columbia I141945490   49.3 -<span style="color: #BB0000;">123.</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> University of Alberta          I154425047   53.5 -<span style="color: #BB0000;">114.</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> McGill University              I5023651     45.5  -<span style="color: #BB0000;">73.6</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> McGill University              I5023651     45.5  -<span style="color: #BB0000;">73.6</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> University of Alberta          I154425047   53.5 -<span style="color: #BB0000;">114.</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> University of Calgary          I168635309   51.1 -<span style="color: #BB0000;">114.</span> </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> University of Waterloo         I151746483   43.5  -<span style="color: #BB0000;">80.5</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Western University             I125749732   43.0  -<span style="color: #BB0000;">81.3</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> University of Ottawa           I153718931   45.4  -<span style="color: #BB0000;">75.7</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> University of Montreal         I70931966    45.5  -<span style="color: #BB0000;">73.6</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> McMaster University            I98251732    43.3  -<span style="color: #BB0000;">79.9</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> Université Laval               I43406934    46.8  -<span style="color: #BB0000;">71.3</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> Université Laval               I43406934    46.8  -<span style="color: #BB0000;">71.3</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> Queen's University             I204722609   44.2  -<span style="color: #BB0000;">76.5</span></span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -272,7 +275,7 @@ can call <code>oa_fetch</code> with the default
 <span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="va">multi_insts</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 12 × 2</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 13 × 2</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># Rowwise: </span></span></span>
 <span><span class="co">#&gt;    openalex_id institutions</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>      </span></span>
@@ -281,13 +284,14 @@ can call <code>oa_fetch</code> with the default
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> W3001491100 <span style="color: #949494;">&lt;chr [2]&gt;</span>   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> W3044902155 <span style="color: #949494;">&lt;chr [1]&gt;</span>   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> W3011866596 <span style="color: #949494;">&lt;chr [1]&gt;</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> W3000049009 <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> W3000910650 <span style="color: #949494;">&lt;chr [3]&gt;</span>   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> W2990688366 <span style="color: #949494;">&lt;chr [3]&gt;</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> W3000910650 <span style="color: #949494;">&lt;chr [3]&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> W3000049009 <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> W2986617680 <span style="color: #949494;">&lt;chr [2]&gt;</span>   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> W3042215340 <span style="color: #949494;">&lt;chr [3]&gt;</span>   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> W2999558594 <span style="color: #949494;">&lt;chr [2]&gt;</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> W3038187379 <span style="color: #949494;">&lt;chr [10]&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> W3038187379 <span style="color: #949494;">&lt;chr [10]&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> W3025370095 <span style="color: #949494;">&lt;chr [4]&gt;</span></span></span>
 <span></span>
 <span><span class="co"># institutions of the first work</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">multi_insts</span><span class="op">[</span><span class="fl">1</span>, <span class="st">"institutions"</span><span class="op">]</span><span class="op">)</span></span>
