@@ -89,12 +89,25 @@ We show a few examples below.
 Use `doi` as a [works filter](https://massimoaria.github.io/openalexR/articles/Filters.html#works) (either the canonical form with <https://doi.org/> or without):
 
 ```{r}
-oa_fetch(
-  doi = c("10.1016/j.joi.2017.08.007", "https://doi.org/10.1093/bioinformatics/btab727"),
+works_from_dois <- oa_fetch(
+  doi = c("10.1016/j.joi.2017.08.007", "https://doi.org/10.1007/s11192-013-1221-3"),
   entity = "works",
   verbose = TRUE
-) %>%
-  show_works() %>%
+)
+```
+
+We can view the output tibble/dataframe, `works_from_dois`, interactively in RStudio or inspect it with base functions like `str` or `head`.
+We also provide the experimental `show_works` function to simplify the result (e.g., remove some columns, keep first/last author) for easy viewing.
+
+*Note*: the following table is wrapped in `knitr::kable()` to be displayed nicely in this README, but you will most likely not need this function.
+
+```{r}
+# str(works_from_dois, max.level = 2)
+# head(works_from_dois)
+# show_works(works_from_dois) 
+
+works_from_dois |>
+  show_works() |>
   knitr::kable()
 ```
 
@@ -103,12 +116,14 @@ oa_fetch(
 Use `author.orcid` as a filter (either canonical form with <https://orcid.org/> or without will work):
 
 ```{r}
-oa_fetch(
+works_from_orcids <- oa_fetch(
   entity = "works",
-  author.orcid = c("0000-0003-3737-6565", "0000-0002-8517-9411"),
+  author.orcid = c("0000-0001-6187-6610", "0000-0002-8517-9411"),
   verbose = TRUE
-) %>%
-  show_works() %>%
+)
+
+works_from_orcids |> 
+  show_works() |> 
   knitr::kable()
 ```
 
@@ -116,7 +131,7 @@ oa_fetch(
 Maybe we also want the results to be sorted by total citations in a descending order.
 
 ```{r}
-oa_fetch(
+works_search <- oa_fetch(
   entity = "works",
   title.search = c("bibliometric analysis", "science mapping"),
   cited_by_count = ">50",
@@ -124,8 +139,10 @@ oa_fetch(
   to_publication_date = "2021-12-31",
   sort = "cited_by_count:desc",
   verbose = TRUE
-) %>%
-  show_works() %>%
+)
+
+works_search |>
+  show_works() |>
   knitr::kable()
 ```
 
@@ -137,11 +154,13 @@ Here, instead of `author.orcid` like earlier, we have to use `orcid` as an argum
 This may be a little confusing, but again, a different entity (**authors** instead of **works**) requires a [different set of filters](https://massimoaria.github.io/openalexR/articles/Filters.html#authors).
 
 ```{r}
-oa_fetch(
+authors_from_orcids <- oa_fetch(
   entity = "authors",
-  orcid = c("0000-0003-3737-6565", "0000-0002-8517-9411")
-) %>%
-  show_authors() %>%
+  orcid = c("0000-0001-6187-6610", "0000-0002-8517-9411")
+)
+
+authors_from_orcids |>
+  show_authors() |>
   knitr::kable()
 ```
 
@@ -150,12 +169,13 @@ oa_fetch(
 We can use other filters such as `display_name` and `has_orcid`:
 
 ```{r}
-oa_fetch(
+authors_from_names <- oa_fetch(
   entity = "authors",
-  display_name = c("Massimo Aria", "Trang T. Le"),
+  display_name = c("Massimo Aria", "Jason Priem"),
   has_orcid = TRUE
-) %>%
-  show_authors() %>%
+)
+authors_from_names |>
+  show_authors() |>
   knitr::kable()
 ```
 
@@ -172,8 +192,8 @@ my_arguments <- list(
 )
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
-do.call(oa_fetch, my_arguments) %>%
-  show_authors() %>%
+do.call(oa_fetch, my_arguments) |>
+  show_authors() |>
   knitr::kable()
 ```
 
@@ -192,10 +212,10 @@ concept_df <- oa_fetch(
   works_count = ">1000000"
 )
 
-concept_df %>%
-  select(display_name, counts_by_year) %>%
-  tidyr::unnest(counts_by_year) %>%
-  filter(year < 2022) %>%
+concept_df |>
+  select(display_name, counts_by_year) |>
+  tidyr::unnest(counts_by_year) |>
+  filter(year < 2022) |>
   ggplot() +
   aes(x = year, y = works_count, color = display_name) +
   facet_wrap(~display_name) +
@@ -226,9 +246,9 @@ italy_insts <- oa_fetch(
   verbose = TRUE
 )
 
-italy_insts %>%
-  slice_max(cited_by_count, n = 8) %>%
-  mutate(display_name = forcats::fct_reorder(display_name, cited_by_count)) %>%
+italy_insts |>
+  slice_max(cited_by_count, n = 8) |>
+  mutate(display_name = forcats::fct_reorder(display_name, cited_by_count)) |>
   ggplot() +
   aes(x = cited_by_count, y = display_name, fill = display_name) +
   geom_col() +
@@ -244,12 +264,15 @@ italy_insts %>%
 And what do they publish on?
 
 ```{r concept-cloud, fig.height=5, fig.width=7}
-concept_cloud <- italy_insts %>%
-  select(inst_id = id, x_concepts) %>%
-  tidyr::unnest(x_concepts) %>%
-  filter(level == 1) %>%
-  select(display_name, score) %>%
-  group_by(display_name) %>%
+# The package wordcloud needs to be installed to run this chunk
+# library(wordcloud)
+
+concept_cloud <- italy_insts |>
+  select(inst_id = id, x_concepts) |>
+  tidyr::unnest(x_concepts) |>
+  filter(level == 1) |>
+  select(display_name, score) |>
+  group_by(display_name) |>
   summarise(score = sum(score))
 
 pal <- c("black", scales::brewer_pal(palette = "Set1")(5))
@@ -267,26 +290,29 @@ wordcloud::wordcloud(
 We first download all records regarding journals that have published more than 300,000 works, then visualize their scored concepts:
 
 ```{r big-journals, message=FALSE, fig.height=8, fig.width=8}
+# The package ggtext needs to be installed to run this chunk
+# library(ggtext)
+
 jours <- oa_fetch(
   entity = "venues",
   works_count = ">500000",
   verbose = TRUE
-) %>%
-  filter(publisher != "Elsevier"|is.na(publisher)) %>%
-  distinct(display_name, .keep_all = TRUE) %>%
-  select(jour = display_name, x_concepts) %>%
-  tidyr::unnest(x_concepts) %>%
-  filter(level == 0) %>%
-  left_join(concept_abbrev) %>%
-  mutate(abbreviation = gsub(" ", "<br>", abbreviation)) %>%
-  tidyr::complete(jour, abbreviation, fill = list(score = 0)) %>%
-  group_by(jour) %>%
+) |>
+  filter(is.na(publisher)|!grepl("Elsevier", publisher)) |>
+  distinct(display_name, .keep_all = TRUE) |>
+  select(jour = display_name, x_concepts) |>
+  tidyr::unnest(x_concepts) |>
+  filter(level == 0) |>
+  left_join(concept_abbrev) |>
+  mutate(abbreviation = gsub(" ", "<br>", abbreviation)) |>
+  tidyr::complete(jour, abbreviation, fill = list(score = 0)) |>
+  group_by(jour) |>
   mutate(
     color = if_else(score > 10, "#1A1A1A", "#D9D9D9"), # CCCCCC
     label = paste0("<span style='color:", color, "'>", abbreviation, "</span>")
   )
 
-jours %>%
+jours |>
   ggplot() +
   aes(fill = jour, y = score, x = abbreviation, group = jour) +
   facet_wrap(~jour) +
@@ -323,6 +349,7 @@ Snowballing is a literature search technique where the researcher starts with a 
 Similar to `oa_fetch`, `oa_snowball` finds and returns information on a core set of articles satisfying certain criteria, but, unlike `oa_fetch`, it also returns information the articles that cite and are cited by this core set.
 
 ```{r snowballing}
+# The packages ggraph and tidygraph need to be installed to run this chunk
 library(ggraph)
 library(tidygraph)
 
@@ -333,11 +360,11 @@ snowball_docs <- oa_snowball(
 
 ggraph(graph = as_tbl_graph(snowball_docs), layout = "stress") +
   geom_edge_link(aes(alpha = after_stat(index)), show.legend = FALSE) +
-  geom_node_point(aes(fill = oa_input, size = cited_by_count), shape = 21) +
+  geom_node_point(aes(fill = oa_input, size = cited_by_count), shape = 21, color = "white") +
   geom_node_label(aes(filter = oa_input, label = id), nudge_y = 0.2, size = 3) +
   scale_edge_width(range = c(0.1, 1.5), guide = "none") +
   scale_size(range = c(3, 10), guide = "none") +
-  scale_fill_manual(values = c("#1A5878", "#C44237"), na.value = "grey", name = "") +
+  scale_fill_manual(values = c("#a3ad62", "#d46780"), na.value = "grey", name = "") +
   theme_graph() +
   theme(legend.position = "bottom") +
   guides(fill = "none")
@@ -348,7 +375,7 @@ ggraph(graph = as_tbl_graph(snowball_docs), layout = "stress") +
 
 OpenAlex offers (limited) support for [fulltext N-grams](https://docs.openalex.org/api-entities/works/get-n-grams#fulltext-coverage) of Work entities (these have IDs starting with `"W"`). Given a vector of work IDs, `oa_ngrams` returns a dataframe of N-gram data (in the `ngrams` list-column) for each work.
 
-```{r}
+```{r ngrams, fig.height=3}
 ngrams_data <- oa_ngrams(
   works_identifier = c("W1964141474", "W1963991285"),
   verbose = TRUE
@@ -359,7 +386,7 @@ ngrams_data
 lapply(ngrams_data$ngrams, head, 3)
 
 ngrams_data |>
-  unnest(ngrams) |>
+  tidyr::unnest(ngrams) |>
   filter(ngram_tokens == 2) |>
   select(id, ngram, ngram_count) |>
   group_by(id) |>
@@ -378,7 +405,7 @@ ngrams_data |>
 
 ## About OpenAlex
 
-![oar-img](man/figures/oar.jpeg)
+![oar-img](man/figures/oar.png)
 
 <div style="text-align: right">
 Schema credits: [\@dhimmel](https://github.com/dhimmel)

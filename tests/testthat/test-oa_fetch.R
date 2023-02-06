@@ -189,7 +189,7 @@ test_that("oa_fetch can combine (OR) more than 50 ORCIDs in a filter", {
     "https://orcid.org/0000-0002-4147-892X",
     "https://orcid.org/0000-0002-7060-8404",
     "https://orcid.org/0000-0001-9080-6267",
-    "https://orcid.org/0000-0002-8057-6864",
+    "https://orcid.org/0000-0001-5129-940X",
     "https://orcid.org/0000-0002-7369-2058",
     "https://orcid.org/0000-0002-9460-5144",
     "https://orcid.org/0000-0002-8517-9411",
@@ -198,7 +198,7 @@ test_that("oa_fetch can combine (OR) more than 50 ORCIDs in a filter", {
     "https://orcid.org/0000-0001-5882-1168",
     "https://orcid.org/0000-0001-9558-6099",
     "https://orcid.org/0000-0003-3421-5627",
-    "https://orcid.org/0000-0002-8850-6764",
+    "https://orcid.org/0000-0002-4689-8501",
     "https://orcid.org/0000-0002-0811-6580",
     "https://orcid.org/0000-0001-6535-5492",
     "https://orcid.org/0000-0001-8934-7569",
@@ -213,7 +213,7 @@ test_that("oa_fetch can combine (OR) more than 50 ORCIDs in a filter", {
     "https://orcid.org/0000-0001-9059-7442",
     "https://orcid.org/0000-0003-2796-9148",
     "https://orcid.org/0000-0002-5639-3128",
-    "https://orcid.org/0000-0001-6591-5015",
+    "https://orcid.org/0000-0001-7327-0106",
     "https://orcid.org/0000-0002-7319-418X",
     "https://orcid.org/0000-0003-1759-1700",
     "https://orcid.org/0000-0003-4867-5149",
@@ -230,7 +230,7 @@ test_that("oa_fetch can combine (OR) more than 50 ORCIDs in a filter", {
   many_orcid_results <- oa_fetch(entity = "authors", orcid = valid_orcids)
 
   expect_s3_class(many_orcid_results, "data.frame")
-  # https://orcid.org/0000-0002-4147-892X corresponds to two openalex id
+  # https://orcid.org/0000-0002-4147-892X no longer corresponds to two openalex id
   expect_true(nrow(many_orcid_results) >= length(valid_orcids))
 })
 
