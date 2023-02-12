@@ -137,7 +137,7 @@ works_from_orcids <- oa_fetch(
   verbose = TRUE
 )
 #> Requesting url: https://api.openalex.org/works?filter=author.orcid%3A0000-0001-6187-6610%7C0000-0002-8517-9411
-#> Getting 2 pages of results with a total of 210 records...
+#> Getting 2 pages of results with a total of 211 records...
 
 works_from_orcids |> 
   show_works() |> 
@@ -169,7 +169,7 @@ works_search <- oa_fetch(
   verbose = TRUE
 )
 #> Requesting url: https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc
-#> Getting 1 page of results with a total of 67 records...
+#> Getting 1 page of results with a total of 70 records...
 
 works_search |>
   show_works() |>
@@ -207,8 +207,8 @@ authors_from_orcids |>
 
 | id          | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
 |:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------|
-| A923435168  | Massimo Aria | 0000-0002-8517-9411 |         160 |           3597 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
-| A2208157607 | Jason Priem  | 0000-0001-6187-6610 |          51 |           1660 | HortResearch                     | World Wide Web, Library science, Law     |
+| A923435168  | Massimo Aria | 0000-0002-8517-9411 |         161 |           3658 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
+| A2208157607 | Jason Priem  | 0000-0001-6187-6610 |          51 |           1663 | HortResearch                     | World Wide Web, Library science, Law     |
 
 **Goal**: Acquire information on the authors of this package.
 
@@ -227,8 +227,8 @@ authors_from_names |>
 
 | id          | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
 |:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------|
-| A923435168  | Massimo Aria | 0000-0002-8517-9411 |         160 |           3597 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
-| A2208157607 | Jason Priem  | 0000-0001-6187-6610 |          51 |           1660 | HortResearch                     | World Wide Web, Library science, Law     |
+| A923435168  | Massimo Aria | 0000-0002-8517-9411 |         161 |           3658 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
+| A2208157607 | Jason Priem  | 0000-0001-6187-6610 |          51 |           1663 | HortResearch                     | World Wide Web, Library science, Law     |
 
 **Goal**: Download all authors’ records of scholars who work at the
 [University of Naples Federico
@@ -248,7 +248,7 @@ my_arguments <- list(
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #>      count db_response_time_ms page per_page
-#> [1,]    57                  81    1        1
+#> [1,]    56                  53    1        1
 do.call(oa_fetch, my_arguments) |>
   show_authors() |>
   knitr::kable()
@@ -256,12 +256,12 @@ do.call(oa_fetch, my_arguments) |>
 
 | id          | display_name        | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                         |
 |:------------|:--------------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------------------|
-| A2061787601 | Luca Lista          | 0000-0001-6471-5492 |        2712 |          35168 | University of Naples Federico II | Nuclear physics, Particle physics, Quantum mechanics |
-| A3088244307 | A. K. Sanchez       | NA                  |        2047 |          38404 | University of Naples Federico II | Quantum mechanics, Nuclear physics, Particle physics |
-| A2159261619 | Annamaria Colao     | 0000-0001-6986-266X |        1654 |          28680 | University of Naples Federico II | Internal medicine, Endocrinology, Pathology          |
-| A2011452631 | Leonardo Merola     | NA                  |        1575 |          27055 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
-| A2725087388 | Mariagrazia Alviggi | NA                  |        1561 |          26481 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
-| A2103058924 | Mario Mancini       | NA                  |        1558 |          16491 | University of Naples Federico II | Internal medicine, Endocrinology, Biochemistry       |
+| A2061787601 | Luca Lista          | 0000-0001-6471-5492 |        2712 |          35227 | University of Naples Federico II | Nuclear physics, Particle physics, Quantum mechanics |
+| A3088244307 | A. K. Sanchez       | NA                  |        2047 |          38443 | University of Naples Federico II | Quantum mechanics, Nuclear physics, Particle physics |
+| A2159261619 | Annamaria Colao     | 0000-0001-6986-266X |        1654 |          28807 | University of Naples Federico II | Internal medicine, Endocrinology, Pathology          |
+| A2011452631 | Leonardo Merola     | NA                  |        1575 |          27097 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
+| A2725087388 | Mariagrazia Alviggi | NA                  |        1561 |          26514 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
+| A2103058924 | Mario Mancini       | NA                  |        1558 |          16510 | University of Naples Federico II | Internal medicine, Endocrinology, Biochemistry       |
 
 ## Example analyses
 
@@ -450,7 +450,7 @@ snowball_docs <- oa_snowball(
 #> Getting 1 page of results with a total of 2 records...
 #> Collecting all documents citing the target papers...
 #> Requesting url: https://api.openalex.org/works?filter=cites%3AW1963991285%7CW1964141474
-#> Getting 3 pages of results with a total of 469 records...
+#> Getting 3 pages of results with a total of 470 records...
 #> Collecting all documents cited by the target papers...
 #> Requesting url: https://api.openalex.org/works?filter=cited_by%3AW1963991285%7CW1964141474
 #> Getting 1 page of results with a total of 87 records...
@@ -482,7 +482,6 @@ ngrams_data <- oa_ngrams(
   works_identifier = c("W1964141474", "W1963991285"),
   verbose = TRUE
 )
-#> Use `{curl}` >= v5.0.0 for a faster implementation of `oa_ngrams`
 
 ngrams_data
 #> # A tibble: 2 × 4
