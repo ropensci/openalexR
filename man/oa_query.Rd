@@ -12,7 +12,7 @@ oa_query(
   search = NULL,
   sort = NULL,
   group_by = NULL,
-  endpoint = "https://api.openalex.org/",
+  endpoint = "https://api.openalex.org",
   verbose = FALSE,
   ...
 )
@@ -50,7 +50,7 @@ For example: "oa_status" for works.
 See more at <https://docs.openalex.org/api/get-groups-of-entities>.}
 
 \item{endpoint}{Character. URL of the OpenAlex Endpoint API server.
-Defaults to endpoint = "https://api.openalex.org/".}
+Defaults to endpoint = "https://api.openalex.org".}
 
 \item{verbose}{Logical. If TRUE, print information on querying process.
 Default to \code{verbose = FALSE}.}

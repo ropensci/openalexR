@@ -60,7 +60,7 @@ formulated through the function \code{oa_query}.
 query_work <- oa_query(
   identifier = "W2755950973",
   entity = "works",
-  endpoint = "https://api.openalex.org/"
+  endpoint = "https://api.openalex.org"
 )
 
 res <- oa_request(
@@ -75,7 +75,7 @@ res <- oa_request(
 query_author <- oa_query(
   identifier = "A923435168",
   entity = "authors",
-  endpoint = "https://api.openalex.org/"
+  endpoint = "https://api.openalex.org"
 )
 
 res <- oa_request(
@@ -105,7 +105,7 @@ query2 <- oa_query(
   from_publication_date = "2021-01-01",
   to_publication_date = "2021-12-31",
   search = NULL,
-  endpoint = "https://api.openalex.org/"
+  endpoint = "https://api.openalex.org"
 )
 
 res2 <- oa_request(
@@ -129,7 +129,7 @@ query3 <- oa_query(
   from_publication_date = "2020-01-01",
   to_publication_date = "2021-12-31",
   search = NULL,
-  endpoint = "https://api.openalex.org/"
+  endpoint = "https://api.openalex.org"
 )
 
 res3 <- oa_request(
@@ -151,7 +151,7 @@ query4 <- oa_query(
   from_publication_date = "2020-01-01",
   to_publication_date = "2021-12-31",
   search = NULL,
-  endpoint = "https://api.openalex.org/"
+  endpoint = "https://api.openalex.org"
 )
 
 res4 <- oa_request(

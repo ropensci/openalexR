@@ -10,7 +10,7 @@ oa_snowball(
   ...,
   id_type = c("short", "original"),
   mailto = oa_email(),
-  endpoint = "https://api.openalex.org/",
+  endpoint = "https://api.openalex.org",
   verbose = FALSE,
   citing_filter = list(),
   cited_by_filter = list()
@@ -32,7 +32,7 @@ for example, https://openalex.org/W2755950973}
 Gives OpenAlex an email to enter the polite pool.}
 
 \item{endpoint}{Character. URL of the OpenAlex Endpoint API server.
-Defaults to endpoint = "https://api.openalex.org/".}
+Defaults to endpoint = "https://api.openalex.org".}
 
 \item{verbose}{Logical. If TRUE, print information on querying process.
 Default to \code{verbose = FALSE}.}

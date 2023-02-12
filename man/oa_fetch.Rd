@@ -14,7 +14,7 @@ oa_fetch(
   group_by = NULL,
   output = c("tibble", "dataframe", "list"),
   abstract = FALSE,
-  endpoint = "https://api.openalex.org/",
+  endpoint = "https://api.openalex.org",
   per_page = 200,
   count_only = FALSE,
   mailto = oa_email(),
@@ -50,7 +50,7 @@ Default to \code{abstract = FALSE}.
 The argument is ignored if entity is different from "works".}
 
 \item{endpoint}{Character. URL of the OpenAlex Endpoint API server.
-Defaults to endpoint = "https://api.openalex.org/".}
+Defaults to endpoint = "https://api.openalex.org".}
 
 \item{per_page}{Numeric. Number of items to download per page.
 The per-page argument can assume any number between 1 and 200.

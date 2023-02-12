@@ -97,7 +97,7 @@ oa2df <- function(data, entity, abstract = TRUE, count_only = FALSE, group_by = 
 #'   from_publication_date = "2021-01-01",
 #'   to_publication_date = "2021-12-31",
 #'   search = NULL,
-#'   endpoint = "https://api.openalex.org/"
+#'   endpoint = "https://api.openalex.org"
 #' )
 #'
 #' res <- oa_request(
