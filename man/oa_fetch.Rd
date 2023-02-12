@@ -6,8 +6,8 @@
 and convert the result to a tibble/data frame.}
 \usage{
 oa_fetch(
-  identifier = NULL,
   entity = if (is.null(identifier)) NULL else id_type(identifier[[1]]),
+  identifier = NULL,
   ...,
   search = NULL,
   sort = NULL,
@@ -22,12 +22,12 @@ oa_fetch(
 )
 }
 \arguments{
-\item{identifier}{Character. OpenAlex ID(s) as item identifier(s).
-See more at <https://docs.openalex.org/about-the-data#the-openalex-id>.}
-
 \item{entity}{Character. Scholarly entity of the search.
 The argument can be one of c("works", "authors", "venues", "institutions", "concepts").
 If not provided, `entity` is guessed from `identifier`.}
+
+\item{identifier}{Character. OpenAlex ID(s) as item identifier(s).
+See more at <https://docs.openalex.org/about-the-data#the-openalex-id>.}
 
 \item{...}{Additional filter arguments.}
 
