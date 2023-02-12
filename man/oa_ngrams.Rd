@@ -4,7 +4,12 @@
 \alias{oa_ngrams}
 \title{Get N-grams of works}
 \usage{
-oa_ngrams(works_identifier, ..., verbose = FALSE)
+oa_ngrams(
+  works_identifier,
+  ...,
+  endpoint = "https://api.openalex.org",
+  verbose = FALSE
+)
 }
 \arguments{
 \item{works_identifier}{Character. OpenAlex ID(s) of "works" entities as item identifier(s).
@@ -12,8 +17,11 @@ These IDs start with "W". See more at <https://docs.openalex.org/about-the-data/
 
 \item{...}{Unused.}
 
-\item{verbose}{Logical.
-If TRUE, print information about the querying process. Defaults to TRUE.}
+\item{endpoint}{Character. URL of the OpenAlex Endpoint API server.
+Defaults to endpoint = "https://api.openalex.org".}
+
+\item{verbose}{Logical. If TRUE, print information on querying process.
+Default to \code{verbose = FALSE}.}
 }
 \value{
 A dataframe of paper metadatada and a list-column of ngrams.
@@ -39,6 +47,5 @@ top_10_ngrams <- first_paper_ngrams \%>\%
 
 # Missing N-grams are `NULL` in the `ngrams` list-column
 oa_ngrams("https://openalex.org/W2284876136")
-
 }
 }
