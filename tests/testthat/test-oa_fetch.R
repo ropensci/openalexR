@@ -48,15 +48,12 @@ test_that("oa_fetch works", {
   )
 
   Sys.sleep(1/10)
-
-  expect_s3_class(
-    oa_fetch(
-      entity = "w",
-      publication_date = "2020-08-01",
-      cited_by_count = ">1000"
-    ),
-    "data.frame"
+  filtered_works <- oa_fetch(
+    entity = "w",
+    publication_date = "2020-08-01",
+    cited_by_count = ">1000"
   )
+  expect_s3_class(filtered_works, "data.frame")
 })
 
 test_that("Error when input entity can't be matched", {
@@ -80,6 +77,8 @@ test_that("Error when input entity can't be matched", {
 })
 
 test_that("oa_fetch instutitions binds associated_institutions correctly", {
+  skip_on_cran()
+  Sys.sleep(1/10)
   inst <- oa_fetch(identifier = "I1292875679")
   expect_true(ncol(inst$associated_institutions[[1]]) >= 6)
 })
