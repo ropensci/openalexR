@@ -2,6 +2,7 @@ test_that("oa_snowball works", {
   skip_on_cran()
 
   work_ids <- c("W3045921891", "W3046863325")
+  Sys.sleep(1/10)
   multi_works <- oa_snowball(identifier = work_ids)
   multi_nodes <- multi_works$nodes
   flat_snow <- oa2df(multi_works, "snowball")
@@ -26,6 +27,9 @@ test_that("oa_snowball works", {
 })
 
 test_that("oa_snowball works for recent articles with no citations yet", {
+  skip_on_cran()
+
+  Sys.sleep(1/10)
   snowball_docs <- oa_snowball(
     identifier = c("W4295757800", "W4296128995", "W4297497355")
   )
@@ -33,11 +37,13 @@ test_that("oa_snowball works for recent articles with no citations yet", {
 })
 
 test_that("oa_snowball works for DOIs", {
+  skip_on_cran()
+
   work_dois <- c(
     "10.1145/3383583.3398584",
     "https://doi.org/10.1038/s41586-022-05258-z"
   )
-
+  Sys.sleep(1/10)
   snowball_doi <- oa_snowball(doi = work_dois)
   doi_nodes <- snowball_doi$nodes
   dois_in <- doi_nodes$doi[doi_nodes$oa_input]
@@ -48,8 +54,10 @@ test_that("oa_snowball works for DOIs", {
 })
 
 test_that("oa_snowball works for author orcids", {
-  orcids <- c("0000-0003-3737-6565", "0000-0002-8517-9411")
+  skip_on_cran()
 
+  orcids <- c("0000-0003-3737-6565", "0000-0002-8517-9411")
+  Sys.sleep(1/10)
   # find publications by these two authors this year
   snowball_orcid <- oa_snowball(
     author.orcid = orcids,
