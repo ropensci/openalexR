@@ -67,15 +67,15 @@ and convert the result to a tibble/data frame.</p>
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">oa_fetch</span><span class="op">(</span></span>
-<span>  identifier <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  entity <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">identifier</span><span class="op">)</span><span class="op">)</span> <span class="cn">NULL</span> <span class="kw">else</span> <span class="fu">id_type</span><span class="op">(</span><span class="va">identifier</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>  identifier <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  search <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  sort <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  group_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  output <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tibble"</span>, <span class="st">"dataframe"</span>, <span class="st">"list"</span><span class="op">)</span>,</span>
 <span>  abstract <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  endpoint <span class="op">=</span> <span class="st">"https://api.openalex.org/"</span>,</span>
+<span>  endpoint <span class="op">=</span> <span class="st">"https://api.openalex.org"</span>,</span>
 <span>  per_page <span class="op">=</span> <span class="fl">200</span>,</span>
 <span>  count_only <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  mailto <span class="op">=</span> <span class="fu">oa_email</span><span class="op">(</span><span class="op">)</span>,</span>
@@ -85,15 +85,15 @@ and convert the result to a tibble/data frame.</p>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>identifier</dt>
-<dd><p>Character. OpenAlex ID(s) as item identifier(s).
-See more at &lt;https://docs.openalex.org/about-the-data#the-openalex-id&gt;.</p></dd>
-
-
-<dt>entity</dt>
+    <dl><dt>entity</dt>
 <dd><p>Character. Scholarly entity of the search.
 The argument can be one of c("works", "authors", "venues", "institutions", "concepts").
 If not provided, `entity` is guessed from `identifier`.</p></dd>
+
+
+<dt>identifier</dt>
+<dd><p>Character. OpenAlex ID(s) as item identifier(s).
+See more at &lt;https://docs.openalex.org/about-the-data#the-openalex-id&gt;.</p></dd>
 
 
 <dt>...</dt>
@@ -130,7 +130,7 @@ The argument is ignored if entity is different from "works".</p></dd>
 
 <dt>endpoint</dt>
 <dd><p>Character. URL of the OpenAlex Endpoint API server.
-Defaults to endpoint = "https://api.openalex.org/".</p></dd>
+Defaults to endpoint = "https://api.openalex.org".</p></dd>
 
 
 <dt>per_page</dt>

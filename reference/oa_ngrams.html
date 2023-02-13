@@ -66,7 +66,12 @@ See &lt;https://docs.openalex.org/api/get-n-grams&gt; for coverage and more tech
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">oa_ngrams</span><span class="op">(</span><span class="va">works_identifier</span>, <span class="va">...</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">oa_ngrams</span><span class="op">(</span></span>
+<span>  <span class="va">works_identifier</span>,</span>
+<span>  <span class="va">...</span>,</span>
+<span>  endpoint <span class="op">=</span> <span class="st">"https://api.openalex.org"</span>,</span>
+<span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -80,9 +85,14 @@ These IDs start with "W". See more at &lt;https://docs.openalex.org/about-the-da
 <dd><p>Unused.</p></dd>
 
 
+<dt>endpoint</dt>
+<dd><p>Character. URL of the OpenAlex Endpoint API server.
+Defaults to endpoint = "https://api.openalex.org".</p></dd>
+
+
 <dt>verbose</dt>
-<dd><p>Logical.
-If TRUE, print information about the querying process. Defaults to TRUE.</p></dd>
+<dd><p>Logical. If TRUE, print information on querying process.
+Default to <code>verbose = FALSE</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -110,7 +120,6 @@ about this. This can be suppressed with `options("oa_ngrams.message.curlv5" = FA
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Missing N-grams are `NULL` in the `ngrams` list-column</span></span></span>
 <span class="r-in"><span><span class="fu">oa_ngrams</span><span class="op">(</span><span class="st">"https://openalex.org/W2284876136"</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>

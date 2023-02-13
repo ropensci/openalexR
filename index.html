@@ -194,7 +194,7 @@
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Requesting url: https://api.openalex.org/works?filter=author.orcid%3A0000-0001-6187-6610%7C0000-0002-8517-9411</span></span>
-<span><span class="co">#&gt; Getting 2 pages of results with a total of 210 records...</span></span>
+<span><span class="co">#&gt; Getting 2 pages of results with a total of 211 records...</span></span>
 <span></span>
 <span><span class="va">works_from_orcids</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="reference/show_works.html">show_works</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
@@ -295,7 +295,7 @@
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; Requesting url: https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&amp;sort=cited_by_count%3Adesc</span></span>
-<span><span class="co">#&gt; Getting 1 page of results with a total of 67 records...</span></span>
+<span><span class="co">#&gt; Getting 1 page of results with a total of 70 records...</span></span>
 <span></span>
 <span><span class="va">works_search</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/show_works.html">show_works</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -423,8 +423,8 @@
 <td align="left">A923435168</td>
 <td align="left">Massimo Aria</td>
 <td align="left">0000-0002-8517-9411</td>
-<td align="right">160</td>
-<td align="right">3597</td>
+<td align="right">161</td>
+<td align="right">3658</td>
 <td align="left">University of Naples Federico II</td>
 <td align="left">Statistics, Internal medicine, Pathology</td>
 </tr>
@@ -433,7 +433,7 @@
 <td align="left">Jason Priem</td>
 <td align="left">0000-0001-6187-6610</td>
 <td align="right">51</td>
-<td align="right">1660</td>
+<td align="right">1663</td>
 <td align="left">HortResearch</td>
 <td align="left">World Wide Web, Library science, Law</td>
 </tr>
@@ -474,8 +474,8 @@
 <td align="left">A923435168</td>
 <td align="left">Massimo Aria</td>
 <td align="left">0000-0002-8517-9411</td>
-<td align="right">160</td>
-<td align="right">3597</td>
+<td align="right">161</td>
+<td align="right">3658</td>
 <td align="left">University of Naples Federico II</td>
 <td align="left">Statistics, Internal medicine, Pathology</td>
 </tr>
@@ -484,7 +484,7 @@
 <td align="left">Jason Priem</td>
 <td align="left">0000-0001-6187-6610</td>
 <td align="right">51</td>
-<td align="right">1660</td>
+<td align="right">1663</td>
 <td align="left">HortResearch</td>
 <td align="left">World Wide Web, Library science, Law</td>
 </tr>
@@ -501,7 +501,7 @@
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">my_arguments</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>count_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;      count db_response_time_ms page per_page</span></span>
-<span><span class="co">#&gt; [1,]    57                  81    1        1</span></span>
+<span><span class="co">#&gt; [1,]    56                  53    1        1</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">oa_fetch</span>, <span class="va">my_arguments</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="reference/show_authors.html">show_authors</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -530,7 +530,7 @@
 <td align="left">Luca Lista</td>
 <td align="left">0000-0001-6471-5492</td>
 <td align="right">2712</td>
-<td align="right">35168</td>
+<td align="right">35227</td>
 <td align="left">University of Naples Federico II</td>
 <td align="left">Nuclear physics, Particle physics, Quantum mechanics</td>
 </tr>
@@ -539,7 +539,7 @@
 <td align="left">A. K. Sanchez</td>
 <td align="left">NA</td>
 <td align="right">2047</td>
-<td align="right">38404</td>
+<td align="right">38443</td>
 <td align="left">University of Naples Federico II</td>
 <td align="left">Quantum mechanics, Nuclear physics, Particle physics</td>
 </tr>
@@ -548,7 +548,7 @@
 <td align="left">Annamaria Colao</td>
 <td align="left">0000-0001-6986-266X</td>
 <td align="right">1654</td>
-<td align="right">28680</td>
+<td align="right">28807</td>
 <td align="left">University of Naples Federico II</td>
 <td align="left">Internal medicine, Endocrinology, Pathology</td>
 </tr>
@@ -557,7 +557,7 @@
 <td align="left">Leonardo Merola</td>
 <td align="left">NA</td>
 <td align="right">1575</td>
-<td align="right">27055</td>
+<td align="right">27097</td>
 <td align="left">University of Naples Federico II</td>
 <td align="left">Quantum mechanics, Particle physics, Nuclear physics</td>
 </tr>
@@ -566,7 +566,7 @@
 <td align="left">Mariagrazia Alviggi</td>
 <td align="left">NA</td>
 <td align="right">1561</td>
-<td align="right">26481</td>
+<td align="right">26514</td>
 <td align="left">University of Naples Federico II</td>
 <td align="left">Quantum mechanics, Particle physics, Nuclear physics</td>
 </tr>
@@ -575,7 +575,7 @@
 <td align="left">Mario Mancini</td>
 <td align="left">NA</td>
 <td align="right">1558</td>
-<td align="right">16491</td>
+<td align="right">16510</td>
 <td align="left">University of Naples Federico II</td>
 <td align="left">Internal medicine, Endocrinology, Biochemistry</td>
 </tr>
@@ -741,7 +741,7 @@
 <span><span class="co">#&gt; Getting 1 page of results with a total of 2 records...</span></span>
 <span><span class="co">#&gt; Collecting all documents citing the target papers...</span></span>
 <span><span class="co">#&gt; Requesting url: https://api.openalex.org/works?filter=cites%3AW1963991285%7CW1964141474</span></span>
-<span><span class="co">#&gt; Getting 3 pages of results with a total of 469 records...</span></span>
+<span><span class="co">#&gt; Getting 3 pages of results with a total of 470 records...</span></span>
 <span><span class="co">#&gt; Collecting all documents cited by the target papers...</span></span>
 <span><span class="co">#&gt; Requesting url: https://api.openalex.org/works?filter=cited_by%3AW1963991285%7CW1964141474</span></span>
 <span><span class="co">#&gt; Getting 1 page of results with a total of 87 records...</span></span>
@@ -767,7 +767,6 @@
 <span>  works_identifier <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"W1964141474"</span>, <span class="st">"W1963991285"</span><span class="op">)</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Use `{curl}` &gt;= v5.0.0 for a faster implementation of `oa_ngrams`</span></span>
 <span></span>
 <span><span class="va">ngrams_data</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 4</span></span>
