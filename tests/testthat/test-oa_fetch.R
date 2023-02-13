@@ -47,14 +47,13 @@ test_that("oa_fetch works", {
     paste0("https://openalex.org/", sort(work_ids))
   )
 
-  expect_s3_class(
-    oa_fetch(
-      entity = "w",
-      publication_date = "2020-08-01",
-      cited_by_count = ">1000"
-    ),
-    "data.frame"
+  Sys.sleep(1/10)
+  filtered_works <- oa_fetch(
+    entity = "w",
+    publication_date = "2020-08-01",
+    cited_by_count = ">1000"
   )
+  expect_s3_class(filtered_works, "data.frame")
 })
 
 test_that("Error when input entity can't be matched", {
@@ -68,6 +67,7 @@ test_that("Error when input entity can't be matched", {
     )
   )
 
+  Sys.sleep(1/10)
   expect_error(
     oa_fetch(
       entity = "insta",
@@ -77,6 +77,8 @@ test_that("Error when input entity can't be matched", {
 })
 
 test_that("oa_fetch instutitions binds associated_institutions correctly", {
+  skip_on_cran()
+  Sys.sleep(1/10)
   inst <- oa_fetch(identifier = "I1292875679")
   expect_true(ncol(inst$associated_institutions[[1]]) >= 6)
 })
@@ -91,7 +93,7 @@ test_that("oa_fetch authors can deal with NA institutions", {
     ),
     "data.frame"
   )
-
+  Sys.sleep(1/10)
   expect_type(
     oa_fetch(
       entity = "authors",
@@ -158,7 +160,7 @@ test_that("oa_fetch can combine (OR) more than 50 DOIs in a filter", {
     "https://doi.org/10.1016/j.net.2020.08.005",
     "https://doi.org/10.1016/j.iot.2020.100318"
   )
-
+  Sys.sleep(1/10)
   many_doi_results <- oa_fetch(entity = "works", doi = valid_dois)
 
   expect_s3_class(

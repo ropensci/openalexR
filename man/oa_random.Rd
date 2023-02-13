@@ -7,7 +7,7 @@
 oa_random(
   entity = oa_entities(),
   output = c("tibble", "dataframe", "list"),
-  endpoint = "https://api.openalex.org/"
+  endpoint = "https://api.openalex.org"
 )
 }
 \arguments{
@@ -18,7 +18,7 @@ If not provided, `entity` is guessed from `identifier`.}
 \item{output}{Character. Type of output, either a list or a tibble/data.frame.}
 
 \item{endpoint}{Character. URL of the OpenAlex Endpoint API server.
-Defaults to endpoint = "https://api.openalex.org/".}
+Defaults to endpoint = "https://api.openalex.org".}
 }
 \value{
 A data.frame or a list. One row or one element.

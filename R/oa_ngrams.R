@@ -24,7 +24,7 @@ ngram2df <- function(ngram) {
 #' @param works_identifier Character. OpenAlex ID(s) of "works" entities as item identifier(s).
 #' These IDs start with "W". See more at <https://docs.openalex.org/about-the-data/work#id>.
 #' @param ... Unused.
-#' @inheritParams oa_request
+#' @inheritParams oa_query
 #'
 #' @return A dataframe of paper metadatada and a list-column of ngrams.
 #' @export
@@ -41,18 +41,22 @@ ngram2df <- function(ngram) {
 #'
 #' # Missing N-grams are `NULL` in the `ngrams` list-column
 #' oa_ngrams("https://openalex.org/W2284876136")
-#'
 #' }
-oa_ngrams <- function(works_identifier, ..., verbose = FALSE) {
+oa_ngrams <- function(works_identifier, ...,
+                      endpoint = "https://api.openalex.org",
+                      verbose = FALSE) {
 
   # Check if input is ID of Works entity
-  normalized_id <- gsub("^https://openalex.org/", "", works_identifier)
+  normalized_id <- shorten_oaid(works_identifier)
   if (!all(grepl("^W", normalized_id))) {
-    stop("Invalid OpenAlex Work entity ID(s) at `works_identifier`: ", paste(which(!grepl("^W", normalized_id)), sep = ", "))
+    stop(
+      "Invalid OpenAlex Work entity ID(s) at `works_identifier`: ",
+      paste(which(!grepl("^W", normalized_id)), sep = ", ")
+    )
   }
 
   # Setup for querying
-  query_urls <- paste0("https://api.openalex.org/works/", normalized_id, "/ngrams")
+  query_urls <- paste(endpoint, "works", normalized_id, "ngrams", sep = "/")
   n <- length(query_urls)
 
   ngrams_failed_template <- data.frame(id = NA, doi = NA, count = NA, ngrams = I(list(NULL)))
@@ -98,5 +102,4 @@ oa_ngrams <- function(works_identifier, ..., verbose = FALSE) {
   }
 
   tibble::as_tibble(do.call(rbind.data.frame, ngrams_dfs))
-
 }

@@ -55,15 +55,15 @@ oa_entities <- function() {
 #'   verbose = TRUE
 #' )
 #' }
-oa_fetch <- function(identifier = NULL, ## identifier of a work, author, venue, etc.
-                     entity = if (is.null(identifier)) NULL else id_type(identifier[[1]]),
+oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(identifier[[1]]),
+                     identifier = NULL,
                      ...,
                      search = NULL,
                      sort = NULL,
                      group_by = NULL,
                      output = c("tibble", "dataframe", "list"),
                      abstract = FALSE,
-                     endpoint = "https://api.openalex.org/",
+                     endpoint = "https://api.openalex.org",
                      per_page = 200,
                      count_only = FALSE,
                      mailto = oa_email(),
@@ -175,7 +175,7 @@ oa_fetch <- function(identifier = NULL, ## identifier of a work, author, venue, 
 #' query_work <- oa_query(
 #'   identifier = "W2755950973",
 #'   entity = "works",
-#'   endpoint = "https://api.openalex.org/"
+#'   endpoint = "https://api.openalex.org"
 #' )
 #'
 #' res <- oa_request(
@@ -190,7 +190,7 @@ oa_fetch <- function(identifier = NULL, ## identifier of a work, author, venue, 
 #' query_author <- oa_query(
 #'   identifier = "A923435168",
 #'   entity = "authors",
-#'   endpoint = "https://api.openalex.org/"
+#'   endpoint = "https://api.openalex.org"
 #' )
 #'
 #' res <- oa_request(
@@ -220,7 +220,7 @@ oa_fetch <- function(identifier = NULL, ## identifier of a work, author, venue, 
 #'   from_publication_date = "2021-01-01",
 #'   to_publication_date = "2021-12-31",
 #'   search = NULL,
-#'   endpoint = "https://api.openalex.org/"
+#'   endpoint = "https://api.openalex.org"
 #' )
 #'
 #' res2 <- oa_request(
@@ -244,7 +244,7 @@ oa_fetch <- function(identifier = NULL, ## identifier of a work, author, venue, 
 #'   from_publication_date = "2020-01-01",
 #'   to_publication_date = "2021-12-31",
 #'   search = NULL,
-#'   endpoint = "https://api.openalex.org/"
+#'   endpoint = "https://api.openalex.org"
 #' )
 #'
 #' res3 <- oa_request(
@@ -266,7 +266,7 @@ oa_fetch <- function(identifier = NULL, ## identifier of a work, author, venue, 
 #'   from_publication_date = "2020-01-01",
 #'   to_publication_date = "2021-12-31",
 #'   search = NULL,
-#'   endpoint = "https://api.openalex.org/"
+#'   endpoint = "https://api.openalex.org"
 #' )
 #'
 #' res4 <- oa_request(
@@ -382,7 +382,7 @@ oa_request <- function(query_url,
 #' But unlike the other filters, search doesn't require an exact match.
 #' To filter using search, append .search to the end of the attribute you're filtering for.
 #' @param endpoint Character. URL of the OpenAlex Endpoint API server.
-#' Defaults to endpoint = "https://api.openalex.org/".
+#' Defaults to endpoint = "https://api.openalex.org".
 #' @param verbose Logical. If TRUE, print information on querying process.
 #' Default to \code{verbose = FALSE}.
 #' @param \dots Additional filter arguments.
@@ -461,12 +461,12 @@ oa_request <- function(query_url,
 
 oa_query <- function(filter = NULL,
                      multiple_id = FALSE,
-                     identifier = NULL, ## identifier of a work, author, venue, etc.
+                     identifier = NULL,
                      entity = if (is.null(identifier)) NULL else id_type(identifier[[1]]),
                      search = NULL,
                      sort = NULL,
                      group_by = NULL,
-                     endpoint = "https://api.openalex.org/",
+                     endpoint = "https://api.openalex.org",
                      verbose = FALSE,
                      ...) {
   entity <- match.arg(entity, oa_entities())
@@ -523,12 +523,12 @@ oa_query <- function(filter = NULL,
 #' oa_random()
 oa_random <- function(entity = oa_entities(),
                       output = c("tibble", "dataframe", "list"),
-                      endpoint = "https://api.openalex.org/") {
+                      endpoint = "https://api.openalex.org") {
   output <- match.arg(output)
   entity <- match.arg(entity, oa_entities())
   if (output == "dataframe") output <- "tibble"
 
-  query_url <- paste0(endpoint, entity, "/random")
+  query_url <- paste(endpoint, entity, "random", sep = "/")
   res <- oa_request(query_url)
 
   final_res <- switch(output,

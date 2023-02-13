@@ -37,7 +37,7 @@ oa_snowball <- function(identifier = NULL,
                         ...,
                         id_type = c("short", "original"),
                         mailto = oa_email(),
-                        endpoint = "https://api.openalex.org/",
+                        endpoint = "https://api.openalex.org",
                         verbose = FALSE,
                         citing_filter = list(),
                         cited_by_filter = list()) {
@@ -95,7 +95,7 @@ oa_snowball <- function(identifier = NULL,
   # remove duplicates when two input identifiers cite each other
   edges <- edges[!duplicated(edges), ]
   # remove edges to/from NA nodes
-  edges <- edges[complete.cases(edges), ]
+  edges <- edges[stats::complete.cases(edges), ]
 
   if (id_type == "short") {
     edges$to <- shorten_oaid(edges$to)

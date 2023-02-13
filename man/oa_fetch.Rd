@@ -6,15 +6,15 @@
 and convert the result to a tibble/data frame.}
 \usage{
 oa_fetch(
-  identifier = NULL,
   entity = if (is.null(identifier)) NULL else id_type(identifier[[1]]),
+  identifier = NULL,
   ...,
   search = NULL,
   sort = NULL,
   group_by = NULL,
   output = c("tibble", "dataframe", "list"),
   abstract = FALSE,
-  endpoint = "https://api.openalex.org/",
+  endpoint = "https://api.openalex.org",
   per_page = 200,
   count_only = FALSE,
   mailto = oa_email(),
@@ -22,12 +22,12 @@ oa_fetch(
 )
 }
 \arguments{
-\item{identifier}{Character. OpenAlex ID(s) as item identifier(s).
-See more at <https://docs.openalex.org/about-the-data#the-openalex-id>.}
-
 \item{entity}{Character. Scholarly entity of the search.
 The argument can be one of c("works", "authors", "venues", "institutions", "concepts").
 If not provided, `entity` is guessed from `identifier`.}
+
+\item{identifier}{Character. OpenAlex ID(s) as item identifier(s).
+See more at <https://docs.openalex.org/about-the-data#the-openalex-id>.}
 
 \item{...}{Additional filter arguments.}
 
@@ -50,7 +50,7 @@ Default to \code{abstract = FALSE}.
 The argument is ignored if entity is different from "works".}
 
 \item{endpoint}{Character. URL of the OpenAlex Endpoint API server.
-Defaults to endpoint = "https://api.openalex.org/".}
+Defaults to endpoint = "https://api.openalex.org".}
 
 \item{per_page}{Numeric. Number of items to download per page.
 The per-page argument can assume any number between 1 and 200.
