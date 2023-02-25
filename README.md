@@ -5,14 +5,14 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/massimoaria/openalexR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/massimoaria/openalexR/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/ropensci/openalexR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ropensci/openalexR/actions/workflows/R-CMD-check.yaml)
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/openalexR)](https://CRAN.R-project.org/package=openalexR)
 [![](http://cranlogs.r-pkg.org/badges/grand-total/openalexR)](https://cran.r-project.org/package=openalexR)
 [![Codecov test
-coverage](https://codecov.io/gh/massimoaria/openalexR/branch/main/graph/badge.svg)](https://app.codecov.io/gh/massimoaria/openalexR?branch=main)
+coverage](https://codecov.io/gh/ropensci/openalexR/branch/main/graph/badge.svg)](https://app.codecov.io/gh/ropensci/openalexR?branch=main)
 <!-- badges: end -->
 
 **openalexR** helps you interface with the
@@ -43,7 +43,7 @@ You can install the developer version of openalexR from
 
 ``` r
 install.packages("remotes")
-remotes::install_github("massimoaria/openalexR")
+remotes::install_github("ropensci/openalexR")
 ```
 
 You can install the released version of openalexR from

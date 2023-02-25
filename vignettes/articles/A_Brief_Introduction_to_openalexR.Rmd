@@ -9,7 +9,7 @@ vignette: >
 
  
 
-[*https://github.com/massimoaria/openalexR*](https://github.com/massimoaria/openalexR){.uri}
+[*https://github.com/ropensci/openalexR*](https://github.com/ropensci/openalexR){.uri}
 
 *Latest version: `r packageVersion("openalexR")`, `r Sys.Date()`*
 
