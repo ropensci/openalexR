@@ -18,7 +18,7 @@ The default output from an `oa_fetch` call is a tibble.
 This object type allows each row to be one unit of entity (article, institution, etc.), which is often helpful for downstream wrangling.
 It **simplifies** and combines complex output elements in [list columns](https://dcl-prog.stanford.edu/list-columns.html), which can be **extracted** or **exploded** with `dplyr::rowwise` or `purrr::map`.
 
-**IMPORTANT**: in "flattening" the list output to a tibble, we have made a few decisions to simplify the original nested list such as retaining only one affiliation for each author if you're querying *Works* (details in [`oa_df` source code](https://github.com/massimoaria/openalexR/blob/main/R/oa2df.R)).
+**IMPORTANT**: in "flattening" the list output to a tibble, we have made a few decisions to simplify the original nested list such as retaining only one affiliation for each author if you're querying *Works* (details in [`oa_df` source code](https://github.com/ropensci/openalexR/blob/main/R/oa2df.R)).
 While the tibble output is sufficient in most use cases, you may need to obtain the original nested list with all the information on an entity for your special research problem.
 If so, please specify `output = "list"` in your `oa_fetch` call.
 

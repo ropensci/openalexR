@@ -5,8 +5,8 @@
   "description": "A set of tools to extract bibliographic content from 'OpenAlex' database using API <https://docs.openalex.org/api/>.",
   "name": "openalexR: Getting Bibliographic Records from 'OpenAlex' Database Using 'DSL'\n    API",
   "relatedLink": ["https://massimoaria.github.io/openalexR/", "https://CRAN.R-project.org/package=openalexR"],
-  "codeRepository": "https://github.com/massimoaria/openalexR",
-  "issueTracker": "https://github.com/massimoaria/openalexR/issues",
+  "codeRepository": "https://github.com/ropensci/openalexR",
+  "issueTracker": "https://github.com/ropensci/openalexR/issues",
   "license": "https://spdx.org/licenses/MIT",
   "version": "1.0.1",
   "programmingLanguage": {
@@ -233,9 +233,9 @@
     "SystemRequirements": null
   },
   "fileSize": "3833.673KB",
-  "releaseNotes": "https://github.com/massimoaria/openalexR/blob/master/NEWS.md",
-  "readme": "https://github.com/massimoaria/openalexR/blob/main/README.md",
-  "contIntegration": ["https://github.com/massimoaria/openalexR/actions/workflows/R-CMD-check.yaml", "https://app.codecov.io/gh/massimoaria/openalexR?branch=main"],
+  "releaseNotes": "https://github.com/ropensci/openalexR/blob/master/NEWS.md",
+  "readme": "https://github.com/ropensci/openalexR/blob/main/README.md",
+  "contIntegration": ["https://github.com/ropensci/openalexR/actions/workflows/R-CMD-check.yaml", "https://app.codecov.io/gh/ropensci/openalexR?branch=main"],
   "developmentStatus": "https://lifecycle.r-lib.org/articles/stages.html#experimental",
   "keywords": ["bibliographic-data", "bibliographic-database", "bibliometrics", "bibliometrix", "science-mapping"]
 }
