@@ -13,9 +13,9 @@ A set of tools to extract bibliographic content from 'OpenAlex' database using A
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/massimoaria/openalexR}
+  \item \url{https://github.com/ropensci/openalexR}
   \item \url{https://massimoaria.github.io/openalexR/}
-  \item Report bugs at \url{https://github.com/massimoaria/openalexR/issues}
+  \item Report bugs at \url{https://github.com/ropensci/openalexR/issues}
 }
 
 }

@@ -28,9 +28,9 @@ Authors@R: c(
 Description: A set of tools to extract bibliographic content from
     'OpenAlex' database using API <https://docs.openalex.org/api/>.
 License: MIT + file LICENSE
-URL: https://github.com/massimoaria/openalexR,
+URL: https://github.com/ropensci/openalexR,
     https://massimoaria.github.io/openalexR/
-BugReports: https://github.com/massimoaria/openalexR/issues
+BugReports: https://github.com/ropensci/openalexR/issues
 Imports: 
     curl,
     httr,
