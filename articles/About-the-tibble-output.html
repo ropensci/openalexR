@@ -64,7 +64,7 @@
 
       <ul class="navbar-nav">
 <li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/massimoaria/openalexR/" aria-label="github">
+  <a class="external-link nav-link" href="https://github.com/ropensci/openalexR/" aria-label="github">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -84,14 +84,14 @@
       <img src="../logo.png" class="logo" alt=""><h1>About the tibble output</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/massimoaria/openalexR/blob/HEAD/vignettes/articles/About-the-tibble-output.Rmd" class="external-link"><code>vignettes/articles/About-the-tibble-output.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ropensci/openalexR/blob/HEAD/vignettes/articles/About-the-tibble-output.Rmd" class="external-link"><code>vignettes/articles/About-the-tibble-output.Rmd</code></a></small>
       <div class="d-none name"><code>About-the-tibble-output.Rmd</code></div>
     </div>
 
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/massimoaria/openalexR" class="external-link">openalexR</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://docs.ropensci.org/openalexR" class="external-link">openalexR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></code></pre></div>
 <p>The default output from an <code>oa_fetch</code> call is a tibble.
 This object type allows each row to be one unit of entity (article,
@@ -102,7 +102,7 @@ with <code><a href="https://dplyr.tidyverse.org/reference/rowwise.html" class="e
 <p><strong>IMPORTANT</strong>: in “flattening” the list output to a
 tibble, we have made a few decisions to simplify the original nested
 list such as retaining only one affiliation for each author if you’re
-querying <em>Works</em> (details in <a href="https://github.com/massimoaria/openalexR/blob/main/R/oa2df.R" class="external-link"><code>oa_df</code>
+querying <em>Works</em> (details in <a href="https://github.com/ropensci/openalexR/blob/main/R/oa2df.R" class="external-link"><code>oa_df</code>
 source code</a>). While the tibble output is sufficient in most use
 cases, you may need to obtain the original nested list with all the
 information on an entity for your special research problem. If so,
@@ -284,11 +284,11 @@ can call <code>oa_fetch</code> with the default
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> W3001491100 <span style="color: #949494;">&lt;chr [2]&gt;</span>   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> W3044902155 <span style="color: #949494;">&lt;chr [1]&gt;</span>   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> W3011866596 <span style="color: #949494;">&lt;chr [1]&gt;</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> W2990688366 <span style="color: #949494;">&lt;chr [3]&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> W3000049009 <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> W3000910650 <span style="color: #949494;">&lt;chr [3]&gt;</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> W3000049009 <span style="color: #949494;">&lt;lgl [1]&gt;</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> W2986617680 <span style="color: #949494;">&lt;chr [2]&gt;</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> W3042215340 <span style="color: #949494;">&lt;chr [3]&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> W2990688366 <span style="color: #949494;">&lt;chr [3]&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> W3042215340 <span style="color: #949494;">&lt;chr [3]&gt;</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> W2986617680 <span style="color: #949494;">&lt;chr [2]&gt;</span>   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> W2999558594 <span style="color: #949494;">&lt;chr [2]&gt;</span>   </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> W3038187379 <span style="color: #949494;">&lt;chr [10]&gt;</span>  </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> W3025370095 <span style="color: #949494;">&lt;chr [4]&gt;</span></span></span>

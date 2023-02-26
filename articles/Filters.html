@@ -64,7 +64,7 @@
 
       <ul class="navbar-nav">
 <li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/massimoaria/openalexR/" aria-label="github">
+  <a class="external-link nav-link" href="https://github.com/ropensci/openalexR/" aria-label="github">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -84,7 +84,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>Filters</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/massimoaria/openalexR/blob/HEAD/vignettes/articles/Filters.Rmd" class="external-link"><code>vignettes/articles/Filters.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/ropensci/openalexR/blob/HEAD/vignettes/articles/Filters.Rmd" class="external-link"><code>vignettes/articles/Filters.Rmd</code></a></small>
       <div class="d-none name"><code>Filters.Rmd</code></div>
     </div>
 
@@ -566,7 +566,7 @@ documentation</a> from Open Alex.</p>
 <h2 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/massimoaria/openalexR" class="external-link">openalexR</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://docs.ropensci.org/openalexR" class="external-link">openalexR</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">lib_concepts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/oa_fetch.html">oa_fetch</a></span><span class="op">(</span></span>
 <span>  entity <span class="op">=</span> <span class="st">"concepts"</span>, </span>
@@ -592,8 +592,8 @@ documentation</a> from Open Alex.</p>
 <span><span class="co">#&gt; $ ancestors                  <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[8 x 4]&gt;], [&lt;data.frame[6 x 4]…</span></span>
 <span><span class="co">#&gt; $ related_concepts           <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[6 x 5]&gt;], [&lt;data.frame[9 x 5]&gt;…</span></span>
 <span><span class="co">#&gt; $ relevance_score            <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA, NA</span></span>
-<span><span class="co">#&gt; $ works_count                <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 947, 675, 629</span></span>
-<span><span class="co">#&gt; $ cited_by_count             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 11409, 11705, 16993</span></span>
+<span><span class="co">#&gt; $ works_count                <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 944, 680, 632</span></span>
+<span><span class="co">#&gt; $ cited_by_count             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 11129, 11835, 17056</span></span>
 <span><span class="co">#&gt; $ counts_by_year             <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[12 x 3]&gt;], [&lt;data.frame[12 x 3…</span></span>
 <span><span class="co">#&gt; $ works_api_url              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://api.openalex.org/works?filter=con…</span></span>
 <span></span>
@@ -621,13 +621,13 @@ documentation</a> from Open Alex.</p>
 <span><span class="co">#&gt; $ image_url                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://upload.wikimedia.org/wikipedia/com…</span></span>
 <span><span class="co">#&gt; $ image_thumbnail_url       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://upload.wikimedia.org/wikipedia/comm…</span></span>
 <span><span class="co">#&gt; $ associated_institutions   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> NA, NA, NA, NA</span></span>
-<span><span class="co">#&gt; $ relevance_score           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 3984.1510, 871.2557, 646.1918, 312.2700</span></span>
-<span><span class="co">#&gt; $ works_count               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 7955, 1054, 526, 650</span></span>
-<span><span class="co">#&gt; $ cited_by_count            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 260140, 10404, 3840, 1316</span></span>
+<span><span class="co">#&gt; $ relevance_score           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 4039.4436, 879.7780, 653.7197, 319.1488</span></span>
+<span><span class="co">#&gt; $ works_count               <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 7978, 1054, 526, 663</span></span>
+<span><span class="co">#&gt; $ cited_by_count            <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> 263028, 10426, 3855, 1351</span></span>
 <span><span class="co">#&gt; $ counts_by_year            <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[12 x 3]&gt;], [&lt;data.frame[12 x 3…</span></span>
 <span><span class="co">#&gt; $ works_api_url             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "https://api.openalex.org/works?filter=insti…</span></span>
 <span><span class="co">#&gt; $ x_concepts                <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> [&lt;data.frame[21 x 5]&gt;], [&lt;data.frame[17 x 5]…</span></span>
-<span><span class="co">#&gt; $ updated_date              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "2023-02-12T14:53:01.669711", "2023-02-11T15…</span></span>
+<span><span class="co">#&gt; $ updated_date              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "2023-02-26T15:26:49.078161", "2023-02-26T19…</span></span>
 <span><span class="co">#&gt; $ created_date              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "2018-05-17", "2016-06-24", "2016-06-24", "2…</span></span>
 <span></span>
 <span><span class="va">peer_venues</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/oa_fetch.html">oa_fetch</a></span><span class="op">(</span></span>
