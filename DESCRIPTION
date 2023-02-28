@@ -26,10 +26,10 @@ Authors@R: c(
            comment = c(ORCID = "0000-0002-0701-921X"))
     )
 Description: A set of tools to extract bibliographic content from
-    'OpenAlex' database using API <https://docs.openalex.org/api/>.
+    'OpenAlex' database using API <https://docs.openalex.org>.
 License: MIT + file LICENSE
 URL: https://github.com/ropensci/openalexR,
-    https://massimoaria.github.io/openalexR/
+    https://ropensci.github.io/openalexR/
 BugReports: https://github.com/ropensci/openalexR/issues
 Imports: 
     curl,

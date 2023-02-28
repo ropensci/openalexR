@@ -52,7 +52,7 @@ You can install the released version of openalexR from [CRAN](https://CRAN.R-pro
 install.packages("openalexR")
 ```
 
-Before we go any further, we highly recommend you set `openalexR.mailto` option so that your requests go to [the polite pool](https://docs.openalex.org/api#the-polite-pool) for faster response times:
+Before we go any further, we highly recommend you set `openalexR.mailto` option so that your requests go to [the polite pool](https://docs.openalex.org/how-to-use-the-api/rate-limits-and-authentication#the-polite-pool) for faster response times:
 
 ```{r}
 options(openalexR.mailto = "example@email.com")
@@ -79,14 +79,14 @@ knitr::opts_chunk$set(dev.args = list(bg = "transparent"))
 
 ## Examples
 
-There are different [filters](https://massimoaria.github.io/openalexR/articles/Filters)/arguments you can use in `oa_fetch`, depending on which [entity](https://docs.openalex.org/about-the-data) you're interested in: works, authors, venues, institutions, or concepts.
+There are different [filters](https://ropensci.github.io/openalexR/articles/Filters)/arguments you can use in `oa_fetch`, depending on which [entity](https://docs.openalex.org/#data) you're interested in: works, authors, venues, institutions, or concepts.
 We show a few examples below.
 
 ### Works
 
 **Goal**: Download all information about a givens set of publications (known DOIs).
 
-Use `doi` as a [works filter](https://massimoaria.github.io/openalexR/articles/Filters.html#works) (either the canonical form with <https://doi.org/> or without):
+Use `doi` as a [works filter](https://ropensci.github.io/openalexR/articles/Filters.html#works) (either the canonical form with "https://doi.org/" or without):
 
 ```{r}
 works_from_dois <- oa_fetch(
@@ -151,7 +151,7 @@ works_search |>
 **Goal**: Download author information when we know their ORCID.
 
 Here, instead of `author.orcid` like earlier, we have to use `orcid` as an argument.
-This may be a little confusing, but again, a different entity (**authors** instead of **works**) requires a [different set of filters](https://massimoaria.github.io/openalexR/articles/Filters.html#authors).
+This may be a little confusing, but again, a different entity (**authors** instead of **works**) requires a [different set of filters](https://ropensci.github.io/openalexR/articles/Filters.html#authors).
 
 ```{r}
 authors_from_orcids <- oa_fetch(

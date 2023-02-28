@@ -27,7 +27,7 @@ The argument can be one of c("works", "authors", "venues", "institutions", "conc
 If not provided, `entity` is guessed from `identifier`.}
 
 \item{identifier}{Character. OpenAlex ID(s) as item identifier(s).
-See more at <https://docs.openalex.org/about-the-data#the-openalex-id>.}
+See more at <https://docs.openalex.org/how-to-use-the-api/get-single-entities#the-openalex-id>.}
 
 \item{...}{Additional filter arguments.}
 
@@ -37,11 +37,11 @@ To filter using search, append .search to the end of the attribute you're filter
 
 \item{sort}{Character. Attribute to sort by.
 For example: "display_name" for venues or "cited_by_count:desc" for works.
-See more at <https://docs.openalex.org/api/get-lists-of-entities/sort-entity-lists>.}
+See more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sort-entity-lists>.}
 
 \item{group_by}{Character. Attribute to group by.
 For example: "oa_status" for works.
-See more at <https://docs.openalex.org/api/get-groups-of-entities>.}
+See more at <https://docs.openalex.org/how-to-use-the-api/get-groups-of-entities>.}
 
 \item{output}{Character. Type of output, either a list or a tibble/data.frame.}
 
