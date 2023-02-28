@@ -1,102 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://massimoaria.github.io/openalexR/404.html</loc>
+    <loc>https://ropensci.github.io/openalexR/404.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/CONTRIBUTING.html</loc>
+    <loc>https://ropensci.github.io/openalexR/CONTRIBUTING.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/LICENSE-text.html</loc>
+    <loc>https://ropensci.github.io/openalexR/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/articles/A_Brief_Introduction_to_openalexR.html</loc>
+    <loc>https://ropensci.github.io/openalexR/articles/A_Brief_Introduction_to_openalexR.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/articles/About-the-tibble-output.html</loc>
+    <loc>https://ropensci.github.io/openalexR/articles/About-the-tibble-output.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/articles/Filters.html</loc>
+    <loc>https://ropensci.github.io/openalexR/articles/Filters.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/articles/index.html</loc>
+    <loc>https://ropensci.github.io/openalexR/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/articles/institution.html</loc>
+    <loc>https://ropensci.github.io/openalexR/articles/institution.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/authors.html</loc>
+    <loc>https://ropensci.github.io/openalexR/authors.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/index.html</loc>
+    <loc>https://ropensci.github.io/openalexR/index.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/news/index.html</loc>
+    <loc>https://ropensci.github.io/openalexR/news/index.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/reference/authors2df.html</loc>
+    <loc>https://ropensci.github.io/openalexR/reference/authors2df.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/reference/concept_abbrev.html</loc>
+    <loc>https://ropensci.github.io/openalexR/reference/concept_abbrev.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/reference/concepts2df.html</loc>
+    <loc>https://ropensci.github.io/openalexR/reference/concepts2df.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/reference/countrycode.html</loc>
+    <loc>https://ropensci.github.io/openalexR/reference/countrycode.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/reference/index.html</loc>
+    <loc>https://ropensci.github.io/openalexR/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/reference/institutions2df.html</loc>
+    <loc>https://ropensci.github.io/openalexR/reference/institutions2df.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/reference/ngram2df.html</loc>
+    <loc>https://ropensci.github.io/openalexR/reference/ngram2df.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/reference/oa2bibliometrix.html</loc>
+    <loc>https://ropensci.github.io/openalexR/reference/oa2bibliometrix.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/reference/oa2df.html</loc>
+    <loc>https://ropensci.github.io/openalexR/reference/oa2df.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/reference/oa_entities.html</loc>
+    <loc>https://ropensci.github.io/openalexR/reference/oa_entities.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/reference/oa_fetch.html</loc>
+    <loc>https://ropensci.github.io/openalexR/reference/oa_fetch.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/reference/oa_ngrams.html</loc>
+    <loc>https://ropensci.github.io/openalexR/reference/oa_ngrams.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/reference/oa_query.html</loc>
+    <loc>https://ropensci.github.io/openalexR/reference/oa_query.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/reference/oa_random.html</loc>
+    <loc>https://ropensci.github.io/openalexR/reference/oa_random.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/reference/oa_request.html</loc>
+    <loc>https://ropensci.github.io/openalexR/reference/oa_request.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/reference/oa_snowball.html</loc>
+    <loc>https://ropensci.github.io/openalexR/reference/oa_snowball.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/reference/openalexR-package.html</loc>
+    <loc>https://ropensci.github.io/openalexR/reference/openalexR-package.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/reference/show_authors.html</loc>
+    <loc>https://ropensci.github.io/openalexR/reference/show_authors.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/reference/show_works.html</loc>
+    <loc>https://ropensci.github.io/openalexR/reference/show_works.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/reference/snowball2df.html</loc>
+    <loc>https://ropensci.github.io/openalexR/reference/snowball2df.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/reference/venues2df.html</loc>
+    <loc>https://ropensci.github.io/openalexR/reference/venues2df.html</loc>
   </url>
   <url>
-    <loc>https://massimoaria.github.io/openalexR/reference/works2df.html</loc>
+    <loc>https://ropensci.github.io/openalexR/reference/works2df.html</loc>
   </url>
 </urlset>

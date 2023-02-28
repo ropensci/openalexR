@@ -6,8 +6,8 @@ articles:
   About-the-tibble-output: About-the-tibble-output.html
   Filters: Filters.html
   institution: institution.html
-last_built: 2023-02-26T20:29Z
+last_built: 2023-02-28T05:43Z
 urls:
-  reference: https://massimoaria.github.io/openalexR/reference
-  article: https://massimoaria.github.io/openalexR/articles
+  reference: https://ropensci.github.io/openalexR/reference
+  article: https://ropensci.github.io/openalexR/articles
 
