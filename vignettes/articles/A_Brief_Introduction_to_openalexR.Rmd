@@ -60,7 +60,7 @@ This paper:
     An R-tool for comprehensive science mapping analysis. 
     Journal of informetrics, 11(4), 959-975.
 
-is associated to the [OpenAlex-id](https://docs.openalex.org/about-the-data#the-openalex-id) **W2755950973**.
+is associated to the [OpenAlex-id](https://docs.openalex.org/api-entities/works/work-object#id) **W2755950973**.
 If you know your paper's OpenAlex ID, all you need to do is passing `identifier = <openalex id>` as an argument in `oa_fetch()`:
 
 ```{r}
@@ -86,7 +86,7 @@ paper_id %>%
 
 ### External id formats
 
-OpenAlex endpoint accepts OpenAlex IDs and other [external IDs](https://docs.openalex.org/api/get-single-entities#id-formats) (*e.g.*, DOI, ISSN) in several formats, including Digital Object Identifier (DOI) and Persistent Identifiers (PIDs).
+OpenAlex endpoint accepts OpenAlex IDs and other [external IDs](https://docs.openalex.org/how-to-use-the-api/get-single-entities#id-formats) (*e.g.*, DOI, ISSN) in several formats, including Digital Object Identifier (DOI) and Persistent Identifiers (PIDs).
 
 ```{r}
 oa_fetch(
@@ -132,10 +132,10 @@ oa_fetch(
 ### Filters
 
 In most cases, we are interested in downloading a collection of items that meet one or more inclusion/exclusion criteria (filters).
-Supported filters for each entity are listed [here](https://massimoaria.github.io/openalexR/articles/Filters.html).
+Supported filters for each entity are listed [here](https://ropensci.github.io/openalexR/articles/Filters.html).
 
 **Example**: We want to download all works published by a set of authors.
-We can do this by filtering on the authorships.author.id/author.id or authorships.author.orcid/author.orcid attribute (see more on  [works attributes](https://massimoaria.github.io/openalexR/articles/Filters.html#works)):
+We can do this by filtering on the authorships.author.id/author.id or authorships.author.orcid/author.orcid attribute (see more on  [works attributes](https://ropensci.github.io/openalexR/articles/Filters.html#works)):
 
 ```{r}
 oa_fetch(

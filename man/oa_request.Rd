@@ -35,7 +35,7 @@ If TRUE, print information about the querying process. Defaults to TRUE.}
 a data.frame or a list of bibliographic records.
 
 For more extensive information about OpenAlex API, please visit:
-\href{https://docs.openalex.org/api}{https://docs.openalex.org/api}
+<https://docs.openalex.org>
 }
 \description{
 `oa_request` makes a request and downloads bibliographic records from

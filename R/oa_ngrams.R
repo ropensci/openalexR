@@ -16,13 +16,13 @@ ngram2df <- function(ngram) {
 #'
 #' Some work entities in OpenAlex include N-grams (word sequences and their frequencies) of their full text.
 #' The N-grams are obtained from Internet Archive, which uses the spaCy parser to index scholarly works.
-#' See <https://docs.openalex.org/api/get-n-grams> for coverage and more technical details.
+#' See <https://docs.openalex.org/api-entities/works/get-n-grams> for coverage and more technical details.
 #'
 #' @note A faster implementation is available for `curl` >= v5.0.0, and `oa_ngrams` will issue a one-time message
 #' about this. This can be suppressed with `options("oa_ngrams.message.curlv5" = FALSE)`.
 #'
 #' @param works_identifier Character. OpenAlex ID(s) of "works" entities as item identifier(s).
-#' These IDs start with "W". See more at <https://docs.openalex.org/about-the-data/work#id>.
+#' These IDs start with "W". See more at <https://docs.openalex.org/api-entities/works#id>.
 #' @param ... Unused.
 #' @inheritParams oa_query
 #'
