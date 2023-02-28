@@ -73,7 +73,7 @@ oa2df <- function(data, entity, abstract = TRUE, count_only = FALSE, group_by = 
 #'
 #' @return a data.frame.
 #'
-#' For more extensive information about OpenAlex API, please visit: \href{https://docs.openalex.org/api}{https://docs.openalex.org/api}
+#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
 #'
 #' @importFrom stats setNames
 #'
@@ -246,7 +246,7 @@ abstract_build <- function(ab) {
 #'
 #' @return a data.frame.
 #'
-#' For more extensive information about OpenAlex API, please visit: \href{https://docs.openalex.org/api}{https://docs.openalex.org/api}
+#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
 #'
 #'
 #' @examples
@@ -357,7 +357,7 @@ authors2df <- function(data, verbose = TRUE) {
 #'
 #' @return a data.frame.
 #'
-#' For more extensive information about OpenAlex API, please visit: \href{https://docs.openalex.org/api}{https://docs.openalex.org/api}
+#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
 #'
 #'
 #' @examples
@@ -463,7 +463,7 @@ institutions2df <- function(data, verbose = TRUE) {
 #'
 #' @return a data.frame.
 #'
-#' For more extensive information about OpenAlex API, please visit: \href{https://docs.openalex.org/api}{https://docs.openalex.org/api}
+#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
 #'
 #'
 #' @examples
@@ -560,7 +560,7 @@ venues2df <- function(data, verbose = TRUE) {
 #'
 #' @return a data.frame.
 #'
-#' For more extensive information about OpenAlex API, please visit: \href{https://docs.openalex.org/api}{https://docs.openalex.org/api}
+#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
 #'
 #'
 #' @examples

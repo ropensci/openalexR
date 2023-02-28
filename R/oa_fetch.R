@@ -79,7 +79,7 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(identif
   if (multiple_id) filter <- c(filter, list(openalex_id = identifier))
 
   # overcome OA limitation of combining 50 values (OR) for a filter at a time
-  # https://docs.openalex.org/api/get-lists-of-entities/filter-entity-lists#addition-or
+  # https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/filter-entity-lists#addition-or
   # here, we assume there is only ONE "large" filter
   large_filter <- which(lengths(filter) > 50)
   if (length(large_filter) == 0) {
@@ -155,7 +155,7 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(identif
 #' @return a data.frame or a list of bibliographic records.
 #'
 #' For more extensive information about OpenAlex API, please visit:
-#' \href{https://docs.openalex.org/api}{https://docs.openalex.org/api}
+#' <https://docs.openalex.org>
 #'
 #'
 #' @examples
@@ -362,22 +362,22 @@ oa_request <- function(query_url,
 #' condition--specifically, a particular value for a particular attribute.
 #' Filters are formatted as attribute = value.
 #' The complete list of filter attributes for each entity can be found at
-#' <https://docs.openalex.org/api/get-lists-of-entities#filter>.
+#' <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/filter-entity-lists>.
 #' For example, `cited_by_count = ">100"`,
 #' `title.search = c("bibliometric analysis", "science mapping")`,
 #' or `to_publication_date = "2021-12-31"`.
 #' @param multiple_id Logical. Whether there are multiple identifiers.
 #' @param identifier Character. OpenAlex ID(s) as item identifier(s).
-#' See more at <https://docs.openalex.org/about-the-data#the-openalex-id>.
+#' See more at <https://docs.openalex.org/how-to-use-the-api/get-single-entities#the-openalex-id>.
 #' @param entity Character. Scholarly entity of the search.
 #' The argument can be one of c("works", "authors", "venues", "institutions", "concepts").
 #' If not provided, `entity` is guessed from `identifier`.
 #' @param sort Character. Attribute to sort by.
 #' For example: "display_name" for venues or "cited_by_count:desc" for works.
-#' See more at <https://docs.openalex.org/api/get-lists-of-entities/sort-entity-lists>.
+#' See more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sort-entity-lists>.
 #' @param group_by Character. Attribute to group by.
 #' For example: "oa_status" for works.
-#' See more at <https://docs.openalex.org/api/get-groups-of-entities>.
+#' See more at <https://docs.openalex.org/how-to-use-the-api/get-groups-of-entities>.
 #' @param search Character. Search is just another kind of filter, one that all five endpoints support.
 #' But unlike the other filters, search doesn't require an exact match.
 #' To filter using search, append .search to the end of the attribute you're filtering for.
@@ -390,7 +390,7 @@ oa_request <- function(query_url,
 #' @return a character containing the query in OpenAlex format.
 #'
 #' For more extensive information about OpenAlex API, please visit:
-#' <https://docs.openalex.org/api>.
+#' <https://docs.openalex.org>.
 #'
 #'
 #' @examples

@@ -23,7 +23,7 @@ Filters narrow the list down to just entities that meet a particular
 condition--specifically, a particular value for a particular attribute.
 Filters are formatted as attribute = value.
 The complete list of filter attributes for each entity can be found at
-<https://docs.openalex.org/api/get-lists-of-entities#filter>.
+<https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/filter-entity-lists>.
 For example, `cited_by_count = ">100"`,
 `title.search = c("bibliometric analysis", "science mapping")`,
 or `to_publication_date = "2021-12-31"`.}
@@ -31,7 +31,7 @@ or `to_publication_date = "2021-12-31"`.}
 \item{multiple_id}{Logical. Whether there are multiple identifiers.}
 
 \item{identifier}{Character. OpenAlex ID(s) as item identifier(s).
-See more at <https://docs.openalex.org/about-the-data#the-openalex-id>.}
+See more at <https://docs.openalex.org/how-to-use-the-api/get-single-entities#the-openalex-id>.}
 
 \item{entity}{Character. Scholarly entity of the search.
 The argument can be one of c("works", "authors", "venues", "institutions", "concepts").
@@ -43,11 +43,11 @@ To filter using search, append .search to the end of the attribute you're filter
 
 \item{sort}{Character. Attribute to sort by.
 For example: "display_name" for venues or "cited_by_count:desc" for works.
-See more at <https://docs.openalex.org/api/get-lists-of-entities/sort-entity-lists>.}
+See more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sort-entity-lists>.}
 
 \item{group_by}{Character. Attribute to group by.
 For example: "oa_status" for works.
-See more at <https://docs.openalex.org/api/get-groups-of-entities>.}
+See more at <https://docs.openalex.org/how-to-use-the-api/get-groups-of-entities>.}
 
 \item{endpoint}{Character. URL of the OpenAlex Endpoint API server.
 Defaults to endpoint = "https://api.openalex.org".}
@@ -61,7 +61,7 @@ Default to \code{verbose = FALSE}.}
 a character containing the query in OpenAlex format.
 
 For more extensive information about OpenAlex API, please visit:
-<https://docs.openalex.org/api>.
+<https://docs.openalex.org>.
 }
 \description{
 It generates a valid query, written following the OpenAlex API Language, from a set of parameters.

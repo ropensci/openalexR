@@ -21,7 +21,7 @@ library(tidyr)
 library(ggplot2)
 ```
 
-We first need to find the [openalex.id](https://docs.openalex.org/about-the-data/institution#id) for University of Pennsylvania.
+We first need to find the [openalex.id](https://docs.openalex.org/how-to-use-the-api/get-single-entities#the-openalex-id) for University of Pennsylvania.
 We can do this by fetching for the *institutions* `entity` and put *"University of Pennsylvania"* in `display_name` or `display_name.search`:
 
 ```{r}

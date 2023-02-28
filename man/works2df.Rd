@@ -18,7 +18,7 @@ Default to \code{verbose = FALSE}.}
 \value{
 a data.frame.
 
-For more extensive information about OpenAlex API, please visit: \href{https://docs.openalex.org/api}{https://docs.openalex.org/api}
+For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
 }
 \description{
 It converts bibliographic collection of works gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
