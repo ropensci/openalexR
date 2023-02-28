@@ -23,6 +23,8 @@ Defaults to endpoint = "https://api.openalex.org".}
 \value{
 A data.frame or a list. One row or one element.
 Result of the random query.
+If you would like to select more than one random entity,
+use the `sample` argument in `oa_fetch`.
 }
 \description{
 oa_fetch but for a random query

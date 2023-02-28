@@ -11,6 +11,8 @@ oa_fetch(
   ...,
   search = NULL,
   sort = NULL,
+  sample = NULL,
+  seed = NULL,
   group_by = NULL,
   output = c("tibble", "dataframe", "list"),
   abstract = FALSE,
@@ -38,6 +40,17 @@ To filter using search, append .search to the end of the attribute you're filter
 \item{sort}{Character. Attribute to sort by.
 For example: "display_name" for venues or "cited_by_count:desc" for works.
 See more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sort-entity-lists>.}
+
+\item{sample}{Integer. Number of (random) records to return.
+Should be no larger than 10,000.
+Defaults to NULL, which returns all records satisfying the query.
+Read more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sample-entity-lists>.}
+
+\item{seed}{Integer.
+A seed value in order to retrieve the same set of random records in
+the same order when used multiple times with `sample`.
+IMPORTANT NOTE: Depending on your query, random results with a seed value may change over time due to new records coming into OpenAlex.
+This argument is likely only useful when queries happen close together (within a day).}
 
 \item{group_by}{Character. Attribute to group by.
 For example: "oa_status" for works.

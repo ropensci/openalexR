@@ -83,6 +83,27 @@ test_that("oa_fetch instutitions binds associated_institutions correctly", {
   expect_true(ncol(inst$associated_institutions[[1]]) >= 6)
 })
 
+test_that("oa_fetch sample works", {
+  skip_on_cran()
+  Sys.sleep(1/10)
+  random2021 <- oa_fetch(
+    "works",
+    publication_year = 2021,
+    sample = 20
+  )
+  Sys.sleep(1/10)
+  random10 <- oa_fetch(
+    "works",
+    sample = 10,
+    seed = 1
+  )
+
+  expect_equal(nrow(random2021), 20)
+  expect_equal(nrow(random10), 10)
+  expect_error(oa_fetch("works", search = "open science", sample = 10))
+})
+
+
 test_that("oa_fetch authors can deal with NA institutions", {
   skip_on_cran()
 

@@ -60,6 +60,8 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(identif
                      ...,
                      search = NULL,
                      sort = NULL,
+                     sample = NULL,
+                     seed = NULL,
                      group_by = NULL,
                      output = c("tibble", "dataframe", "list"),
                      abstract = FALSE,
@@ -106,6 +108,8 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(identif
         entity = entity,
         search = search,
         sort = sort,
+        sample = sample,
+        seed = seed,
         group_by = group_by,
         endpoint = endpoint,
         verbose = verbose
@@ -375,6 +379,15 @@ oa_request <- function(query_url,
 #' @param sort Character. Attribute to sort by.
 #' For example: "display_name" for venues or "cited_by_count:desc" for works.
 #' See more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sort-entity-lists>.
+#' @param sample Integer. Number of (random) records to return.
+#' Should be no larger than 10,000.
+#' Defaults to NULL, which returns all records satisfying the query.
+#' Read more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sample-entity-lists>.
+#' @param seed Integer.
+#' A seed value in order to retrieve the same set of random records in
+#' the same order when used multiple times with `sample`.
+#' IMPORTANT NOTE: Depending on your query, random results with a seed value may change over time due to new records coming into OpenAlex.
+#' This argument is likely only useful when queries happen close together (within a day).
 #' @param group_by Character. Attribute to group by.
 #' For example: "oa_status" for works.
 #' See more at <https://docs.openalex.org/how-to-use-the-api/get-groups-of-entities>.
@@ -465,10 +478,17 @@ oa_query <- function(filter = NULL,
                      entity = if (is.null(identifier)) NULL else id_type(identifier[[1]]),
                      search = NULL,
                      sort = NULL,
+                     sample = NULL,
+                     seed = NULL,
                      group_by = NULL,
                      endpoint = "https://api.openalex.org",
                      verbose = FALSE,
                      ...) {
+
+  if (!(is.null(search) || is.null(sample))){
+    stop("You can't use `search` and `sample` at the same time. Please specify only one of these two arguments.")
+  }
+
   entity <- match.arg(entity, oa_entities())
   filter <- c(filter, list(...))
 
@@ -483,7 +503,7 @@ oa_query <- function(filter = NULL,
   }
 
   if (is.null(identifier) || multiple_id) {
-    if (length(filter) == 0 && is.null(search)) {
+    if (length(filter) == 0 && is.null(search) && is.null(sample)) {
       message("Identifier is missing, please specify filter or search argument.")
       return()
     }
@@ -493,6 +513,8 @@ oa_query <- function(filter = NULL,
       filter = flt_ready,
       search = search,
       sort = sort,
+      sample = sample,
+      seed = seed,
       group_by = group_by
     )
   } else {
@@ -517,6 +539,9 @@ oa_query <- function(filter = NULL,
 #'
 #' @return A data.frame or a list. One row or one element.
 #' Result of the random query.
+#' If you would like to select more than one random entity,
+#' use the `sample` argument in `oa_fetch`.
+#'
 #' @export
 #'
 #' @examples
