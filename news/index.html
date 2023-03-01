@@ -55,7 +55,11 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="openalexr-development-version">openalexR (development version)<a class="anchor" aria-label="anchor" href="#openalexr-development-version"></a></h2>
-<ul><li>Bug fixes</li>
+<ul><li>Breaking change: Reorder of the first two arguments in <code>oa_fetch</code>: <code>entity</code> now comes before <code>idenfitifier</code>. This should not affect your workflow too much unless you have been getting article information from OpenAlex IDs.</li>
+<li>new arguments to <code>oa_fetch</code>: <code>sample</code> and <code>seed</code> allows the user to download a random subset of the entities instead of the entire set.</li>
+<li>
+<code>oa_ngrams</code> gets you N-grams of works</li>
+<li>Bug fixes</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.0.1" id="openalexr-101">openalexR 1.0.1<a class="anchor" aria-label="anchor" href="#openalexr-101"></a></h2>
@@ -67,6 +71,7 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.0.0" id="openalexr-100">openalexR 1.0.0<a class="anchor" aria-label="anchor" href="#openalexr-100"></a></h2><p class="text-muted">CRAN release: 2022-10-06</p>
 <ul><li>Breaking change: now uses a more canonical way to filter <a href="https://github.com/ropensci/openalexR/issues/7" class="external-link">#7</a>.</li>
+<li>In <code>oa_fetch</code>, <code>abstract</code> now defaults to FALSE to save compute/query time/space. You will need to set <code>abstract = TRUE</code> to retrieve abstracts for the articles.</li>
 <li>Added website, hex.</li>
 <li>Added tests.</li>
 <li>Added R CMD CHECK as a GH Action</li>

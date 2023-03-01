@@ -67,6 +67,8 @@
 <span>  entity <span class="op">=</span> <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">identifier</span><span class="op">)</span><span class="op">)</span> <span class="cn">NULL</span> <span class="kw">else</span> <span class="fu">id_type</span><span class="op">(</span><span class="va">identifier</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>,</span>
 <span>  search <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  sort <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  sample <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  seed <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  group_by <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  endpoint <span class="op">=</span> <span class="st">"https://api.openalex.org"</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -113,6 +115,21 @@ To filter using search, append .search to the end of the attribute you're filter
 <dd><p>Character. Attribute to sort by.
 For example: "display_name" for venues or "cited_by_count:desc" for works.
 See more at &lt;https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sort-entity-lists&gt;.</p></dd>
+
+
+<dt>sample</dt>
+<dd><p>Integer. Number of (random) records to return.
+Should be no larger than 10,000.
+Defaults to NULL, which returns all records satisfying the query.
+Read more at &lt;https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sample-entity-lists&gt;.</p></dd>
+
+
+<dt>seed</dt>
+<dd><p>Integer.
+A seed value in order to retrieve the same set of random records in
+the same order when used multiple times with `sample`.
+IMPORTANT NOTE: Depending on your query, random results with a seed value may change over time due to new records coming into OpenAlex.
+This argument is likely only useful when queries happen close together (within a day).</p></dd>
 
 
 <dt>group_by</dt>
