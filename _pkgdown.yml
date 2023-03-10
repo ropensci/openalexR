@@ -1,7 +1,1 @@
-url: https://ropensci.github.io/openalexR/
-template:
-  bootstrap: 5
-  bslib:
-    primary: "#BB4827"
-    border-radius: 0.5rem
-    btn-border-radius: 0.25rem
+url: https://docs.ropensci.org/openalexR/
