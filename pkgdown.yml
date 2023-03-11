@@ -6,7 +6,7 @@ articles:
   About-the-tibble-output: About-the-tibble-output.html
   Filters: Filters.html
   institution: institution.html
-last_built: 2023-03-09T11:10Z
+last_built: 2023-03-11T19:30Z
 urls:
   reference: https://ropensci.github.io/openalexR/reference
   article: https://ropensci.github.io/openalexR/articles
