@@ -1,7 +1,36 @@
 url: https://docs.ropensci.org/openalexR/
 
-authors:
-  Massimo Aria:
-    href: https://massimoaria.com/
-  Trang Le:
-    href: https://trang.page/
+template:
+  bootstrap: 5
+  bslib:
+    primary: "#BB4827"
+    border-radius: 0.5rem
+    btn-border-radius: 0.25rem
+reference:
+- title: Main functions
+- contents:
+  - oa_fetch
+  - oa_snowball
+  - oa_ngrams
+  - oa_random
+
+- title: Utility functions
+- contents:
+  - starts_with("show")
+
+- title: Low-level functions
+- contents:
+  - oa_query
+  - oa_request
+
+- title: To dataframe
+  desc: convert the JSON object to tibble/dataframe
+- contents:
+  - ends_with("2df")
+
+- title: Data and others
+- contents:
+  - countrycode
+  - concept_abbrev
+  - oa_entities
+  - oa2bibliometrix
