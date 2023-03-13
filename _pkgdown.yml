@@ -1,4 +1,5 @@
-url: https://ropensci.github.io/openalexR/
+url: https://docs.ropensci.org/openalexR/
+
 template:
   bootstrap: 5
   bslib:
