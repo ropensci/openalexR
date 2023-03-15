@@ -29,7 +29,7 @@ Description: A set of tools to extract bibliographic content from
     'OpenAlex' database using API <https://docs.openalex.org>.
 License: MIT + file LICENSE
 URL: https://github.com/ropensci/openalexR,
-    https://ropensci.github.io/openalexR/
+    https://docs.ropensci.org/openalexR/
 BugReports: https://github.com/ropensci/openalexR/issues
 Imports: 
     curl,

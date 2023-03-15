@@ -13,6 +13,8 @@ status](https://www.r-pkg.org/badges/version/openalexR)](https://CRAN.R-project.
 [![](http://cranlogs.r-pkg.org/badges/grand-total/openalexR)](https://cran.r-project.org/package=openalexR)
 [![Codecov test
 coverage](https://codecov.io/gh/ropensci/openalexR/branch/main/graph/badge.svg)](https://app.codecov.io/gh/ropensci/openalexR?branch=main)
+[![Status at rOpenSci Software Peer
+Review](https://badges.ropensci.org/560_status.svg)](https://github.com/ropensci/software-review/issues/560)
 <!-- badges: end -->
 
 **openalexR** helps you interface with the
