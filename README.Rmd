@@ -69,13 +69,12 @@ library(ggplot2)
 ```
 
 ```{r set-theme, include=FALSE}
-theme_set(
-  theme_classic() +
-    theme(
-      plot.background = element_rect(fill = "transparent", colour = NA),
-      panel.background = element_rect(fill = "transparent", colour = NA)
-    )
+theme_set(theme_classic())
+theme_update(
+  plot.background = element_rect(fill = "transparent", colour = NA),
+  panel.background = element_rect(fill = "transparent", colour = NA)
 )
+
 knitr::opts_chunk$set(dev.args = list(bg = "transparent"))
 ```
 
@@ -92,8 +91,8 @@ Use `doi` as a [works filter](https://ropensci.github.io/openalexR/articles/Filt
 
 ```{r}
 works_from_dois <- oa_fetch(
-  doi = c("10.1016/j.joi.2017.08.007", "https://doi.org/10.1007/s11192-013-1221-3"),
   entity = "works",
+  doi = c("10.1016/j.joi.2017.08.007", "https://doi.org/10.1007/s11192-013-1221-3"),
   verbose = TRUE
 )
 ```
@@ -106,7 +105,7 @@ We also provide the experimental `show_works` function to simplify the result (e
 ```{r}
 # str(works_from_dois, max.level = 2)
 # head(works_from_dois)
-# show_works(works_from_dois) 
+# show_works(works_from_dois)
 
 works_from_dois |>
   show_works() |>
@@ -124,8 +123,8 @@ works_from_orcids <- oa_fetch(
   verbose = TRUE
 )
 
-works_from_orcids |> 
-  show_works() |> 
+works_from_orcids |>
+  show_works() |>
   knitr::kable()
 ```
 
@@ -229,7 +228,7 @@ concept_df |>
   ) +
   guides(color = "none") +
   gghighlight(
-    max(works_count) > 244000, 
+    max(works_count) > 244000,
     label_params = list(nudge_y = 10^5, segment.color = NA)
   )
 ```
@@ -295,24 +294,31 @@ We first download all records regarding journals that have published more than 3
 # The package ggtext needs to be installed to run this chunk
 # library(ggtext)
 
-jours <- oa_fetch(
+jours_all <- oa_fetch(
   entity = "venues",
-  works_count = ">500000",
+  works_count = ">200000",
   verbose = TRUE
-) |>
-  filter(is.na(publisher)|!grepl("Elsevier", publisher)) |>
+)
+
+jours <- jours_all |>
+  filter(!is.na(x_concepts), type != "ebook platform") |>
+  slice_max(cited_by_count, n = 9) |>
   distinct(display_name, .keep_all = TRUE) |>
   select(jour = display_name, x_concepts) |>
   tidyr::unnest(x_concepts) |>
   filter(level == 0) |>
-  left_join(concept_abbrev) |>
-  mutate(abbreviation = gsub(" ", "<br>", abbreviation)) |>
+  left_join(concept_abbrev, by = join_by(id, display_name)) |>
+  mutate(
+    abbreviation = gsub(" ", "<br>", abbreviation),
+    jour = gsub("Journal of|Journal of the", "J.", gsub("\\(.*?\\)", "", jour))
+  ) |>
   tidyr::complete(jour, abbreviation, fill = list(score = 0)) |>
   group_by(jour) |>
   mutate(
     color = if_else(score > 10, "#1A1A1A", "#D9D9D9"), # CCCCCC
     label = paste0("<span style='color:", color, "'>", abbreviation, "</span>")
-  )
+  ) |>
+  ungroup()
 
 jours |>
   ggplot() +
@@ -327,8 +333,6 @@ jours |>
   coord_polar(clip = "off") +
   theme_bw() +
   theme(
-    plot.background = element_rect(fill = "transparent", colour = NA),
-    panel.background = element_rect(fill = "transparent", colour = NA),
     panel.grid = element_blank(),
     panel.border = element_blank(),
     axis.text = element_blank(),
@@ -338,8 +342,7 @@ jours |>
     aes(y = 120, label = label),
     fill = NA, label.color = NA, size = 3
   ) +
-  scale_fill_brewer(palette = "Set1") +
-  guides(fill = "none") +
+  scale_fill_brewer(palette = "Set1", guide = "none") +
   labs(y = NULL, x = NULL, title = "Journal clocks")
 ```
 
@@ -395,7 +398,7 @@ ngrams_data |>
   slice_max(ngram_count, n = 10, with_ties = FALSE) |>
   ggplot(aes(ngram_count, forcats::fct_reorder(ngram, ngram_count))) +
   geom_col(aes(fill = id), show.legend = FALSE) +
-  facet_wrap(~ id, scales = "free_y") +
+  facet_wrap(~id, scales = "free_y") +
   labs(
     title = "Top 10 fulltext bigrams",
     x = "Count",
