@@ -126,11 +126,14 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
   n <- length(data)
   pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)
-  # biblio_cols <- c("volume", "issue", "first_page", "last_page")
   inst_cols <- c("id", "display_name", "ror", "country_code", "type")
   venue_cols <- c(
-    so_id = "id", so = "display_name", publisher = "publisher",
-    url = "url", is_oa = "is_oa"
+    url = "landing_page_url", pdf_url = "pdf_url", is_oa = "is_oa",
+    license = "license", version = "version"
+  )
+  so_cols <- c(
+    so_id = "id", so = "display_name", issn_l = "issn_l",
+    host_organization = "host_organization"
   )
   empty_inst <- empty_list(inst_cols)
 
@@ -139,6 +142,9 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
 
     paper <- data[[i]]
     paper <- simple_rapply(paper, `%||%`, y = NA)
+    so_info <- paper$primary_location["source"]
+    so_info <- if (is.na(so_info)) NA else so_info[[1]]
+    sub_biblio <- paper$biblio
 
     sub_identical <- paper[
       c(
@@ -147,7 +153,6 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
         "is_paratext", "is_retracted"
       )
     ]
-    sub_biblio <- paper$biblio
 
     sub_flat <- lapply(
       paper[c("referenced_works", "related_works")],
@@ -177,8 +182,10 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
       }
     })
 
-    sub_venue <- setNames(paper$host_venue[venue_cols], names(venue_cols))
-    sub_venue$issn <- subs_na(paper$host_venue$issn, "flat")
+    sub_venue <- setNames(
+      c(paper$primary_location[venue_cols], so_info[so_cols]),
+      c(names(venue_cols), names(so_cols))
+    )
 
     # authorships and affilitation
     author <- list(do.call(rbind.data.frame, lapply(paper$authorships, function(l) {
@@ -217,7 +224,8 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
 
   col_order <- c(
     "id", "display_name", "author", "ab", "publication_date", "relevance_score",
-    "so", "so_id", "publisher", "issn", "url", "first_page", "last_page",
+    "so", "so_id", "host_organization", "issn_l", "url", "pdf_url",
+    "license", "version", "first_page", "last_page",
     "volume", "issue", "is_oa", "cited_by_count", "counts_by_year",
     "publication_year", "cited_by_api_url", "ids", "doi", "type",
     "referenced_works", "related_works", "is_paratext", "is_retracted", "concepts"
@@ -490,7 +498,6 @@ institutions2df <- function(data, verbose = TRUE) {
 #'
 #' # @export
 venues2df <- function(data, verbose = TRUE) {
-
   # replace NULL with NA
   data <- simple_rapply(data, function(x) if (is.null(x)) NA else x)
 
@@ -514,8 +521,8 @@ venues2df <- function(data, verbose = TRUE) {
 
     sub_identical <- item[
       c(
-        "id", "display_name", "publisher", "works_count", "cited_by_count",
-        "is_oa", "is_in_doaj", "homepage_url", "works_api_url"
+        "id", "display_name", "host_organization_name", "works_count", "cited_by_count",
+        "is_oa", "is_in_doaj", "homepage_url", "works_api_url", "type"
       )
     ]
 
@@ -542,9 +549,9 @@ venues2df <- function(data, verbose = TRUE) {
   }
 
   col_order <- c(
-    "id", "display_name", "publisher", "issn", "issn_l", "is_oa", "is_in_doaj",
+    "id", "display_name", "host_organization_name", "issn", "issn_l", "is_oa", "is_in_doaj",
     "ids", "homepage_url", "relevance_score", "works_count", "cited_by_count",
-    "counts_by_year", "x_concepts", "works_api_url"
+    "counts_by_year", "x_concepts", "works_api_url", "type"
   )
 
   do.call(rbind, list_df)[, col_order]
