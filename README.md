@@ -412,6 +412,8 @@ jours |>
   coord_polar(clip = "off") +
   theme_bw() +
   theme(
+    plot.background = element_rect(fill = "transparent", colour = NA),
+    panel.background = element_rect(fill = "transparent", colour = NA),
     panel.grid = element_blank(),
     panel.border = element_blank(),
     axis.text = element_blank(),
@@ -469,7 +471,11 @@ ggraph(graph = as_tbl_graph(snowball_docs), layout = "stress") +
   scale_size(range = c(3, 10), guide = "none") +
   scale_fill_manual(values = c("#a3ad62", "#d46780"), na.value = "grey", name = "") +
   theme_graph() +
-  theme(legend.position = "bottom") +
+  theme(
+    plot.background = element_rect(fill = "transparent", colour = NA),
+    panel.background = element_rect(fill = "transparent", colour = NA),
+    legend.position = "bottom"
+  ) +
   guides(fill = "none")
 ```
 
