@@ -202,7 +202,7 @@ test_that("oa_fetch can combine (OR) more than 50 ORCIDs in a filter", {
     "https://orcid.org/0000-0002-6465-982X",
     "https://orcid.org/0000-0002-8270-3134",
     "https://orcid.org/0000-0001-8446-2349",
-    "https://orcid.org/0000-0002-3128-0135",
+    "https://orcid.org/0000-0002-3012-7446",
     "https://orcid.org/0000-0001-6428-8611",
     "https://orcid.org/0000-0002-4951-4526",
     "https://orcid.org/0000-0002-6354-3913",
@@ -217,7 +217,7 @@ test_that("oa_fetch can combine (OR) more than 50 ORCIDs in a filter", {
     "https://orcid.org/0000-0002-9460-5144",
     "https://orcid.org/0000-0002-8517-9411",
     "https://orcid.org/0000-0003-1345-9649",
-    "https://orcid.org/0000-0001-6048-7277",
+    "https://orcid.org/0000-0003-3737-6565",
     "https://orcid.org/0000-0001-5882-1168",
     "https://orcid.org/0000-0001-9558-6099",
     "https://orcid.org/0000-0003-3421-5627",
@@ -265,3 +265,4 @@ test_that("oa_random works", {
   expect_s3_class(random_works, "data.frame")
   expect_equal(nrow(random_works), 1)
 })
+
