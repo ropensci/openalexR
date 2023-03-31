@@ -14,7 +14,7 @@ A set of tools to extract bibliographic content from 'OpenAlex' database using A
 Useful links:
 \itemize{
   \item \url{https://github.com/ropensci/openalexR}
-  \item \url{https://ropensci.github.io/openalexR/}
+  \item \url{https://docs.ropensci.org/openalexR/}
   \item Report bugs at \url{https://github.com/ropensci/openalexR/issues}
 }
 

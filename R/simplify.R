@@ -35,7 +35,7 @@ show_authors <- function(x, simp_func = utils::head) {
     x$x_concepts,
     function(y) {
       if (is.logical(y)) {
-        return(NA)
+        return(NA_character_)
       }
       op_level <- min(1, max(y$level))
       paste(utils::head(y[y$level == op_level, "display_name"], 3),
@@ -91,7 +91,7 @@ show_works <- function(x, simp_func = utils::head) {
     x$concepts,
     function(y) {
       if (is.logical(y)) {
-        return(NA)
+        return(NA_character_)
       }
       op_level <- min(2, max(y$level))
       paste(utils::head(y[y$level == op_level, "display_name"], 3),

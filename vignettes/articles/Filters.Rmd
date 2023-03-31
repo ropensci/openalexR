@@ -25,10 +25,10 @@ See the [original documentation](https://docs.openalex.org/how-to-use-the-api/ge
 |-----------------------------------------|--------------------------------------------------------------------------------------------|
 | `publication_year`                      | 2018                                                                                       |
 | `publication_date`                      | \"2018-02-13\"                                                                             |
-| `host_venue.issn`                       | \"2167-8359\"                                                                              |
-| `host_venue.license`                    | \"cc-by\"                                                                                  |
-| `host_venue.publisher`                  | \"PeerJ\"                                                                                  |
-| `host_venue.type`                       | \"journal\"                                                                                |
+| `primary_location.source.issn`          | \"2167-8359\"                                                                              |
+| `primary_location.license`              | \"cc-by\"                                                                                  |
+| `primary_location.source.host_organization` | \"<https://openalex.org/P4310320104>\"                                                                                  |
+| `primary_location.source.type`          | \"journal\"                                                                                |
 | `type`                                  | \"journal-article\"                                                                        |
 | `is_paratext`                           | TRUE                                                                                       |
 | `open_access.oa_status`                 | \"gold\"                                                                                   |
