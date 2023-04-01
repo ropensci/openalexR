@@ -392,7 +392,10 @@ oa_request <- function(query_url,
 #' For example: "oa_status" for works.
 #' See more at <https://docs.openalex.org/how-to-use-the-api/get-groups-of-entities>.
 #' @param search Character. Search is just another kind of filter, one that all five endpoints support.
-#' But unlike the other filters, search doesn't require an exact match.
+#' But unlike the other filters, search does NOT require an exact match. This is particularly useful to search for authors, because some authors have middle name besides their first and last name. 
+#' Their middle names in a variety of forms may not exist, or may co-exist in OpenAlex datasets (e.g. Phillip H. Kuo, Phillip Hsin Kuo).  
+#' The display_name search requires an exact match, and will NOT find all these authors. 
+#' For example, author "Phillip H. Kuo" and "Phillip Hsin Kuo" can only be found either using search ="Phillip Kuo" or display_name =c("Phillip H. Kuo" , "Phillip Hsin Kuo").
 #' To filter using search, append .search to the end of the attribute you're filtering for.
 #' @param endpoint Character. URL of the OpenAlex Endpoint API server.
 #' Defaults to endpoint = "https://api.openalex.org".
