@@ -18,3 +18,4 @@
 ^dev$
 ^codemeta\.json$
 ^man/figures$
+^cran-comments\.md$
