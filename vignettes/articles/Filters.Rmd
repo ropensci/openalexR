@@ -85,6 +85,7 @@ See the [original documentation](https://docs.openalex.org/how-to-use-the-api/ge
 | `scopus`                                | \"<http://www.scopus.com/inward/authorDetails.url?authorID=36455008000&partnerID=MN8TOARS>\" |
 | `x_concepts.id`                         | \"C41008148\"                                                                              |
 | `display_name.search`                   | \"tupolev\"                                                                                |
+| `search`                                | \"Phillip Kuo\"                                                                            |
 | `has_orcid`                             | TRUE                                                                                       |
 
 ### Venues
@@ -146,6 +147,17 @@ See the [original documentation](https://docs.openalex.org/how-to-use-the-api/ge
 
 ```{r examples}
 library(openalexR)
+
+# Unlike the other filters, search does NOT require an exact match. 
+# This is particularly useful to search for authors. Some authors have their middle names in a variety of forms, which may not exist, or co-exist in OpenAlex (e.g. Phillip H. Kuo, Phillip Hsin Kuo).  
+# The display_name search returns an exact match, and will NOT find all these variations. For example, author "Phillip H. Kuo" and "Phillip Hsin Kuo" is the same person.
+# His middle name are recorded differently in openAlex. Therefore, all the varitions can only be found either using search ="Phillip Kuo" or display_name =c("Phillip H. Kuo" , "Phillip Hsin Kuo").
+
+authors_from_names <- oa_fetch(
+  entity = "authors", 
+  search = "Phillip Kuo"
+ )
+
 
 lib_concepts <- oa_fetch(
   entity = "concepts", 
