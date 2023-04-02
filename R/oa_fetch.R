@@ -395,7 +395,7 @@ oa_request <- function(query_url,
 #' But unlike the other filters, search does NOT require an exact match.
 #' This is particularly useful in author queries because many authors have middle names, which may not exist or do so in a variety of forms.  
 #' The `display_name` filter requires an exact match and will NOT find all these authors. 
-#' For example, author "Phillip H. Kuo" and "Phillip Hsin Kuo" can only be found either using search ="Phillip Kuo" or display_name =c("Phillip H. Kuo" , "Phillip Hsin Kuo").
+#' For example, author "Phillip H. Kuo" and "Phillip Hsin Kuo" can only be found either using search = "Phillip Kuo" or display_name = c("Phillip H. Kuo", "Phillip Hsin Kuo").
 #' To filter using search, append .search to the end of the attribute you're filtering for.
 #' @param endpoint Character. URL of the OpenAlex Endpoint API server.
 #' Defaults to endpoint = "https://api.openalex.org".
