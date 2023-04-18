@@ -2,7 +2,7 @@ Type: Package
 Package: openalexR
 Title: Getting Bibliographic Records from 'OpenAlex' Database Using 'DSL'
     API
-Version: 1.0.2.9000
+Version: 1.0.2.9
 Authors@R: c(
     person(given = "Massimo",
            family = "Aria",
@@ -46,11 +46,9 @@ Suggests:
     purrr,
     ggplot2,
     covr
-VignetteBuilder: 
-    knitr
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Config/testthat/edition: 3
 Depends: 
     R (>= 2.10)

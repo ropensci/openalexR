@@ -15,6 +15,7 @@ status](https://www.r-pkg.org/badges/version/openalexR)](https://CRAN.R-project.
 coverage](https://codecov.io/gh/ropensci/openalexR/branch/main/graph/badge.svg)](https://app.codecov.io/gh/ropensci/openalexR?branch=main)
 [![Status at rOpenSci Software Peer
 Review](https://badges.ropensci.org/560_status.svg)](https://github.com/ropensci/software-review/issues/560)
+
 <!-- badges: end -->
 
 **openalexR** helps you interface with the
@@ -22,21 +23,21 @@ Review](https://badges.ropensci.org/560_status.svg)](https://github.com/ropensci
 infomation about publications, authors, venues, institutions and
 concepts with 5 main functions:
 
--   `oa_fetch`: composes three functions below so the user can execute
-    everything in one step, *i.e.*, `oa_query |> oa_request |> oa2df`
+- `oa_fetch`: composes three functions below so the user can execute
+  everything in one step, *i.e.*, `oa_query |> oa_request |> oa2df`
 
--   `oa_query`: generates a valid query, written following the OpenAlex
-    API syntax, from a set of arguments provided by the user.
+- `oa_query`: generates a valid query, written following the OpenAlex
+  API syntax, from a set of arguments provided by the user.
 
--   `oa_request`: downloads a collection of entities matching the query
-    created by `oa_query` or manually written by the user, and returns a
-    JSON object in a list format.
+- `oa_request`: downloads a collection of entities matching the query
+  created by `oa_query` or manually written by the user, and returns a
+  JSON object in a list format.
 
--   `oa2df`: converts the JSON object in classical bibliographic
-    tibble/data frame.
+- `oa2df`: converts the JSON object in classical bibliographic
+  tibble/data frame.
 
--   `oa_random`: get random entity, *e.g.*, `oa_random("works")` gives a
-    different work each time you run it
+- `oa_random`: get random entity, *e.g.*, `oa_random("works")` gives a
+  different work each time you run it
 
 ## Setup
 
@@ -88,8 +89,7 @@ below.
 (known DOIs).
 
 Use `doi` as a [works
-filter](https://ropensci.github.io/openalexR/articles/Filters.html#works)
-(either the canonical form with “<https://doi.org/>” or without):
+filter](https://ropensci.github.io/openalexR/articles/Filters.html#works):
 
 ``` r
 works_from_dois <- oa_fetch(
@@ -139,7 +139,7 @@ works_from_orcids <- oa_fetch(
   verbose = TRUE
 )
 #> Requesting url: https://api.openalex.org/works?filter=author.orcid%3A0000-0001-6187-6610%7C0000-0002-8517-9411
-#> Getting 1 page of results with a total of 173 records...
+#> Getting 1 page of results with a total of 165 records...
 
 works_from_orcids |>
   show_works() |>
@@ -209,7 +209,7 @@ authors_from_orcids |>
 
 | id          | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
 |:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------|
-| A923435168  | Massimo Aria | 0000-0002-8517-9411 |         161 |           3910 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
+| A923435168  | Massimo Aria | 0000-0002-8517-9411 |         156 |           4323 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
 | A2208157607 | Jason Priem  | 0000-0001-6187-6610 |          51 |           1680 | HortResearch                     | World Wide Web, Library science, Law     |
 
 **Goal**: Acquire information on the authors of this package.
@@ -229,7 +229,7 @@ authors_from_names |>
 
 | id          | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
 |:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------|
-| A923435168  | Massimo Aria | 0000-0002-8517-9411 |         161 |           3910 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
+| A923435168  | Massimo Aria | 0000-0002-8517-9411 |         156 |           4323 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
 | A2208157607 | Jason Priem  | 0000-0001-6187-6610 |          51 |           1680 | HortResearch                     | World Wide Web, Library science, Law     |
 
 **Goal**: Download all authors’ records of scholars who work at the
@@ -250,20 +250,20 @@ my_arguments <- list(
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #>      count db_response_time_ms page per_page
-#> [1,]    54                  54    1        1
+#> [1,]    40                  57    1        1
 do.call(oa_fetch, my_arguments) |>
   show_authors() |>
   knitr::kable()
 ```
 
-| id          | display_name        | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                         |
-|:------------|:--------------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------------------|
-| A2061787601 | Luca Lista          | 0000-0001-6471-5492 |        2713 |          35462 | University of Naples Federico II | Nuclear physics, Particle physics, Quantum mechanics |
-| A2609805198 | Giovanni Esposito   | 0000-0001-7960-5253 |        2070 |          33506 | University of Naples Federico II | Internal medicine, Genetics, Biochemistry            |
-| A3088244307 | A. K. Sanchez       | NA                  |        2047 |          38758 | University of Naples Federico II | Quantum mechanics, Nuclear physics, Particle physics |
-| A2011452631 | Leonardo Merola     | NA                  |        1575 |          27247 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
-| A2725087388 | Mariagrazia Alviggi | NA                  |        1561 |          26667 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
-| A2103058924 | Mario Mancini       | NA                  |        1558 |          16591 | University of Naples Federico II | Internal medicine, Endocrinology, Biochemistry       |
+| id          | display_name    | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                         |
+|:------------|:----------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------------------|
+| A2061787601 | Luca Lista      | 0000-0001-6471-5492 |        2591 |          81673 | University of Naples Federico II | Nuclear physics, Particle physics, Quantum mechanics |
+| A3088244307 | A. K. Sanchez   | NA                  |        2092 |          54696 | University of Naples Federico II | Quantum mechanics, Nuclear physics, Particle physics |
+| A4359269603 | Leonardo Merola | NA                  |        1558 |          59268 | University of Naples Federico II | NA                                                   |
+| A4355442610 | Mario Mancini   | NA                  |        1326 |          13191 | University of Naples Federico II | NA                                                   |
+| A2558588088 | Paolo Russo     | 0000-0001-9409-0008 |        1220 |          14252 | University of Naples Federico II | Internal medicine, Quantum mechanics, Optics         |
+| A2078246078 | M. Della Pietra | 0000-0003-4446-3368 |        1215 |          47943 | University of Naples Federico II | Quantum mechanics, Nuclear physics, Particle physics |
 
 ## Example analyses
 
@@ -477,6 +477,11 @@ ggraph(graph = as_tbl_graph(snowball_docs), layout = "stress") +
     legend.position = "bottom"
   ) +
   guides(fill = "none")
+#> Warning: Using the `size` aesthetic in this geom was deprecated in ggplot2 3.4.0.
+#> ℹ Please use `linewidth` in the `default_aes` field and elsewhere instead.
+#> This warning is displayed once every 8 hours.
+#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+#> generated.
 ```
 
 <img src="man/figures/README-snowballing-1.png" width="100%" />
@@ -563,16 +568,16 @@ Alexandria](https://en.wikipedia.org/wiki/Library_of_Alexandria). The
 OpenAlex dataset describes scholarly entities and how those entities are
 connected to each other. There are five types of entities:
 
--   **Works** are papers, books, datasets, etc; they cite other works
+- **Works** are papers, books, datasets, etc; they cite other works
 
--   **Authors** are people who create works
+- **Authors** are people who create works
 
--   **Venues** are journals and repositories that host works
+- **Venues** are journals and repositories that host works
 
--   **Institutions** are universities and other orgs that are affiliated
-    with works (via authors)
+- **Institutions** are universities and other orgs that are affiliated
+  with works (via authors)
 
--   **Concepts** *tag* Works with a topic
+- **Concepts** *tag* Works with a topic
 
 ## Code of Conduct
 

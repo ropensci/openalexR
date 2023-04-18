@@ -18,13 +18,8 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/ropensci/openalexR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ropensci/openalexR/actions/workflows/R-CMD-check.yaml) 
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![CRAN status](https://www.r-pkg.org/badges/version/openalexR)](https://CRAN.R-project.org/package=openalexR)
-`r badger::badge_cran_download("openalexR", "grand-total")` 
-[![Codecov test coverage](https://codecov.io/gh/ropensci/openalexR/branch/main/graph/badge.svg)](https://app.codecov.io/gh/ropensci/openalexR?branch=main)
-[![Status at rOpenSci Software Peer
-Review](https://badges.ropensci.org/560_status.svg)](https://github.com/ropensci/software-review/issues/560)
+[![R-CMD-check](https://github.com/ropensci/openalexR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ropensci/openalexR/actions/workflows/R-CMD-check.yaml) [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental) [![CRAN status](https://www.r-pkg.org/badges/version/openalexR)](https://CRAN.R-project.org/package=openalexR) `r badger::badge_cran_download("openalexR", "grand-total")` [![Codecov test coverage](https://codecov.io/gh/ropensci/openalexR/branch/main/graph/badge.svg)](https://app.codecov.io/gh/ropensci/openalexR?branch=main) [![Status at rOpenSci Software Peer Review](https://badges.ropensci.org/560_status.svg)](https://github.com/ropensci/software-review/issues/560)
+
 <!-- badges: end -->
 
 **openalexR** helps you interface with the [OpenAlex](https://openalex.org) API to retrieve bibliographic infomation about publications, authors, venues, institutions and concepts with 5 main functions:
@@ -37,7 +32,7 @@ Review](https://badges.ropensci.org/560_status.svg)](https://github.com/ropensci
 
 -   `oa2df`: converts the JSON object in classical bibliographic tibble/data frame.
 
--   `oa_random`: get random entity, _e.g._, `oa_random("works")` gives a different work each time you run it
+-   `oa_random`: get random entity, *e.g.*, `oa_random("works")` gives a different work each time you run it
 
 ## Setup
 
@@ -80,14 +75,13 @@ knitr::opts_chunk$set(dev.args = list(bg = "transparent"))
 
 ## Examples
 
-There are different [filters](https://ropensci.github.io/openalexR/articles/Filters)/arguments you can use in `oa_fetch`, depending on which [entity](https://docs.openalex.org/#data) you're interested in: works, authors, venues, institutions, or concepts.
-We show a few examples below.
+There are different [filters](https://ropensci.github.io/openalexR/articles/Filters)/arguments you can use in `oa_fetch`, depending on which [entity](https://docs.openalex.org/#data) you're interested in: works, authors, venues, institutions, or concepts. We show a few examples below.
 
 ### Works
 
 **Goal**: Download all information about a givens set of publications (known DOIs).
 
-Use `doi` as a [works filter](https://ropensci.github.io/openalexR/articles/Filters.html#works) (either the canonical form with "https://doi.org/" or without):
+Use `doi` as a [works filter](https://ropensci.github.io/openalexR/articles/Filters.html#works):
 
 ```{r}
 works_from_dois <- oa_fetch(
@@ -97,8 +91,7 @@ works_from_dois <- oa_fetch(
 )
 ```
 
-We can view the output tibble/dataframe, `works_from_dois`, interactively in RStudio or inspect it with base functions like `str` or `head`.
-We also provide the experimental `show_works` function to simplify the result (e.g., remove some columns, keep first/last author) for easy viewing.
+We can view the output tibble/dataframe, `works_from_dois`, interactively in RStudio or inspect it with base functions like `str` or `head`. We also provide the experimental `show_works` function to simplify the result (e.g., remove some columns, keep first/last author) for easy viewing.
 
 *Note*: the following table is wrapped in `knitr::kable()` to be displayed nicely in this README, but you will most likely not need this function.
 
@@ -128,8 +121,7 @@ works_from_orcids |>
   knitr::kable()
 ```
 
-**Goal**: Download all works that have been cited more than 50 times, published between 2020 and 2021, and include the strings "bibliometric analysis" or "science mapping" in the title.
-Maybe we also want the results to be sorted by total citations in a descending order.
+**Goal**: Download all works that have been cited more than 50 times, published between 2020 and 2021, and include the strings "bibliometric analysis" or "science mapping" in the title. Maybe we also want the results to be sorted by total citations in a descending order.
 
 ```{r}
 works_search <- oa_fetch(
@@ -151,8 +143,7 @@ works_search |>
 
 **Goal**: Download author information when we know their ORCID.
 
-Here, instead of `author.orcid` like earlier, we have to use `orcid` as an argument.
-This may be a little confusing, but again, a different entity (**authors** instead of **works**) requires a [different set of filters](https://ropensci.github.io/openalexR/articles/Filters.html#authors).
+Here, instead of `author.orcid` like earlier, we have to use `orcid` as an argument. This may be a little confusing, but again, a different entity (**authors** instead of **works**) requires a [different set of filters](https://ropensci.github.io/openalexR/articles/Filters.html#authors).
 
 ```{r}
 authors_from_orcids <- oa_fetch(
@@ -182,8 +173,7 @@ authors_from_names |>
 
 **Goal**: Download all authors' records of scholars who work at the [University of Naples Federico II](https://explore.openalex.org/institutions/I71267560) (OpenAlex ID: I71267560) and have published at least 500 publications.
 
-Let's first check how many records match the query, then download the entire collection.
-We can do this by first defining a list of arguments, then adding `count_only` (default `FALSE`) to this list:
+Let's first check how many records match the query, then download the entire collection. We can do this by first defining a list of arguments, then adding `count_only` (default `FALSE`) to this list:
 
 ```{r}
 my_arguments <- list(
@@ -235,9 +225,7 @@ concept_df |>
 
 **Goal**: Rank institutions in Italy by total number of citations.
 
-We want download all records regarding Italian institutions (country_code:it) that are classified as educational (type:education).
-Again, we check how many records match the query then download the collection:
-
+We want download all records regarding Italian institutions (country_code:it) that are classified as educational (type:education). Again, we check how many records match the query then download the collection:
 
 ```{r italy-insts, fig.height=3.5, fig.width=7}
 italy_insts <- oa_fetch(
@@ -350,10 +338,7 @@ jours |>
 
 ## Snowball search
 
-The user can also perform *snowballing* with `oa_snowball`.
-Snowballing is a literature search technique where the researcher starts with a set of articles and find articles that cite or were cited by the original set.
-`oa_snowball` returns a list of 2 elements: *nodes* and *edges*.
-Similar to `oa_fetch`, `oa_snowball` finds and returns information on a core set of articles satisfying certain criteria, but, unlike `oa_fetch`, it also returns information the articles that cite and are cited by this core set.
+The user can also perform *snowballing* with `oa_snowball`. Snowballing is a literature search technique where the researcher starts with a set of articles and find articles that cite or were cited by the original set. `oa_snowball` returns a list of 2 elements: *nodes* and *edges*. Similar to `oa_fetch`, `oa_snowball` finds and returns information on a core set of articles satisfying certain criteria, but, unlike `oa_fetch`, it also returns information the articles that cite and are cited by this core set.
 
 ```{r snowballing}
 # The packages ggraph and tidygraph need to be installed to run this chunk
@@ -380,7 +365,6 @@ ggraph(graph = as_tbl_graph(snowball_docs), layout = "stress") +
   ) +
   guides(fill = "none")
 ```
-
 
 ## N-grams
 
@@ -412,20 +396,17 @@ ngrams_data |>
   )
 ```
 
-`oa_ngrams` can sometimes be slow because the N-grams data can get pretty big, but given that the N-grams are `"cached via CDN"`](https://docs.openalex.org/api-entities/works/get-n-grams#api-endpoint), you may also consider parallelizing for this special case (`oa_ngrams` does this automatically if you have `{curl} >= v5.0.0`).
+`oa_ngrams` can sometimes be slow because the N-grams data can get pretty big, but given that the N-grams are `"cached via CDN"`](<https://docs.openalex.org/api-entities/works/get-n-grams#api-endpoint>), you may also consider parallelizing for this special case (`oa_ngrams` does this automatically if you have `{curl} >= v5.0.0`).
 
 ## About OpenAlex
 
 ![oar-img](man/figures/oar.png)
 
-<div style="text-align: right">
+::: {style="text-align: right"}
 Schema credits: [\@dhimmel](https://github.com/dhimmel)
-</div>
+:::
 
-[OpenAlex](https://openalex.org) is a fully open catalog of the global research system.
-It's named after the ancient [Library of Alexandria](https://en.wikipedia.org/wiki/Library_of_Alexandria).
-The OpenAlex dataset describes scholarly entities and how those entities are connected to each other.
-There are five types of entities:
+[OpenAlex](https://openalex.org) is a fully open catalog of the global research system. It's named after the ancient [Library of Alexandria](https://en.wikipedia.org/wiki/Library_of_Alexandria). The OpenAlex dataset describes scholarly entities and how those entities are connected to each other. There are five types of entities:
 
 -   **Works** are papers, books, datasets, etc; they cite other works
 
@@ -439,8 +420,7 @@ There are five types of entities:
 
 ## Code of Conduct
 
-Please note that this package is released with a [Contributor Code of Conduct](https://ropensci.org/code-of-conduct/). 
-By contributing to this project, you agree to abide by its terms.
+Please note that this package is released with a [Contributor Code of Conduct](https://ropensci.org/code-of-conduct/). By contributing to this project, you agree to abide by its terms.
 
 ## Acknowledgements
 
