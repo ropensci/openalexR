@@ -40,7 +40,10 @@ The argument can be one of c("works", "authors", "venues", "institutions", "conc
 If not provided, `entity` is guessed from `identifier`.}
 
 \item{search}{Character. Search is just another kind of filter, one that all five endpoints support.
-But unlike the other filters, search doesn't require an exact match.
+But unlike the other filters, search does NOT require an exact match.
+This is particularly useful in author queries because many authors have middle names, which may not exist or do so in a variety of forms.
+The `display_name` filter requires an exact match and will NOT find all these authors.
+For example, author "Phillip H. Kuo" and "Phillip Hsin Kuo" can only be found either using search = "Phillip Kuo" or display_name = c("Phillip H. Kuo", "Phillip Hsin Kuo").
 To filter using search, append .search to the end of the attribute you're filtering for.}
 
 \item{sort}{Character. Attribute to sort by.

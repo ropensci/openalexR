@@ -9,6 +9,7 @@ oa_request(
   per_page = 200,
   count_only = FALSE,
   mailto = oa_email(),
+  api_key = oa_apikey(),
   verbose = FALSE
 )
 }
@@ -27,6 +28,9 @@ Defaults to FALSE.}
 
 \item{mailto}{Character string.
 Gives OpenAlex an email to enter the polite pool.}
+
+\item{api_key}{Character string.
+Your OpenAlex Premium API key, if available.}
 
 \item{verbose}{Logical.
 If TRUE, print information about the querying process. Defaults to TRUE.}
