@@ -65,7 +65,19 @@ id_type <- function(identifier) {
 }
 
 oa_email <- function() {
-  return(getOption("openalexR.mailto", default = NULL))
+  email <- Sys.getenv("openalexR.mailto")
+  if (email == ""){
+    email <- getOption("openalexR.mailto", default = NULL)
+  }
+  email
+}
+
+oa_apikey <- function() {
+  apikey <- Sys.getenv("openalexR.apikey")
+  if (apikey == ""){
+    apikey <- getOption("openalexR.apikey", default = NULL)
+  }
+  apikey
 }
 
 oa_progress <- function(n, text = "converting") {
