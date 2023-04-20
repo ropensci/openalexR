@@ -20,6 +20,7 @@ oa_fetch(
   per_page = 200,
   count_only = FALSE,
   mailto = oa_email(),
+  api_key = oa_apikey(),
   verbose = FALSE
 )
 }
@@ -34,7 +35,10 @@ See more at <https://docs.openalex.org/how-to-use-the-api/get-single-entities#th
 \item{...}{Additional filter arguments.}
 
 \item{search}{Character. Search is just another kind of filter, one that all five endpoints support.
-But unlike the other filters, search doesn't require an exact match.
+But unlike the other filters, search does NOT require an exact match.
+This is particularly useful in author queries because many authors have middle names, which may not exist or do so in a variety of forms.
+The `display_name` filter requires an exact match and will NOT find all these authors.
+For example, author "Phillip H. Kuo" and "Phillip Hsin Kuo" can only be found either using search = "Phillip Kuo" or display_name = c("Phillip H. Kuo", "Phillip Hsin Kuo").
 To filter using search, append .search to the end of the attribute you're filtering for.}
 
 \item{sort}{Character. Attribute to sort by.
@@ -75,6 +79,9 @@ Defaults to FALSE.}
 
 \item{mailto}{Character string.
 Gives OpenAlex an email to enter the polite pool.}
+
+\item{api_key}{Character string.
+Your OpenAlex Premium API key, if available.}
 
 \item{verbose}{Logical. If TRUE, print information on querying process.
 Default to \code{verbose = FALSE}.}
