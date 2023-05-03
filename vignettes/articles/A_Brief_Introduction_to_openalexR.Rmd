@@ -169,7 +169,7 @@ oa_fetch(
   cited_by_count = ">50", 
   from_publication_date = "2020-01-01",
   to_publication_date = "2021-12-31",
-  sort = "cited_by_count:desc",
+  options = list(sort = "cited_by_count:desc"),
   count_only = TRUE,
   verbose = TRUE
 )
@@ -184,7 +184,7 @@ oa_fetch(
   cited_by_count = ">50", 
   from_publication_date = "2020-01-01",
   to_publication_date = "2021-12-31",
-  sort = "cited_by_count:desc",
+  options = list(sort = "cited_by_count:desc"),
   count_only = FALSE
 ) %>%
   show_works() %>%

@@ -23,21 +23,21 @@ Review](https://badges.ropensci.org/560_status.svg)](https://github.com/ropensci
 infomation about publications, authors, venues, institutions and
 concepts with 5 main functions:
 
--   `oa_fetch`: composes three functions below so the user can execute
-    everything in one step, *i.e.*, `oa_query |> oa_request |> oa2df`
+- `oa_fetch`: composes three functions below so the user can execute
+  everything in one step, *i.e.*, `oa_query |> oa_request |> oa2df`
 
--   `oa_query`: generates a valid query, written following the OpenAlex
-    API syntax, from a set of arguments provided by the user.
+- `oa_query`: generates a valid query, written following the OpenAlex
+  API syntax, from a set of arguments provided by the user.
 
--   `oa_request`: downloads a collection of entities matching the query
-    created by `oa_query` or manually written by the user, and returns a
-    JSON object in a list format.
+- `oa_request`: downloads a collection of entities matching the query
+  created by `oa_query` or manually written by the user, and returns a
+  JSON object in a list format.
 
--   `oa2df`: converts the JSON object in classical bibliographic
-    tibble/data frame.
+- `oa2df`: converts the JSON object in classical bibliographic
+  tibble/data frame.
 
--   `oa_random`: get random entity, *e.g.*, `oa_random("works")` gives a
-    different work each time you run it
+- `oa_random`: get random entity, *e.g.*, `oa_random("works")` gives a
+  different work each time you run it
 
 ## Setup
 
@@ -145,7 +145,7 @@ works_from_orcids <- oa_fetch(
   verbose = TRUE
 )
 #> Requesting url: https://api.openalex.org/works?filter=author.orcid%3A0000-0001-6187-6610%7C0000-0002-8517-9411
-#> Getting 1 page of results with a total of 160 records...
+#> Getting 1 page of results with a total of 156 records...
 
 works_from_orcids |>
   show_works() |>
@@ -173,11 +173,11 @@ works_search <- oa_fetch(
   cited_by_count = ">50",
   from_publication_date = "2020-01-01",
   to_publication_date = "2021-12-31",
-  sort = "cited_by_count:desc",
+  options = list(sort = "cited_by_count:desc"),
   verbose = TRUE
 )
 #> Requesting url: https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc
-#> Getting 1 page of results with a total of 88 records...
+#> Getting 1 page of results with a total of 91 records...
 
 works_search |>
   show_works() |>
@@ -188,7 +188,7 @@ works_search |>
 |:------------|:------------------------------------------------------------------------------------------------------------------------------|:------------------------|:-------------------|:------------------------------------------|:------------------------------------------------|:------|:-----------------------------------------------|
 | W3160856016 | How to conduct a bibliometric analysis: An overview and guidelines                                                            | Naveen Donthu           | Weng Marc Lim      | Journal of Business Research              | <https://doi.org/10.1016/j.jbusres.2021.04.070> | TRUE  | Bibliometrics                                  |
 | W3038273726 | Investigating the emerging COVID-19 research trends in the field of business and management: A bibliometric analysis approach | Surabhi Verma           | Anders Gustafsson  | Journal of Business Research              | <https://doi.org/10.1016/j.jbusres.2020.06.057> | FALSE | Bibliometrics, Field (mathematics), MEDLINE    |
-| W2990450011 | Forty-five years of Journal of Business Research: A bibliometric analysis                                                     | Naveen Donthu           | Debidutta Pattnaik | Journal of Business Research              | <https://doi.org/10.1016/j.jbusres.2019.10.039> | FALSE | Bibliometrics                                  |
+| W2990450011 | Forty-five years of Journal of Business Research: A bibliometric analysis                                                     | Naveen Donthu           | Debidutta Pattnaik | Journal of Business Research              | <https://doi.org/10.1016/j.jbusres.2019.10.039> | FALSE | Publishing, Bibliometrics, Empirical research  |
 | W3001491100 | Software tools for conducting bibliometric analysis in science: An up-to-date review                                          | Jose A. Moral-Munoz     | Manuel Cobo        | Profesional De La Informacion             | <https://doi.org/10.3145/epi.2020.ene.03>       | TRUE  | Bibliometrics, Software                        |
 | W3044902155 | Financial literacy: A systematic review and bibliometric analysis                                                             | Kirti Savyasacchi Goyal | Satish Kumar       | International Journal of Consumer Studies | <https://doi.org/10.1111/ijcs.12605>            | FALSE | Financial literacy, Citation, Content analysis |
 | W3042215340 | A bibliometric analysis using VOSviewer of publications on COVID-19                                                           | Yuetian Yu              | Erzhen Chen        | Annals of Translational Medicine          | <https://doi.org/10.21037/atm-20-4235>          | TRUE  | Citation, Bibliometrics, China                 |
@@ -213,10 +213,10 @@ authors_from_orcids |>
   knitr::kable()
 ```
 
-| id          | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
-|:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------|
-| A923435168  | Massimo Aria | 0000-0002-8517-9411 |         157 |           4409 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
-| A2208157607 | Jason Priem  | 0000-0001-6187-6610 |           3 |              1 | HortResearch                     | World Wide Web, Library science, Law     |
+| id          | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                   |
+|:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------------|
+| A923435168  | Massimo Aria | 0000-0002-8517-9411 |         157 |           4503 | University of Naples Federico II | Statistics, Internal medicine, Pathology       |
+| A2208157607 | Jason Priem  | 0000-0001-6187-6610 |           3 |              1 | HortResearch                     | World Wide Web, Data science, Internet privacy |
 
 **Goal**: Acquire information on the authors of this package.
 
@@ -233,10 +233,10 @@ authors_from_names |>
   knitr::kable()
 ```
 
-| id          | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
-|:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------|
-| A923435168  | Massimo Aria | 0000-0002-8517-9411 |         157 |           4409 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
-| A2208157607 | Jason Priem  | 0000-0001-6187-6610 |           3 |              1 | HortResearch                     | World Wide Web, Library science, Law     |
+| id          | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                   |
+|:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------------|
+| A923435168  | Massimo Aria | 0000-0002-8517-9411 |         157 |           4503 | University of Naples Federico II | Statistics, Internal medicine, Pathology       |
+| A2208157607 | Jason Priem  | 0000-0001-6187-6610 |           3 |              1 | HortResearch                     | World Wide Web, Data science, Internet privacy |
 
 **Goal**: Download all authors’ records of scholars who work at the
 [University of Naples Federico
@@ -256,7 +256,7 @@ my_arguments <- list(
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #>      count db_response_time_ms page per_page
-#> [1,]    39                  64    1        1
+#> [1,]    40                  59    1        1
 do.call(oa_fetch, my_arguments) |>
   show_authors() |>
   knitr::kable()
@@ -264,12 +264,12 @@ do.call(oa_fetch, my_arguments) |>
 
 | id          | display_name    | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                         |
 |:------------|:----------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------------------|
-| A2061787601 | Luca Lista      | 0000-0001-6471-5492 |        2591 |          81851 | University of Naples Federico II | Nuclear physics, Particle physics, Quantum mechanics |
-| A3088244307 | A. K. Sanchez   | NA                  |        2092 |          54820 | University of Naples Federico II | Quantum mechanics, Nuclear physics, Particle physics |
-| A4359269603 | Leonardo Merola | NA                  |        1558 |          59391 | University of Naples Federico II | NA                                                   |
-| A4355442610 | Mario Mancini   | NA                  |        1326 |          13228 | University of Naples Federico II | NA                                                   |
-| A2558588088 | Paolo Russo     | 0000-0001-9409-0008 |        1220 |          14289 | University of Naples Federico II | Internal medicine, Quantum mechanics, Optics         |
-| A2078246078 | M. Della Pietra | 0000-0003-4446-3368 |        1215 |          48055 | University of Naples Federico II | Quantum mechanics, Nuclear physics, Particle physics |
+| A2061787601 | Luca Lista      | 0000-0001-6471-5492 |        2591 |          82086 | University of Naples Federico II | Particle physics, Nuclear physics, Quantum mechanics |
+| A3088244307 | A. K. Sanchez   | NA                  |        2092 |          54941 | University of Naples Federico II | Quantum mechanics, Nuclear physics, Particle physics |
+| A4359269603 | Leonardo Merola | NA                  |        1558 |          59559 | University of Naples Federico II | Particle physics, Quantum mechanics, Nuclear physics |
+| A4355442610 | Mario Mancini   | NA                  |        1326 |          13260 | University of Naples Federico II | Internal medicine, Biochemistry, Pathology           |
+| A2558588088 | Paolo Russo     | 0000-0001-9409-0008 |        1221 |          14334 | University of Naples Federico II | Internal medicine, Genetics, Quantum mechanics       |
+| A2078246078 | M. Della Pietra | 0000-0003-4446-3368 |        1215 |          48211 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
 
 ## Example analyses
 
@@ -305,6 +305,7 @@ concept_df |>
     max(works_count) > 244000,
     label_params = list(nudge_y = 10^5, segment.color = NA)
   )
+#> Warning: Ignoring unknown parameters: linewidth
 #> label_key: display_name
 ```
 
@@ -431,6 +432,7 @@ jours |>
   ) +
   scale_fill_brewer(palette = "Set1", guide = "none") +
   labs(y = NULL, x = NULL, title = "Journal clocks")
+#> Warning: Ignoring unknown parameters: linewidth
 ```
 
 <img src="man/figures/README-big-journals-1.png" width="100%" />
@@ -464,7 +466,7 @@ snowball_docs <- oa_snowball(
 #> Getting 1 page of results with a total of 2 records...
 #> Collecting all documents citing the target papers...
 #> Requesting url: https://api.openalex.org/works?filter=cites%3AW1963991285%7CW1964141474
-#> Getting 3 pages of results with a total of 476 records...
+#> Getting 3 pages of results with a total of 475 records...
 #> Collecting all documents cited by the target papers...
 #> Requesting url: https://api.openalex.org/works?filter=cited_by%3AW1963991285%7CW1964141474
 #> Getting 1 page of results with a total of 87 records...
@@ -500,6 +502,7 @@ ngrams_data <- oa_ngrams(
   works_identifier = c("W1964141474", "W1963991285"),
   verbose = TRUE
 )
+#> Use `{curl}` >= v5.0.0 for a faster implementation of `oa_ngrams`
 
 ngrams_data
 #> # A tibble: 2 × 4
@@ -569,16 +572,16 @@ Alexandria](https://en.wikipedia.org/wiki/Library_of_Alexandria). The
 OpenAlex dataset describes scholarly entities and how those entities are
 connected to each other. There are five types of entities:
 
--   **Works** are papers, books, datasets, etc; they cite other works
+- **Works** are papers, books, datasets, etc; they cite other works
 
--   **Authors** are people who create works
+- **Authors** are people who create works
 
--   **Venues** are journals and repositories that host works
+- **Venues** are journals and repositories that host works
 
--   **Institutions** are universities and other orgs that are affiliated
-    with works (via authors)
+- **Institutions** are universities and other orgs that are affiliated
+  with works (via authors)
 
--   **Concepts** *tag* Works with a topic
+- **Concepts** *tag* Works with a topic
 
 ## Code of Conduct
 
