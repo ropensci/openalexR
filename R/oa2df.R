@@ -42,7 +42,7 @@
 #' }
 #'
 #' @export
-oa2df <- function(data, entity, abstract = TRUE, count_only = FALSE, group_by = NULL, verbose = TRUE) {
+oa2df <- function(data, entity, count_only = FALSE, group_by = NULL, abstract = TRUE, verbose = TRUE) {
   if (!is.null(group_by)) {
     return(do.call(rbind.data.frame, data))
   }
@@ -113,113 +113,9 @@ oa2df <- function(data, entity, abstract = TRUE, count_only = FALSE, group_by = 
 #'
 #' # @export
 #'
-works2df <- function(data, abstract = TRUE, verbose = TRUE) {
+works2df <- function(data, abstract, verbose = TRUE) {
   if (!is.null(data$id)) {
     data <- list(data)
-  }
-
-  if (length(data) == 0 || is.null(data[[1]]$id)) {
-    message("One list does not contain a valid OpenAlex collection")
-    return()
-  }
-
-  n <- length(data)
-  pb <- oa_progress(n)
-  list_df <- vector(mode = "list", length = n)
-  inst_cols <- c("id", "display_name", "ror", "country_code", "type")
-  venue_cols <- c(
-    url = "landing_page_url", pdf_url = "pdf_url", is_oa = "is_oa",
-    license = "license", version = "version"
-  )
-  so_cols <- c(
-    so_id = "id", so = "display_name", issn_l = "issn_l",
-    host_organization = "host_organization"
-  )
-  empty_inst <- empty_list(inst_cols)
-
-  for (i in 1:n) {
-    if (verbose) pb$tick()
-
-    paper <- data[[i]]
-    paper <- simple_rapply(paper, `%||%`, y = NA)
-    so_info <- paper$primary_location["source"]
-    so_info <- if (is.na(so_info)) NA else so_info[[1]]
-    sub_biblio <- paper$biblio
-
-    sub_identical <- paper[
-      c(
-        "id", "display_name", "publication_date", "doi", "type",
-        "cited_by_count", "publication_year", "cited_by_api_url",
-        "is_paratext", "is_retracted"
-      )
-    ]
-
-    sub_flat <- lapply(
-      paper[c("referenced_works", "related_works")],
-      subs_na,
-      type = "flat"
-    )
-
-    sub_id <- list(
-      ids = subs_na(paper$ids, type = "col_df"),
-      relevance_score = paper$relevance_score %||% NA
-    )
-
-    sub_rbind_dfs <- lapply(
-      paper[c("counts_by_year", "concepts")],
-      subs_na,
-      type = "rbind_df"
-    )
-
-    # Type conversions for concepts df
-    sub_rbind_dfs$concepts <- lapply(sub_rbind_dfs$concepts, function(x) {
-      if (is.atomic(x) && is.na(x)) {
-        NULL
-      } else if (!is.null(x$score)) {
-        transform(x, score = as.double(score))
-      } else {
-        x
-      }
-    })
-
-    sub_venue <- setNames(
-      c(paper$primary_location[venue_cols], so_info[so_cols]),
-      c(names(venue_cols), names(so_cols))
-    )
-
-    # authorships and affilitation
-    author <- list(do.call(rbind.data.frame, lapply(paper$authorships, function(l) {
-      l_inst <- l$institutions
-      inst_idx <- lengths(l_inst) > 0
-      if (length(inst_idx) > 0 && any(inst_idx)) {
-        first_inst <- l_inst[inst_idx][[1]]
-      } else {
-        first_inst <- empty_inst
-      }
-      first_inst <- prepend(first_inst, "institution")
-      aff_raw <- list(au_affiliation_raw = l$raw_affiliation_string[1])
-      l_author <- l_author <- if (length(l$author) > 0) {
-        prepend(l$author, "au")
-      } else {
-        empty_list(c("au_id", "au_display_name", "au_orcid"))
-      }
-
-      c(l_author, l["author_position"], aff_raw, first_inst)
-    })))
-
-    # Abstract
-    if (abstract && !is.na(paper$abstract_inverted_index[1])) {
-      ab <- abstract_build(paper$abstract_inverted_index)
-    } else {
-      ab <- NA
-    }
-
-    list_df[[i]] <- tibble::as_tibble(
-      c(
-        sub_identical, sub_flat, sub_id, sub_rbind_dfs, sub_venue, sub_biblio,
-        list(author = author), list(ab = ab)
-      )
-    )
   }
 
   col_order <- c(
@@ -230,11 +126,119 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
     "publication_year", "cited_by_api_url", "ids", "doi", "type",
     "referenced_works", "related_works", "is_paratext", "is_retracted", "concepts"
   )
+  works_process <- tibble::tribble(
+    ~type, ~field,
+    "identical", "id",
+    "identical", "display_name",
+    "identical", "publication_date",
+    "identical", "doi",
+    "identical", "type",
+    "identical", "cited_by_count",
+    "identical", "publication_year",
+    "identical", "cited_by_api_url",
+    "identical", "is_paratext",
+    "identical", "is_retracted",
+    "identical", "relevance_score",
+    "flat", "referenced_works",
+    "flat", "related_works",
+    "rbind_df", "counts_by_year",
+    "rbind_df", "concepts",
+    "col_df", "ids"
+  )
 
-  do.call(rbind.data.frame, list_df)[, col_order]
+  venue_cols <- c(
+    url = "landing_page_url",
+    pdf_url = "pdf_url",
+    is_oa = "is_oa",
+    license = "license",
+    version = "version"
+  )
+  so_cols <- c(
+    so_id = "id",
+    so = "display_name",
+    issn_l = "issn_l",
+    host_organization = "host_organization_name"
+  )
+  inst_cols <- c("id", "display_name", "ror", "country_code", "type")
+  empty_inst <- empty_list(inst_cols)
+
+  n <- length(data)
+  pb <- oa_progress(n)
+  list_df <- vector(mode = "list", length = n)
+
+  for (i in seq.int(n)) {
+    if (verbose) pb$tick()
+
+    paper <- data[[i]]
+    paper <- simple_rapply(paper, `%||%`, y = NA)
+
+    fields <- works_process[works_process$field %in% names(paper), ]
+    sim_fields <- mapply(
+      function(x, y) subs_na(paper[[x]], type = y),
+      fields$field,
+      fields$type,
+      SIMPLIFY = FALSE
+    )
+
+    # Type conversions for concepts df
+    if (!is.null(sim_fields$concepts) && !is.na(sim_fields$concepts)) {
+      sim_fields$concepts <- numeric_concept_score(sim_fields$concepts)
+    }
+
+    author <- venue <- ab <- NULL
+
+    if (!is.null(paper$primary_location)) {
+      so_info <- paper$primary_location["source"]
+      so_info <- if (is.na(so_info)) NA else so_info[[1]]
+
+      venue <- setNames(
+        c(paper$primary_location[venue_cols], so_info[so_cols]),
+        c(names(venue_cols), names(so_cols))
+      )
+    }
+
+    # authorships and affilitation
+    if (!is.null(paper$authorships)) {
+      author <- subs_na(
+        lapply(paper$authorships, function(l) {
+          l_inst <- l$institutions
+          inst_idx <- lengths(l_inst) > 0
+          if (length(inst_idx) > 0 && any(inst_idx)) {
+            first_inst <- l_inst[inst_idx][[1]]
+          } else {
+            first_inst <- empty_inst
+          }
+          first_inst <- prepend(first_inst, "institution")
+          aff_raw <- list(au_affiliation_raw = l$raw_affiliation_string[1])
+          l_author <- l_author <- if (length(l$author) > 0) {
+            prepend(l$author, "au")
+          } else {
+            empty_list(c("au_id", "au_display_name", "au_orcid"))
+          }
+
+          c(l_author, l["author_position"], aff_raw, first_inst)
+        }), "rbind_df"
+      )
+    }
+
+    # Abstract
+    if (!is.null(paper$abstract_inverted_index) && abstract) {
+      ab <- abstract_build(paper$abstract_inverted_index)
+    }
+
+    out_ls <- c(sim_fields, venue, paper$biblio, list(author = author, ab = ab))
+    out_ls[sapply(out_ls, is.null)] <- NULL
+    list_df[[i]] <- tibble::as_tibble(out_ls)
+  }
+
+  out_df <- do.call(rbind.data.frame, list_df)
+  out_df[, intersect(col_order, names(out_df))]
 }
 
 abstract_build <- function(ab) {
+  if (is.null(ab)) {
+    return(NA)
+  }
   w <- rep(names(ab), lengths(ab))
   ind <- unlist(ab)
   if (is.null(ind)) {
@@ -293,11 +297,6 @@ authors2df <- function(data, verbose = TRUE) {
     data <- list(data)
   }
 
-  if (length(data) == 0 || is.null(data[[1]]$id)) {
-    message("One list does not contain a valid OpenAlex collection")
-    return()
-  }
-
   n <- length(data)
   pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)
@@ -305,43 +304,43 @@ authors2df <- function(data, verbose = TRUE) {
   inst_cols <- c("id", "display_name", "ror", "country_code", "type")
   empty_inst <- empty_list(inst_cols)
 
-  for (i in 1:n) {
+  author_process <- tibble::tribble(
+    ~type, ~field,
+    "identical", "id",
+    "identical", "works_count",
+    "identical", "display_name",
+    "identical", "orcid",
+    "identical", "works_api_url",
+    "identical", "cited_by_count",
+    "identical", "relevance_score",
+    "flat", "display_name_alternatives",
+    "rbind_df", "counts_by_year",
+    "rbind_df", "x_concepts",
+    "col_df", "ids"
+  )
+
+  for (i in seq.int(n)) {
     if (verbose) pb$tick()
 
     item <- data[[i]]
 
-    sub_identical <- item[
-      c(
-        "id", "works_count", "display_name", "orcid",
-        "works_api_url", "cited_by_count"
-      )
-    ]
-
-    sub_id <- list(
-      ids = subs_na(item$ids, type = "col_df"),
-      relevance_score = item$relevance_score %||% NA
-    )
-
-    sub_flat <- lapply(
-      item[c("display_name_alternatives")],
-      subs_na,
-      type = "flat"
-    )
-    sub_rbind_dfs <- lapply(
-      item[c("counts_by_year", "x_concepts")],
-      subs_na,
-      type = "rbind_df"
+    fields <- author_process[author_process$field %in% names(item), ]
+    sim_fields <- mapply(
+      function(x, y) subs_na(item[[x]], type = y),
+      fields$field,
+      fields$type,
+      SIMPLIFY = FALSE
     )
 
     sub_affiliation <- item$last_known_institution
-    if (is.na(sub_affiliation[[1]])) {
-      sub_affiliation <- empty_inst
+    if (!is.null(sub_affiliation)) {
+      if (is.na(sub_affiliation[[1]])) {
+        sub_affiliation <- empty_inst
+      }
+      sub_affiliation <- prepend(sub_affiliation, "affiliation")
     }
-    sub_affiliation <- prepend(sub_affiliation, "affiliation")
 
-    list_df[[i]] <- tibble::as_tibble(
-      c(sub_identical, sub_id, sub_flat, sub_rbind_dfs, sub_affiliation)
-    )
+    list_df[[i]] <- tibble::as_tibble(c(sim_fields, sub_affiliation))
   }
 
   col_order <- c(
@@ -352,7 +351,8 @@ authors2df <- function(data, verbose = TRUE) {
     "works_api_url"
   )
 
-  do.call(rbind, list_df)[, col_order]
+  out_df <- do.call(rbind.data.frame, list_df)
+  out_df[, intersect(col_order, names(out_df))]
 }
 
 
@@ -398,54 +398,48 @@ institutions2df <- function(data, verbose = TRUE) {
     data <- list(data)
   }
 
-  if (length(data) == 0 || is.null(data[[1]]$id)) {
-    message("One list does not contain a valid OpenAlex collection")
-    return()
-  }
-
   n <- length(data)
   pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)
 
-  for (i in 1:n) {
+  institution_process <- tibble::tribble(
+    ~type, ~field,
+    "identical", "id",
+    "identical", "ror",
+    "identical", "works_api_url",
+    "identical", "type",
+    "identical", "works_count",
+    "identical", "display_name",
+    "identical", "country_code",
+    "identical", "homepage_url",
+    "identical", "image_url",
+    "identical", "image_thumbnail_url",
+    "identical", "cited_by_count",
+    "identical", "updated_date",
+    "identical", "created_date",
+    "identical", "relevance_score",
+    "flat", "display_name_alternatives",
+    "flat", "display_name_acronyms",
+    "row_df", "international",
+    "row_df", "geo",
+    "rbind_df", "counts_by_year",
+    "rbind_df", "x_concepts",
+    "rbind_df", "associated_institutions",
+    "col_df", "ids"
+  )
+
+  for (i in seq.int(n)) {
     if (verbose) pb$tick()
 
     item <- data[[i]]
-    sub_identical <- item[
-      c(
-        "id", "ror", "works_api_url", "type", "works_count",
-        "display_name", "country_code", "homepage_url",
-        "image_url", "image_thumbnail_url", "cited_by_count",
-        "updated_date", "created_date"
-      )
-    ]
-
-    sub_id <- list(
-      ids = subs_na(item$ids, type = "col_df"),
-      relevance_score = item$relevance_score %||% NA
+    fields <- institution_process[institution_process$field %in% names(item), ]
+    sim_fields <- mapply(
+      function(x, y) subs_na(item[[x]], type = y),
+      fields$field,
+      fields$type,
+      SIMPLIFY = FALSE
     )
-
-    sub_flat <- lapply(
-      item[c("display_name_alternatives", "display_name_acronyms")],
-      subs_na,
-      type = "flat"
-    )
-
-    sub_row <- lapply(
-      item[c("international", "geo")],
-      subs_na,
-      type = "row_df"
-    )
-
-    sub_rbind_dfs <- lapply(
-      item[c("counts_by_year", "x_concepts", "associated_institutions")],
-      subs_na,
-      type = "rbind_df"
-    )
-
-    list_df[[i]] <- tibble::as_tibble(
-      c(sub_flat, sub_row, sub_identical, sub_id, sub_rbind_dfs)
-    )
+    list_df[[i]] <- tibble::as_tibble(sim_fields)
   }
 
 
@@ -458,7 +452,8 @@ institutions2df <- function(data, verbose = TRUE) {
     "works_api_url", "x_concepts", "updated_date", "created_date"
   )
 
-  do.call(rbind, list_df)[, col_order]
+  out_df <- do.call(rbind.data.frame, list_df)
+  out_df[, intersect(col_order, names(out_df))]
 }
 
 
@@ -505,47 +500,42 @@ venues2df <- function(data, verbose = TRUE) {
     data <- list(data)
   }
 
-  if (length(data) == 0 || is.null(data[[1]]$id)) {
-    message("One list does not contain a valid OpenAlex collection")
-    return()
-  }
-
   n <- length(data)
   pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)
+  venue_process <- tibble::tribble(
+    ~type, ~field,
+    "identical", "id",
+    "identical", "display_name",
+    "identical", "host_organization_name",
+    "identical", "works_count",
+    "identical", "cited_by_count",
+    "identical", "is_oa",
+    "identical", "is_in_doaj",
+    "identical", "homepage_url",
+    "identical", "works_api_url",
+    "identical", "type",
+    "identical", "relevance_score",
+    "flat", "issn_l",
+    "flat", "issn",
+    "rbind_df", "counts_by_year",
+    "rbind_df", "x_concepts",
+    "col_df", "ids"
+  )
 
-  for (i in 1:n) {
+  for (i in seq.int(n)) {
     if (verbose) pb$tick()
 
     item <- data[[i]]
 
-    sub_identical <- item[
-      c(
-        "id", "display_name", "host_organization_name", "works_count", "cited_by_count",
-        "is_oa", "is_in_doaj", "homepage_url", "works_api_url", "type"
-      )
-    ]
-
-    sub_flat <- lapply(
-      item[c("issn_l", "issn")],
-      subs_na,
-      type = "flat"
+    fields <- venue_process[venue_process$field %in% names(item), ]
+    sim_fields <- mapply(
+      function(x, y) subs_na(item[[x]], type = y),
+      fields$field,
+      fields$type,
+      SIMPLIFY = FALSE
     )
-
-    sub_id <- list(
-      ids = subs_na(item$ids, type = "col_df"),
-      relevance_score = item$relevance_score %||% NA
-    )
-
-    sub_rbind_dfs <- lapply(
-      item[c("counts_by_year", "x_concepts")],
-      subs_na,
-      type = "rbind_df"
-    )
-
-    list_df[[i]] <- tibble::as_tibble(
-      c(sub_identical, sub_flat, sub_id, sub_rbind_dfs)
-    )
+    list_df[[i]] <- tibble::as_tibble(sim_fields)
   }
 
   col_order <- c(
@@ -554,7 +544,8 @@ venues2df <- function(data, verbose = TRUE) {
     "counts_by_year", "x_concepts", "works_api_url", "type"
   )
 
-  do.call(rbind, list_df)[, col_order]
+  out_df <- do.call(rbind.data.frame, list_df)
+  out_df[, intersect(col_order, names(out_df))]
 }
 
 
@@ -602,49 +593,51 @@ concepts2df <- function(data, verbose = TRUE) {
     data <- list(data)
   }
 
-  if (length(data) == 0 || is.null(data[[1]]$id)) {
-    message("One list does not contain a valid OpenAlex collection")
-    return()
-  }
+  concept_process <- tibble::tribble(
+    ~type, ~field,
+    "identical", "id",
+    "identical", "display_name",
+    "identical", "wikidata",
+    "identical", "level",
+    "identical", "description",
+    "identical", "image_url",
+    "identical", "image_thumbnail_url",
+    "identical", "works_count",
+    "identical", "cited_by_count",
+    "identical", "works_api_url",
+    "identical", "relevance_score",
+    "rbind_df", "counts_by_year",
+    "rbind_df", "ancestors",
+    "rbind_df", "related_concepts",
+    "col_df", "ids"
+  )
 
   n <- length(data)
   pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)
 
-  for (i in 1:n) {
+  for (i in seq.int(n)) {
     if (verbose) pb$tick()
 
     item <- data[[i]]
+    fields <- concept_process[concept_process$field %in% names(item), ]
+    sim_fields <- mapply(
+      function(x, y) subs_na(item[[x]], type = y),
+      fields$field,
+      fields$type,
+      SIMPLIFY = FALSE
+    )
 
-    sub_identical <- item[
-      c(
-        "id", "display_name", "wikidata", "level", "description",
-        "image_url", "image_thumbnail_url", "works_count", "cited_by_count",
-        "works_api_url"
+    if (!is.null(item$international)) {
+      intern_fields <- lapply(
+        item$international[c("display_name", "description")],
+        subs_na,
+        type = "row_df"
       )
-    ]
+      names(intern_fields) <- paste(names(intern_fields), "international", sep = "_")
+    }
 
-    sub_id <- list(
-      ids = subs_na(item$ids, type = "col_df"),
-      relevance_score = item$relevance_score %||% NA
-    )
-
-    sub_rbind_dfs <- lapply(
-      item[c("counts_by_year", "ancestors", "related_concepts")],
-      subs_na,
-      type = "rbind_df"
-    )
-
-    sub_row <- lapply(
-      item$international[c("display_name", "description")],
-      subs_na,
-      type = "row_df"
-    )
-    names(sub_row) <- paste(names(sub_row), "international", sep = "_")
-
-    list_df[[i]] <- tibble::as_tibble(
-      c(sub_identical, sub_id, sub_rbind_dfs, sub_row)
-    )
+    list_df[[i]] <- tibble::as_tibble(c(sim_fields, intern_fields))
   }
 
   col_order <- c(
@@ -656,7 +649,8 @@ concepts2df <- function(data, verbose = TRUE) {
     "works_api_url"
   )
 
-  do.call(rbind, list_df)[, col_order]
+  out_df <- do.call(rbind.data.frame, list_df)
+  out_df[, intersect(col_order, names(out_df))]
 }
 
 

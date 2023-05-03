@@ -10,8 +10,11 @@ simple_rapply <- function(x, fn, ...) {
 
 `%||%` <- function(x, y) if (is.null(x)) y else x
 
-subs_na <- function(x, type = c("row_df", "col_df", "flat", "rbind_df"), prefix = NULL) {
+subs_na <- function(x, type = c("row_df", "col_df", "flat", "rbind_df", "identical"), prefix = NULL) {
   type <- match.arg(type)
+  if (type == "identical"){
+    return(x)
+  }
 
   if (length(x) == 0) {
     return(NA)
@@ -104,4 +107,16 @@ shorten_oaid <- function(id) {
 
 shorten_orcid <- function(id) {
   gsub("^https://orcid.org/", "", id)
+}
+
+numeric_concept_score <- function(x) {
+  if (is.null(x)) return()
+
+  if (is.atomic(x) && is.na(x)) {
+    NULL
+  } else if (!is.null(x$score)) {
+    transform(x, score = as.double(score))
+  } else {
+    x
+  }
 }
