@@ -285,3 +285,16 @@ test_that("oa_random works", {
   expect_equal(nrow(random_works), 1)
 })
 
+test_that("oa_fetch other entities works", {
+  skip_on_cran()
+
+  random_authors <- oa_fetch(entity = "authors", options = list(sample = 20))
+  random_venues <- oa_fetch(entity = "venues", options = list(sample = 20))
+  random_concepts <- oa_fetch(entity = "concepts", options = list(sample = 20))
+  random_institutions <- oa_fetch(entity = "institutions", options = list(sample = 20))
+
+  expect_equal(nrow(random_authors), 20)
+  expect_equal(nrow(random_venues), 20)
+  expect_equal(nrow(random_concepts), 20)
+  expect_equal(nrow(random_institutions), 20)
+})

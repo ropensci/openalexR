@@ -623,6 +623,7 @@ concepts2df <- function(data, verbose = TRUE) {
       SIMPLIFY = FALSE
     )
 
+    intern_fields <- NULL
     if (!is.null(item$international)) {
       intern_fields <- lapply(
         item$international[c("display_name", "description")],
