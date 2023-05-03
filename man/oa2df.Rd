@@ -7,9 +7,9 @@
 oa2df(
   data,
   entity,
-  abstract = TRUE,
   count_only = FALSE,
   group_by = NULL,
+  abstract = TRUE,
   verbose = TRUE
 )
 }
@@ -19,9 +19,6 @@ oa2df(
 \item{entity}{Character. Scholarly entity of the search.
 The argument can be one of c("works", "authors", "venues", "institutions", "concepts").}
 
-\item{abstract}{Logical. If TRUE, the function returns also the abstract of each item.
-Ignored if entity is different from "works". Defaults to TRUE.}
-
 \item{count_only}{Logical.
 If TRUE, the function returns only the number of item matching the query.
 Defaults to FALSE.}
@@ -29,6 +26,9 @@ Defaults to FALSE.}
 \item{group_by}{Character. Attribute to group by.
 For example: "oa_status" for works.
 See more at <https://docs.openalex.org/how-to-use-the-api/get-groups-of-entities>.}
+
+\item{abstract}{Logical. If TRUE, the function returns also the abstract of each item.
+Ignored if entity is different from "works". Defaults to TRUE.}
 
 \item{verbose}{Logical. If TRUE, print information on querying process.
 Default to \code{verbose = FALSE}.}
