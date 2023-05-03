@@ -108,15 +108,3 @@ shorten_oaid <- function(id) {
 shorten_orcid <- function(id) {
   gsub("^https://orcid.org/", "", id)
 }
-
-numeric_concept_score <- function(x) {
-  if (is.null(x)) return()
-
-  if (is.atomic(x) && is.na(x)) {
-    NULL
-  } else if (!is.null(x$score)) {
-    transform(x, score = as.double(score))
-  } else {
-    x
-  }
-}

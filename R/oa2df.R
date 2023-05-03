@@ -180,11 +180,6 @@ works2df <- function(data, abstract, verbose = TRUE) {
       SIMPLIFY = FALSE
     )
 
-    # Type conversions for concepts df
-    if (!is.null(sim_fields$concepts) && !is.na(sim_fields$concepts)) {
-      sim_fields$concepts <- numeric_concept_score(sim_fields$concepts)
-    }
-
     author <- venue <- ab <- NULL
 
     if (!is.null(paper$primary_location)) {
