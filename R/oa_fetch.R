@@ -47,6 +47,7 @@ oa_entities <- function() {
 #'     "10.1371/journal.pone.0266781",
 #'     "10.1371/journal.pone.0267149"
 #'   ),
+#'   options = list(select = c("doi", "id", "cited_by_count", "type")),
 #'   verbose = TRUE
 #' )
 #'
@@ -55,21 +56,21 @@ oa_entities <- function() {
 #'   verbose = TRUE
 #' )
 #' }
-oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(identifier[[1]]),
+oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten_oaid(identifier[[1]])),
                      identifier = NULL,
                      ...,
+                     options = NULL,
                      search = NULL,
-                     sort = NULL,
-                     sample = NULL,
-                     seed = NULL,
                      group_by = NULL,
                      output = c("tibble", "dataframe", "list"),
-                     abstract = FALSE,
+                     abstract = TRUE,
                      endpoint = "https://api.openalex.org",
                      per_page = 200,
                      count_only = FALSE,
                      mailto = oa_email(),
+                     api_key = oa_apikey(),
                      verbose = FALSE) {
+
   output <- match.arg(output)
   entity <- match.arg(entity, oa_entities())
 
@@ -100,16 +101,14 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(identif
       filter_i[[large_filter]] <- list_id[[i]]
     }
 
-    res <- oa_request(
+    final_res[[i]] <- oa_request(
       oa_query(
         filter = filter_i,
         multiple_id = multiple_id,
         identifier = identifier,
         entity = entity,
         search = search,
-        sort = sort,
-        sample = sample,
-        seed = seed,
+        options = options,
         group_by = group_by,
         endpoint = endpoint,
         verbose = verbose
@@ -117,22 +116,27 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(identif
       per_page = per_page,
       count_only = count_only,
       mailto = mailto,
+      api_key = api_key,
       verbose = verbose
     )
-
-    final_res[[i]] <- switch(output,
-      list = res,
-      tibble = oa2df(res,
-        entity = entity, abstract = abstract,
-        count_only = count_only, group_by = group_by,
-        verbose = verbose
-      )
-    )
   }
-  switch(output,
-    list = unlist(final_res, recursive = FALSE),
-    tibble = do.call(rbind, final_res)
-  )
+
+  if (length(final_res[[1]]) == 0) { # || is.null(final_res[[1]][[1]]$id)
+    warning("No collection found!")
+    return(NULL)
+  }
+
+  if (output == "list") {
+    unlist(final_res, recursive = FALSE)
+  } else {
+    do.call(rbind, lapply(
+      final_res, oa2df,
+      entity = entity, abstract = abstract,
+      count_only = count_only, group_by = group_by,
+      verbose = verbose
+    ))
+  }
+
 }
 
 #' Get bibliographic records from OpenAlex database
@@ -153,6 +157,8 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(identif
 #' Defaults to FALSE.
 #' @param mailto Character string.
 #' Gives OpenAlex an email to enter the polite pool.
+#' @param api_key Character string.
+#' Your OpenAlex Premium API key, if available.
 #' @param verbose Logical.
 #' If TRUE, print information about the querying process. Defaults to TRUE.
 #'
@@ -287,9 +293,10 @@ oa_request <- function(query_url,
                        per_page = 200,
                        count_only = FALSE,
                        mailto = oa_email(),
+                       api_key = oa_apikey(),
                        verbose = FALSE) {
-
-  ua <- httr::user_agent(cfg()$user_agent)
+  # https://httr.r-lib.org/articles/api-packages.html#set-a-user-agent
+  ua <- httr::user_agent("https://github.com/ropensci/openalexR/")
 
   # building query...
   # first, download info about n. of items returned by the query
@@ -304,7 +311,7 @@ oa_request <- function(query_url,
     }
   }
 
-  res <- api_request(query_url, ua, query = query_ls)
+  res <- api_request(query_url, ua, query = query_ls, api_key = api_key)
 
   if (is_group_by) {
     return(res$group_by)
@@ -337,7 +344,7 @@ oa_request <- function(query_url,
     )
   }
 
-  pb <- oa_progress(n = length(pages), text = "OpenAlex downloading")
+  pb <- oa_progress(n = n_pages, text = "OpenAlex downloading")
 
   # Setting items per page
   query_ls[["per-page"]] <- per_page
@@ -376,24 +383,31 @@ oa_request <- function(query_url,
 #' @param entity Character. Scholarly entity of the search.
 #' The argument can be one of c("works", "authors", "venues", "institutions", "concepts").
 #' If not provided, `entity` is guessed from `identifier`.
-#' @param sort Character. Attribute to sort by.
+#' @param options List. Additional parameters to add in the query. For example:
+#' - `select` Character vector. Top-level fields to show in output.
+#' Defaults to NULL, which returns all fields.
+#' https://docs.openalex.org/how-to-use-the-api/get-single-entities/select-fields
+#' - `sort` Character. Attribute to sort by.
 #' For example: "display_name" for venues or "cited_by_count:desc" for works.
 #' See more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sort-entity-lists>.
-#' @param sample Integer. Number of (random) records to return.
+#' - `sample` Integer. Number of (random) records to return.
 #' Should be no larger than 10,000.
 #' Defaults to NULL, which returns all records satisfying the query.
 #' Read more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sample-entity-lists>.
-#' @param seed Integer.
+#' - `seed` Integer.
 #' A seed value in order to retrieve the same set of random records in
 #' the same order when used multiple times with `sample`.
 #' IMPORTANT NOTE: Depending on your query, random results with a seed value may change over time due to new records coming into OpenAlex.
 #' This argument is likely only useful when queries happen close together (within a day).
+#' @param search Character. Search is just another kind of filter, one that all five endpoints support.
+#' But unlike the other filters, search does NOT require an exact match.
+#' This is particularly useful in author queries because many authors have middle names, which may not exist or do so in a variety of forms.
+#' The `display_name` filter requires an exact match and will NOT find all these authors.
+#' For example, author "Phillip H. Kuo" and "Phillip Hsin Kuo" can only be found either using search = "Phillip Kuo" or display_name = c("Phillip H. Kuo", "Phillip Hsin Kuo").
+#' To filter using search, append .search to the end of the attribute you're filtering for.
 #' @param group_by Character. Attribute to group by.
 #' For example: "oa_status" for works.
 #' See more at <https://docs.openalex.org/how-to-use-the-api/get-groups-of-entities>.
-#' @param search Character. Search is just another kind of filter, one that all five endpoints support.
-#' But unlike the other filters, search doesn't require an exact match.
-#' To filter using search, append .search to the end of the attribute you're filtering for.
 #' @param endpoint Character. URL of the OpenAlex Endpoint API server.
 #' Defaults to endpoint = "https://api.openalex.org".
 #' @param verbose Logical. If TRUE, print information on querying process.
@@ -464,7 +478,7 @@ oa_request <- function(query_url,
 #'   title.search = c("bibliometric analysis", "science mapping"),
 #'   from_publication_date = "2021-01-01",
 #'   to_publication_date = "2021-06-30",
-#'   sort = "cited_by_count:desc",
+#'   options = list(sort = "cited_by_count:desc"),
 #'   verbose = TRUE
 #' )
 #' }
@@ -476,16 +490,13 @@ oa_query <- function(filter = NULL,
                      multiple_id = FALSE,
                      identifier = NULL,
                      entity = if (is.null(identifier)) NULL else id_type(identifier[[1]]),
+                     options = NULL,
                      search = NULL,
-                     sort = NULL,
-                     sample = NULL,
-                     seed = NULL,
                      group_by = NULL,
                      endpoint = "https://api.openalex.org",
                      verbose = FALSE,
                      ...) {
-
-  if (!(is.null(search) || is.null(sample))){
+  if (!(is.null(search) || is.null(options$sample))) {
     stop("You can't use `search` and `sample` at the same time. Please specify only one of these two arguments.")
   }
 
@@ -502,20 +513,24 @@ oa_query <- function(filter = NULL,
     flt_ready <- list()
   }
 
+  if (!is.null(options$select)) {
+    options$select <- paste(options$select, collapse = ",")
+  }
+
   if (is.null(identifier) || multiple_id) {
-    if (length(filter) == 0 && is.null(search) && is.null(sample)) {
+    if (length(filter) == 0 && is.null(search) && is.null(options$sample)) {
       message("Identifier is missing, please specify filter or search argument.")
       return()
     }
 
     path <- entity
-    query <- list(
-      filter = flt_ready,
-      search = search,
-      sort = sort,
-      sample = sample,
-      seed = seed,
-      group_by = group_by
+    query <- c(
+      list(
+        filter = flt_ready,
+        search = search,
+        group_by = group_by
+      ),
+      options
     )
   } else {
     path <- paste(entity, identifier, sep = "/")
@@ -539,8 +554,8 @@ oa_query <- function(filter = NULL,
 #'
 #' @return A data.frame or a list. One row or one element.
 #' Result of the random query.
-#' If you would like to select more than one random entity,
-#' use the `sample` argument in `oa_fetch`.
+#' If you would like to select more than one random entity, say, 10,
+#' use `options = list(sample = 10)` argument in `oa_fetch`.
 #'
 #' @export
 #'
@@ -566,8 +581,8 @@ oa_random <- function(entity = oa_entities(),
   final_res
 }
 
-api_request <- function(query_url, ua, query = query) {
-  res <- httr::GET(query_url, ua, query = query)
+api_request <- function(query_url, ua, query = query, api_key = oa_apikey()) {
+  res <- httr::GET(query_url, ua, query = query, httr::add_headers(api_key = api_key))
 
   if (httr::status_code(res) == 200) {
     if (httr::http_type(res) != "application/json") {
@@ -608,27 +623,4 @@ api_request <- function(query_url, ua, query = query) {
     message("HTTP status ", httr::status_code(res))
     return(list())
   }
-}
-
-
-cfg <- function(.ua = base::getOption("HTTPUserAgent")) {
-  ## >> maybe something like this
-  if (is.null(.ua) || length(.ua) == 0L) {
-    .ua <-
-      paste0(
-        "curl/",
-        curl::curl_version()[[1]],
-        " RCurl/",
-        utils::packageVersion("RCurl"),
-        " httr/",
-        utils::packageVersion("httr")
-      )
-  }
-
-  res <- list(user_agent = .ua)
-
-  if (Sys.getenv("OPENALEX_USERAGENT") != "") {
-    res$user_agent <- Sys.getenv("OPENALEX_USERAGENT")
-  }
-  res
 }

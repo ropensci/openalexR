@@ -6,20 +6,19 @@
 and convert the result to a tibble/data frame.}
 \usage{
 oa_fetch(
-  entity = if (is.null(identifier)) NULL else id_type(identifier[[1]]),
+  entity = if (is.null(identifier)) NULL else id_type(shorten_oaid(identifier[[1]])),
   identifier = NULL,
   ...,
+  options = NULL,
   search = NULL,
-  sort = NULL,
-  sample = NULL,
-  seed = NULL,
   group_by = NULL,
   output = c("tibble", "dataframe", "list"),
-  abstract = FALSE,
+  abstract = TRUE,
   endpoint = "https://api.openalex.org",
   per_page = 200,
   count_only = FALSE,
   mailto = oa_email(),
+  api_key = oa_apikey(),
   verbose = FALSE
 )
 }
@@ -33,24 +32,29 @@ See more at <https://docs.openalex.org/how-to-use-the-api/get-single-entities#th
 
 \item{...}{Additional filter arguments.}
 
-\item{search}{Character. Search is just another kind of filter, one that all five endpoints support.
-But unlike the other filters, search doesn't require an exact match.
-To filter using search, append .search to the end of the attribute you're filtering for.}
-
-\item{sort}{Character. Attribute to sort by.
+\item{options}{List. Additional parameters to add in the query. For example:
+- `select` Character vector. Top-level fields to show in output.
+Defaults to NULL, which returns all fields.
+https://docs.openalex.org/how-to-use-the-api/get-single-entities/select-fields
+- `sort` Character. Attribute to sort by.
 For example: "display_name" for venues or "cited_by_count:desc" for works.
-See more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sort-entity-lists>.}
-
-\item{sample}{Integer. Number of (random) records to return.
+See more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sort-entity-lists>.
+- `sample` Integer. Number of (random) records to return.
 Should be no larger than 10,000.
 Defaults to NULL, which returns all records satisfying the query.
-Read more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sample-entity-lists>.}
-
-\item{seed}{Integer.
+Read more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sample-entity-lists>.
+- `seed` Integer.
 A seed value in order to retrieve the same set of random records in
 the same order when used multiple times with `sample`.
 IMPORTANT NOTE: Depending on your query, random results with a seed value may change over time due to new records coming into OpenAlex.
 This argument is likely only useful when queries happen close together (within a day).}
+
+\item{search}{Character. Search is just another kind of filter, one that all five endpoints support.
+But unlike the other filters, search does NOT require an exact match.
+This is particularly useful in author queries because many authors have middle names, which may not exist or do so in a variety of forms.
+The `display_name` filter requires an exact match and will NOT find all these authors.
+For example, author "Phillip H. Kuo" and "Phillip Hsin Kuo" can only be found either using search = "Phillip Kuo" or display_name = c("Phillip H. Kuo", "Phillip Hsin Kuo").
+To filter using search, append .search to the end of the attribute you're filtering for.}
 
 \item{group_by}{Character. Attribute to group by.
 For example: "oa_status" for works.
@@ -75,6 +79,9 @@ Defaults to FALSE.}
 
 \item{mailto}{Character string.
 Gives OpenAlex an email to enter the polite pool.}
+
+\item{api_key}{Character string.
+Your OpenAlex Premium API key, if available.}
 
 \item{verbose}{Logical. If TRUE, print information on querying process.
 Default to \code{verbose = FALSE}.}
@@ -113,6 +120,7 @@ oa_fetch(
     "10.1371/journal.pone.0266781",
     "10.1371/journal.pone.0267149"
   ),
+  options = list(select = c("doi", "id", "cited_by_count", "type")),
   verbose = TRUE
 )
 

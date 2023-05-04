@@ -54,6 +54,26 @@ test_that("oa_fetch works", {
     cited_by_count = ">1000"
   )
   expect_s3_class(filtered_works, "data.frame")
+
+  expect_warning(oa_fetch(doi = "123"))
+})
+
+test_that("oa_fetch options$select works", {
+  skip_on_cran()
+
+  x <- oa_fetch(
+    entity = "works",
+    doi = c(
+      "10.1371/journal.pone.0266781",
+      "10.1371/journal.pone.0267149"
+    ),
+    options = list(select = c("doi", "id", "cited_by_count", "type")),
+    verbose = TRUE
+  )
+  expect_equal(
+    dim(x),
+    c(2, 4)
+  )
 })
 
 test_that("Error when input entity can't be matched", {
@@ -89,24 +109,24 @@ test_that("oa_fetch sample works", {
   random2021 <- oa_fetch(
     "works",
     publication_year = 2021,
-    sample = 20
+    options = list(sample = 20)
   )
   Sys.sleep(1/10)
   random10 <- oa_fetch(
     "works",
-    sample = 10,
-    seed = 1
+    options = list(sample = 10, seed = 1)
   )
 
   expect_equal(nrow(random2021), 20)
   expect_equal(nrow(random10), 10)
-  expect_error(oa_fetch("works", search = "open science", sample = 10))
+  expect_error(oa_fetch("works", search = "open science", options = list(sample = 10)))
 })
 
 
 test_that("oa_fetch authors can deal with NA institutions", {
   skip_on_cran()
 
+  Sys.sleep(1/10)
   expect_s3_class(
     oa_fetch(
       entity = "authors",
@@ -192,7 +212,6 @@ test_that("oa_fetch can combine (OR) more than 50 DOIs in a filter", {
   expect_equal(nrow(many_doi_results), length(valid_dois))
 })
 
-
 test_that("oa_fetch can combine (OR) more than 50 ORCIDs in a filter", {
   skip_on_cran()
 
@@ -201,7 +220,7 @@ test_that("oa_fetch can combine (OR) more than 50 ORCIDs in a filter", {
     "https://orcid.org/0000-0001-7641-0637",
     "https://orcid.org/0000-0002-6465-982X",
     "https://orcid.org/0000-0002-8270-3134",
-    "https://orcid.org/0000-0001-8446-2349",
+    "https://orcid.org/0000-0001-9336-6543",
     "https://orcid.org/0000-0002-3012-7446",
     "https://orcid.org/0000-0001-6428-8611",
     "https://orcid.org/0000-0002-4951-4526",
@@ -221,15 +240,15 @@ test_that("oa_fetch can combine (OR) more than 50 ORCIDs in a filter", {
     "https://orcid.org/0000-0001-5882-1168",
     "https://orcid.org/0000-0001-9558-6099",
     "https://orcid.org/0000-0003-3421-5627",
-    "https://orcid.org/0000-0002-4689-8501",
+    "https://orcid.org/0000-0003-2916-6402",
     "https://orcid.org/0000-0002-0811-6580",
     "https://orcid.org/0000-0001-6535-5492",
     "https://orcid.org/0000-0001-8934-7569",
     "https://orcid.org/0000-0002-1355-9175",
     "https://orcid.org/0000-0001-8693-5947",
     "https://orcid.org/0000-0003-4126-9244",
-    "https://orcid.org/0000-0001-9102-9359",
-    "https://orcid.org/0000-0002-5119-8358",
+    "https://orcid.org/0000-0002-5015-1099",
+    "https://orcid.org/0000-0001-8713-9213",
     "https://orcid.org/0000-0001-5035-5983",
     "https://orcid.org/0000-0002-2817-5377",
     "https://orcid.org/0000-0002-5935-7544",
@@ -246,7 +265,7 @@ test_that("oa_fetch can combine (OR) more than 50 ORCIDs in a filter", {
     "https://orcid.org/0000-0001-9443-8123",
     "https://orcid.org/0000-0002-4180-2216",
     "https://orcid.org/0000-0003-1761-3180",
-    "https://orcid.org/0000-0002-3721-1122",
+    "https://orcid.org/0000-0003-4886-7482",
     "https://orcid.org/0000-0001-6618-8542"
   )
 
@@ -266,3 +285,16 @@ test_that("oa_random works", {
   expect_equal(nrow(random_works), 1)
 })
 
+test_that("oa_fetch other entities works", {
+  skip_on_cran()
+
+  random_authors <- oa_fetch(entity = "authors", options = list(sample = 20))
+  random_venues <- oa_fetch(entity = "venues", options = list(sample = 20))
+  random_concepts <- oa_fetch(entity = "concepts", options = list(sample = 20))
+  random_institutions <- oa_fetch(entity = "institutions", options = list(sample = 20))
+
+  expect_equal(nrow(random_authors), 20)
+  expect_equal(nrow(random_venues), 20)
+  expect_equal(nrow(random_concepts), 20)
+  expect_equal(nrow(random_institutions), 20)
+})

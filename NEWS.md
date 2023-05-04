@@ -1,4 +1,11 @@
 # openalexR (development version)
+* Arguments sample, seed, sort, and select are now grouped into `options`.
+* `abstract` now defaults to TRUE to avoid issues.
+* New argument to oa_fetch: api_key
+* Bug fixes
+* Improved documentation: group functions in Reference, details on search, etc.
+
+# openalexR 1.0.2.9
 * Breaking change: Reorder of the first two arguments in `oa_fetch`: `entity` now comes before `idenfitifier`.
 This should not affect your workflow too much unless you have been getting article information from OpenAlex IDs.
 * new arguments to `oa_fetch`: `sample` and `seed` allows the user to download a random subset of the entities instead of the entire set.

@@ -3,7 +3,7 @@ test_that("oa_snowball works", {
 
   work_ids <- c("W3045921891", "W3046863325")
   Sys.sleep(1/10)
-  multi_works <- oa_snowball(identifier = work_ids)
+  multi_works <- oa_snowball(identifier = work_ids) # no cited papers
   multi_nodes <- multi_works$nodes
   flat_snow <- oa2df(multi_works, "snowball")
 

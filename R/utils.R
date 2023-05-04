@@ -10,8 +10,11 @@ simple_rapply <- function(x, fn, ...) {
 
 `%||%` <- function(x, y) if (is.null(x)) y else x
 
-subs_na <- function(x, type = c("row_df", "col_df", "flat", "rbind_df"), prefix = NULL) {
+subs_na <- function(x, type = c("row_df", "col_df", "flat", "rbind_df", "identical"), prefix = NULL) {
   type <- match.arg(type)
+  if (type == "identical"){
+    return(x)
+  }
 
   if (length(x) == 0) {
     return(NA)
@@ -65,7 +68,19 @@ id_type <- function(identifier) {
 }
 
 oa_email <- function() {
-  return(getOption("openalexR.mailto", default = NULL))
+  email <- Sys.getenv("openalexR.mailto")
+  if (email == ""){
+    email <- getOption("openalexR.mailto", default = NULL)
+  }
+  email
+}
+
+oa_apikey <- function() {
+  apikey <- Sys.getenv("openalexR.apikey")
+  if (apikey == ""){
+    apikey <- getOption("openalexR.apikey", default = NULL)
+  }
+  apikey
 }
 
 oa_progress <- function(n, text = "converting") {

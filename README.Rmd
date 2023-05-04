@@ -49,13 +49,20 @@ You can install the released version of openalexR from [CRAN](https://CRAN.R-pro
 install.packages("openalexR")
 ```
 
-Before we go any further, we highly recommend you set `openalexR.mailto` option so that your requests go to [the polite pool](https://docs.openalex.org/how-to-use-the-api/rate-limits-and-authentication#the-polite-pool) for faster response times:
+Before we go any further, we highly recommend you set `openalexR.mailto` option so that your requests go to [the polite pool](https://docs.openalex.org/how-to-use-the-api/rate-limits-and-authentication#the-polite-pool) for faster response times.
+If you have OpenAlex Premium, you can add your API key to the `openalexR.apikey` option as well.
+These lines best go into `.Rprofile` with `file.edit("~/.Rprofile")`.
 
-```{r}
+```{r eval=FALSE}
 options(openalexR.mailto = "example@email.com")
+options(openalexR.apikey = "EXAMPLE_APIKEY")
 ```
 
-Bonus point if you put this in your `.Rprofile` with `file.edit("~/.Rprofile")`.
+Alternatively, you can open `.Renviron` with `file.edit("~/.Renviron")` and add:
+```
+openalexR.mailto = example@email.com
+openalexR.apikey = EXAMPLE_APIKEY
+```
 
 ```{r warning=FALSE, message=FALSE}
 library(openalexR)
@@ -130,7 +137,7 @@ works_search <- oa_fetch(
   cited_by_count = ">50",
   from_publication_date = "2020-01-01",
   to_publication_date = "2021-12-31",
-  sort = "cited_by_count:desc",
+  options = list(sort = "cited_by_count:desc"),
   verbose = TRUE
 )
 
