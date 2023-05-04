@@ -19,3 +19,4 @@
 ^codemeta\.json$
 ^man/figures$
 ^cran-comments\.md$
+^CRAN-SUBMISSION$
