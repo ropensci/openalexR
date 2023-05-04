@@ -256,7 +256,7 @@ my_arguments <- list(
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #>      count db_response_time_ms page per_page
-#> [1,]    40                  59    1        1
+#> [1,]    40                  63    1        1
 do.call(oa_fetch, my_arguments) |>
   show_authors() |>
   knitr::kable()
@@ -305,7 +305,6 @@ concept_df |>
     max(works_count) > 244000,
     label_params = list(nudge_y = 10^5, segment.color = NA)
   )
-#> Warning: Ignoring unknown parameters: linewidth
 #> label_key: display_name
 ```
 
@@ -432,7 +431,6 @@ jours |>
   ) +
   scale_fill_brewer(palette = "Set1", guide = "none") +
   labs(y = NULL, x = NULL, title = "Journal clocks")
-#> Warning: Ignoring unknown parameters: linewidth
 ```
 
 <img src="man/figures/README-big-journals-1.png" width="100%" />
@@ -485,6 +483,11 @@ ggraph(graph = as_tbl_graph(snowball_docs), layout = "stress") +
     legend.position = "bottom"
   ) +
   guides(fill = "none")
+#> Warning: Using the `size` aesthetic in this geom was deprecated in ggplot2 3.4.0.
+#> ℹ Please use `linewidth` in the `default_aes` field and elsewhere instead.
+#> This warning is displayed once every 8 hours.
+#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+#> generated.
 ```
 
 <img src="man/figures/README-snowballing-1.png" width="100%" />
@@ -502,7 +505,6 @@ ngrams_data <- oa_ngrams(
   works_identifier = c("W1964141474", "W1963991285"),
   verbose = TRUE
 )
-#> Use `{curl}` >= v5.0.0 for a faster implementation of `oa_ngrams`
 
 ngrams_data
 #> # A tibble: 2 × 4
