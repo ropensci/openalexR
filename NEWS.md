@@ -1,4 +1,4 @@
-# openalexR (development version)
+# openalexR 1.1.0
 * Arguments sample, seed, sort, and select are now grouped into `options`.
 * `abstract` now defaults to TRUE to avoid issues.
 * New argument to oa_fetch: api_key
