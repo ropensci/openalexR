@@ -56,12 +56,15 @@ oa_snowball <- function(identifier = NULL,
   # fetching documents citing the target papers
   identifier <- shorten_oaid(paper$id)
   if (verbose) message("Collecting all documents citing the target papers...")
-  citing <- do.call(oa_fetch, c(base_args, list(cites = identifier), citing_filter))
+  citing <- suppressWarnings(
+    do.call(oa_fetch, c(base_args, list(cites = identifier), citing_filter))
+  )
 
   # fetching documents cited by the target papers
   if (verbose) message("Collecting all documents cited by the target papers...")
-  cited <- do.call(oa_fetch, c(base_args, list(cited_by = identifier), cited_by_filter))
-
+  cited <- suppressWarnings(
+    do.call(oa_fetch, c(base_args, list(cited_by = identifier), cited_by_filter))
+  )
   # merging all documents in a single data frame
   if (is.null(citing)) {
     citing <- paper[0, TRUE]

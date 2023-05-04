@@ -10,8 +10,11 @@ simple_rapply <- function(x, fn, ...) {
 
 `%||%` <- function(x, y) if (is.null(x)) y else x
 
-subs_na <- function(x, type = c("row_df", "col_df", "flat", "rbind_df"), prefix = NULL) {
+subs_na <- function(x, type = c("row_df", "col_df", "flat", "rbind_df", "identical"), prefix = NULL) {
   type <- match.arg(type)
+  if (type == "identical"){
+    return(x)
+  }
 
   if (length(x) == 0) {
     return(NA)
