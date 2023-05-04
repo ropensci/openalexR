@@ -100,7 +100,8 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
     if (length(large_filter) > 0) {
       filter_i[[large_filter]] <- list_id[[i]]
     }
-
+    
+    Sys.sleep(1/10)
     final_res[[i]] <- oa_request(
       oa_query(
         filter = filter_i,
