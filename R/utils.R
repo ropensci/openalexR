@@ -12,12 +12,12 @@ simple_rapply <- function(x, fn, ...) {
 
 subs_na <- function(x, type = c("row_df", "col_df", "flat", "rbind_df", "identical"), prefix = NULL) {
   type <- match.arg(type)
-  if (type == "identical"){
-    return(x)
-  }
-
   if (length(x) == 0) {
     return(NA)
+  }
+
+  if (type == "identical") {
+    return(x)
   }
 
   out <- switch(type,
@@ -27,14 +27,14 @@ subs_na <- function(x, type = c("row_df", "col_df", "flat", "rbind_df", "identic
     rbind_df = do.call(rbind.data.frame, x)
   )
 
-  if (!is.null(prefix)){
+  if (!is.null(prefix)) {
     out <- prepend(out, prefix)
   }
 
   list(out)
 }
 
-prepend <- function(x, prefix = ""){
+prepend <- function(x, prefix = "") {
   names(x) <- paste(prefix, names(x), sep = "_")
   x
 }
@@ -69,7 +69,7 @@ id_type <- function(identifier) {
 
 oa_email <- function() {
   email <- Sys.getenv("openalexR.mailto")
-  if (email == ""){
+  if (email == "") {
     email <- getOption("openalexR.mailto", default = NULL)
   }
   email
@@ -77,7 +77,7 @@ oa_email <- function() {
 
 oa_apikey <- function() {
   apikey <- Sys.getenv("openalexR.apikey")
-  if (apikey == ""){
+  if (apikey == "") {
     apikey <- getOption("openalexR.apikey", default = NULL)
   }
   apikey
@@ -91,7 +91,9 @@ oa_progress <- function(n, text = "converting") {
 }
 
 asl <- function(z) {
-  if (length(z) > 1) return(z)
+  if (length(z) > 1) {
+    return(z)
+  }
 
   z_low <- tolower(z)
   if (z_low == "true" || z_low == "false") {
@@ -107,4 +109,20 @@ shorten_oaid <- function(id) {
 
 shorten_orcid <- function(id) {
   gsub("^https://orcid.org/", "", id)
+}
+
+rbind_oa_ls <- function(list_df) {
+  all_names <- unique(unlist(lapply(list_df, names)))
+  do.call(
+    rbind.data.frame,
+    lapply(
+      list_df,
+      function(x) {
+        tibble::as_tibble(c(x, sapply(
+          setdiff(all_names, names(x)),
+          function(y) NA
+        )))
+      }
+    )
+  )
 }
