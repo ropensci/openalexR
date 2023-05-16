@@ -335,7 +335,7 @@ authors2df <- function(data, verbose = TRUE) {
       sub_affiliation <- prepend(sub_affiliation, "affiliation")
     }
 
-    list_df[[i]] <- tibble::as_tibble(c(sim_fields, sub_affiliation))
+    list_df[[i]] <- c(sim_fields, sub_affiliation)
   }
 
   col_order <- c(
@@ -346,7 +346,7 @@ authors2df <- function(data, verbose = TRUE) {
     "works_api_url"
   )
 
-  out_df <- do.call(rbind.data.frame, list_df)
+  out_df <- rbind_oa_ls(list_df)
   out_df[, intersect(col_order, names(out_df))]
 }
 
@@ -434,7 +434,7 @@ institutions2df <- function(data, verbose = TRUE) {
       fields$type,
       SIMPLIFY = FALSE
     )
-    list_df[[i]] <- tibble::as_tibble(sim_fields)
+    list_df[[i]] <- sim_fields
   }
 
 
@@ -447,7 +447,7 @@ institutions2df <- function(data, verbose = TRUE) {
     "works_api_url", "x_concepts", "updated_date", "created_date"
   )
 
-  out_df <- do.call(rbind.data.frame, list_df)
+  out_df <- rbind_oa_ls(list_df)
   out_df[, intersect(col_order, names(out_df))]
 }
 
@@ -530,7 +530,7 @@ venues2df <- function(data, verbose = TRUE) {
       fields$type,
       SIMPLIFY = FALSE
     )
-    list_df[[i]] <- tibble::as_tibble(sim_fields)
+    list_df[[i]] <- sim_fields
   }
 
   col_order <- c(
@@ -539,7 +539,7 @@ venues2df <- function(data, verbose = TRUE) {
     "counts_by_year", "x_concepts", "works_api_url", "type"
   )
 
-  out_df <- do.call(rbind.data.frame, list_df)
+  out_df <- rbind_oa_ls(list_df)
   out_df[, intersect(col_order, names(out_df))]
 }
 
@@ -633,7 +633,7 @@ concepts2df <- function(data, verbose = TRUE) {
       names(intern_fields) <- paste(names(intern_fields), "international", sep = "_")
     }
 
-    list_df[[i]] <- tibble::as_tibble(c(sim_fields, intern_fields))
+    list_df[[i]] <- c(sim_fields, intern_fields)
   }
 
   col_order <- c(
@@ -645,7 +645,7 @@ concepts2df <- function(data, verbose = TRUE) {
     "works_api_url"
   )
 
-  out_df <- do.call(rbind.data.frame, list_df)
+  out_df <- rbind_oa_ls(list_df)
   out_df[, intersect(col_order, names(out_df))]
 }
 
