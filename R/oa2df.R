@@ -113,7 +113,7 @@ oa2df <- function(data, entity, count_only = FALSE, group_by = NULL, abstract = 
 #'
 #' # @export
 #'
-works2df <- function(data, abstract, verbose = TRUE) {
+works2df <- function(data, abstract = TRUE, verbose = TRUE) {
   if (!is.null(data$id)) {
     data <- list(data)
   }
