@@ -298,3 +298,15 @@ test_that("oa_fetch other entities works", {
   expect_equal(nrow(random_concepts), 20)
   expect_equal(nrow(random_institutions), 20)
 })
+
+test_that("paging works with sample", {
+  w <- oa_fetch(
+    "works",
+    from_publication_date = Sys.Date() - 2,
+    to_publication_date = Sys.Date(),
+    options = list(sample = 50, seed = 1),
+    per_page = 20
+  )
+  expect_equal(nrow(w), 50)
+  expect_equal(sum(duplicated(w)), 0) # no duplicates
+})

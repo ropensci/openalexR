@@ -7,6 +7,7 @@
 oa_request(
   query_url,
   per_page = 200,
+  paging = "cursor",
   count_only = FALSE,
   mailto = oa_email(),
   api_key = oa_apikey(),
@@ -21,6 +22,9 @@ can be generated with \code{oa_query}.}
 \item{per_page}{Numeric. Number of items to download per page.
 The per-page argument can assume any number between 1 and 200.
 Defaults to 200.}
+
+\item{paging}{Character.
+Either "cursor" for cursor paging or "page" for basic paging.}
 
 \item{count_only}{Logical.
 If TRUE, the function returns only the number of item matching the query.

@@ -70,7 +70,6 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
                      mailto = oa_email(),
                      api_key = oa_apikey(),
                      verbose = FALSE) {
-
   output <- match.arg(output)
   entity <- match.arg(entity, oa_entities())
 
@@ -94,14 +93,20 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
     )
   }
 
+  if (!is.null(options$sample) && (options$sample > per_page)) {
+    paging <- "page"
+  } else {
+    paging <- "cursor"
+  }
+
   final_res <- list()
   for (i in seq_along(list_id)) {
     filter_i <- filter
     if (length(large_filter) > 0) {
       filter_i[[large_filter]] <- list_id[[i]]
     }
-    
-    Sys.sleep(1/10)
+
+    Sys.sleep(1 / 10)
     final_res[[i]] <- oa_request(
       oa_query(
         filter = filter_i,
@@ -115,6 +120,7 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
         verbose = verbose
       ),
       per_page = per_page,
+      paging = paging,
       count_only = count_only,
       mailto = mailto,
       api_key = api_key,
@@ -137,7 +143,6 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
       verbose = verbose
     ))
   }
-
 }
 
 #' Get bibliographic records from OpenAlex database
@@ -153,6 +158,8 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 #' @param per_page Numeric. Number of items to download per page.
 #' The per-page argument can assume any number between 1 and 200.
 #' Defaults to 200.
+#' @param paging Character.
+#' Either "cursor" for cursor paging or "page" for basic paging.
 #' @param count_only Logical.
 #' If TRUE, the function returns only the number of item matching the query.
 #' Defaults to FALSE.
@@ -292,6 +299,7 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 #'
 oa_request <- function(query_url,
                        per_page = 200,
+                       paging = "cursor",
                        count_only = FALSE,
                        mailto = oa_email(),
                        api_key = oa_apikey(),
@@ -351,18 +359,29 @@ oa_request <- function(query_url,
   query_ls[["per-page"]] <- per_page
 
   # Activation of cursor pagination
-  cursor <- "*" # cursor request
+  next_page <- get_next_page(paging, 1)
   data <- vector("list", length = n_pages)
   for (i in pages) {
     if (verbose) pb$tick()
     Sys.sleep(1 / 100)
-    query_ls[["cursor"]] <- cursor
+    query_ls[[paging]] <- next_page
     res <- api_request(query_url, ua, query = query_ls)
-    cursor <- res$meta$next_cursor # next cursor
+    next_page <- get_next_page(paging, i + 1, res)
     if (!is.null(res$results)) data[[i]] <- res$results
   }
 
   unlist(data, recursive = FALSE)
+}
+
+get_next_page <- function(paging, i, res = NULL) {
+  if (paging == "page") { # basic paging
+    return(i)
+  }
+  # cursor paging
+  if (i == 1) {
+    return("*")
+  }
+  res$meta$next_cursor
 }
 
 #' Generate an OpenAlex query from a set of parameters
