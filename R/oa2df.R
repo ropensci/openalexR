@@ -113,7 +113,7 @@ oa2df <- function(data, entity, count_only = FALSE, group_by = NULL, abstract = 
 #'
 #' # @export
 #'
-works2df <- function(data, abstract, verbose = TRUE) {
+works2df <- function(data, abstract = TRUE, verbose = TRUE) {
   if (!is.null(data$id)) {
     data <- list(data)
   }
@@ -223,10 +223,10 @@ works2df <- function(data, abstract, verbose = TRUE) {
 
     out_ls <- c(sim_fields, venue, paper$biblio, list(author = author, ab = ab))
     out_ls[sapply(out_ls, is.null)] <- NULL
-    list_df[[i]] <- tibble::as_tibble(out_ls)
+    list_df[[i]] <- out_ls
   }
 
-  out_df <- do.call(rbind.data.frame, list_df)
+  out_df <- rbind_oa_ls(list_df)
   out_df[, intersect(col_order, names(out_df))]
 }
 

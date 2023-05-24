@@ -2,6 +2,7 @@
 #'
 #' It converts bibliographic collections gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into a
 #' bibliometrix data frame (\href{https://bibliometrix.org/}{https://bibliometrix.org/})
+#' Column names follow https://images.webofknowledge.com/images/help/WOS/hs_wos_fieldtags.html.
 #'
 #' @param df is bibliographic collection of works donwloaded from OpenALex.
 #' @return a data.frame with class "bibliometrix".
@@ -48,7 +49,7 @@ oa2bibliometrix <- function(df) {
   names(df)[names(df) == "id"] <- "id_url"
 
   if (substr(df$id_oa[1], 1, 1) != "W") {
-    message("oa2bibliometrix accepts only OpenAlex data frames containing 'works' (entity = 'works')")
+    warning("oa2bibliometrix accepts only OpenAlex data frames containing 'works' (entity = 'works')")
     return()
   }
 
@@ -57,16 +58,23 @@ oa2bibliometrix <- function(df) {
 
   # Authors
   AU_info <- lapply(df$author, function(l) {
-    AU <- au_collapse(l$au_display_name)
-    C1 <- au_collapse(l$au_affiliation_raw)
-    RP <- au_collapse(l$au_affiliation_raw[1])
-    AU_UN <- au_collapse(l$institution_name)
-    l$institution_country[is.na(l$institution_country)] <- "Not available"
-    AU_CO <- au_collapse(countrycode[l$institution_country, 1])
-    list(AU = AU, RP = RP, C1 = C1, AU_UN = AU_UN, AU_CO = AU_CO)
+    if (length(l) == 0 || (length(l) == 1 && is.na(l))){
+      return(empty_list(
+        c("AU", "RP", "C1", "AU_UN", "AU_CO")
+      ))
+    } else {
+      l$institution_country[is.na(l$institution_country)] <- "Not available"
+      AU <- au_collapse(l$au_display_name)
+      C1 <- au_collapse(l$au_affiliation_raw)
+      RP <- au_collapse(l$au_affiliation_raw[1])
+      AU_UN <- au_collapse(l$institution_name)
+      AU_CO <- au_collapse(countrycode[l$institution_country, 1])
+      list(AU = AU, RP = RP, C1 = C1, AU_UN = AU_UN, AU_CO = AU_CO)
+    }
   })
-
   AU_info <- do.call(rbind.data.frame, AU_info)
+
+
 
   # References
   df$CR <- unlist(lapply(df$referenced_works, function(l) {
@@ -113,21 +121,16 @@ SR <- function(df) {
     return(l)
   }))
 
-  SR <- paste(FirstAuthor, df$PY, df$SO, sep = ", ")
-
-  df$SR_FULL <- gsub("\\s+", " ", SR)
+  SR <- gsub("\\s+", " ", paste(FirstAuthor, df$PY, df$SO, sep = ", "))
+  df$SR_FULL <- SR
 
   ## assign an unique name to each document
-  SR <- gsub("\\s+", " ", SR)
-  st <- i <- 0
-  while (st == 0) {
-    ind <- which(duplicated(SR))
-    if (length(ind) > 0) {
-      i <- i + 1
-      SR[ind] <- paste0(SR[ind], "-", letters[i], sep = "")
-    } else {
-      st <- 1
-    }
+  i <- 0
+  dup <- duplicated(SR)
+  while (any(dup)) {
+    i <- i + 1
+    SR[dup] <- paste(SR[dup], letters[i], sep = "-")
+    dup <- duplicated(SR)
   }
   df$SR <- SR
 
