@@ -15,6 +15,7 @@ a data.frame with class "bibliometrix".
 \description{
 It converts bibliographic collections gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into a
 bibliometrix data frame (\href{https://bibliometrix.org/}{https://bibliometrix.org/})
+Column names follow https://images.webofknowledge.com/images/help/WOS/hs_wos_fieldtags.html.
 }
 \examples{
 \dontrun{

@@ -4,7 +4,7 @@
 \alias{works2df}
 \title{Convert OpenAlex collection of works from list format to data frame}
 \usage{
-works2df(data, abstract, verbose = TRUE)
+works2df(data, abstract = TRUE, verbose = TRUE)
 }
 \arguments{
 \item{data}{List. Output of \code{oa_request}.}
