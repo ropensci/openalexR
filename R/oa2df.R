@@ -111,7 +111,7 @@ oa2df <- function(data, entity, count_only = FALSE, group_by = NULL, abstract = 
 #' df
 #' }
 #'
-#' # @export
+#' @export
 #'
 works2df <- function(data, abstract = TRUE, verbose = TRUE) {
   if (!is.null(data$id)) {
@@ -283,7 +283,7 @@ abstract_build <- function(ab) {
 #' df
 #' }
 #'
-#' # @export
+#' @export
 authors2df <- function(data, verbose = TRUE) {
   # replace NULL with NA
   data <- simple_rapply(data, function(x) if (is.null(x)) NA else x)
@@ -383,7 +383,7 @@ authors2df <- function(data, verbose = TRUE) {
 #' oa2df(res, entity = "institutions")
 #' }
 #'
-#' # @export
+#' @export
 institutions2df <- function(data, verbose = TRUE) {
 
   # replace NULL with NA
@@ -486,7 +486,7 @@ institutions2df <- function(data, verbose = TRUE) {
 #' df
 #' }
 #'
-#' # @export
+#' @export
 venues2df <- function(data, verbose = TRUE) {
   # replace NULL with NA
   data <- simple_rapply(data, function(x) if (is.null(x)) NA else x)
@@ -578,7 +578,7 @@ venues2df <- function(data, verbose = TRUE) {
 #' df
 #' }
 #'
-#' # @export
+#' @export
 concepts2df <- function(data, verbose = TRUE) {
 
   # replace NULL with NA
