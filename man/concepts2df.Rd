@@ -43,5 +43,4 @@ df <- oa2df(res, entity = "concepts")
 df
 }
 
-# @export
 }

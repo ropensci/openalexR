@@ -58,6 +58,4 @@ df <- oa2df(res, entity = "works")
 df
 }
 
-# @export
-
 }
