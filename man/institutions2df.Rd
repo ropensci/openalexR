@@ -41,5 +41,4 @@ res <- oa_request(
 oa2df(res, entity = "institutions")
 }
 
-# @export
 }

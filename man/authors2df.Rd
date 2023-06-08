@@ -48,5 +48,4 @@ df <- oa2df(res, entity = "authors")
 df
 }
 
-# @export
 }
