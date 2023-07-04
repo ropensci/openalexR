@@ -53,7 +53,7 @@ oa2bibliometrix <- function(df) {
     return()
   }
 
-  utils::data("countrycode", envir = environment())
+  utils::data("countrycode", envir = environment(), package = "openalexR")
   countrycode$Country <- as.character(countrycode$Country)
 
   # Authors
