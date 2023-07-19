@@ -57,6 +57,7 @@ oa2df <- function(data, entity, count_only = FALSE, group_by = NULL, abstract = 
     institutions = institutions2df(data, verbose),
     venues = venues2df(data, verbose),
     concepts = concepts2df(data, verbose),
+    funders = funders2df(data, verbose),
     snowball = snowball2df(data)
   )
 }
@@ -648,6 +649,86 @@ concepts2df <- function(data, verbose = TRUE) {
   out_df <- rbind_oa_ls(list_df)
   out_df[, intersect(col_order, names(out_df))]
 }
+
+
+#' Convert OpenAlex collection of concepts' records from list format to data frame
+#'
+#' It converts bibliographic collection of concepts' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
+#' The function converts a list of concepts' records obtained using \code{oa_request} into a data frame/tibble.
+#'
+#' @inheritParams oa2df
+#'
+#' @return a data.frame.
+#'
+#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
+#'
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # Get funders located in Canada with more than 100,000 citations
+#'
+#' res <- oa_request(
+#'   "https://api.openalex.org/funders?filter=country_code:ca,cited_by_count:>100000"
+#' )
+#'
+#' df <- oa2df(res, entity = "funders")
+#'
+#' df
+#' }
+#'
+#' @export
+funders2df <- function(data, verbose = TRUE) {
+
+  # replace NULL with NA
+  data <- simple_rapply(data, `%||%`, y = NA)
+
+  if (!is.null(data$id)) {
+    data <- list(data)
+  }
+
+  funder_process <- tibble::tribble(
+    ~type, ~field,
+    "identical", "id",
+    "identical", "display_name",
+    "col_df", "alternate_titles",
+    "identical", "country_code",
+    "identical", "description",
+    "identical", "homepage_url",
+    "identical", "image_url",
+    "identical", "image_thumbnail_url",
+    "identical", "grants_count",
+    "identical", "works_count",
+    "identical", "cited_by_count",
+    "col_df", "summary_stats",
+    "col_df", "ids",
+    "rbind_df", "counts_by_year",
+    "rbind_df", "roles",
+    "identical", "updated_date",
+    "identical", "created_date"
+  )
+
+  n <- length(data)
+  pb <- oa_progress(n)
+  list_df <- vector(mode = "list", length = n)
+
+  for (i in seq.int(n)) {
+    if (verbose) pb$tick()
+
+    item <- data[[i]]
+    fields <- funder_process[funder_process$field %in% names(item), ]
+    sim_fields <- mapply(
+      function(x, y) subs_na(item[[x]], type = y),
+      fields$field,
+      fields$type,
+      SIMPLIFY = FALSE
+    )
+    list_df[[i]] <- sim_fields
+  }
+
+  out_df <- rbind_oa_ls(list_df)
+}
+
 
 
 #' Flatten snowball result
