@@ -317,3 +317,18 @@ test_that("oa_fetch works for funders", {
   expect_equal(ncol(s), 17)
   expect_true(nrow(s) > 1)
 })
+
+test_that("oa_fetch works for sources", {
+  s <- oa_fetch(entity = "sources", search = "nature")
+  expect_s3_class(s, "data.frame")
+  expect_equal(ncol(s), 27)
+  expect_true(nrow(s) > 200)
+})
+
+test_that("oa_fetch works for publishers", {
+  s <- oa_fetch(entity = "publishers", country_codes = "ca")
+  expect_s3_class(s, "data.frame")
+  expect_equal(ncol(s), 19)
+  expect_true(nrow(s) > 100)
+})
+

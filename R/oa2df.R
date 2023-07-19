@@ -58,6 +58,8 @@ oa2df <- function(data, entity, count_only = FALSE, group_by = NULL, abstract = 
     venues = venues2df(data, verbose),
     concepts = concepts2df(data, verbose),
     funders = funders2df(data, verbose),
+    sources = sources2df(data, verbose),
+    publishers = publishers2df(data, verbose),
     snowball = snowball2df(data)
   )
 }
@@ -651,10 +653,10 @@ concepts2df <- function(data, verbose = TRUE) {
 }
 
 
-#' Convert OpenAlex collection of concepts' records from list format to data frame
+#' Convert OpenAlex collection of funders' records from list format to data frame
 #'
-#' It converts bibliographic collection of concepts' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
-#' The function converts a list of concepts' records obtained using \code{oa_request} into a data frame/tibble.
+#' It converts bibliographic collection of funders' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
+#' The function converts a list of funders' records obtained using \code{oa_request} into a data frame/tibble.
 #'
 #' @inheritParams oa2df
 #'
@@ -717,6 +719,178 @@ funders2df <- function(data, verbose = TRUE) {
 
     item <- data[[i]]
     fields <- funder_process[funder_process$field %in% names(item), ]
+    sim_fields <- mapply(
+      function(x, y) subs_na(item[[x]], type = y),
+      fields$field,
+      fields$type,
+      SIMPLIFY = FALSE
+    )
+    list_df[[i]] <- sim_fields
+  }
+
+  out_df <- rbind_oa_ls(list_df)
+}
+
+
+
+#' Convert OpenAlex collection of sources' records from list format to data frame
+#'
+#' It converts bibliographic collection of sources' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
+#' The function converts a list of sources' records obtained using \code{oa_request} into a data frame/tibble.
+#'
+#' @inheritParams oa2df
+#'
+#' @return a data.frame.
+#'
+#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
+#'
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # Get sources from Nature
+#'
+#' res <- oa_request(
+#'   "https://api.openalex.org/sources?search=nature"
+#' )
+#'
+#' df <- oa2df(res, entity = "sources")
+#'
+#' df
+#' }
+#'
+#' @export
+sources2df <- function(data, verbose = TRUE) {
+
+  # replace NULL with NA
+  data <- simple_rapply(data, `%||%`, y = NA)
+
+  if (!is.null(data$id)) {
+    data <- list(data)
+  }
+
+  source_process <- tibble::tribble(
+    ~type, ~field,
+    "identical", "id",
+    "identical", "issn_l",
+    "col_df", "issn",
+    "identical", "display_name",
+    "identical", "host_organization",
+    "identical", "host_organization_name",
+    "col_df", "host_organization_lineage",
+    "identical", "relevance_score",
+    "identical", "works_count",
+    "identical", "cited_by_count",
+    "col_df", "summary_stats",
+    "identical", "is_oa",
+    "identical", "is_in_doaj",
+    "col_df", "ids",
+    "identical", "homepage_url",
+    "identical", "apc_prices",
+    "identical", "apc_usd",
+    "identical", "country_code",
+    "flat", "societies",
+    "flat", "alternate_titles",
+    "identical", "abbreviated_title",
+    "identical", "type",
+    "rbind_df", "x_concepts",
+    "rbind_df", "counts_by_year",
+    "identical", "works_api_url",
+    "identical", "updated_date",
+    "identical", "created_date"
+  )
+
+  n <- length(data)
+  pb <- oa_progress(n)
+  list_df <- vector(mode = "list", length = n)
+
+  for (i in seq.int(n)) {
+    if (verbose) pb$tick()
+
+    item <- data[[i]]
+    fields <- source_process[source_process$field %in% names(item), ]
+    sim_fields <- mapply(
+      function(x, y) subs_na(item[[x]], type = y),
+      fields$field,
+      fields$type,
+      SIMPLIFY = FALSE
+    )
+    list_df[[i]] <- sim_fields
+  }
+
+  out_df <- rbind_oa_ls(list_df)
+}
+
+
+
+#' Convert OpenAlex collection of publishers' records from list format to data frame
+#'
+#' It converts bibliographic collection of publishers' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
+#' The function converts a list of publishers' records obtained using \code{oa_request} into a data frame/tibble.
+#'
+#' @inheritParams oa2df
+#'
+#' @return a data.frame.
+#'
+#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
+#'
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # Get publishers located in Canada with more than 100,000 citations
+#'
+#' res <- oa_request(
+#'   "https://api.openalex.org/publishers?filter=country_codes:ca"
+#' )
+#'
+#' df <- oa2df(res, entity = "publishers")
+#'
+#' df
+#' }
+#'
+#' @export
+publishers2df <- function(data, verbose = TRUE) {
+
+  # replace NULL with NA
+  data <- simple_rapply(data, `%||%`, y = NA)
+
+  if (!is.null(data$id)) {
+    data <- list(data)
+  }
+
+  publisher_process <- tibble::tribble(
+    ~type, ~field,
+    "identical", "id",
+    "identical", "display_name",
+    "flat", "alternate_titles",
+    "identical", "hierarchy_level",
+    "row_df", "parent_publisher",
+    "flat", "lineage",
+    "identical", "country_codes",
+    "identical", "homepage_url",
+    "identical", "image_url",
+    "identical", "image_thumbnail_url",
+    "identical", "works_count",
+    "identical", "cited_by_count",
+    "col_df", "summary_stats",
+    "col_df", "ids",
+    "rbind_df", "counts_by_year",
+    "rbind_df", "roles",
+    "identical", "sources_api_url",
+    "identical", "updated_date",
+    "identical", "created_date"
+  )
+
+  n <- length(data)
+  pb <- oa_progress(n)
+  list_df <- vector(mode = "list", length = n)
+
+  for (i in seq.int(n)) {
+    if (verbose) pb$tick()
+
+    item <- data[[i]]
+    fields <- publisher_process[publisher_process$field %in% names(item), ]
     sim_fields <- mapply(
       function(x, y) subs_na(item[[x]], type = y),
       fields$field,

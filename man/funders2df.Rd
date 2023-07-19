@@ -2,7 +2,7 @@
 % Please edit documentation in R/oa2df.R
 \name{funders2df}
 \alias{funders2df}
-\title{Convert OpenAlex collection of concepts' records from list format to data frame}
+\title{Convert OpenAlex collection of funders' records from list format to data frame}
 \usage{
 funders2df(data, verbose = TRUE)
 }
@@ -18,8 +18,8 @@ a data.frame.
 For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
 }
 \description{
-It converts bibliographic collection of concepts' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
-The function converts a list of concepts' records obtained using \code{oa_request} into a data frame/tibble.
+It converts bibliographic collection of funders' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
+The function converts a list of funders' records obtained using \code{oa_request} into a data frame/tibble.
 }
 \examples{
 \dontrun{
