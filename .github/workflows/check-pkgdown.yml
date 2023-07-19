@@ -25,7 +25,9 @@ jobs:
             extra-packages: any::devtools, any::pkgdown
 
         - name: Install dependencies
-          run: devtools::install_github("https://github.com/ropensci-org/rotemplate")
+          run: |
+            options(download.file.method = "wget")
+            devtools::install_github("https://github.com/ropensci-org/rotemplate")
           shell: Rscript {0}
 
         - name: Check pkgdown
