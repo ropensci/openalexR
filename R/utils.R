@@ -63,6 +63,9 @@ id_type <- function(identifier) {
     V = "venues",
     I = "institutions",
     C = "concepts",
+    S = "sources",
+    P = "publishers",
+    `F` = "funders",
     NA
   )
 }
