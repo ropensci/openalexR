@@ -177,7 +177,6 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
     if (verbose) pb$tick()
 
     paper <- data[[i]]
-    paper <- simple_rapply(paper, `%||%`, y = NA)
 
     fields <- works_process[works_process$field %in% names(paper), ]
     sim_fields <- mapply(
@@ -292,8 +291,6 @@ abstract_build <- function(ab) {
 #'
 #' @export
 authors2df <- function(data, verbose = TRUE) {
-  # replace NULL with NA
-  data <- simple_rapply(data, function(x) if (is.null(x)) NA else x)
 
   if (!is.null(data$id)) {
     data <- list(data)
@@ -392,9 +389,6 @@ authors2df <- function(data, verbose = TRUE) {
 #'
 #' @export
 institutions2df <- function(data, verbose = TRUE) {
-
-  # replace NULL with NA
-  data <- simple_rapply(data, `%||%`, y = NA)
 
   if (!is.null(data$id)) {
     data <- list(data)
@@ -495,8 +489,6 @@ institutions2df <- function(data, verbose = TRUE) {
 #'
 #' @export
 venues2df <- function(data, verbose = TRUE) {
-  # replace NULL with NA
-  data <- simple_rapply(data, function(x) if (is.null(x)) NA else x)
 
   if (!is.null(data$id)) {
     data <- list(data)
@@ -587,9 +579,6 @@ venues2df <- function(data, verbose = TRUE) {
 #'
 #' @export
 concepts2df <- function(data, verbose = TRUE) {
-
-  # replace NULL with NA
-  data <- simple_rapply(data, `%||%`, y = NA)
 
   if (!is.null(data$id)) {
     data <- list(data)
@@ -686,9 +675,6 @@ concepts2df <- function(data, verbose = TRUE) {
 #' @export
 funders2df <- function(data, verbose = TRUE) {
 
-  # replace NULL with NA
-  data <- simple_rapply(data, `%||%`, y = NA)
-
   if (!is.null(data$id)) {
     data <- list(data)
   }
@@ -766,9 +752,6 @@ funders2df <- function(data, verbose = TRUE) {
 #'
 #' @export
 sources2df <- function(data, verbose = TRUE) {
-
-  # replace NULL with NA
-  data <- simple_rapply(data, `%||%`, y = NA)
 
   if (!is.null(data$id)) {
     data <- list(data)
@@ -857,9 +840,6 @@ sources2df <- function(data, verbose = TRUE) {
 #'
 #' @export
 publishers2df <- function(data, verbose = TRUE) {
-
-  # replace NULL with NA
-  data <- simple_rapply(data, `%||%`, y = NA)
 
   if (!is.null(data$id)) {
     data <- list(data)
