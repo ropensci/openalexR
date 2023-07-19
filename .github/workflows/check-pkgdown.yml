@@ -27,7 +27,11 @@ jobs:
         - name: Install dependencies
           run: |
             options(download.file.method = "wget")
-            devtools::install_github("https://github.com/ropensci-org/rotemplate")
+            pkg <- "ropensci-org/rotemplate"
+            URL <- paste0("https://api.github.com/repos/", pkg, "/tarball")
+            tmp <- tempfile(fileext = ".tar.gz")
+            download.file(URL, tmp, method = "wget")
+            install.packages(tmp, type = "source")
           shell: Rscript {0}
 
         - name: Check pkgdown
