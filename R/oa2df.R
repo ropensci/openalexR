@@ -8,6 +8,10 @@
 #' The argument can be one of c("works", "authors", "venues", "institutions", "concepts").
 #' @param abstract Logical. If TRUE, the function returns also the abstract of each item.
 #' Ignored if entity is different from "works". Defaults to TRUE.
+#' @param verbose Logical.
+#' If TRUE, print information about the dataframe conversion process.
+#' Defaults to TRUE.
+#'
 #' @inheritParams oa_query
 #' @inheritParams oa_request
 #' @return A tibble/dataframe result of the original OpenAlex result list.
@@ -187,10 +191,10 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
 
     if (!is.null(paper$primary_location)) {
       so_info <- paper$primary_location["source"]
-      so_info <- if (is.na(so_info)) NA else so_info[[1]]
-
+      so_info <- if (length(so_info[[1]]) == 0) NA else so_info[[1]]
+      venue_info <- replace_w_na(paper$primary_location[venue_cols])
       venue <- setNames(
-        c(paper$primary_location[venue_cols], so_info[so_cols]),
+        c(venue_info, so_info[so_cols]),
         c(names(venue_cols), names(so_cols))
       )
     }
@@ -208,12 +212,11 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
           }
           first_inst <- prepend(first_inst, "institution")
           aff_raw <- list(au_affiliation_raw = l$raw_affiliation_string[1])
-          l_author <- l_author <- if (length(l$author) > 0) {
-            prepend(l$author, "au")
+          l_author <- if (length(l$author) > 0) {
+            prepend(replace_w_na(l$author), "au")
           } else {
             empty_list(c("au_id", "au_display_name", "au_orcid"))
           }
-
           c(l_author, l["author_position"], aff_raw, first_inst)
         }), "rbind_df"
       )
@@ -223,8 +226,9 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
     if (!is.null(paper$abstract_inverted_index) && abstract) {
       ab <- abstract_build(paper$abstract_inverted_index)
     }
+    paper_biblio <- replace_w_na(paper$biblio) # TODO replace sapply with something else
 
-    out_ls <- c(sim_fields, venue, paper$biblio, list(author = author, ab = ab))
+    out_ls <- c(sim_fields, venue, paper_biblio, list(author = author, ab = ab))
     out_ls[sapply(out_ls, is.null)] <- NULL
     list_df[[i]] <- out_ls
   }
@@ -337,7 +341,7 @@ authors2df <- function(data, verbose = TRUE) {
       }
       sub_affiliation <- prepend(sub_affiliation, "affiliation")
     }
-
+    sub_affiliation <- replace_w_na(sub_affiliation)
     list_df[[i]] <- c(sim_fields, sub_affiliation)
   }
 
@@ -729,6 +733,7 @@ funders2df <- function(data, verbose = TRUE) {
   }
 
   out_df <- rbind_oa_ls(list_df)
+  out_df
 }
 
 
@@ -819,6 +824,7 @@ sources2df <- function(data, verbose = TRUE) {
   }
 
   out_df <- rbind_oa_ls(list_df)
+  out_df
 }
 
 
@@ -901,6 +907,7 @@ publishers2df <- function(data, verbose = TRUE) {
   }
 
   out_df <- rbind_oa_ls(list_df)
+  out_df
 }
 
 

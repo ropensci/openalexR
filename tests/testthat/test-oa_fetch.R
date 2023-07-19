@@ -332,3 +332,29 @@ test_that("oa_fetch works for publishers", {
   expect_true(nrow(s) > 100)
 })
 
+test_that("oa_fetch works with 1 identifier", {
+  w <- oa_fetch(identifier = "W3046863325") # Work
+  a <- oa_fetch(identifier = "A1969205032") # Author
+  i <- oa_fetch(identifier = "I4200000001") # Institution
+  f <- oa_fetch(identifier = "F4320332161") # Funder
+  p <- oa_fetch(identifier = "P4310311775") # Publisher
+  s <- oa_fetch(identifier = "S1983995261") # Source
+  co <- oa_fetch(identifier = "C2522767166") # Concept
+
+  expect_s3_class(w, "data.frame")
+  expect_s3_class(a, "data.frame")
+  expect_s3_class(i, "data.frame")
+  expect_s3_class(f, "data.frame")
+  expect_s3_class(p, "data.frame")
+  expect_s3_class(s, "data.frame")
+  expect_s3_class(co, "data.frame")
+
+  expect_equal(dim(w), c(1, 30))
+  expect_equal(dim(a), c(1, 15))
+  expect_equal(dim(i), c(1, 21))
+  expect_equal(dim(f), c(1, 17))
+  expect_equal(dim(p), c(1, 19))
+  expect_equal(dim(s), c(1, 26))
+  expect_equal(dim(co), c(1, 16))
+
+})
