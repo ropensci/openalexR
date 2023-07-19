@@ -81,6 +81,14 @@ oa_email <- function() {
   email
 }
 
+oa_debug <- function() {
+  d <- Sys.getenv("openalexR.debug")
+  if (d == ""){
+    return(FALSE)
+  }
+  TRUE
+}
+
 oa_apikey <- function() {
   apikey <- Sys.getenv("openalexR.apikey")
   if (apikey == "") {

@@ -433,6 +433,7 @@ get_next_page <- function(paging, i, res = NULL) {
 #' Defaults to endpoint = "https://api.openalex.org".
 #' @param verbose Logical. If TRUE, print information on querying process.
 #' Default to \code{verbose = FALSE}.
+#' To display the full query URL, set the environment variable openalexR.debug to TRUE.
 #' @param \dots Additional filter arguments.
 #'
 #' @return a character containing the query in OpenAlex format.
@@ -564,7 +565,13 @@ oa_query <- function(filter = NULL,
     query = query
   )
 
-  if (verbose) message("Requesting url: ", query_url)
+  if (oa_debug()){
+    url_display <- query_url
+  } else {
+    url_display <- paste0(substr(string, 1, 60), "...")
+  }
+
+  if (verbose) message("Requesting url: ", url_display)
 
   query_url
 }
