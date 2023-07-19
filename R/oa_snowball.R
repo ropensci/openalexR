@@ -36,6 +36,7 @@
 oa_snowball <- function(identifier = NULL,
                         ...,
                         id_type = c("short", "original"),
+                        options = list(),
                         mailto = oa_email(),
                         endpoint = "https://api.openalex.org",
                         verbose = FALSE,
@@ -45,6 +46,7 @@ oa_snowball <- function(identifier = NULL,
   base_args <- list(
     entity = "works",
     output = "tibble",
+    options = options,
     endpoint = endpoint,
     mailto = mailto,
     verbose = verbose

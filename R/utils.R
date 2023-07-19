@@ -14,8 +14,7 @@ replace_w_na <- function(x){
   lapply(x, `%||%`, y = NA)
 }
 
-subs_na <- function(x, type = c("row_df", "col_df", "flat", "rbind_df", "identical"), prefix = NULL) {
-  type <- match.arg(type)
+subs_na <- function(x, type, prefix = NULL) {
   if (length(x) == 0) {
     return(NA)
   }
@@ -28,8 +27,7 @@ subs_na <- function(x, type = c("row_df", "col_df", "flat", "rbind_df", "identic
     row_df = as.data.frame(replace_w_na(x)),
     col_df = tibble::enframe(unlist(x)),
     flat = unlist(x),
-    rbind_df = do.call(rbind.data.frame, lapply(x, replace_w_na)
-    )
+    rbind_df = do.call(rbind.data.frame, lapply(x, replace_w_na))
   )
 
   if (!is.null(prefix)) {
