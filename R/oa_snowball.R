@@ -99,6 +99,8 @@ oa_snowball <- function(identifier = NULL,
   edges <- edges[!duplicated(edges), ]
   # remove edges to/from NA nodes
   edges <- edges[stats::complete.cases(edges), ]
+  # remove edges to missing nodes (ex: deleted works)
+  edges <- edges[edges$from %in% nodes$id & edges$to %in% nodes$id, ]
 
   if (id_type == "short") {
     edges$to <- shorten_oaid(edges$to)
