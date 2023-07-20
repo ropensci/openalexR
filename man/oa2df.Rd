@@ -30,8 +30,9 @@ See more at <https://docs.openalex.org/how-to-use-the-api/get-groups-of-entities
 \item{abstract}{Logical. If TRUE, the function returns also the abstract of each item.
 Ignored if entity is different from "works". Defaults to TRUE.}
 
-\item{verbose}{Logical. If TRUE, print information on querying process.
-Default to \code{verbose = FALSE}.}
+\item{verbose}{Logical.
+If TRUE, print information about the dataframe conversion process.
+Defaults to TRUE.}
 }
 \value{
 A tibble/dataframe result of the original OpenAlex result list.

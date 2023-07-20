@@ -47,7 +47,7 @@ test_that("oa_fetch works", {
     paste0("https://openalex.org/", sort(work_ids))
   )
 
-  Sys.sleep(1/10)
+  Sys.sleep(1 / 10)
   filtered_works <- oa_fetch(
     entity = "w",
     publication_date = "2020-08-01",
@@ -87,7 +87,7 @@ test_that("Error when input entity can't be matched", {
     )
   )
 
-  Sys.sleep(1/10)
+  Sys.sleep(1 / 10)
   expect_error(
     oa_fetch(
       entity = "insta",
@@ -98,20 +98,20 @@ test_that("Error when input entity can't be matched", {
 
 test_that("oa_fetch instutitions binds associated_institutions correctly", {
   skip_on_cran()
-  Sys.sleep(1/10)
+  Sys.sleep(1 / 10)
   inst <- oa_fetch(identifier = "I1292875679")
   expect_true(ncol(inst$associated_institutions[[1]]) >= 6)
 })
 
 test_that("oa_fetch sample works", {
   skip_on_cran()
-  Sys.sleep(1/10)
+  Sys.sleep(1 / 10)
   random2021 <- oa_fetch(
     "works",
     publication_year = 2021,
     options = list(sample = 20)
   )
-  Sys.sleep(1/10)
+  Sys.sleep(1 / 10)
   random10 <- oa_fetch(
     "works",
     options = list(sample = 10, seed = 1)
@@ -126,7 +126,7 @@ test_that("oa_fetch sample works", {
 test_that("oa_fetch authors can deal with NA institutions", {
   skip_on_cran()
 
-  Sys.sleep(1/10)
+  Sys.sleep(1 / 10)
   expect_s3_class(
     oa_fetch(
       entity = "authors",
@@ -134,7 +134,7 @@ test_that("oa_fetch authors can deal with NA institutions", {
     ),
     "data.frame"
   )
-  Sys.sleep(1/10)
+  Sys.sleep(1 / 10)
   expect_type(
     oa_fetch(
       entity = "authors",
@@ -201,7 +201,7 @@ test_that("oa_fetch can combine (OR) more than 50 DOIs in a filter", {
     "https://doi.org/10.1016/j.net.2020.08.005",
     "https://doi.org/10.1016/j.iot.2020.100318"
   )
-  Sys.sleep(1/10)
+  Sys.sleep(1 / 10)
   many_doi_results <- oa_fetch(entity = "works", doi = valid_dois)
 
   expect_s3_class(
@@ -309,4 +309,52 @@ test_that("paging works with sample", {
   )
   expect_equal(nrow(w), 50)
   expect_equal(sum(duplicated(w)), 0) # no duplicates
+})
+
+test_that("oa_fetch works for funders", {
+  s <- oa_fetch("funders", country_code = "ca", cited_by_count = ">100000")
+  expect_s3_class(s, "data.frame")
+  expect_equal(ncol(s), 17)
+  expect_true(nrow(s) > 1)
+})
+
+test_that("oa_fetch works for sources", {
+  s <- oa_fetch(entity = "sources", search = "nature")
+  expect_s3_class(s, "data.frame")
+  expect_equal(ncol(s), 27)
+  expect_true(nrow(s) > 200)
+})
+
+test_that("oa_fetch works for publishers", {
+  s <- oa_fetch(entity = "publishers", country_codes = "ca")
+  expect_s3_class(s, "data.frame")
+  expect_equal(ncol(s), 19)
+  expect_true(nrow(s) > 100)
+})
+
+test_that("oa_fetch works with 1 identifier", {
+  w <- oa_fetch(identifier = "W3046863325") # Work
+  a <- oa_fetch(identifier = "A1969205032") # Author
+  i <- oa_fetch(identifier = "I4200000001") # Institution
+  f <- oa_fetch(identifier = "F4320332161") # Funder
+  p <- oa_fetch(identifier = "P4310311775") # Publisher
+  s <- oa_fetch(identifier = "S1983995261") # Source
+  co <- oa_fetch(identifier = "C2522767166") # Concept
+
+  expect_s3_class(w, "data.frame")
+  expect_s3_class(a, "data.frame")
+  expect_s3_class(i, "data.frame")
+  expect_s3_class(f, "data.frame")
+  expect_s3_class(p, "data.frame")
+  expect_s3_class(s, "data.frame")
+  expect_s3_class(co, "data.frame")
+
+  expect_equal(dim(w), c(1, 30))
+  expect_equal(dim(a), c(1, 15))
+  expect_equal(dim(i), c(1, 21))
+  expect_equal(dim(f), c(1, 17))
+  expect_equal(dim(p), c(1, 19))
+  expect_equal(dim(s), c(1, 26))
+  expect_equal(dim(co), c(1, 16))
+
 })

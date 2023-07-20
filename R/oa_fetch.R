@@ -5,7 +5,8 @@
 #' @examples
 #' oa_entities()
 oa_entities <- function() {
-  c("works", "authors", "venues", "institutions", "concepts")
+  c("works", "authors", "venues", "institutions", "concepts",
+    "funders", "sources", "publishers")
 }
 
 #' A composition function to perform query building, requesting,
