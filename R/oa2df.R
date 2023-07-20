@@ -129,7 +129,7 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
     "id", "display_name", "author", "ab", "publication_date", "relevance_score",
     "so", "so_id", "host_organization", "issn_l", "url", "pdf_url",
     "license", "version", "first_page", "last_page",
-    "volume", "issue", "is_oa", "cited_by_count", "counts_by_year",
+    "volume", "issue", "is_oa", "open_access", "cited_by_count", "counts_by_year",
     "publication_year", "cited_by_api_url", "ids", "doi", "type",
     "referenced_works", "related_works", "is_paratext", "is_retracted", "concepts"
   )
@@ -146,11 +146,12 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
     "identical", "is_paratext",
     "identical", "is_retracted",
     "identical", "relevance_score",
+    "row_df", "open_access",
     "flat", "referenced_works",
     "flat", "related_works",
     "rbind_df", "counts_by_year",
     "rbind_df", "concepts",
-    "col_df", "ids"
+    "flat", "ids"
   )
 
   venue_cols <- c(
@@ -318,7 +319,7 @@ authors2df <- function(data, verbose = TRUE) {
     "flat", "display_name_alternatives",
     "rbind_df", "counts_by_year",
     "rbind_df", "x_concepts",
-    "col_df", "ids"
+    "flat", "ids"
   )
 
   for (i in seq.int(n)) {
@@ -427,7 +428,7 @@ institutions2df <- function(data, verbose = TRUE) {
     "rbind_df", "counts_by_year",
     "rbind_df", "x_concepts",
     "rbind_df", "associated_institutions",
-    "col_df", "ids"
+    "flat", "ids"
   )
 
   for (i in seq.int(n)) {
@@ -522,7 +523,7 @@ venues2df <- function(data, verbose = TRUE) {
     "flat", "issn",
     "rbind_df", "counts_by_year",
     "rbind_df", "x_concepts",
-    "col_df", "ids"
+    "flat", "ids"
   )
 
   for (i in seq.int(n)) {
@@ -611,7 +612,7 @@ concepts2df <- function(data, verbose = TRUE) {
     "rbind_df", "counts_by_year",
     "rbind_df", "ancestors",
     "rbind_df", "related_concepts",
-    "col_df", "ids"
+    "flat", "ids"
   )
 
   n <- length(data)
@@ -697,7 +698,7 @@ funders2df <- function(data, verbose = TRUE) {
     ~type, ~field,
     "identical", "id",
     "identical", "display_name",
-    "col_df", "alternate_titles",
+    "flat", "alternate_titles",
     "identical", "country_code",
     "identical", "description",
     "identical", "homepage_url",
@@ -706,8 +707,8 @@ funders2df <- function(data, verbose = TRUE) {
     "identical", "grants_count",
     "identical", "works_count",
     "identical", "cited_by_count",
-    "col_df", "summary_stats",
-    "col_df", "ids",
+    "flat", "summary_stats",
+    "flat", "ids",
     "rbind_df", "counts_by_year",
     "rbind_df", "roles",
     "identical", "updated_date",
@@ -778,18 +779,18 @@ sources2df <- function(data, verbose = TRUE) {
     ~type, ~field,
     "identical", "id",
     "identical", "issn_l",
-    "col_df", "issn",
+    "flat", "issn",
     "identical", "display_name",
     "identical", "host_organization",
     "identical", "host_organization_name",
-    "col_df", "host_organization_lineage",
+    "flat", "host_organization_lineage",
     "identical", "relevance_score",
     "identical", "works_count",
     "identical", "cited_by_count",
-    "col_df", "summary_stats",
+    "flat", "summary_stats",
     "identical", "is_oa",
     "identical", "is_in_doaj",
-    "col_df", "ids",
+    "flat", "ids",
     "identical", "homepage_url",
     "identical", "apc_prices",
     "identical", "apc_usd",
@@ -879,8 +880,8 @@ publishers2df <- function(data, verbose = TRUE) {
     "identical", "image_thumbnail_url",
     "identical", "works_count",
     "identical", "cited_by_count",
-    "col_df", "summary_stats",
-    "col_df", "ids",
+    "flat", "summary_stats",
+    "flat", "ids",
     "rbind_df", "counts_by_year",
     "rbind_df", "roles",
     "identical", "sources_api_url",
