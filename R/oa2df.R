@@ -128,8 +128,8 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
   col_order <- c(
     "id", "display_name", "author", "ab", "publication_date", "relevance_score",
     "so", "so_id", "host_organization", "issn_l", "url", "pdf_url",
-    "license", "version", "first_page", "last_page",
-    "volume", "issue", "is_oa", "open_access", "cited_by_count", "counts_by_year",
+    "license", "version", "first_page", "last_page", "volume", "issue", "is_oa",
+    "open_access", "language", "grants", "cited_by_count", "counts_by_year",
     "publication_year", "cited_by_api_url", "ids", "doi", "type",
     "referenced_works", "related_works", "is_paratext", "is_retracted", "concepts"
   )
@@ -147,6 +147,8 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
     "identical", "is_retracted",
     "identical", "relevance_score",
     "row_df", "open_access",
+    "identical", "language",
+    "flat", "grants",
     "flat", "referenced_works",
     "flat", "related_works",
     "rbind_df", "counts_by_year",
@@ -423,7 +425,6 @@ institutions2df <- function(data, verbose = TRUE) {
     "identical", "relevance_score",
     "flat", "display_name_alternatives",
     "flat", "display_name_acronyms",
-    "row_df", "international",
     "row_df", "geo",
     "rbind_df", "counts_by_year",
     "rbind_df", "x_concepts",
@@ -442,13 +443,21 @@ institutions2df <- function(data, verbose = TRUE) {
       fields$type,
       SIMPLIFY = FALSE
     )
-    list_df[[i]] <- sim_fields
+    if (!is.null(item$international)) {
+      interna <- list(
+        display_name_international = subs_na(
+          item$international$display_name,
+          type = "flat"
+        )
+      )
+    }
+    list_df[[i]] <- c(sim_fields, interna)
   }
 
 
   col_order <- c(
     "id", "display_name", "display_name_alternatives", "display_name_acronyms",
-    "international", "ror", "ids", "country_code", "geo", "type",
+    "display_name_international", "ror", "ids", "country_code", "geo", "type",
     "homepage_url", "image_url", "image_thumbnail_url",
     "associated_institutions", "relevance_score", "works_count",
     "cited_by_count", "counts_by_year",
@@ -636,7 +645,7 @@ concepts2df <- function(data, verbose = TRUE) {
       intern_fields <- lapply(
         item$international[c("display_name", "description")],
         subs_na,
-        type = "row_df"
+        type = "flat"
       )
       names(intern_fields) <- paste(names(intern_fields), "international", sep = "_")
     }
@@ -872,7 +881,7 @@ publishers2df <- function(data, verbose = TRUE) {
     "identical", "display_name",
     "flat", "alternate_titles",
     "identical", "hierarchy_level",
-    "row_df", "parent_publisher",
+    "flat", "parent_publisher",
     "flat", "lineage",
     "identical", "country_codes",
     "identical", "homepage_url",
