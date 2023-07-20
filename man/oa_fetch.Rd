@@ -84,7 +84,8 @@ Gives OpenAlex an email to enter the polite pool.}
 Your OpenAlex Premium API key, if available.}
 
 \item{verbose}{Logical. If TRUE, print information on querying process.
-Default to \code{verbose = FALSE}.}
+Default to \code{verbose = FALSE}.
+To display the full query URL, set the environment variable openalexR.debug to TRUE.}
 }
 \value{
 A data.frame or a list. Result of the query.

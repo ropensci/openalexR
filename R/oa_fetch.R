@@ -568,7 +568,7 @@ oa_query <- function(filter = NULL,
   if (oa_debug()){
     url_display <- query_url
   } else {
-    url_display <- paste0(substr(string, 1, 60), "...")
+    url_display <- paste0(substr(query_url, 1, 70), "...")
   }
 
   if (verbose) message("Requesting url: ", url_display)

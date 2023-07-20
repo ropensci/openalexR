@@ -53,7 +53,8 @@ Gives OpenAlex an email to enter the polite pool.}
 Defaults to endpoint = "https://api.openalex.org".}
 
 \item{verbose}{Logical. If TRUE, print information on querying process.
-Default to \code{verbose = FALSE}.}
+Default to \code{verbose = FALSE}.
+To display the full query URL, set the environment variable openalexR.debug to TRUE.}
 
 \item{citing_filter}{filters used in the search of works citing the input works.}
 

@@ -69,7 +69,8 @@ See more at <https://docs.openalex.org/how-to-use-the-api/get-groups-of-entities
 Defaults to endpoint = "https://api.openalex.org".}
 
 \item{verbose}{Logical. If TRUE, print information on querying process.
-Default to \code{verbose = FALSE}.}
+Default to \code{verbose = FALSE}.
+To display the full query URL, set the environment variable openalexR.debug to TRUE.}
 
 \item{\dots}{Additional filter arguments.}
 }

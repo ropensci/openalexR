@@ -21,7 +21,8 @@ These IDs start with "W". See more at <https://docs.openalex.org/api-entities/wo
 Defaults to endpoint = "https://api.openalex.org".}
 
 \item{verbose}{Logical. If TRUE, print information on querying process.
-Default to \code{verbose = FALSE}.}
+Default to \code{verbose = FALSE}.
+To display the full query URL, set the environment variable openalexR.debug to TRUE.}
 }
 \value{
 A dataframe of paper metadatada and a list-column of ngrams.
