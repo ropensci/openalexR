@@ -12,8 +12,9 @@ works2df(data, abstract = TRUE, verbose = TRUE)
 \item{abstract}{Logical. If TRUE, the function returns also the abstract of each item.
 Defaults to TRUE.}
 
-\item{verbose}{Logical. If TRUE, print information on querying process.
-Default to \code{verbose = FALSE}.}
+\item{verbose}{Logical.
+If TRUE, print information about the dataframe conversion process.
+Defaults to TRUE.}
 }
 \value{
 a data.frame.
