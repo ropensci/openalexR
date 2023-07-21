@@ -129,7 +129,8 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
     "id", "display_name", "author", "ab", "publication_date", "relevance_score",
     "so", "so_id", "host_organization", "issn_l", "url", "pdf_url",
     "license", "version", "first_page", "last_page", "volume", "issue", "is_oa",
-    "open_access", "language", "grants", "cited_by_count", "counts_by_year",
+    "is_oa_anywhere", "oa_status", "oa_url", "any_repository_has_fulltext",
+    "language", "grants", "cited_by_count", "counts_by_year",
     "publication_year", "cited_by_api_url", "ids", "doi", "type",
     "referenced_works", "related_works", "is_paratext", "is_retracted", "concepts"
   )
@@ -146,7 +147,6 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
     "identical", "is_paratext",
     "identical", "is_retracted",
     "identical", "relevance_score",
-    "row_df", "open_access",
     "identical", "language",
     "flat", "grants",
     "flat", "referenced_works",
@@ -229,9 +229,13 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
     if (!is.null(paper$abstract_inverted_index) && abstract) {
       ab <- abstract_build(paper$abstract_inverted_index)
     }
-    paper_biblio <- replace_w_na(paper$biblio) # TODO replace sapply with something else
+    paper_biblio <- replace_w_na(paper$biblio)
+    open_access <- replace_w_na(paper$open_access)
+    if (length(open_access) > 0){
+      names(open_access)[[1]] <- "is_oa_anywhere"
+    }
 
-    out_ls <- c(sim_fields, venue, paper_biblio, list(author = author, ab = ab))
+    out_ls <- c(sim_fields, venue, open_access, paper_biblio, list(author = author, ab = ab))
     out_ls[sapply(out_ls, is.null)] <- NULL
     list_df[[i]] <- out_ls
   }
