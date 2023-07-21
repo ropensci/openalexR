@@ -1,6 +1,6 @@
 #' A function to perform a snowball search
 #' and convert the result to a tibble/data frame.
-#' @param identifier Character vector of openalex_id identifiers.
+#' @param identifier Character vector of openalex identifiers.
 #' @param ... Additional arguments to pass to `oa_fetch` when querying the
 #' input works, such as `doi`.
 #' @param id_type Type of OpenAlex IDs to return. Defaults to "short",

@@ -468,7 +468,7 @@ snowball_docs <- oa_snowball(
   identifier = c("W1964141474", "W1963991285"),
   verbose = TRUE
 )
-#> Requesting url: https://api.openalex.org/works?filter=openalex_id%3AW1964141474%7CW1963991285
+#> Requesting url: https://api.openalex.org/works?filter=openalex%3AW1964141474%7CW1963991285
 #> Getting 1 page of results with a total of 2 records...
 #> Collecting all documents citing the target papers...
 #> Requesting url: https://api.openalex.org/works?filter=cites%3AW1963991285%7CW1964141474
