@@ -128,8 +128,9 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
   col_order <- c(
     "id", "display_name", "author", "ab", "publication_date", "relevance_score",
     "so", "so_id", "host_organization", "issn_l", "url", "pdf_url",
-    "license", "version", "first_page", "last_page",
-    "volume", "issue", "is_oa", "cited_by_count", "counts_by_year",
+    "license", "version", "first_page", "last_page", "volume", "issue", "is_oa",
+    "is_oa_anywhere", "oa_status", "oa_url", "any_repository_has_fulltext",
+    "language", "grants", "cited_by_count", "counts_by_year",
     "publication_year", "cited_by_api_url", "ids", "doi", "type",
     "referenced_works", "related_works", "is_paratext", "is_retracted", "concepts"
   )
@@ -146,11 +147,13 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
     "identical", "is_paratext",
     "identical", "is_retracted",
     "identical", "relevance_score",
+    "identical", "language",
+    "flat", "grants",
     "flat", "referenced_works",
     "flat", "related_works",
     "rbind_df", "counts_by_year",
     "rbind_df", "concepts",
-    "col_df", "ids"
+    "flat", "ids"
   )
 
   venue_cols <- c(
@@ -226,9 +229,13 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
     if (!is.null(paper$abstract_inverted_index) && abstract) {
       ab <- abstract_build(paper$abstract_inverted_index)
     }
-    paper_biblio <- replace_w_na(paper$biblio) # TODO replace sapply with something else
+    paper_biblio <- replace_w_na(paper$biblio)
+    open_access <- replace_w_na(paper$open_access)
+    if (length(open_access) > 0){
+      names(open_access)[[1]] <- "is_oa_anywhere"
+    }
 
-    out_ls <- c(sim_fields, venue, paper_biblio, list(author = author, ab = ab))
+    out_ls <- c(sim_fields, venue, open_access, paper_biblio, list(author = author, ab = ab))
     out_ls[sapply(out_ls, is.null)] <- NULL
     list_df[[i]] <- out_ls
   }
@@ -318,7 +325,7 @@ authors2df <- function(data, verbose = TRUE) {
     "flat", "display_name_alternatives",
     "rbind_df", "counts_by_year",
     "rbind_df", "x_concepts",
-    "col_df", "ids"
+    "flat", "ids"
   )
 
   for (i in seq.int(n)) {
@@ -422,12 +429,11 @@ institutions2df <- function(data, verbose = TRUE) {
     "identical", "relevance_score",
     "flat", "display_name_alternatives",
     "flat", "display_name_acronyms",
-    "row_df", "international",
     "row_df", "geo",
     "rbind_df", "counts_by_year",
     "rbind_df", "x_concepts",
     "rbind_df", "associated_institutions",
-    "col_df", "ids"
+    "flat", "ids"
   )
 
   for (i in seq.int(n)) {
@@ -441,13 +447,21 @@ institutions2df <- function(data, verbose = TRUE) {
       fields$type,
       SIMPLIFY = FALSE
     )
-    list_df[[i]] <- sim_fields
+    if (!is.null(item$international)) {
+      interna <- list(
+        display_name_international = subs_na(
+          item$international$display_name,
+          type = "flat"
+        )
+      )
+    }
+    list_df[[i]] <- c(sim_fields, interna)
   }
 
 
   col_order <- c(
     "id", "display_name", "display_name_alternatives", "display_name_acronyms",
-    "international", "ror", "ids", "country_code", "geo", "type",
+    "display_name_international", "ror", "ids", "country_code", "geo", "type",
     "homepage_url", "image_url", "image_thumbnail_url",
     "associated_institutions", "relevance_score", "works_count",
     "cited_by_count", "counts_by_year",
@@ -522,7 +536,7 @@ venues2df <- function(data, verbose = TRUE) {
     "flat", "issn",
     "rbind_df", "counts_by_year",
     "rbind_df", "x_concepts",
-    "col_df", "ids"
+    "flat", "ids"
   )
 
   for (i in seq.int(n)) {
@@ -611,7 +625,7 @@ concepts2df <- function(data, verbose = TRUE) {
     "rbind_df", "counts_by_year",
     "rbind_df", "ancestors",
     "rbind_df", "related_concepts",
-    "col_df", "ids"
+    "flat", "ids"
   )
 
   n <- length(data)
@@ -635,7 +649,7 @@ concepts2df <- function(data, verbose = TRUE) {
       intern_fields <- lapply(
         item$international[c("display_name", "description")],
         subs_na,
-        type = "row_df"
+        type = "flat"
       )
       names(intern_fields) <- paste(names(intern_fields), "international", sep = "_")
     }
@@ -697,7 +711,7 @@ funders2df <- function(data, verbose = TRUE) {
     ~type, ~field,
     "identical", "id",
     "identical", "display_name",
-    "col_df", "alternate_titles",
+    "flat", "alternate_titles",
     "identical", "country_code",
     "identical", "description",
     "identical", "homepage_url",
@@ -706,8 +720,8 @@ funders2df <- function(data, verbose = TRUE) {
     "identical", "grants_count",
     "identical", "works_count",
     "identical", "cited_by_count",
-    "col_df", "summary_stats",
-    "col_df", "ids",
+    "flat", "summary_stats",
+    "flat", "ids",
     "rbind_df", "counts_by_year",
     "rbind_df", "roles",
     "identical", "updated_date",
@@ -778,18 +792,18 @@ sources2df <- function(data, verbose = TRUE) {
     ~type, ~field,
     "identical", "id",
     "identical", "issn_l",
-    "col_df", "issn",
+    "flat", "issn",
     "identical", "display_name",
     "identical", "host_organization",
     "identical", "host_organization_name",
-    "col_df", "host_organization_lineage",
+    "flat", "host_organization_lineage",
     "identical", "relevance_score",
     "identical", "works_count",
     "identical", "cited_by_count",
-    "col_df", "summary_stats",
+    "flat", "summary_stats",
     "identical", "is_oa",
     "identical", "is_in_doaj",
-    "col_df", "ids",
+    "flat", "ids",
     "identical", "homepage_url",
     "identical", "apc_prices",
     "identical", "apc_usd",
@@ -871,7 +885,7 @@ publishers2df <- function(data, verbose = TRUE) {
     "identical", "display_name",
     "flat", "alternate_titles",
     "identical", "hierarchy_level",
-    "row_df", "parent_publisher",
+    "flat", "parent_publisher",
     "flat", "lineage",
     "identical", "country_codes",
     "identical", "homepage_url",
@@ -879,8 +893,8 @@ publishers2df <- function(data, verbose = TRUE) {
     "identical", "image_thumbnail_url",
     "identical", "works_count",
     "identical", "cited_by_count",
-    "col_df", "summary_stats",
-    "col_df", "ids",
+    "flat", "summary_stats",
+    "flat", "ids",
     "rbind_df", "counts_by_year",
     "rbind_df", "roles",
     "identical", "sources_api_url",
