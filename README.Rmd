@@ -194,9 +194,12 @@ my_arguments <- list(
 )
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
+
+if (do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))[1]>0){
 do.call(oa_fetch, my_arguments) |>
   show_authors() |>
   knitr::kable()
+}
 ```
 
 ## 🍒 Example analyses

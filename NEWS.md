@@ -1,3 +1,8 @@
+# openalexR 1.2.0
+* many improvements in oa_snowball
+* added new openalex entities
+* solved CRAN issue about  packageVersion() 
+
 # openalexR 1.1.0
 * Basic paging is applied when using options$sample
 * Bug fixes for rbind in oa2df
