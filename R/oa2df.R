@@ -8,6 +8,10 @@
 #' The argument can be one of c("works", "authors", "venues", "institutions", "concepts").
 #' @param abstract Logical. If TRUE, the function returns also the abstract of each item.
 #' Ignored if entity is different from "works". Defaults to TRUE.
+#' @param verbose Logical.
+#' If TRUE, print information about the dataframe conversion process.
+#' Defaults to TRUE.
+#'
 #' @inheritParams oa_query
 #' @inheritParams oa_request
 #' @return A tibble/dataframe result of the original OpenAlex result list.
@@ -57,6 +61,9 @@ oa2df <- function(data, entity, count_only = FALSE, group_by = NULL, abstract = 
     institutions = institutions2df(data, verbose),
     venues = venues2df(data, verbose),
     concepts = concepts2df(data, verbose),
+    funders = funders2df(data, verbose),
+    sources = sources2df(data, verbose),
+    publishers = publishers2df(data, verbose),
     snowball = snowball2df(data)
   )
 }
@@ -121,8 +128,9 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
   col_order <- c(
     "id", "display_name", "author", "ab", "publication_date", "relevance_score",
     "so", "so_id", "host_organization", "issn_l", "url", "pdf_url",
-    "license", "version", "first_page", "last_page",
-    "volume", "issue", "is_oa", "cited_by_count", "counts_by_year",
+    "license", "version", "first_page", "last_page", "volume", "issue", "is_oa",
+    "is_oa_anywhere", "oa_status", "oa_url", "any_repository_has_fulltext",
+    "language", "grants", "cited_by_count", "counts_by_year",
     "publication_year", "cited_by_api_url", "ids", "doi", "type",
     "referenced_works", "related_works", "is_paratext", "is_retracted", "concepts"
   )
@@ -139,11 +147,13 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
     "identical", "is_paratext",
     "identical", "is_retracted",
     "identical", "relevance_score",
+    "identical", "language",
+    "flat", "grants",
     "flat", "referenced_works",
     "flat", "related_works",
     "rbind_df", "counts_by_year",
     "rbind_df", "concepts",
-    "col_df", "ids"
+    "flat", "ids"
   )
 
   venue_cols <- c(
@@ -184,10 +194,10 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
 
     if (!is.null(paper$primary_location)) {
       so_info <- paper$primary_location["source"]
-      so_info <- if (is.na(so_info)) NA else so_info[[1]]
-
+      so_info <- if (length(so_info[[1]]) == 0) NA else so_info[[1]]
+      venue_info <- replace_w_na(paper$primary_location[venue_cols])
       venue <- setNames(
-        c(paper$primary_location[venue_cols], so_info[so_cols]),
+        c(venue_info, so_info[so_cols]),
         c(names(venue_cols), names(so_cols))
       )
     }
@@ -205,12 +215,11 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
           }
           first_inst <- prepend(first_inst, "institution")
           aff_raw <- list(au_affiliation_raw = l$raw_affiliation_string[1])
-          l_author <- l_author <- if (length(l$author) > 0) {
-            prepend(l$author, "au")
+          l_author <- if (length(l$author) > 0) {
+            prepend(replace_w_na(l$author), "au")
           } else {
             empty_list(c("au_id", "au_display_name", "au_orcid"))
           }
-
           c(l_author, l["author_position"], aff_raw, first_inst)
         }), "rbind_df"
       )
@@ -220,8 +229,13 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
     if (!is.null(paper$abstract_inverted_index) && abstract) {
       ab <- abstract_build(paper$abstract_inverted_index)
     }
+    paper_biblio <- replace_w_na(paper$biblio)
+    open_access <- replace_w_na(paper$open_access)
+    if (length(open_access) > 0){
+      names(open_access)[[1]] <- "is_oa_anywhere"
+    }
 
-    out_ls <- c(sim_fields, venue, paper$biblio, list(author = author, ab = ab))
+    out_ls <- c(sim_fields, venue, open_access, paper_biblio, list(author = author, ab = ab))
     out_ls[sapply(out_ls, is.null)] <- NULL
     list_df[[i]] <- out_ls
   }
@@ -311,7 +325,7 @@ authors2df <- function(data, verbose = TRUE) {
     "flat", "display_name_alternatives",
     "rbind_df", "counts_by_year",
     "rbind_df", "x_concepts",
-    "col_df", "ids"
+    "flat", "ids"
   )
 
   for (i in seq.int(n)) {
@@ -334,7 +348,7 @@ authors2df <- function(data, verbose = TRUE) {
       }
       sub_affiliation <- prepend(sub_affiliation, "affiliation")
     }
-
+    sub_affiliation <- replace_w_na(sub_affiliation)
     list_df[[i]] <- c(sim_fields, sub_affiliation)
   }
 
@@ -415,12 +429,11 @@ institutions2df <- function(data, verbose = TRUE) {
     "identical", "relevance_score",
     "flat", "display_name_alternatives",
     "flat", "display_name_acronyms",
-    "row_df", "international",
     "row_df", "geo",
     "rbind_df", "counts_by_year",
     "rbind_df", "x_concepts",
     "rbind_df", "associated_institutions",
-    "col_df", "ids"
+    "flat", "ids"
   )
 
   for (i in seq.int(n)) {
@@ -434,13 +447,21 @@ institutions2df <- function(data, verbose = TRUE) {
       fields$type,
       SIMPLIFY = FALSE
     )
-    list_df[[i]] <- sim_fields
+    if (!is.null(item$international)) {
+      interna <- list(
+        display_name_international = subs_na(
+          item$international$display_name,
+          type = "flat"
+        )
+      )
+    }
+    list_df[[i]] <- c(sim_fields, interna)
   }
 
 
   col_order <- c(
     "id", "display_name", "display_name_alternatives", "display_name_acronyms",
-    "international", "ror", "ids", "country_code", "geo", "type",
+    "display_name_international", "ror", "ids", "country_code", "geo", "type",
     "homepage_url", "image_url", "image_thumbnail_url",
     "associated_institutions", "relevance_score", "works_count",
     "cited_by_count", "counts_by_year",
@@ -515,7 +536,7 @@ venues2df <- function(data, verbose = TRUE) {
     "flat", "issn",
     "rbind_df", "counts_by_year",
     "rbind_df", "x_concepts",
-    "col_df", "ids"
+    "flat", "ids"
   )
 
   for (i in seq.int(n)) {
@@ -604,7 +625,7 @@ concepts2df <- function(data, verbose = TRUE) {
     "rbind_df", "counts_by_year",
     "rbind_df", "ancestors",
     "rbind_df", "related_concepts",
-    "col_df", "ids"
+    "flat", "ids"
   )
 
   n <- length(data)
@@ -628,7 +649,7 @@ concepts2df <- function(data, verbose = TRUE) {
       intern_fields <- lapply(
         item$international[c("display_name", "description")],
         subs_na,
-        type = "row_df"
+        type = "flat"
       )
       names(intern_fields) <- paste(names(intern_fields), "international", sep = "_")
     }
@@ -648,6 +669,261 @@ concepts2df <- function(data, verbose = TRUE) {
   out_df <- rbind_oa_ls(list_df)
   out_df[, intersect(col_order, names(out_df))]
 }
+
+
+#' Convert OpenAlex collection of funders' records from list format to data frame
+#'
+#' It converts bibliographic collection of funders' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
+#' The function converts a list of funders' records obtained using \code{oa_request} into a data frame/tibble.
+#'
+#' @inheritParams oa2df
+#'
+#' @return a data.frame.
+#'
+#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
+#'
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # Get funders located in Canada with more than 100,000 citations
+#'
+#' res <- oa_request(
+#'   "https://api.openalex.org/funders?filter=country_code:ca,cited_by_count:>100000"
+#' )
+#'
+#' df <- oa2df(res, entity = "funders")
+#'
+#' df
+#' }
+#'
+#' @export
+funders2df <- function(data, verbose = TRUE) {
+
+  # replace NULL with NA
+  data <- simple_rapply(data, `%||%`, y = NA)
+
+  if (!is.null(data$id)) {
+    data <- list(data)
+  }
+
+  funder_process <- tibble::tribble(
+    ~type, ~field,
+    "identical", "id",
+    "identical", "display_name",
+    "flat", "alternate_titles",
+    "identical", "country_code",
+    "identical", "description",
+    "identical", "homepage_url",
+    "identical", "image_url",
+    "identical", "image_thumbnail_url",
+    "identical", "grants_count",
+    "identical", "works_count",
+    "identical", "cited_by_count",
+    "flat", "summary_stats",
+    "flat", "ids",
+    "rbind_df", "counts_by_year",
+    "rbind_df", "roles",
+    "identical", "updated_date",
+    "identical", "created_date"
+  )
+
+  n <- length(data)
+  pb <- oa_progress(n)
+  list_df <- vector(mode = "list", length = n)
+
+  for (i in seq.int(n)) {
+    if (verbose) pb$tick()
+
+    item <- data[[i]]
+    fields <- funder_process[funder_process$field %in% names(item), ]
+    sim_fields <- mapply(
+      function(x, y) subs_na(item[[x]], type = y),
+      fields$field,
+      fields$type,
+      SIMPLIFY = FALSE
+    )
+    list_df[[i]] <- sim_fields
+  }
+
+  out_df <- rbind_oa_ls(list_df)
+  out_df
+}
+
+
+
+#' Convert OpenAlex collection of sources' records from list format to data frame
+#'
+#' It converts bibliographic collection of sources' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
+#' The function converts a list of sources' records obtained using \code{oa_request} into a data frame/tibble.
+#'
+#' @inheritParams oa2df
+#'
+#' @return a data.frame.
+#'
+#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
+#'
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # Get sources from Nature
+#'
+#' res <- oa_request(
+#'   "https://api.openalex.org/sources?search=nature"
+#' )
+#'
+#' df <- oa2df(res, entity = "sources")
+#'
+#' df
+#' }
+#'
+#' @export
+sources2df <- function(data, verbose = TRUE) {
+
+  # replace NULL with NA
+  data <- simple_rapply(data, `%||%`, y = NA)
+
+  if (!is.null(data$id)) {
+    data <- list(data)
+  }
+
+  source_process <- tibble::tribble(
+    ~type, ~field,
+    "identical", "id",
+    "identical", "issn_l",
+    "flat", "issn",
+    "identical", "display_name",
+    "identical", "host_organization",
+    "identical", "host_organization_name",
+    "flat", "host_organization_lineage",
+    "identical", "relevance_score",
+    "identical", "works_count",
+    "identical", "cited_by_count",
+    "flat", "summary_stats",
+    "identical", "is_oa",
+    "identical", "is_in_doaj",
+    "flat", "ids",
+    "identical", "homepage_url",
+    "identical", "apc_prices",
+    "identical", "apc_usd",
+    "identical", "country_code",
+    "flat", "societies",
+    "flat", "alternate_titles",
+    "identical", "abbreviated_title",
+    "identical", "type",
+    "rbind_df", "x_concepts",
+    "rbind_df", "counts_by_year",
+    "identical", "works_api_url",
+    "identical", "updated_date",
+    "identical", "created_date"
+  )
+
+  n <- length(data)
+  pb <- oa_progress(n)
+  list_df <- vector(mode = "list", length = n)
+
+  for (i in seq.int(n)) {
+    if (verbose) pb$tick()
+
+    item <- data[[i]]
+    fields <- source_process[source_process$field %in% names(item), ]
+    sim_fields <- mapply(
+      function(x, y) subs_na(item[[x]], type = y),
+      fields$field,
+      fields$type,
+      SIMPLIFY = FALSE
+    )
+    list_df[[i]] <- sim_fields
+  }
+
+  out_df <- rbind_oa_ls(list_df)
+  out_df
+}
+
+
+
+#' Convert OpenAlex collection of publishers' records from list format to data frame
+#'
+#' It converts bibliographic collection of publishers' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
+#' The function converts a list of publishers' records obtained using \code{oa_request} into a data frame/tibble.
+#'
+#' @inheritParams oa2df
+#'
+#' @return a data.frame.
+#'
+#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
+#'
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # Get publishers located in Canada with more than 100,000 citations
+#'
+#' res <- oa_request(
+#'   "https://api.openalex.org/publishers?filter=country_codes:ca"
+#' )
+#'
+#' df <- oa2df(res, entity = "publishers")
+#'
+#' df
+#' }
+#'
+#' @export
+publishers2df <- function(data, verbose = TRUE) {
+
+  # replace NULL with NA
+  data <- simple_rapply(data, `%||%`, y = NA)
+
+  if (!is.null(data$id)) {
+    data <- list(data)
+  }
+
+  publisher_process <- tibble::tribble(
+    ~type, ~field,
+    "identical", "id",
+    "identical", "display_name",
+    "flat", "alternate_titles",
+    "identical", "hierarchy_level",
+    "flat", "parent_publisher",
+    "flat", "lineage",
+    "identical", "country_codes",
+    "identical", "homepage_url",
+    "identical", "image_url",
+    "identical", "image_thumbnail_url",
+    "identical", "works_count",
+    "identical", "cited_by_count",
+    "flat", "summary_stats",
+    "flat", "ids",
+    "rbind_df", "counts_by_year",
+    "rbind_df", "roles",
+    "identical", "sources_api_url",
+    "identical", "updated_date",
+    "identical", "created_date"
+  )
+
+  n <- length(data)
+  pb <- oa_progress(n)
+  list_df <- vector(mode = "list", length = n)
+
+  for (i in seq.int(n)) {
+    if (verbose) pb$tick()
+
+    item <- data[[i]]
+    fields <- publisher_process[publisher_process$field %in% names(item), ]
+    sim_fields <- mapply(
+      function(x, y) subs_na(item[[x]], type = y),
+      fields$field,
+      fields$type,
+      SIMPLIFY = FALSE
+    )
+    list_df[[i]] <- sim_fields
+  }
+
+  out_df <- rbind_oa_ls(list_df)
+  out_df
+}
+
 
 
 #' Flatten snowball result

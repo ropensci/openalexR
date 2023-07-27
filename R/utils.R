@@ -10,6 +10,10 @@ simple_rapply <- function(x, fn, ...) {
 
 `%||%` <- function(x, y) if (is.null(x)) y else x
 
+replace_w_na <- function(x){
+  lapply(x, `%||%`, y = NA)
+}
+
 subs_na <- function(x, type = c("row_df", "col_df", "flat", "rbind_df", "identical"), prefix = NULL) {
   type <- match.arg(type)
   if (length(x) == 0) {
@@ -21,10 +25,10 @@ subs_na <- function(x, type = c("row_df", "col_df", "flat", "rbind_df", "identic
   }
 
   out <- switch(type,
-    row_df = as.data.frame(x),
-    col_df = tibble::enframe(unlist(x)),
+    row_df = as.data.frame(replace_w_na(x)),
     flat = unlist(x),
-    rbind_df = do.call(rbind.data.frame, x)
+    rbind_df = do.call(rbind.data.frame, lapply(x, replace_w_na)
+    )
   )
 
   if (!is.null(prefix)) {
@@ -63,6 +67,9 @@ id_type <- function(identifier) {
     V = "venues",
     I = "institutions",
     C = "concepts",
+    S = "sources",
+    P = "publishers",
+    `F` = "funders",
     NA
   )
 }

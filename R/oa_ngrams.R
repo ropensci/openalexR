@@ -63,7 +63,7 @@ oa_ngrams <- function(works_identifier, ...,
   pb <- oa_progress(n)
 
   # Fetch
-  if (utils::packageVersion("curl") >= 5) {
+  if (utils::packageVersion("curl") >= "5") {
     # Parallel fetch
     ngrams_files <- asNamespace("curl")$multi_download(query_urls, file.path(tempdir(), normalized_id), progress = verbose)
     ngrams_success <- ifelse(ngrams_files$success, ngrams_files$destfile, NA)

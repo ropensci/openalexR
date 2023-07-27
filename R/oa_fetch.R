@@ -5,7 +5,8 @@
 #' @examples
 #' oa_entities()
 oa_entities <- function() {
-  c("works", "authors", "venues", "institutions", "concepts")
+  c("works", "authors", "venues", "institutions", "concepts",
+    "funders", "sources", "publishers")
 }
 
 #' A composition function to perform query building, requesting,
@@ -76,9 +77,9 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
   if (output == "dataframe") output <- "tibble"
   filter <- list(...)
 
-  # if multiple identifiers are provided, use openalex_id or doi as a filter attribute
+  # if multiple identifiers are provided, use openalex or doi as a filter attribute
   multiple_id <- length(identifier) > 1
-  if (multiple_id) filter <- c(filter, list(openalex_id = identifier))
+  if (multiple_id) filter <- c(filter, list(openalex = identifier))
 
   # overcome OA limitation of combining 50 values (OR) for a filter at a time
   # https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/filter-entity-lists#addition-or
