@@ -140,7 +140,7 @@ We can do this by filtering on the authorships.author.id/author.id or authorship
 ```{r}
 oa_fetch(
   entity = "works",
-  author.id = c("A923435168", "A2208157607"),
+  author.id = c("A5048491430", "A5023888391"),
   verbose = TRUE
 ) %>% 
   show_works() %>% 
