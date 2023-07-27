@@ -257,7 +257,7 @@ then adding `count_only` (default `FALSE`) to this list:
 ``` r
 my_arguments <- list(
   entity = "authors",
-  last_known_institution.id = "I40120149",
+  last_known_institution.id = "I71267560",
   works_count = ">499"
 )
 
