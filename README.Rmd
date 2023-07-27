@@ -189,14 +189,17 @@ Let's first check how many records match the query, then download the entire col
 ```{r}
 my_arguments <- list(
   entity = "authors",
-  last_known_institution.id = "I71267560",
+  last_known_institution.id = "I40120149",
   works_count = ">499"
 )
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
+
+if (do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))[1]>0){
 do.call(oa_fetch, my_arguments) |>
   show_authors() |>
   knitr::kable()
+}
 ```
 
 ## 🍒 Example analyses
