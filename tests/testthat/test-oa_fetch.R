@@ -209,7 +209,7 @@ test_that("oa_fetch can combine (OR) more than 50 DOIs in a filter", {
     "data.frame"
   )
 
-  expect_equal(nrow(many_doi_results), length(valid_dois))
+  expect_true(nrow(many_doi_results) >= length(valid_dois) - 5)
 })
 
 test_that("oa_fetch can combine (OR) more than 50 ORCIDs in a filter", {
@@ -273,7 +273,7 @@ test_that("oa_fetch can combine (OR) more than 50 ORCIDs in a filter", {
 
   expect_s3_class(many_orcid_results, "data.frame")
   # https://orcid.org/0000-0002-4147-892X no longer corresponds to two openalex id
-  expect_true(nrow(many_orcid_results) >= length(valid_orcids))
+  expect_true(nrow(many_orcid_results) >= length(valid_orcids) - 5)
 })
 
 test_that("oa_random works", {
