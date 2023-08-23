@@ -63,12 +63,12 @@ oa2bibliometrix <- function(df) {
         c("AU", "RP", "C1", "AU_UN", "AU_CO")
       ))
     } else {
-      l$institution_country[is.na(l$institution_country)] <- "Not available"
+      l$institution_country_code[is.na(l$institution_country_code)] <- "Not available"
       AU <- au_collapse(l$au_display_name)
       C1 <- au_collapse(l$au_affiliation_raw)
       RP <- au_collapse(l$au_affiliation_raw[1])
-      AU_UN <- au_collapse(l$institution_name)
-      AU_CO <- au_collapse(countrycode[l$institution_country, 1])
+      AU_UN <- au_collapse(l$institution_display_name)
+      AU_CO <- au_collapse(countrycode[l$institution_country_code, 1])
       list(AU = AU, RP = RP, C1 = C1, AU_UN = AU_UN, AU_CO = AU_CO)
     }
   })
@@ -84,7 +84,8 @@ oa2bibliometrix <- function(df) {
   # Keywords
   ID <- unlist(lapply(df$concepts, function(l) {
     if (is.logical(l)) return(NA)
-    au_collapse(l$display_name)
+
+    au_collapse(l$display_name[l$score>0])
   }))
 
   df <- cbind(AU_info, ID, df)
@@ -93,11 +94,12 @@ oa2bibliometrix <- function(df) {
   df$AB <- toupper(df$ab)
   df$SO <- toupper(df$so)
   df$DT <- toupper(df$type)
-  df$DB <- "openalex"
+  df$DB <- "OPENALEX"
   df$JI <- shorten_oaid(df$so_id)
   df$J9 <- df$JI
   df$PY <- df$publication_year
   df$TC <- df$cited_by_count
+  df$DI <- gsub("https://doi.org/","",df$doi)
   df <-  df[!names(df) %in% c("display_name","ab","so","type","publication_year","cited_by_count")]
 
 
