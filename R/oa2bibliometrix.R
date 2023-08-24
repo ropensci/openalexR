@@ -78,7 +78,7 @@ oa2bibliometrix <- function(df) {
 
   # References
   df$CR <- unlist(lapply(df$referenced_works, function(l) {
-    paste(l, collapse = ";")
+    paste(shorten_oaid(l), collapse = ";")
   }))
 
   # Keywords
