@@ -47,6 +47,10 @@
 #'
 #' @export
 oa2df <- function(data, entity, count_only = FALSE, group_by = NULL, abstract = TRUE, verbose = TRUE) {
+  if (length(data) == 0){
+    return(NULL)
+  }
+
   if (!is.null(group_by)) {
     return(do.call(rbind.data.frame, data))
   }
