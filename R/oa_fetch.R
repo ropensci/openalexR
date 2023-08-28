@@ -405,21 +405,26 @@ get_next_page <- function(paging, i, res = NULL) {
 #' The argument can be one of c("works", "authors", "venues", "institutions", "concepts").
 #' If not provided, `entity` is guessed from `identifier`.
 #' @param options List. Additional parameters to add in the query. For example:
+#'
 #' - `select` Character vector. Top-level fields to show in output.
 #' Defaults to NULL, which returns all fields.
 #' https://docs.openalex.org/how-to-use-the-api/get-single-entities/select-fields
+#'
 #' - `sort` Character. Attribute to sort by.
 #' For example: "display_name" for venues or "cited_by_count:desc" for works.
 #' See more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sort-entity-lists>.
+#'
 #' - `sample` Integer. Number of (random) records to return.
 #' Should be no larger than 10,000.
 #' Defaults to NULL, which returns all records satisfying the query.
 #' Read more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sample-entity-lists>.
+#'
 #' - `seed` Integer.
 #' A seed value in order to retrieve the same set of random records in
 #' the same order when used multiple times with `sample`.
 #' IMPORTANT NOTE: Depending on your query, random results with a seed value may change over time due to new records coming into OpenAlex.
 #' This argument is likely only useful when queries happen close together (within a day).
+#'
 #' @param search Character. Search is just another kind of filter, one that all five endpoints support.
 #' But unlike the other filters, search does NOT require an exact match.
 #' This is particularly useful in author queries because many authors have middle names, which may not exist or do so in a variety of forms.
