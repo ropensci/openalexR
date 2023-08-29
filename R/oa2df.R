@@ -217,6 +217,7 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
           } else {
             first_inst <- empty_inst
           }
+          first_inst$lineage <- paste(first_inst$lineage, collapse = ", ")
           first_inst <- prepend(first_inst, "institution")
           aff_raw <- list(au_affiliation_raw = l$raw_affiliation_string[1])
           l_author <- if (length(l$author) > 0) {
