@@ -351,6 +351,9 @@ authors2df <- function(data, verbose = TRUE) {
       if (is.na(sub_affiliation[[1]])) {
         sub_affiliation <- empty_inst
       }
+      if (length(sub_affiliation$lineage) > 1) {
+        sub_affiliation$lineage <- paste(sub_affiliation$lineage, collapse = ", ")
+      }
       sub_affiliation <- prepend(sub_affiliation, "affiliation")
     }
     sub_affiliation <- replace_w_na(sub_affiliation)
@@ -361,8 +364,8 @@ authors2df <- function(data, verbose = TRUE) {
     "id", "display_name", "display_name_alternatives", "relevance_score",
     "ids", "orcid", "works_count", "cited_by_count", "counts_by_year",
     "affiliation_display_name", "affiliation_id", "affiliation_ror",
-    "affiliation_country_code", "affiliation_type", "x_concepts",
-    "works_api_url"
+    "affiliation_country_code", "affiliation_type", "affiliation_lineage",
+    "x_concepts", "works_api_url"
   )
 
   out_df <- rbind_oa_ls(list_df)
