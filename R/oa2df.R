@@ -173,7 +173,7 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
     issn_l = "issn_l",
     host_organization = "host_organization_name"
   )
-  inst_cols <- c("id", "display_name", "ror", "country_code", "type")
+  inst_cols <- c("id", "display_name", "ror", "country_code", "type", "lineage")
   empty_inst <- empty_list(inst_cols)
 
   n <- length(data)
@@ -214,10 +214,10 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
           inst_idx <- lengths(l_inst) > 0
           if (length(inst_idx) > 0 && any(inst_idx)) {
             first_inst <- l_inst[inst_idx][[1]]
+            first_inst$lineage <- paste(first_inst$lineage, collapse = ", ")
           } else {
             first_inst <- empty_inst
           }
-          first_inst$lineage <- paste(first_inst$lineage, collapse = ", ")
           first_inst <- prepend(first_inst, "institution")
           aff_raw <- list(au_affiliation_raw = l$raw_affiliation_string[1])
           l_author <- if (length(l$author) > 0) {
@@ -315,7 +315,7 @@ authors2df <- function(data, verbose = TRUE) {
   pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)
 
-  inst_cols <- c("id", "display_name", "ror", "country_code", "type")
+  inst_cols <- c("id", "display_name", "ror", "country_code", "type", "lineage")
   empty_inst <- empty_list(inst_cols)
 
   author_process <- tibble::tribble(
