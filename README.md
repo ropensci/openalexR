@@ -152,7 +152,7 @@ works_from_orcids <- oa_fetch(
   verbose = TRUE
 )
 #> Requesting url: https://api.openalex.org/works?filter=author.orcid%3A0000-0001-6187-6610%7C0000-0002-8517-9411
-#> Getting 2 pages of results with a total of 224 records...
+#> Getting 2 pages of results with a total of 225 records...
 
 works_from_orcids |>
   show_works() |>
@@ -184,7 +184,7 @@ works_search <- oa_fetch(
   verbose = TRUE
 )
 #> Requesting url: https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc
-#> Getting 1 page of results with a total of 113 records...
+#> Getting 1 page of results with a total of 121 records...
 
 works_search |>
   show_works() |>
@@ -222,8 +222,8 @@ authors_from_orcids |>
 
 | id          | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
 |:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------|
-| A5069892096 | Massimo Aria | 0000-0002-8517-9411 |         178 |           5256 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
-| A5023888391 | Jason Priem  | 0000-0001-6187-6610 |          53 |           2108 | Our Research                     | World Wide Web, Library science, Law     |
+| A5069892096 | Massimo Aria | 0000-0002-8517-9411 |         178 |           5397 | University of Naples Federico II | Statistics, Pathology, Internal medicine |
+| A5023888391 | Jason Priem  | 0000-0001-6187-6610 |          53 |           2117 | Our Research                     | World Wide Web, Library science, Law     |
 
 **Goal**: Acquire information on the authors of this package.
 
@@ -242,8 +242,8 @@ authors_from_names |>
 
 | id          | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
 |:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------|
-| A5069892096 | Massimo Aria | 0000-0002-8517-9411 |         178 |           5256 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
-| A5023888391 | Jason Priem  | 0000-0001-6187-6610 |          53 |           2108 | Our Research                     | World Wide Web, Library science, Law     |
+| A5069892096 | Massimo Aria | 0000-0002-8517-9411 |         178 |           5397 | University of Naples Federico II | Statistics, Pathology, Internal medicine |
+| A5023888391 | Jason Priem  | 0000-0001-6187-6610 |          53 |           2117 | Our Research                     | World Wide Web, Library science, Law     |
 
 **Goal**: Download all authors’ records of scholars who work at the
 [University of Naples Federico
@@ -263,7 +263,7 @@ my_arguments <- list(
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #>      count db_response_time_ms page per_page
-#> [1,]    24                  55    1        1
+#> [1,]    23                  39    1        1
 
 if (do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))[1]>0){
 do.call(oa_fetch, my_arguments) |>
@@ -272,14 +272,14 @@ do.call(oa_fetch, my_arguments) |>
 }
 ```
 
-| id          | display_name             | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                         |
-|:------------|:-------------------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------------------|
-| A5032217427 | Nicola Longo             | 0000-0002-3677-1216 |        1079 |          11165 | University of Naples Federico II | Internal medicine, Genetics, Pathology               |
-| A5040940946 | Ettore Novellino         | 0000-0002-2181-2142 |        1069 |          26515 | University of Naples Federico II | Biochemistry, Genetics, Organic chemistry            |
-| A5072318694 | G. Chiefari              | NA                  |         886 |          44704 | University of Naples Federico II | Particle physics, Quantum mechanics, Nuclear physics |
-| A5076706548 | Salvatore Capozziello    | 0000-0003-4886-2024 |         883 |          29633 | University of Naples Federico II | Quantum mechanics, Astronomy, Theoretical physics    |
-| A5019451576 | Alberto Orso Maria Iorio | 0000-0002-3798-1135 |         829 |          15330 | University of Naples Federico II | Nuclear physics, Particle physics, Quantum mechanics |
-| A5003544129 | Annamaria Colao          | NA                  |         805 |          22337 | University of Naples Federico II | Internal medicine, Endocrinology, Biochemistry       |
+| id          | display_name       | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                         |
+|:------------|:-------------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------------------|
+| A5032217427 | Nicola Longo       | 0000-0002-3677-1216 |        1083 |          11277 | University of Naples Federico II | Internal medicine, Genetics, Pathology               |
+| A5040940946 | Ettore Novellino   | 0000-0002-2181-2142 |        1069 |          26679 | University of Naples Federico II | Biochemistry, Genetics, Organic chemistry            |
+| A5072318694 | G. Chiefari        | NA                  |         886 |          44802 | University of Naples Federico II | Particle physics, Quantum mechanics, Nuclear physics |
+| A5003544129 | Annamaria Colao    | NA                  |         805 |          22421 | University of Naples Federico II | Internal medicine, Endocrinology, Biochemistry       |
+| A5035636337 | S. Patricelli      | NA                  |         796 |          42144 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
+| A5051324603 | Massimo Chiariello | NA                  |         777 |          15068 | University of Naples Federico II | Internal medicine, Cardiology, Endocrinology         |
 
 ## 🍒 Example analyses
 

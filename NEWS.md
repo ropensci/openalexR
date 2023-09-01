@@ -1,6 +1,10 @@
 # openalexR (development version)
 
 # openalexR 1.2.0
+* many improvements in bibliometrix support
+* solved issue with CRAN test
+
+# openalexR 1.2.0
 * many improvements in oa_snowball
 * added new openalex entities
 * solved CRAN issue about  packageVersion() 
