@@ -46,7 +46,7 @@
 #' }
 #'
 #' @export
-oa2df <- function(data, entity, count_only = FALSE, group_by = NULL, abstract = TRUE, verbose = TRUE) {
+oa2df <- function(data, entity, options = NULL, count_only = FALSE, group_by = NULL, abstract = TRUE, verbose = TRUE) {
   if (length(data) == 0){
     return(NULL)
   }
@@ -57,6 +57,15 @@ oa2df <- function(data, entity, count_only = FALSE, group_by = NULL, abstract = 
 
   if (count_only && length(data) == 4) {
     return(unlist(data))
+  }
+
+  if (entity != "snowball"){
+    # replace NULL with NA
+    data <- simple_rapply(data, `%||%`, y = NA)
+    ch <- ifelse(is.null(options$select), "id", options$select[[1]])
+    if (!is.null(data[[ch]])) {
+      data <- list(data)
+    }
   }
 
   switch(entity,
@@ -125,9 +134,6 @@ oa2df <- function(data, entity, count_only = FALSE, group_by = NULL, abstract = 
 #' @export
 #'
 works2df <- function(data, abstract = TRUE, verbose = TRUE) {
-  if (!is.null(data$id)) {
-    data <- list(data)
-  }
 
   col_order <- c(
     "id", "display_name", "author", "ab", "publication_date", "relevance_score",
@@ -304,12 +310,6 @@ abstract_build <- function(ab) {
 #'
 #' @export
 authors2df <- function(data, verbose = TRUE) {
-  # replace NULL with NA
-  data <- simple_rapply(data, function(x) if (is.null(x)) NA else x)
-
-  if (!is.null(data$id)) {
-    data <- list(data)
-  }
 
   n <- length(data)
   pb <- oa_progress(n)
@@ -357,6 +357,7 @@ authors2df <- function(data, verbose = TRUE) {
       sub_affiliation <- prepend(sub_affiliation, "affiliation")
     }
     sub_affiliation <- replace_w_na(sub_affiliation)
+
     list_df[[i]] <- c(sim_fields, sub_affiliation)
   }
 
@@ -408,13 +409,6 @@ authors2df <- function(data, verbose = TRUE) {
 #' @export
 institutions2df <- function(data, verbose = TRUE) {
 
-  # replace NULL with NA
-  data <- simple_rapply(data, `%||%`, y = NA)
-
-  if (!is.null(data$id)) {
-    data <- list(data)
-  }
-
   n <- length(data)
   pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)
@@ -455,6 +449,7 @@ institutions2df <- function(data, verbose = TRUE) {
       fields$type,
       SIMPLIFY = FALSE
     )
+    interna <- NULL
     if (!is.null(item$international)) {
       interna <- list(
         display_name_international = subs_na(
@@ -517,12 +512,6 @@ institutions2df <- function(data, verbose = TRUE) {
 #'
 #' @export
 venues2df <- function(data, verbose = TRUE) {
-  # replace NULL with NA
-  data <- simple_rapply(data, function(x) if (is.null(x)) NA else x)
-
-  if (!is.null(data$id)) {
-    data <- list(data)
-  }
 
   n <- length(data)
   pb <- oa_progress(n)
@@ -609,13 +598,6 @@ venues2df <- function(data, verbose = TRUE) {
 #'
 #' @export
 concepts2df <- function(data, verbose = TRUE) {
-
-  # replace NULL with NA
-  data <- simple_rapply(data, `%||%`, y = NA)
-
-  if (!is.null(data$id)) {
-    data <- list(data)
-  }
 
   concept_process <- tibble::tribble(
     ~type, ~field,
@@ -708,13 +690,6 @@ concepts2df <- function(data, verbose = TRUE) {
 #' @export
 funders2df <- function(data, verbose = TRUE) {
 
-  # replace NULL with NA
-  data <- simple_rapply(data, `%||%`, y = NA)
-
-  if (!is.null(data$id)) {
-    data <- list(data)
-  }
-
   funder_process <- tibble::tribble(
     ~type, ~field,
     "identical", "id",
@@ -788,13 +763,6 @@ funders2df <- function(data, verbose = TRUE) {
 #'
 #' @export
 sources2df <- function(data, verbose = TRUE) {
-
-  # replace NULL with NA
-  data <- simple_rapply(data, `%||%`, y = NA)
-
-  if (!is.null(data$id)) {
-    data <- list(data)
-  }
 
   source_process <- tibble::tribble(
     ~type, ~field,
@@ -879,13 +847,6 @@ sources2df <- function(data, verbose = TRUE) {
 #'
 #' @export
 publishers2df <- function(data, verbose = TRUE) {
-
-  # replace NULL with NA
-  data <- simple_rapply(data, `%||%`, y = NA)
-
-  if (!is.null(data$id)) {
-    data <- list(data)
-  }
 
   publisher_process <- tibble::tribble(
     ~type, ~field,
