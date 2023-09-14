@@ -139,7 +139,7 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
   } else {
     do.call(rbind, lapply(
       final_res, oa2df,
-      entity = entity, abstract = abstract,
+      entity = entity, options = options, abstract = abstract,
       count_only = count_only, group_by = group_by,
       verbose = verbose
     ))
@@ -560,7 +560,7 @@ oa_query <- function(filter = NULL,
     )
   } else {
     path <- paste(entity, identifier, sep = "/")
-    query <- NULL
+    query <- options
   }
 
   query_url <- httr::modify_url(

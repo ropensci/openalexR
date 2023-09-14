@@ -67,8 +67,7 @@ test_that("oa_fetch options$select works", {
       "10.1371/journal.pone.0266781",
       "10.1371/journal.pone.0267149"
     ),
-    options = list(select = c("doi", "id", "cited_by_count", "type")),
-    verbose = TRUE
+    options = list(select = c("doi", "id", "cited_by_count", "type"))
   )
   expect_equal(
     dim(x),
@@ -357,4 +356,19 @@ test_that("oa_fetch works with 1 identifier", {
   expect_equal(dim(s), c(1, 26))
   expect_equal(dim(co), c(1, 16))
 
+})
+
+test_that("oa_fetch for identifiers works with options", {
+  i <- oa_fetch(
+    identifier = "I201448701",
+    options = list(select = c("ids", "country_code"))
+  )
+
+  a <- oa_fetch(
+    identifier = "A1969205032",
+    options = list(select = c("display_name", "orcid", "cited_by_count"))
+  )
+
+  expect_equal(dim(i), c(1, 2))
+  expect_equal(dim(a), c(1, 3))
 })
