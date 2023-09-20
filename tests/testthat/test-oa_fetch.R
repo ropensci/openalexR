@@ -26,7 +26,7 @@ test_that("oa_request gives messages for unexpected input", {
 
   query_url <- paste0(
     "https://api.openalex.org/authors?",
-    "filter=openalex%3AA923435168%7CA2208157607"
+    "filter=openalex%3AA5048491430%7CA5023888391"
   )
   expect_message(oa_request(query_url, verbose = TRUE))
   expect_message(oa_request(query_url, mailto = 123))
@@ -333,7 +333,7 @@ test_that("oa_fetch works for publishers", {
 
 test_that("oa_fetch works with 1 identifier", {
   w <- oa_fetch(identifier = "W3046863325") # Work
-  a <- oa_fetch(identifier = "A1969205032") # Author
+  a <- oa_fetch(identifier = "A5023888391") # Author
   i <- oa_fetch(identifier = "I4200000001") # Institution
   f <- oa_fetch(identifier = "F4320332161") # Funder
   p <- oa_fetch(identifier = "P4310311775") # Publisher
@@ -349,7 +349,7 @@ test_that("oa_fetch works with 1 identifier", {
   expect_s3_class(co, "data.frame")
 
   expect_equal(dim(w), c(1, 36))
-  expect_equal(dim(a), c(1, 15))
+  expect_equal(dim(a), c(1, 16))
   expect_equal(dim(i), c(1, 21))
   expect_equal(dim(f), c(1, 17))
   expect_equal(dim(p), c(1, 19))
@@ -365,7 +365,7 @@ test_that("oa_fetch for identifiers works with options", {
   )
 
   a <- oa_fetch(
-    identifier = "A1969205032",
+    identifier = "A5023888391",
     options = list(select = c("display_name", "orcid", "cited_by_count"))
   )
 
