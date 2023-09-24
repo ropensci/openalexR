@@ -1,6 +1,9 @@
 # openalexR (development version)
 
-# openalexR 1.2.0
+# openalexR 1.2.2
+* solved issue with CRAN test
+
+# openalexR 1.2.1
 * many improvements in bibliometrix support
 * solved issue with CRAN test
 
