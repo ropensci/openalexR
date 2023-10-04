@@ -24,7 +24,9 @@ The per-page argument can assume any number between 1 and 200.
 Defaults to 200.}
 
 \item{paging}{Character.
-Either "cursor" for cursor paging or "page" for basic paging.}
+Either "cursor" for cursor paging or "page" for basic paging.
+When used with options$sample, please set `paging = "page"`
+to avoid duplicates.}
 
 \item{count_only}{Logical.
 If TRUE, the function returns only the number of item matching the query.

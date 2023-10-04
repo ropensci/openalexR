@@ -161,6 +161,8 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 #' Defaults to 200.
 #' @param paging Character.
 #' Either "cursor" for cursor paging or "page" for basic paging.
+#' When used with options$sample, please set `paging = "page"`
+#' to avoid duplicates.
 #' @param count_only Logical.
 #' If TRUE, the function returns only the number of item matching the query.
 #' Defaults to FALSE.
@@ -522,9 +524,6 @@ oa_query <- function(filter = NULL,
                      endpoint = "https://api.openalex.org",
                      verbose = FALSE,
                      ...) {
-  if (!(is.null(search) || is.null(options$sample))) {
-    stop("You can't use `search` and `sample` at the same time. Please specify only one of these two arguments.")
-  }
 
   entity <- match.arg(entity, oa_entities())
   filter <- c(filter, list(...))
