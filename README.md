@@ -184,7 +184,7 @@ works_search <- oa_fetch(
   verbose = TRUE
 )
 #> Requesting url: https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc
-#> Getting 1 page of results with a total of 121 records...
+#> Getting 1 page of results with a total of 124 records...
 
 works_search |>
   show_works() |>
@@ -196,9 +196,9 @@ works_search |>
 | W3160856016 | How to conduct a bibliometric analysis: An overview and guidelines                                                            | Naveen Donthu       | Weng Marc Lim      | Journal of Business Research              | <https://doi.org/10.1016/j.jbusres.2021.04.070> | TRUE  | Bibliometrics, Field (mathematics), Resource (disambiguation) |
 | W3038273726 | Investigating the emerging COVID-19 research trends in the field of business and management: A bibliometric analysis approach | Surabhi Verma       | Anders Gustafsson  | Journal of Business Research              | <https://doi.org/10.1016/j.jbusres.2020.06.057> | TRUE  | Bibliometrics, Field (mathematics), Empirical research        |
 | W2990450011 | Forty-five years of Journal of Business Research: A bibliometric analysis                                                     | Naveen Donthu       | Debidutta Pattnaik | Journal of Business Research              | <https://doi.org/10.1016/j.jbusres.2019.10.039> | FALSE | Publishing, Bibliometrics, Empirical research                 |
-| W3001491100 | Software tools for conducting bibliometric analysis in science: An up-to-date review                                          | Jose A. Moral-Munoz | Manuel J. Cobo     | Profesional De La Informacion             | <https://doi.org/10.3145/epi.2020.ene.03>       | TRUE  | Bibliometrics, Software                                       |
 | W3044902155 | Financial literacy: A systematic review and bibliometric analysis                                                             | Kirti Goyal         | Satish Kumar       | International Journal of Consumer Studies | <https://doi.org/10.1111/ijcs.12605>            | FALSE | Financial literacy, Citation, Content analysis                |
-| W3042215340 | A bibliometric analysis using VOSviewer of publications on COVID-19                                                           | Yuetian Yu          | Erzhen Chen        | Annals of Translational Medicine          | <https://doi.org/10.21037/atm-20-4235>          | TRUE  | Bibliometrics, MEDLINE, Disease                               |
+| W3001491100 | Software tools for conducting bibliometric analysis in science: An up-to-date review                                          | Jose A. Moral-Munoz | Manuel J. Cobo     | Profesional De La Informacion             | <https://doi.org/10.3145/epi.2020.ene.03>       | TRUE  | Bibliometrics, Software                                       |
+| W2990688366 | A bibliometric analysis of board diversity: Current status, development, and future research directions                       | H. Kent Baker       | Arunima Haldar     | Journal of Business Research              | <https://doi.org/10.1016/j.jbusres.2019.11.025> | FALSE | Diversity (politics), Current (fluid), Bibliometrics          |
 
 ### 🧑 Authors
 
@@ -222,8 +222,8 @@ authors_from_orcids |>
 
 | id          | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
 |:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------|
-| A5069892096 | Massimo Aria | 0000-0002-8517-9411 |         178 |           5397 | University of Naples Federico II | Statistics, Pathology, Internal medicine |
-| A5023888391 | Jason Priem  | 0000-0001-6187-6610 |          53 |           2117 | Our Research                     | World Wide Web, Library science, Law     |
+| A5069892096 | Massimo Aria | 0000-0002-8517-9411 |         179 |           5530 | University of Naples Federico II | Statistics, Pathology, Internal medicine |
+| A5023888391 | Jason Priem  | 0000-0001-6187-6610 |          53 |           2130 | Our Research                     | World Wide Web, Library science, Law     |
 
 **Goal**: Acquire information on the authors of this package.
 
@@ -242,8 +242,8 @@ authors_from_names |>
 
 | id          | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
 |:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------|
-| A5069892096 | Massimo Aria | 0000-0002-8517-9411 |         178 |           5397 | University of Naples Federico II | Statistics, Pathology, Internal medicine |
-| A5023888391 | Jason Priem  | 0000-0001-6187-6610 |          53 |           2117 | Our Research                     | World Wide Web, Library science, Law     |
+| A5069892096 | Massimo Aria | 0000-0002-8517-9411 |         179 |           5530 | University of Naples Federico II | Statistics, Pathology, Internal medicine |
+| A5023888391 | Jason Priem  | 0000-0001-6187-6610 |          53 |           2130 | Our Research                     | World Wide Web, Library science, Law     |
 
 **Goal**: Download all authors’ records of scholars who work at the
 [University of Naples Federico
@@ -263,7 +263,7 @@ my_arguments <- list(
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #>      count db_response_time_ms page per_page
-#> [1,]    23                  39    1        1
+#> [1,]    21                  76    1        1
 
 if (do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))[1]>0){
 do.call(oa_fetch, my_arguments) |>
@@ -272,14 +272,14 @@ do.call(oa_fetch, my_arguments) |>
 }
 ```
 
-| id          | display_name       | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                         |
-|:------------|:-------------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------------------|
-| A5032217427 | Nicola Longo       | 0000-0002-3677-1216 |        1083 |          11277 | University of Naples Federico II | Internal medicine, Genetics, Pathology               |
-| A5040940946 | Ettore Novellino   | 0000-0002-2181-2142 |        1069 |          26679 | University of Naples Federico II | Biochemistry, Genetics, Organic chemistry            |
-| A5072318694 | G. Chiefari        | NA                  |         886 |          44802 | University of Naples Federico II | Particle physics, Quantum mechanics, Nuclear physics |
-| A5003544129 | Annamaria Colao    | NA                  |         805 |          22421 | University of Naples Federico II | Internal medicine, Endocrinology, Biochemistry       |
-| A5035636337 | S. Patricelli      | NA                  |         796 |          42144 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
-| A5051324603 | Massimo Chiariello | NA                  |         777 |          15068 | University of Naples Federico II | Internal medicine, Cardiology, Endocrinology         |
+| id          | display_name          | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                         |
+|:------------|:----------------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------------------|
+| A5032217427 | Nicola Longo          | 0000-0002-3677-1216 |        1092 |          11416 | University of Naples Federico II | Internal medicine, Genetics, Pathology               |
+| A5076706548 | Salvatore Capozziello | 0000-0003-4886-2024 |         891 |          30196 | University of Naples Federico II | Quantum mechanics, Astronomy, Classical mechanics    |
+| A5072318694 | G. Chiefari           | NA                  |         886 |          44892 | University of Naples Federico II | Particle physics, Quantum mechanics, Nuclear physics |
+| A5003544129 | Annamaria Colao       | NA                  |         810 |          22569 | University of Naples Federico II | Internal medicine, Endocrinology, Biochemistry       |
+| A5035636337 | S. Patricelli         | NA                  |         796 |          42271 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
+| A5051324603 | Massimo Chiariello    | NA                  |         777 |          15078 | University of Naples Federico II | Internal medicine, Cardiology, Endocrinology         |
 
 ## 🍒 Example analyses
 
@@ -475,7 +475,7 @@ snowball_docs <- oa_snowball(
 #> Getting 1 page of results with a total of 2 records...
 #> Collecting all documents citing the target papers...
 #> Requesting url: https://api.openalex.org/works?filter=cites%3AW1963991285%7CW1964141474
-#> Getting 3 pages of results with a total of 490 records...
+#> Getting 3 pages of results with a total of 494 records...
 #> Collecting all documents cited by the target papers...
 #> Requesting url: https://api.openalex.org/works?filter=cited_by%3AW1963991285%7CW1964141474
 #> Getting 1 page of results with a total of 87 records...
