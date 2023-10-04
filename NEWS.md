@@ -1,6 +1,7 @@
 # openalexR (development version)
+* allowed the use of `options$sample` with `search`
 
-# openalexR 1.2.0
+# openalexR 1.2.2
 * many improvements in bibliometrix support
 * solved issue with CRAN test
 
