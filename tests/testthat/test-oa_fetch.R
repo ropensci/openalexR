@@ -118,9 +118,13 @@ test_that("oa_fetch sample works", {
 
   expect_equal(nrow(random2021), 20)
   expect_equal(nrow(random10), 10)
-  expect_error(oa_fetch("works", search = "open science", options = list(sample = 10)))
 })
 
+
+test_that("search works with sampling", {
+  w <- oa_fetch("works", search = "open science", options = list(sample = 5))
+  expect_equal(nrow(w), 5)
+})
 
 test_that("oa_fetch authors can deal with NA institutions", {
   skip_on_cran()
