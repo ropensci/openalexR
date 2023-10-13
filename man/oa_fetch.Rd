@@ -67,7 +67,7 @@ See more at <https://docs.openalex.org/how-to-use-the-api/get-groups-of-entities
 \item{output}{Character. Type of output, either a list or a tibble/data.frame.}
 
 \item{abstract}{Logical. If TRUE, the function returns also the abstract of each item.
-Default to \code{abstract = FALSE}.
+Default to \code{abstract = TRUE}.
 The argument is ignored if entity is different from "works".}
 
 \item{endpoint}{Character. URL of the OpenAlex Endpoint API server.
