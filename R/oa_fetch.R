@@ -183,7 +183,8 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 #' If TRUE, print information about the querying process. Defaults to TRUE.
 #'
 #' @return a data.frame or a list of bibliographic records. If `save_pages` is
-#' not NULL the directory containing the saved pages is returned.
+#' not NULL a character vector containing the names of the saved pages
+#' is returned.
 #'
 #' For more extensive information about OpenAlex API, please visit:
 #' <https://docs.openalex.org>
