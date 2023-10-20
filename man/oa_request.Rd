@@ -8,6 +8,7 @@ oa_request(
   query_url,
   per_page = 200,
   paging = "cursor",
+  save_pages = NULL,
   count_only = FALSE,
   mailto = oa_email(),
   api_key = oa_apikey(),
@@ -28,6 +29,16 @@ Either "cursor" for cursor paging or "page" for basic paging.
 When used with options$sample, please set `paging = "page"`
 to avoid duplicates.}
 
+\item{save_pages}{Character.
+If NULL, the individual pages will be downloaded and processed in memory.
+This can, lead to memory issues if the amount downloaded is to large. To
+avoid this, set `save_pages` to a directory path. The individual pages
+downloaded will be saved in the directory specified by `save_pages`.
+The directory will be created if it dowes not exist.
+**The function will overwrite existing files in the directory without
+warning!**
+Defaults to NULL.}
+
 \item{count_only}{Logical.
 If TRUE, the function returns only the number of item matching the query.
 Defaults to FALSE.}
@@ -42,7 +53,9 @@ Your OpenAlex Premium API key, if available.}
 If TRUE, print information about the querying process. Defaults to TRUE.}
 }
 \value{
-a data.frame or a list of bibliographic records.
+a data.frame or a list of bibliographic records. If `save_pages` is
+not NULL a character vector containing the names of the saved pages
+is returned.
 
 For more extensive information about OpenAlex API, please visit:
 <https://docs.openalex.org>
