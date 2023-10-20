@@ -11,3 +11,4 @@ vignettes/*.R
 vignettes/*.html
 concept-abbre.csv
 dev/
+.lintr

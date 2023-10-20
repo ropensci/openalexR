@@ -163,6 +163,15 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 #' Either "cursor" for cursor paging or "page" for basic paging.
 #' When used with options$sample, please set `paging = "page"`
 #' to avoid duplicates.
+#' @param save_pages Character.
+#' If NULL, the individual pages will be downloaded and processed in memory.
+#' This can, lead to memory issues if the amount downloaded is to large. To
+#' avoid this, set `save_pages` to a directory path. The individual pages
+#' downloaded will be saved in the directory specified by `save_pages`.
+#' The directory will be created if it dowes not exist.
+#' **The function will overwrite existing files in the directory without
+#' warning!**
+#' Defaults to NULL.
 #' @param count_only Logical.
 #' If TRUE, the function returns only the number of item matching the query.
 #' Defaults to FALSE.
@@ -173,7 +182,8 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 #' @param verbose Logical.
 #' If TRUE, print information about the querying process. Defaults to TRUE.
 #'
-#' @return a data.frame or a list of bibliographic records.
+#' @return a data.frame or a list of bibliographic records. If `save_pages` is
+#' not NULL the directory containing the saved pages is returned.
 #'
 #' For more extensive information about OpenAlex API, please visit:
 #' <https://docs.openalex.org>
@@ -303,6 +313,7 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 oa_request <- function(query_url,
                        per_page = 200,
                        paging = "cursor",
+                       save_pages = NULL,
                        count_only = FALSE,
                        mailto = oa_email(),
                        api_key = oa_apikey(),
@@ -361,6 +372,17 @@ oa_request <- function(query_url,
   # Setting items per page
   query_ls[["per-page"]] <- per_page
 
+  # Setup save_pages if not NULL
+  if (!is.null(save_pages)) {
+    if (!dir.exists(save_pages)) {
+      dir.create(save_pages)
+    }
+    save_pages <- normalizePath(save_pages)
+    result <- character(n_pages)
+
+    save_no_pages <- 20
+  }
+
   # Activation of cursor pagination
   next_page <- get_next_page(paging, 1)
   data <- vector("list", length = n_pages)
@@ -370,10 +392,20 @@ oa_request <- function(query_url,
     query_ls[[paging]] <- next_page
     res <- api_request(query_url, ua, query = query_ls)
     next_page <- get_next_page(paging, i + 1, res)
-    if (!is.null(res$results)) data[[i]] <- res$results
+    if (!is.null(save_pages)) {
+      fn <- file.path(save_pages, paste0("page_", i, ".rds"))
+      saveRDS(res, file.path(save_pages, paste0("page_", i, ".rds")))
+      result[[i]] <- fn
+    } else {
+      if (!is.null(res$results)) data[[i]] <- res$results
+    }
   }
 
-  unlist(data, recursive = FALSE)
+  if (is.null(save_pages)) {
+    return(unlist(data, recursive = FALSE))
+  } else {
+    return(result)
+  }
 }
 
 get_next_page <- function(paging, i, res = NULL) {
