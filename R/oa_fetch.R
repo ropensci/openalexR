@@ -163,12 +163,11 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 #' Either "cursor" for cursor paging or "page" for basic paging.
 #' When used with options$sample, please set `paging = "page"`
 #' to avoid duplicates.
-#' @param save_pages Character.
+#' @param output_pages_to Character.
 #' If NULL, the individual pages will be downloaded and processed in memory.
-#' This can, lead to memory issues if the amount downloaded is to large. To
-#' avoid this, set `save_pages` to a directory path. The individual pages
-#' downloaded will be saved in the directory specified by `save_pages`.
-#' The directory will be created if it dowes not exist.
+#' If not NULL, the individual pages
+#' downloaded will be saved in the directory specified by `output_pages_to`.
+#' The directory will be created if it does not exist.
 #' **The function will overwrite existing files in the directory without
 #' warning!**
 #' Defaults to NULL.
@@ -182,7 +181,7 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 #' @param verbose Logical.
 #' If TRUE, print information about the querying process. Defaults to TRUE.
 #'
-#' @return a data.frame or a list of bibliographic records. If `save_pages` is
+#' @return a data.frame or a list of bibliographic records. If `output_pages_to` is
 #' not NULL a character vector containing the names of the saved pages
 #' is returned.
 #'
@@ -314,7 +313,7 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 oa_request <- function(query_url,
                        per_page = 200,
                        paging = "cursor",
-                       save_pages = NULL,
+                       output_pages_to = NULL,
                        count_only = FALSE,
                        mailto = oa_email(),
                        api_key = oa_apikey(),
@@ -373,12 +372,12 @@ oa_request <- function(query_url,
   # Setting items per page
   query_ls[["per-page"]] <- per_page
 
-  # Setup save_pages if not NULL
-  if (!is.null(save_pages)) {
-    if (!dir.exists(save_pages)) {
-      dir.create(save_pages)
+  # Setup output_pages_to if not NULL
+  if (!is.null(output_pages_to)) {
+    output_pages_to <- normalizePath(output_pages_to, mustWork = FALSE)
+    if (!dir.exists(output_pages_to)) {
+      dir.create(output_pages_to)
     }
-    save_pages <- normalizePath(save_pages)
     result <- character(n_pages)
 
     save_no_pages <- 20
@@ -393,16 +392,16 @@ oa_request <- function(query_url,
     query_ls[[paging]] <- next_page
     res <- api_request(query_url, ua, query = query_ls)
     next_page <- get_next_page(paging, i + 1, res)
-    if (!is.null(save_pages)) {
-      fn <- file.path(save_pages, paste0("page_", i, ".rds"))
-      saveRDS(res, file.path(save_pages, paste0("page_", i, ".rds")))
+    if (!is.null(output_pages_to)) {
+      fn <- file.path(output_pages_to, paste0("page_", i, ".rds"))
+      saveRDS(res, file.path(output_pages_to, paste0("page_", i, ".rds")))
       result[[i]] <- fn
     } else {
       if (!is.null(res$results)) data[[i]] <- res$results
     }
   }
 
-  if (is.null(save_pages)) {
+  if (is.null(output_pages_to)) {
     return(unlist(data, recursive = FALSE))
   } else {
     return(result)
