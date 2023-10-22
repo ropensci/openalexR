@@ -16,6 +16,8 @@ oa_fetch(
   abstract = TRUE,
   endpoint = "https://api.openalex.org",
   per_page = 200,
+  paging = NULL,
+  pages = NULL,
   count_only = FALSE,
   mailto = oa_email(),
   api_key = oa_apikey(),
@@ -76,6 +78,16 @@ Defaults to endpoint = "https://api.openalex.org".}
 \item{per_page}{Numeric. Number of items to download per page.
 The per-page argument can assume any number between 1 and 200.
 Defaults to 200.}
+
+\item{paging}{Character.
+Either "cursor" for cursor paging or "page" for basic paging.
+When used with `options$sample` and or `pages`,
+paging is also automatically set to basic paging: `paging = "page"`
+to avoid duplicates and get the right page.
+See https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/paging.}
+
+\item{pages}{Integer vector.
+The range of pages to return. If NULL, return all pages.}
 
 \item{count_only}{Logical.
 If TRUE, the function returns only the number of item matching the query.

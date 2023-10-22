@@ -90,7 +90,7 @@ oa_snowball <- function(identifier = NULL,
   citing$oa_input <- FALSE
   cited$oa_input <- FALSE
   paper$oa_input <- TRUE
-  nodes <- rbind(paper, citing, cited)
+  nodes <- rbind_oa_ls(list(paper, citing, cited))
   nodes <- nodes[!duplicated(nodes$id), ]
 
   # relationships/edges

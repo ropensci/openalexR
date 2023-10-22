@@ -376,3 +376,54 @@ test_that("oa_fetch for identifiers works with options", {
   expect_equal(dim(i), c(1, 2))
   expect_equal(dim(a), c(1, 3))
 })
+
+test_that("different paging methods yield the same result", {
+  w0 <- oa_fetch(
+    entity = "works",
+    title.search = c("bibliometric analysis", "science mapping"),
+    cited_by_count = ">50",
+    options = list(select = "id"),
+    from_publication_date = "2021-01-01",
+    to_publication_date = "2021-12-31",
+    verbose = TRUE
+  )
+
+  w24 <- oa_fetch(
+    entity = "works",
+    title.search = c("bibliometric analysis", "science mapping"),
+    cited_by_count = ">50",
+    from_publication_date = "2021-01-01",
+    to_publication_date = "2021-12-31",
+    options = list(select = "id"),
+    pages = c(2, 4:5),
+    per_page = 10,
+    verbose = TRUE
+  )
+  expect_equal(
+    w0[c(11:20, 31:min(50, nrow(w0))), ],
+    w24
+  )
+
+
+
+})
+
+test_that("pages works", {
+  # The last 10 pages when per_page = 20
+  # should be the same as the 10 pages when fetching page 2
+  w1 <- oa_fetch(
+    search = "transformative change",
+    options = list(select = c("id", "display_name", "publication_date")),
+    pages = 1,
+    per_page = 20,
+    verbose = TRUE
+  )
+  w2 <- oa_fetch(
+    search = "transformative change",
+    options = list(select = c("id", "display_name", "publication_date")),
+    pages = 2,
+    per_page = 10,
+    verbose = TRUE
+  )
+  expect_equal(w1[11:20,], w2)
+})
