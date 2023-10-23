@@ -67,6 +67,8 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
                      abstract = TRUE,
                      endpoint = "https://api.openalex.org",
                      per_page = 200,
+                     paging = NULL,
+                     pages = NULL,
                      count_only = FALSE,
                      mailto = oa_email(),
                      api_key = oa_apikey(),
@@ -96,7 +98,9 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 
   if (!is.null(options$sample) && (options$sample > per_page)) {
     paging <- "page"
-  } else {
+  } else if (!is.null(options$page)){
+    paging <- "page"
+  } else if (is.null(paging)){
     paging <- "cursor"
   }
 
@@ -122,6 +126,7 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
       ),
       per_page = per_page,
       paging = paging,
+      pages = pages,
       count_only = count_only,
       mailto = mailto,
       api_key = api_key,
@@ -130,7 +135,6 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
   }
 
   if (length(final_res[[1]]) == 0) { # || is.null(final_res[[1]][[1]]$id)
-    warning("No collection found!")
     return(NULL)
   }
 
@@ -161,8 +165,12 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 #' Defaults to 200.
 #' @param paging Character.
 #' Either "cursor" for cursor paging or "page" for basic paging.
-#' When used with options$sample, please set `paging = "page"`
-#' to avoid duplicates.
+#' When used with `options$sample` and or `pages`,
+#' paging is also automatically set to basic paging: `paging = "page"`
+#' to avoid duplicates and get the right page.
+#' See https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/paging.
+#' @param pages Integer vector.
+#' The range of pages to return. If NULL, return all pages.
 #' @param output_pages_to Character.
 #' If NULL, the individual pages will be downloaded and processed in memory.
 #' If not NULL, the individual pages
@@ -313,6 +321,7 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 oa_request <- function(query_url,
                        per_page = 200,
                        paging = "cursor",
+                       pages = NULL,
                        output_pages_to = NULL,
                        count_only = FALSE,
                        mailto = oa_email(),
@@ -348,13 +357,22 @@ oa_request <- function(query_url,
   } else {
     return(res)
   }
+  n_items <- res$meta$count
+  n_pages <- ceiling(n_items / per_page)
 
   ## number of pages
-  n_items <- res$meta$count
-  n_pages <- ceiling(res$meta$count / per_page)
-  pages <- seq.int(n_pages)
+  if (is.null(pages)){
+    pages <- seq.int(n_pages)
+  } else {
+    pages <- pages[pages <= n_pages]
+    n_pages <- length(pages)
+    n_items <- min(n_items - per_page * (utils::tail(pages, 1) - n_pages), per_page * n_pages)
+    message("Using basic paging...")
+    paging <- "page"
+  }
 
-  if (n_items <= 0) {
+  if (n_items <= 0 || n_pages <= 0) {
+    warning("No records found!")
     return(list())
   }
 
@@ -384,17 +402,21 @@ oa_request <- function(query_url,
   }
 
   # Activation of cursor pagination
-  next_page <- get_next_page(paging, 1)
   data <- vector("list", length = n_pages)
+  res <- NULL
   for (i in pages) {
     if (verbose) pb$tick()
     Sys.sleep(1 / 100)
+    next_page <- get_next_page(paging, i, res)
     query_ls[[paging]] <- next_page
     res <- api_request(query_url, ua, query = query_ls)
     next_page <- get_next_page(paging, i + 1, res)
     if (!is.null(output_pages_to)) {
       fn <- file.path(output_pages_to, paste0("page_", i, ".rds"))
-      saveRDS(res, file.path(output_pages_to, paste0("page_", i, ".rds")))
+      saveRDS(unlist(
+        res$results,
+        recursive = FALSE
+      ), file.path(output_pages_to, paste0("page_", i, ".rds")))
       result[[i]] <- fn
     } else {
       if (!is.null(res$results)) data[[i]] <- res$results

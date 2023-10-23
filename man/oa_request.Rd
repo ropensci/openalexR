@@ -8,6 +8,7 @@ oa_request(
   query_url,
   per_page = 200,
   paging = "cursor",
+  pages = NULL,
   output_pages_to = NULL,
   count_only = FALSE,
   mailto = oa_email(),
@@ -26,8 +27,13 @@ Defaults to 200.}
 
 \item{paging}{Character.
 Either "cursor" for cursor paging or "page" for basic paging.
-When used with options$sample, please set `paging = "page"`
-to avoid duplicates.}
+When used with `options$sample` and or `pages`,
+paging is also automatically set to basic paging: `paging = "page"`
+to avoid duplicates and get the right page.
+See https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/paging.}
+
+\item{pages}{Integer vector.
+The range of pages to return. If NULL, return all pages.}
 
 \item{output_pages_to}{Character.
 If NULL, the individual pages will be downloaded and processed in memory.
