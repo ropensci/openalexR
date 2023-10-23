@@ -98,9 +98,9 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 
   if (!is.null(options$sample) && (options$sample > per_page)) {
     paging <- "page"
-  } else if (!is.null(options$page)){
+  } else if (!is.null(options$page)) {
     paging <- "page"
-  } else if (is.null(paging)){
+  } else if (is.null(paging)) {
     paging <- "cursor"
   }
 
@@ -179,6 +179,16 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 #' **The function will overwrite existing files in the directory without
 #' warning!**
 #' Defaults to NULL.
+#' @param pages_save_function Function.
+#' The function which will be used to save the individual pages if
+#' `output_pages_to` is set. This function has to take at least two arguments:
+#'   - the object to save (which will be the page returned in the same formnat 
+#'     as returned by the function `oa_request()`)
+#'   - the file name where to save it to (which is 
+#'     `file.path(output_pages_to, paste0("page_", i, ".rds"))`).
+#' This function can be used for example to save the results in a database or 
+#' a different format than `.rds`.
+#' Defaults to `saveRDS`.
 #' @param count_only Logical.
 #' If TRUE, the function returns only the number of item matching the query.
 #' Defaults to FALSE.
@@ -323,6 +333,7 @@ oa_request <- function(query_url,
                        paging = "cursor",
                        pages = NULL,
                        output_pages_to = NULL,
+                       pages_save_function = saveRDS,
                        count_only = FALSE,
                        mailto = oa_email(),
                        api_key = oa_apikey(),
@@ -397,8 +408,6 @@ oa_request <- function(query_url,
       dir.create(output_pages_to)
     }
     result <- character(n_pages)
-
-    save_no_pages <- 20
   }
 
   # Activation of cursor pagination
@@ -413,10 +422,13 @@ oa_request <- function(query_url,
     next_page <- get_next_page(paging, i + 1, res)
     if (!is.null(output_pages_to)) {
       fn <- file.path(output_pages_to, paste0("page_", i, ".rds"))
-      saveRDS(unlist(
-        res$results,
-        recursive = FALSE
-      ), file.path(output_pages_to, paste0("page_", i, ".rds")))
+      pages_save_function(
+        unlist(
+          res$results,
+          recursive = FALSE
+        ),
+        file.path(output_pages_to, paste0("page_", i, ".rds"))
+      )
       result[[i]] <- fn
     } else {
       if (!is.null(res$results)) data[[i]] <- res$results

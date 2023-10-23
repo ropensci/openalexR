@@ -10,6 +10,7 @@ oa_request(
   paging = "cursor",
   pages = NULL,
   output_pages_to = NULL,
+  pages_save_function = saveRDS,
   count_only = FALSE,
   mailto = oa_email(),
   api_key = oa_apikey(),
@@ -43,6 +44,17 @@ The directory will be created if it does not exist.
 **The function will overwrite existing files in the directory without
 warning!**
 Defaults to NULL.}
+
+\item{pages_save_function}{Function.
+The function which will be used to save the individual pages if
+`output_pages_to` is set. This function has to take at least two arguments:
+  - the object to save (which will be the page returned in the same formnat 
+    as returned by the function `oa_request()`)
+  - the file name where to save it to (which is 
+    `file.path(output_pages_to, paste0("page_", i, ".rds"))`).
+This function can be used for example to save the results in a database or 
+a different format than `.rds`.
+Defaults to `saveRDS`.}
 
 \item{count_only}{Logical.
 If TRUE, the function returns only the number of item matching the query.
