@@ -60,8 +60,6 @@ oa2df <- function(data, entity, options = NULL, count_only = FALSE, group_by = N
   }
 
   if (entity != "snowball"){
-    # replace NULL with NA
-    data <- simple_rapply(data, `%||%`, y = NA)
     ch <- ifelse(is.null(options$select), "id", options$select[[1]])
     if (!is.null(data[[ch]])) {
       data <- list(data)

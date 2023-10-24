@@ -59,8 +59,7 @@ Defaults to endpoint = "https://api.openalex.org".}
 \item{verbose}{Logical. If TRUE, print information on querying process.
 Default to \code{verbose = FALSE}.
 To shorten the printed query URL, set the environment variable openalexR.print
-to the number of characters to print:
-\code{Sys.setenv(openalexR.print = 70)}.}
+to the number of characters to print: \code{Sys.setenv(openalexR.print = 70)}.}
 
 \item{citing_filter}{filters used in the search of works citing the input works.}
 
