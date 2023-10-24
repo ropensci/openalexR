@@ -34,10 +34,13 @@ ngram2df <- function(ngram) {
 #'
 #' ngrams_data <- oa_ngrams(c("W1963991285", "W1964141474"))
 #'
-#' library(dplyr)
+#' # 10 most common ngrams in the first work
 #' first_paper_ngrams <- ngrams_data$ngrams[[1]]
-#' top_10_ngrams <- first_paper_ngrams %>%
-#'   slice_max(ngram_count, n = 10, with_ties = FALSE)
+#' first_paper_ngrams[
+#'   order(first_paper_ngrams$ngram_count, decreasing = TRUE),
+#' ][
+#'   1:10,
+#' ]
 #'
 #' # Missing N-grams are `NULL` in the `ngrams` list-column
 #' oa_ngrams("https://openalex.org/W2284876136")

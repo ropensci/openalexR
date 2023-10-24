@@ -1,7 +1,7 @@
 test_that("show_authors works", {
   skip_on_cran()
 
-  author_ids <- c("A923435168", "A2208157607")
+  author_ids <- c("A5023888391", "A5014077037")
   author_simplified <- show_authors(oa_fetch(identifier = author_ids))
 
   expect_s3_class(author_simplified, "data.frame")

@@ -25,7 +25,6 @@ subs_na <- function(x, type, prefix = NULL) {
 
   out <- switch(type,
     row_df = as.data.frame(replace_w_na(x)),
-    col_df = tibble::enframe(unlist(x)),
     flat = unlist(x),
     rbind_df = do.call(rbind.data.frame, lapply(x, replace_w_na))
   )

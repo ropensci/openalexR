@@ -26,7 +26,7 @@ simplify the result however you want.
 \examples{
 
 show_authors(oa_fetch(
-  identifier = c("A923435168", "A2208157607"),
+  identifier = c("A5023888391", "A5014077037"),
   verbose = TRUE
 ))
 

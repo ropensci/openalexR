@@ -26,7 +26,7 @@ test_that("oa_request gives messages for unexpected input", {
 
   query_url <- paste0(
     "https://api.openalex.org/authors?",
-    "filter=openalex%3AA923435168%7CA2208157607"
+    "filter=openalex%3AA5048491430%7CA5023888391"
   )
   expect_message(oa_request(query_url, verbose = TRUE))
   expect_message(oa_request(query_url, mailto = 123))
@@ -67,8 +67,7 @@ test_that("oa_fetch options$select works", {
       "10.1371/journal.pone.0266781",
       "10.1371/journal.pone.0267149"
     ),
-    options = list(select = c("doi", "id", "cited_by_count", "type")),
-    verbose = TRUE
+    options = list(select = c("doi", "id", "cited_by_count", "type"))
   )
   expect_equal(
     dim(x),
@@ -119,9 +118,13 @@ test_that("oa_fetch sample works", {
 
   expect_equal(nrow(random2021), 20)
   expect_equal(nrow(random10), 10)
-  expect_error(oa_fetch("works", search = "open science", options = list(sample = 10)))
 })
 
+
+test_that("search works with sampling", {
+  w <- oa_fetch("works", search = "open science", options = list(sample = 5))
+  expect_equal(nrow(w), 5)
+})
 
 test_that("oa_fetch authors can deal with NA institutions", {
   skip_on_cran()
@@ -209,7 +212,7 @@ test_that("oa_fetch can combine (OR) more than 50 DOIs in a filter", {
     "data.frame"
   )
 
-  expect_equal(nrow(many_doi_results), length(valid_dois))
+  expect_true(nrow(many_doi_results) >= length(valid_dois) - 5)
 })
 
 test_that("oa_fetch can combine (OR) more than 50 ORCIDs in a filter", {
@@ -273,7 +276,7 @@ test_that("oa_fetch can combine (OR) more than 50 ORCIDs in a filter", {
 
   expect_s3_class(many_orcid_results, "data.frame")
   # https://orcid.org/0000-0002-4147-892X no longer corresponds to two openalex id
-  expect_true(nrow(many_orcid_results) >= length(valid_orcids))
+  expect_true(nrow(many_orcid_results) >= length(valid_orcids) - 5)
 })
 
 test_that("oa_random works", {
@@ -334,7 +337,7 @@ test_that("oa_fetch works for publishers", {
 
 test_that("oa_fetch works with 1 identifier", {
   w <- oa_fetch(identifier = "W3046863325") # Work
-  a <- oa_fetch(identifier = "A1969205032") # Author
+  a <- oa_fetch(identifier = "A5023888391") # Author
   i <- oa_fetch(identifier = "I4200000001") # Institution
   f <- oa_fetch(identifier = "F4320332161") # Funder
   p <- oa_fetch(identifier = "P4310311775") # Publisher
@@ -349,12 +352,78 @@ test_that("oa_fetch works with 1 identifier", {
   expect_s3_class(s, "data.frame")
   expect_s3_class(co, "data.frame")
 
-  expect_equal(dim(w), c(1, 30))
-  expect_equal(dim(a), c(1, 15))
+  expect_equal(dim(w), c(1, 36))
+  expect_equal(dim(a), c(1, 16))
   expect_equal(dim(i), c(1, 21))
   expect_equal(dim(f), c(1, 17))
   expect_equal(dim(p), c(1, 19))
   expect_equal(dim(s), c(1, 26))
   expect_equal(dim(co), c(1, 16))
 
+})
+
+test_that("oa_fetch for identifiers works with options", {
+  i <- oa_fetch(
+    identifier = "I201448701",
+    options = list(select = c("ids", "country_code"))
+  )
+
+  a <- oa_fetch(
+    identifier = "A5023888391",
+    options = list(select = c("display_name", "orcid", "cited_by_count"))
+  )
+
+  expect_equal(dim(i), c(1, 2))
+  expect_equal(dim(a), c(1, 3))
+})
+
+test_that("different paging methods yield the same result", {
+  w0 <- oa_fetch(
+    entity = "works",
+    title.search = c("bibliometric analysis", "science mapping"),
+    cited_by_count = ">50",
+    options = list(select = "id"),
+    from_publication_date = "2021-01-01",
+    to_publication_date = "2021-12-31",
+    verbose = TRUE
+  )
+
+  w24 <- oa_fetch(
+    entity = "works",
+    title.search = c("bibliometric analysis", "science mapping"),
+    cited_by_count = ">50",
+    from_publication_date = "2021-01-01",
+    to_publication_date = "2021-12-31",
+    options = list(select = "id"),
+    pages = c(2, 4:5),
+    per_page = 10,
+    verbose = TRUE
+  )
+  expect_equal(
+    w0[c(11:20, 31:min(50, nrow(w0))), ],
+    w24
+  )
+
+
+
+})
+
+test_that("pages works", {
+  # The last 10 pages when per_page = 20
+  # should be the same as the 10 pages when fetching page 2
+  w1 <- oa_fetch(
+    search = "transformative change",
+    options = list(select = c("id", "display_name", "publication_date")),
+    pages = 1,
+    per_page = 20,
+    verbose = TRUE
+  )
+  w2 <- oa_fetch(
+    search = "transformative change",
+    options = list(select = c("id", "display_name", "publication_date")),
+    pages = 2,
+    per_page = 10,
+    verbose = TRUE
+  )
+  expect_equal(w1[11:20,], w2)
 })

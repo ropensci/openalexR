@@ -1,3 +1,18 @@
+# openalexR (development version)
+* allowed the use of `options$sample` with `search`
+
+# openalexR 1.2.2
+* solved issue with CRAN test
+* 
+# openalexR 1.2.1
+* many improvements in bibliometrix support
+* solved issue with CRAN test
+
+# openalexR 1.2.0
+* many improvements in oa_snowball
+* added new openalex entities
+* solved CRAN issue about  packageVersion() 
+
 # openalexR 1.1.0
 * Basic paging is applied when using options$sample
 * Bug fixes for rbind in oa2df

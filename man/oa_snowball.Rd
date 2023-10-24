@@ -18,7 +18,7 @@ oa_snowball(
 )
 }
 \arguments{
-\item{identifier}{Character vector of openalex_id identifiers.}
+\item{identifier}{Character vector of openalex identifiers.}
 
 \item{...}{Additional arguments to pass to `oa_fetch` when querying the
 input works, such as `doi`.}

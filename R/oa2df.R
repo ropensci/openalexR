@@ -46,13 +46,26 @@
 #' }
 #'
 #' @export
-oa2df <- function(data, entity, count_only = FALSE, group_by = NULL, abstract = TRUE, verbose = TRUE) {
+oa2df <- function(data, entity, options = NULL, count_only = FALSE, group_by = NULL, abstract = TRUE, verbose = TRUE) {
+  if (length(data) == 0){
+    return(NULL)
+  }
+
   if (!is.null(group_by)) {
     return(do.call(rbind.data.frame, data))
   }
 
   if (count_only && length(data) == 4) {
     return(unlist(data))
+  }
+
+  if (entity != "snowball"){
+    # replace NULL with NA
+    data <- simple_rapply(data, `%||%`, y = NA)
+    ch <- ifelse(is.null(options$select), "id", options$select[[1]])
+    if (!is.null(data[[ch]])) {
+      data <- list(data)
+    }
   }
 
   switch(entity,
@@ -121,15 +134,13 @@ oa2df <- function(data, entity, count_only = FALSE, group_by = NULL, abstract = 
 #' @export
 #'
 works2df <- function(data, abstract = TRUE, verbose = TRUE) {
-  if (!is.null(data$id)) {
-    data <- list(data)
-  }
 
   col_order <- c(
     "id", "display_name", "author", "ab", "publication_date", "relevance_score",
     "so", "so_id", "host_organization", "issn_l", "url", "pdf_url",
-    "license", "version", "first_page", "last_page",
-    "volume", "issue", "is_oa", "cited_by_count", "counts_by_year",
+    "license", "version", "first_page", "last_page", "volume", "issue", "is_oa",
+    "is_oa_anywhere", "oa_status", "oa_url", "any_repository_has_fulltext",
+    "language", "grants", "cited_by_count", "counts_by_year",
     "publication_year", "cited_by_api_url", "ids", "doi", "type",
     "referenced_works", "related_works", "is_paratext", "is_retracted", "concepts"
   )
@@ -146,11 +157,13 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
     "identical", "is_paratext",
     "identical", "is_retracted",
     "identical", "relevance_score",
+    "identical", "language",
+    "flat", "grants",
     "flat", "referenced_works",
     "flat", "related_works",
     "rbind_df", "counts_by_year",
     "rbind_df", "concepts",
-    "col_df", "ids"
+    "flat", "ids"
   )
 
   venue_cols <- c(
@@ -166,7 +179,7 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
     issn_l = "issn_l",
     host_organization = "host_organization_name"
   )
-  inst_cols <- c("id", "display_name", "ror", "country_code", "type")
+  inst_cols <- c("id", "display_name", "ror", "country_code", "type", "lineage")
   empty_inst <- empty_list(inst_cols)
 
   n <- length(data)
@@ -206,6 +219,7 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
           inst_idx <- lengths(l_inst) > 0
           if (length(inst_idx) > 0 && any(inst_idx)) {
             first_inst <- l_inst[inst_idx][[1]]
+            first_inst$lineage <- paste(first_inst$lineage, collapse = ", ")
           } else {
             first_inst <- empty_inst
           }
@@ -225,9 +239,13 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
     if (!is.null(paper$abstract_inverted_index) && abstract) {
       ab <- abstract_build(paper$abstract_inverted_index)
     }
-    paper_biblio <- replace_w_na(paper$biblio) # TODO replace sapply with something else
+    paper_biblio <- replace_w_na(paper$biblio)
+    open_access <- replace_w_na(paper$open_access)
+    if (length(open_access) > 0){
+      names(open_access)[[1]] <- "is_oa_anywhere"
+    }
 
-    out_ls <- c(sim_fields, venue, paper_biblio, list(author = author, ab = ab))
+    out_ls <- c(sim_fields, venue, open_access, paper_biblio, list(author = author, ab = ab))
     out_ls[sapply(out_ls, is.null)] <- NULL
     list_df[[i]] <- out_ls
   }
@@ -291,16 +309,11 @@ abstract_build <- function(ab) {
 #'
 #' @export
 authors2df <- function(data, verbose = TRUE) {
-
-  if (!is.null(data$id)) {
-    data <- list(data)
-  }
-
   n <- length(data)
   pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)
 
-  inst_cols <- c("id", "display_name", "ror", "country_code", "type")
+  inst_cols <- c("id", "display_name", "ror", "country_code", "type", "lineage")
   empty_inst <- empty_list(inst_cols)
 
   author_process <- tibble::tribble(
@@ -315,7 +328,7 @@ authors2df <- function(data, verbose = TRUE) {
     "flat", "display_name_alternatives",
     "rbind_df", "counts_by_year",
     "rbind_df", "x_concepts",
-    "col_df", "ids"
+    "flat", "ids"
   )
 
   for (i in seq.int(n)) {
@@ -336,9 +349,13 @@ authors2df <- function(data, verbose = TRUE) {
       if (is.na(sub_affiliation[[1]])) {
         sub_affiliation <- empty_inst
       }
+      if (length(sub_affiliation$lineage) > 1) {
+        sub_affiliation$lineage <- paste(sub_affiliation$lineage, collapse = ", ")
+      }
       sub_affiliation <- prepend(sub_affiliation, "affiliation")
     }
     sub_affiliation <- replace_w_na(sub_affiliation)
+
     list_df[[i]] <- c(sim_fields, sub_affiliation)
   }
 
@@ -346,8 +363,8 @@ authors2df <- function(data, verbose = TRUE) {
     "id", "display_name", "display_name_alternatives", "relevance_score",
     "ids", "orcid", "works_count", "cited_by_count", "counts_by_year",
     "affiliation_display_name", "affiliation_id", "affiliation_ror",
-    "affiliation_country_code", "affiliation_type", "x_concepts",
-    "works_api_url"
+    "affiliation_country_code", "affiliation_type", "affiliation_lineage",
+    "x_concepts", "works_api_url"
   )
 
   out_df <- rbind_oa_ls(list_df)
@@ -389,11 +406,6 @@ authors2df <- function(data, verbose = TRUE) {
 #'
 #' @export
 institutions2df <- function(data, verbose = TRUE) {
-
-  if (!is.null(data$id)) {
-    data <- list(data)
-  }
-
   n <- length(data)
   pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)
@@ -416,12 +428,11 @@ institutions2df <- function(data, verbose = TRUE) {
     "identical", "relevance_score",
     "flat", "display_name_alternatives",
     "flat", "display_name_acronyms",
-    "row_df", "international",
     "row_df", "geo",
     "rbind_df", "counts_by_year",
     "rbind_df", "x_concepts",
     "rbind_df", "associated_institutions",
-    "col_df", "ids"
+    "flat", "ids"
   )
 
   for (i in seq.int(n)) {
@@ -435,13 +446,22 @@ institutions2df <- function(data, verbose = TRUE) {
       fields$type,
       SIMPLIFY = FALSE
     )
-    list_df[[i]] <- sim_fields
+    interna <- NULL
+    if (!is.null(item$international)) {
+      interna <- list(
+        display_name_international = subs_na(
+          item$international$display_name,
+          type = "flat"
+        )
+      )
+    }
+    list_df[[i]] <- c(sim_fields, interna)
   }
 
 
   col_order <- c(
     "id", "display_name", "display_name_alternatives", "display_name_acronyms",
-    "international", "ror", "ids", "country_code", "geo", "type",
+    "display_name_international", "ror", "ids", "country_code", "geo", "type",
     "homepage_url", "image_url", "image_thumbnail_url",
     "associated_institutions", "relevance_score", "works_count",
     "cited_by_count", "counts_by_year",
@@ -490,10 +510,6 @@ institutions2df <- function(data, verbose = TRUE) {
 #' @export
 venues2df <- function(data, verbose = TRUE) {
 
-  if (!is.null(data$id)) {
-    data <- list(data)
-  }
-
   n <- length(data)
   pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)
@@ -514,7 +530,7 @@ venues2df <- function(data, verbose = TRUE) {
     "flat", "issn",
     "rbind_df", "counts_by_year",
     "rbind_df", "x_concepts",
-    "col_df", "ids"
+    "flat", "ids"
   )
 
   for (i in seq.int(n)) {
@@ -580,10 +596,6 @@ venues2df <- function(data, verbose = TRUE) {
 #' @export
 concepts2df <- function(data, verbose = TRUE) {
 
-  if (!is.null(data$id)) {
-    data <- list(data)
-  }
-
   concept_process <- tibble::tribble(
     ~type, ~field,
     "identical", "id",
@@ -600,7 +612,7 @@ concepts2df <- function(data, verbose = TRUE) {
     "rbind_df", "counts_by_year",
     "rbind_df", "ancestors",
     "rbind_df", "related_concepts",
-    "col_df", "ids"
+    "flat", "ids"
   )
 
   n <- length(data)
@@ -624,7 +636,7 @@ concepts2df <- function(data, verbose = TRUE) {
       intern_fields <- lapply(
         item$international[c("display_name", "description")],
         subs_na,
-        type = "row_df"
+        type = "flat"
       )
       names(intern_fields) <- paste(names(intern_fields), "international", sep = "_")
     }
@@ -675,15 +687,11 @@ concepts2df <- function(data, verbose = TRUE) {
 #' @export
 funders2df <- function(data, verbose = TRUE) {
 
-  if (!is.null(data$id)) {
-    data <- list(data)
-  }
-
   funder_process <- tibble::tribble(
     ~type, ~field,
     "identical", "id",
     "identical", "display_name",
-    "col_df", "alternate_titles",
+    "flat", "alternate_titles",
     "identical", "country_code",
     "identical", "description",
     "identical", "homepage_url",
@@ -692,8 +700,8 @@ funders2df <- function(data, verbose = TRUE) {
     "identical", "grants_count",
     "identical", "works_count",
     "identical", "cited_by_count",
-    "col_df", "summary_stats",
-    "col_df", "ids",
+    "flat", "summary_stats",
+    "flat", "ids",
     "rbind_df", "counts_by_year",
     "rbind_df", "roles",
     "identical", "updated_date",
@@ -753,26 +761,22 @@ funders2df <- function(data, verbose = TRUE) {
 #' @export
 sources2df <- function(data, verbose = TRUE) {
 
-  if (!is.null(data$id)) {
-    data <- list(data)
-  }
-
   source_process <- tibble::tribble(
     ~type, ~field,
     "identical", "id",
     "identical", "issn_l",
-    "col_df", "issn",
+    "flat", "issn",
     "identical", "display_name",
     "identical", "host_organization",
     "identical", "host_organization_name",
-    "col_df", "host_organization_lineage",
+    "flat", "host_organization_lineage",
     "identical", "relevance_score",
     "identical", "works_count",
     "identical", "cited_by_count",
-    "col_df", "summary_stats",
+    "flat", "summary_stats",
     "identical", "is_oa",
     "identical", "is_in_doaj",
-    "col_df", "ids",
+    "flat", "ids",
     "identical", "homepage_url",
     "identical", "apc_prices",
     "identical", "apc_usd",
@@ -841,17 +845,13 @@ sources2df <- function(data, verbose = TRUE) {
 #' @export
 publishers2df <- function(data, verbose = TRUE) {
 
-  if (!is.null(data$id)) {
-    data <- list(data)
-  }
-
   publisher_process <- tibble::tribble(
     ~type, ~field,
     "identical", "id",
     "identical", "display_name",
     "flat", "alternate_titles",
     "identical", "hierarchy_level",
-    "row_df", "parent_publisher",
+    "flat", "parent_publisher",
     "flat", "lineage",
     "identical", "country_codes",
     "identical", "homepage_url",
@@ -859,8 +859,8 @@ publishers2df <- function(data, verbose = TRUE) {
     "identical", "image_thumbnail_url",
     "identical", "works_count",
     "identical", "cited_by_count",
-    "col_df", "summary_stats",
-    "col_df", "ids",
+    "flat", "summary_stats",
+    "flat", "ids",
     "rbind_df", "counts_by_year",
     "rbind_df", "roles",
     "identical", "sources_api_url",

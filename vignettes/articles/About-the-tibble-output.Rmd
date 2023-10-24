@@ -50,7 +50,7 @@ institutions %>%
   rowwise() %>%
   mutate(
     name = display_name,
-    openalex_id = stringr::str_extract(id, "I\\d+"),
+    openalex = stringr::str_extract(id, "I\\d+"),
     lat = geo$latitude,
     lon = geo$longitude,
     .keep = "none"
@@ -66,7 +66,7 @@ As you can see below, the syntax is a little less natural, but you *may* gain so
 institutions %>%
   mutate(
     name = display_name,
-    openalex_id = stringr::str_extract(id, "I\\d+"),
+    openalex = stringr::str_extract(id, "I\\d+"),
     lat = purrr::map_dbl(geo, ~ .x$latitude),
     lon = purrr::map_dbl(geo, ~ .x$longitude),
     .keep = "none"
@@ -81,7 +81,7 @@ Similar to the purrr approach, you can use the base functions in the `lapply` fa
 institutions %>%
   mutate(
     name = display_name,
-    openalex_id = stringr::str_extract(id, "I\\d+"),
+    openalex = stringr::str_extract(id, "I\\d+"),
     lat = vapply(geo, function(x) x$latitude, numeric(1)),
     lon = vapply(geo, function(x) x$longitude, numeric(1)),
     .keep = "none"
@@ -115,7 +115,7 @@ We will store the result in a list column:
 multi_insts <- works %>%
   rowwise() %>%
   mutate(
-    openalex_id = stringr::str_extract(id, "W\\d+"),
+    openalex = stringr::str_extract(id, "W\\d+"),
     institutions = list(unique(author$institution_display_name)),
     .keep = "none"
   )

@@ -16,6 +16,8 @@ oa_fetch(
   abstract = TRUE,
   endpoint = "https://api.openalex.org",
   per_page = 200,
+  paging = NULL,
+  pages = NULL,
   count_only = FALSE,
   mailto = oa_email(),
   api_key = oa_apikey(),
@@ -33,16 +35,20 @@ See more at <https://docs.openalex.org/how-to-use-the-api/get-single-entities#th
 \item{...}{Additional filter arguments.}
 
 \item{options}{List. Additional parameters to add in the query. For example:
+
 - `select` Character vector. Top-level fields to show in output.
 Defaults to NULL, which returns all fields.
 https://docs.openalex.org/how-to-use-the-api/get-single-entities/select-fields
+
 - `sort` Character. Attribute to sort by.
 For example: "display_name" for venues or "cited_by_count:desc" for works.
 See more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sort-entity-lists>.
+
 - `sample` Integer. Number of (random) records to return.
 Should be no larger than 10,000.
 Defaults to NULL, which returns all records satisfying the query.
 Read more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sample-entity-lists>.
+
 - `seed` Integer.
 A seed value in order to retrieve the same set of random records in
 the same order when used multiple times with `sample`.
@@ -63,7 +69,7 @@ See more at <https://docs.openalex.org/how-to-use-the-api/get-groups-of-entities
 \item{output}{Character. Type of output, either a list or a tibble/data.frame.}
 
 \item{abstract}{Logical. If TRUE, the function returns also the abstract of each item.
-Default to \code{abstract = FALSE}.
+Default to \code{abstract = TRUE}.
 The argument is ignored if entity is different from "works".}
 
 \item{endpoint}{Character. URL of the OpenAlex Endpoint API server.
@@ -72,6 +78,16 @@ Defaults to endpoint = "https://api.openalex.org".}
 \item{per_page}{Numeric. Number of items to download per page.
 The per-page argument can assume any number between 1 and 200.
 Defaults to 200.}
+
+\item{paging}{Character.
+Either "cursor" for cursor paging or "page" for basic paging.
+When used with `options$sample` and or `pages`,
+paging is also automatically set to basic paging: `paging = "page"`
+to avoid duplicates and get the right page.
+See https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/paging.}
+
+\item{pages}{Integer vector.
+The range of pages to return. If NULL, return all pages.}
 
 \item{count_only}{Logical.
 If TRUE, the function returns only the number of item matching the query.

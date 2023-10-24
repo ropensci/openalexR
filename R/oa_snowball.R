@@ -1,6 +1,6 @@
 #' A function to perform a snowball search
 #' and convert the result to a tibble/data frame.
-#' @param identifier Character vector of openalex_id identifiers.
+#' @param identifier Character vector of openalex identifiers.
 #' @param ... Additional arguments to pass to `oa_fetch` when querying the
 #' input works, such as `doi`.
 #' @param id_type Type of OpenAlex IDs to return. Defaults to "short",
@@ -92,7 +92,7 @@ oa_snowball <- function(identifier = NULL,
   citing$oa_input <- FALSE
   cited$oa_input <- FALSE
   paper$oa_input <- TRUE
-  nodes <- rbind(paper, citing, cited)
+  nodes <- rbind_oa_ls(list(paper, citing, cited))
   nodes <- nodes[!duplicated(nodes$id), ]
 
   # relationships/edges
@@ -101,6 +101,8 @@ oa_snowball <- function(identifier = NULL,
   edges <- edges[!duplicated(edges), ]
   # remove edges to/from NA nodes
   edges <- edges[stats::complete.cases(edges), ]
+  # remove edges to missing nodes (ex: deleted works)
+  edges <- edges[edges$from %in% nodes$id & edges$to %in% nodes$id, ]
 
   if (id_type == "short") {
     edges$to <- shorten_oaid(edges$to)
