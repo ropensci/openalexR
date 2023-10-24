@@ -80,12 +80,12 @@ oa_email <- function() {
   email
 }
 
-oa_debug <- function() {
-  d <- Sys.getenv("openalexR.debug")
-  if (d == ""){
-    return(FALSE)
+oa_print <- function() {
+  p <- as.integer(Sys.getenv("openalexR.print"))
+  if (is.na(p)){
+    return(NULL)
   }
-  TRUE
+  p
 }
 
 oa_apikey <- function() {

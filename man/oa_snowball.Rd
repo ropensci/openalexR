@@ -30,16 +30,20 @@ If "original", the OpenAlex IDs are kept as are,
 for example, https://openalex.org/W2755950973}
 
 \item{options}{List. Additional parameters to add in the query. For example:
+
 - `select` Character vector. Top-level fields to show in output.
 Defaults to NULL, which returns all fields.
 https://docs.openalex.org/how-to-use-the-api/get-single-entities/select-fields
+
 - `sort` Character. Attribute to sort by.
 For example: "display_name" for venues or "cited_by_count:desc" for works.
 See more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sort-entity-lists>.
+
 - `sample` Integer. Number of (random) records to return.
 Should be no larger than 10,000.
 Defaults to NULL, which returns all records satisfying the query.
 Read more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sample-entity-lists>.
+
 - `seed` Integer.
 A seed value in order to retrieve the same set of random records in
 the same order when used multiple times with `sample`.
@@ -54,7 +58,9 @@ Defaults to endpoint = "https://api.openalex.org".}
 
 \item{verbose}{Logical. If TRUE, print information on querying process.
 Default to \code{verbose = FALSE}.
-To display the full query URL, set the environment variable openalexR.debug to TRUE.}
+To shorten the printed query URL, set the environment variable openalexR.print
+to the number of characters to print:
+\code{Sys.setenv(openalexR.print = 70)}.}
 
 \item{citing_filter}{filters used in the search of works citing the input works.}
 

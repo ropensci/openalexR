@@ -101,7 +101,9 @@ Your OpenAlex Premium API key, if available.}
 
 \item{verbose}{Logical. If TRUE, print information on querying process.
 Default to \code{verbose = FALSE}.
-To display the full query URL, set the environment variable openalexR.debug to TRUE.}
+To shorten the printed query URL, set the environment variable openalexR.print
+to the number of characters to print:
+\code{Sys.setenv(openalexR.print = 70)}.}
 }
 \value{
 A data.frame or a list. Result of the query.
