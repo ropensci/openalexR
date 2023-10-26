@@ -53,7 +53,7 @@ oa_entities <- function() {
 #' )
 #'
 #' oa_fetch(
-#'   identifier = c("A923435168", "A2208157607"),
+#'   identifier = c("A5069892096", "A5023888391"),
 #'   verbose = TRUE
 #' )
 #' }
@@ -213,11 +213,11 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 #'   verbose = FALSE
 #' )
 #'
-#' #  The author Massimo Aria is associated to the OpenAlex-id A923435168.
+#' #  The author Massimo Aria is associated to the OpenAlex-id A5069892096.
 #'
 #'
 #' query_author <- oa_query(
-#'   identifier = "A923435168",
+#'   identifier = "A5069892096",
 #'   entity = "authors",
 #'   endpoint = "https://api.openalex.org"
 #' )
@@ -471,7 +471,7 @@ get_next_page <- function(paging, i, res = NULL) {
 #' @examples
 #' \dontrun{
 #'
-#' query_auth <- oa_query(identifier = "A923435168", verbose = TRUE)
+#' query_auth <- oa_query(identifier = "A5069892096", verbose = TRUE)
 #'
 #' ### EXAMPLE 1: Full record about an entity.
 #'
@@ -489,9 +489,9 @@ get_next_page <- function(paging, i, res = NULL) {
 #' )
 #'
 #'
-#' #  The author Massimo Aria is associated to the OpenAlex-id A923435168:
+#' #  The author Massimo Aria is associated to the OpenAlex-id A5069892096:
 #'
-#' query_auth <- oa_query(identifier = "A923435168", verbose = TRUE)
+#' query_auth <- oa_query(identifier = "A5069892096", verbose = TRUE)
 #'
 #'
 #' ### EXAMPLE 2: all works citing a particular work.
@@ -591,7 +591,7 @@ oa_query <- function(filter = NULL,
   if (is.null(oa_print())){
     url_display <- query_url
   } else {
-    query_url <- URLdecode(query_url)
+    query_url <- utils::URLdecode(query_url)
     query_url_more <- if (oa_print() < nchar(query_url)) "..."
     url_display <- paste0(substr(query_url, 1, oa_print()), query_url_more)
   }

@@ -85,11 +85,11 @@ res <- oa_request(
   verbose = FALSE
 )
 
-#  The author Massimo Aria is associated to the OpenAlex-id A923435168.
+#  The author Massimo Aria is associated to the OpenAlex-id A5069892096.
 
 
 query_author <- oa_query(
-  identifier = "A923435168",
+  identifier = "A5069892096",
   entity = "authors",
   endpoint = "https://api.openalex.org"
 )

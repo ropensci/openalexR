@@ -66,5 +66,4 @@ snowball_docs <- oa_snowball(
   verbose = TRUE
 )
 }
-
 }

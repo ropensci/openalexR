@@ -91,7 +91,7 @@ It generates a valid query, written following the OpenAlex API Language, from a 
 \examples{
 \dontrun{
 
-query_auth <- oa_query(identifier = "A923435168", verbose = TRUE)
+query_auth <- oa_query(identifier = "A5069892096", verbose = TRUE)
 
 ### EXAMPLE 1: Full record about an entity.
 
@@ -109,9 +109,9 @@ query_work <- oa_query(
 )
 
 
-#  The author Massimo Aria is associated to the OpenAlex-id A923435168:
+#  The author Massimo Aria is associated to the OpenAlex-id A5069892096:
 
-query_auth <- oa_query(identifier = "A923435168", verbose = TRUE)
+query_auth <- oa_query(identifier = "A5069892096", verbose = TRUE)
 
 
 ### EXAMPLE 2: all works citing a particular work.

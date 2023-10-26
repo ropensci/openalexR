@@ -4,7 +4,7 @@ test_that("Invalid filter errors out", {
   # open_alex is not a valid filter
   query_url <- paste0(
     "https://api.openalex.org/authors?",
-    "filter=open_alex%3AA923435168%7CA2208157607"
+    "filter=open_alex%3AA5069892096%7CA5023888391"
   )
 
   expect_error(oa_request(query_url))
@@ -15,7 +15,7 @@ test_that("oa_request returns list", {
 
   query_url <- paste0(
     "https://api.openalex.org/authors?",
-    "filter=openalex%3AA923435168%7CA2208157607"
+    "filter=openalex%3AA5069892096%7CA5023888391"
   )
 
   expect_type(oa_request(query_url), "list")

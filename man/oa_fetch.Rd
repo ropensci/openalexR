@@ -143,7 +143,7 @@ oa_fetch(
 )
 
 oa_fetch(
-  identifier = c("A923435168", "A2208157607"),
+  identifier = c("A5069892096", "A5023888391"),
   verbose = TRUE
 )
 }
