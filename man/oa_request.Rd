@@ -117,7 +117,7 @@ res <- oa_request(
 query2 <- oa_query(
   identifier = NULL,
   entity = "works",
-  filter = "cites:W2755950973",
+  filter = c(cites = "W2755950973"),
   from_publication_date = "2021-01-01",
   to_publication_date = "2021-12-31",
   search = NULL,
@@ -141,7 +141,7 @@ res2 <- oa_request(
 query3 <- oa_query(
   identifier = NULL,
   entity = "works",
-  filter = 'title.search:"bibliometric analysis"|"science mapping"',
+  filter = c(title.search = '"bibliometric analysis"|"science mapping"'),
   from_publication_date = "2020-01-01",
   to_publication_date = "2021-12-31",
   search = NULL,

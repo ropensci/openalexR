@@ -63,28 +63,12 @@ id_type <- function(identifier) {
   )
 }
 
-oa_email <- function() {
-  email <- Sys.getenv("openalexR.mailto")
-  if (email == "") {
-    email <- getOption("openalexR.mailto", default = NULL)
-  }
-  email
-}
-
 oa_print <- function() {
   p <- as.integer(Sys.getenv("openalexR.print"))
   if (is.na(p)){
     return(NULL)
   }
   p
-}
-
-oa_apikey <- function() {
-  apikey <- Sys.getenv("openalexR.apikey")
-  if (apikey == "") {
-    apikey <- getOption("openalexR.apikey", default = NULL)
-  }
-  apikey
 }
 
 oa_progress <- function(n, text = "converting") {
@@ -129,4 +113,20 @@ rbind_oa_ls <- function(list_df) {
       }
     )
   )
+}
+
+oa_email <- function() {
+  email <- Sys.getenv("openalexR.mailto")
+  if (email == "") {
+    email <- getOption("openalexR.mailto", default = NULL)
+  }
+  email
+}
+
+oa_apikey <- function() {
+  apikey <- Sys.getenv("openalexR.apikey")
+  if (apikey == "") {
+    apikey <- getOption("openalexR.apikey", default = NULL)
+  }
+  apikey
 }

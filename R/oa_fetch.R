@@ -245,7 +245,7 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 #' query2 <- oa_query(
 #'   identifier = NULL,
 #'   entity = "works",
-#'   filter = "cites:W2755950973",
+#'   filter = c(cites = "W2755950973"),
 #'   from_publication_date = "2021-01-01",
 #'   to_publication_date = "2021-12-31",
 #'   search = NULL,
@@ -269,7 +269,7 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 #' query3 <- oa_query(
 #'   identifier = NULL,
 #'   entity = "works",
-#'   filter = 'title.search:"bibliometric analysis"|"science mapping"',
+#'   filter = c(title.search = '"bibliometric analysis"|"science mapping"'),
 #'   from_publication_date = "2020-01-01",
 #'   to_publication_date = "2021-12-31",
 #'   search = NULL,
@@ -634,7 +634,7 @@ oa_random <- function(entity = oa_entities(),
   final_res
 }
 
-api_request <- function(query_url, ua, query = query, api_key = oa_apikey()) {
+api_request <- function(query_url, ua, query, api_key = oa_apikey()) {
   res <- httr::GET(query_url, ua, query = query, httr::add_headers(api_key = api_key))
 
   if (httr::status_code(res) == 200) {
