@@ -591,7 +591,9 @@ oa_query <- function(filter = NULL,
   if (is.null(oa_print())){
     url_display <- query_url
   } else {
-    url_display <- paste0(substr(query_url, 1, oa_print()), "...")
+    query_url <- URLdecode(query_url)
+    query_url_more <- if (oa_print() < nchar(query_url)) "..."
+    url_display <- paste0(substr(query_url, 1, oa_print()), query_url_more)
   }
 
   if (verbose) message("Requesting url: ", url_display)
