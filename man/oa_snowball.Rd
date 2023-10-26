@@ -12,8 +12,8 @@ oa_snowball(
   mailto = oa_email(),
   endpoint = "https://api.openalex.org",
   verbose = FALSE,
-  citing_filter = list(),
-  cited_by_filter = list()
+  citing_params = list(),
+  cited_by_params = list()
 )
 }
 \arguments{
@@ -35,11 +35,13 @@ Gives OpenAlex an email to enter the polite pool.}
 Defaults to endpoint = "https://api.openalex.org".}
 
 \item{verbose}{Logical. If TRUE, print information on querying process.
-Default to \code{verbose = FALSE}.}
+Default to \code{verbose = FALSE}.
+To shorten the printed query URL, set the environment variable openalexR.print
+to the number of characters to print: \code{Sys.setenv(openalexR.print = 70)}.}
 
-\item{citing_filter}{filters used in the search of works citing the input works.}
+\item{citing_params}{parameters used in the search of works citing the input works.}
 
-\item{cited_by_filter}{filters used in the search of works cited by the input works.}
+\item{cited_by_params}{parameters used in the search of works cited by the input works.}
 }
 \value{
 A list containing 2 elements:
@@ -59,8 +61,8 @@ and convert the result to a tibble/data frame.
 
 snowball_docs <- oa_snowball(
   identifier = c("W2741809807", "W2755950973"),
-  citing_filter = list(from_publication_date = "2022-01-01"),
-  cited_by_filter = list(),
+  citing_params = list(from_publication_date = "2022-01-01"),
+  cited_by_params = list(),
   verbose = TRUE
 )
 }

@@ -100,7 +100,9 @@ Gives OpenAlex an email to enter the polite pool.}
 Your OpenAlex Premium API key, if available.}
 
 \item{verbose}{Logical. If TRUE, print information on querying process.
-Default to \code{verbose = FALSE}.}
+Default to \code{verbose = FALSE}.
+To shorten the printed query URL, set the environment variable openalexR.print
+to the number of characters to print: \code{Sys.setenv(openalexR.print = 70)}.}
 }
 \value{
 A data.frame or a list. Result of the query.
@@ -141,7 +143,7 @@ oa_fetch(
 )
 
 oa_fetch(
-  identifier = c("A923435168", "A2208157607"),
+  identifier = c("A5069892096", "A5023888391"),
   verbose = TRUE
 )
 }

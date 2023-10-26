@@ -73,7 +73,9 @@ See more at <https://docs.openalex.org/how-to-use-the-api/get-groups-of-entities
 Defaults to endpoint = "https://api.openalex.org".}
 
 \item{verbose}{Logical. If TRUE, print information on querying process.
-Default to \code{verbose = FALSE}.}
+Default to \code{verbose = FALSE}.
+To shorten the printed query URL, set the environment variable openalexR.print
+to the number of characters to print: \code{Sys.setenv(openalexR.print = 70)}.}
 
 \item{\dots}{Additional filter arguments.}
 }
@@ -89,7 +91,7 @@ It generates a valid query, written following the OpenAlex API Language, from a 
 \examples{
 \dontrun{
 
-query_auth <- oa_query(identifier = "A923435168", verbose = TRUE)
+query_auth <- oa_query(identifier = "A5069892096", verbose = TRUE)
 
 ### EXAMPLE 1: Full record about an entity.
 
@@ -107,9 +109,9 @@ query_work <- oa_query(
 )
 
 
-#  The author Massimo Aria is associated to the OpenAlex-id A923435168:
+#  The author Massimo Aria is associated to the OpenAlex-id A5069892096:
 
-query_auth <- oa_query(identifier = "A923435168", verbose = TRUE)
+query_auth <- oa_query(identifier = "A5069892096", verbose = TRUE)
 
 
 ### EXAMPLE 2: all works citing a particular work.

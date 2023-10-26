@@ -8,8 +8,8 @@
 #' for example, W2755950973.
 #' If "original", the OpenAlex IDs are kept as are,
 #' for example, https://openalex.org/W2755950973
-#' @param citing_filter filters used in the search of works citing the input works.
-#' @param cited_by_filter filters used in the search of works cited by the input works.
+#' @param citing_params parameters used in the search of works citing the input works.
+#' @param cited_by_params parameters used in the search of works cited by the input works.
 #' @inheritParams oa_fetch
 #'
 #'
@@ -28,8 +28,8 @@
 #'
 #' snowball_docs <- oa_snowball(
 #'   identifier = c("W2741809807", "W2755950973"),
-#'   citing_filter = list(from_publication_date = "2022-01-01"),
-#'   cited_by_filter = list(),
+#'   citing_params = list(from_publication_date = "2022-01-01"),
+#'   cited_by_params = list(),
 #'   verbose = TRUE
 #' )
 #' }
@@ -39,8 +39,8 @@ oa_snowball <- function(identifier = NULL,
                         mailto = oa_email(),
                         endpoint = "https://api.openalex.org",
                         verbose = FALSE,
-                        citing_filter = list(),
-                        cited_by_filter = list()) {
+                        citing_params = list(),
+                        cited_by_params = list()) {
   id_type <- match.arg(id_type)
   base_args <- list(
     entity = "works",
@@ -51,20 +51,30 @@ oa_snowball <- function(identifier = NULL,
   )
 
   # collecting records about the target papers
-  paper <- do.call(oa_fetch, c(base_args, list(identifier = identifier), list(...)))
+  paper <- fetch_snow(
+    c(base_args, list(identifier = identifier)),
+    list(...)
+  )
 
   # fetching documents citing the target papers
   identifier <- shorten_oaid(paper$id)
   if (verbose) message("Collecting all documents citing the target papers...")
   citing <- suppressWarnings(
-    do.call(oa_fetch, c(base_args, list(cites = identifier), citing_filter))
+    fetch_snow(
+      c(base_args, list(cites = identifier)),
+      citing_params
+    )
   )
 
   # fetching documents cited by the target papers
   if (verbose) message("Collecting all documents cited by the target papers...")
   cited <- suppressWarnings(
-    do.call(oa_fetch, c(base_args, list(cited_by = identifier), cited_by_filter))
+    fetch_snow(
+      c(base_args, list(cited_by = identifier)),
+      cited_by_params
+    )
   )
+
   # merging all documents in a single data frame
   if (is.null(citing)) {
     citing <- paper[0, TRUE]
@@ -109,4 +119,15 @@ oa_snowball <- function(identifier = NULL,
   }
 
   list(nodes = nodes, edges = edges)
+}
+
+
+fetch_snow <- function(args, filt){
+  if (!is.null(filt$options$select)){
+    # id and referenced_works is needed to find citing papers
+    filt$options$select <- union(filt$options$select, c("id", "referenced_works"))
+  }
+
+  # collecting records about the target papers
+  do.call(oa_fetch, c(args, filt))
 }
