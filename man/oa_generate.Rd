@@ -5,26 +5,12 @@
 \title{A generator for making request to OpenAlex API
 Returns one record at a time.}
 \usage{
-oa_generate(
-  query_url,
-  mailto = oa_email(),
-  api_key = oa_apikey(),
-  verbose = FALSE
-)
+oa_generate(...)
 }
 \arguments{
-\item{query_url}{Character string.
-A search query formulated using the OpenAlex API language and
-can be generated with \code{oa_query}.}
-
-\item{mailto}{Character string.
-Gives OpenAlex an email to enter the polite pool.}
-
-\item{api_key}{Character string.
-Your OpenAlex Premium API key, if available.}
-
-\item{verbose}{Logical.
-If TRUE, print information about the querying process. Defaults to TRUE.}
+\item{...}{arguments passed to the generator including
+`query_url`, `mailto`, `api_key`, and `verbose`.
+See `oa_request` for details on these arguments.}
 }
 \value{
 Generator function.
@@ -36,7 +22,6 @@ TODO check group_by
 if (require("coro")) {
   query_url <- "https://api.openalex.org/works?filter=cites\%3AW2755950973"
   oar <- oa_generate(query_url, verbose = TRUE)
-  print(oar)
   p1 <- oar() # record 1
   p2 <- oar() # record 2
   p3 <- oar() # record 3
