@@ -17,7 +17,7 @@
 #'
 #' @export
 #' @return Generator function.
-oa_generate <- if (!rlang::is_installed("coro")) {
+oa_generate <- if (!requireNamespace("coro")) {
   message(
     "Package \"coro\" must be installed to use this generator."
   )
