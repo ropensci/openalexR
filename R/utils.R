@@ -117,6 +117,7 @@ rbind_oa_ls <- function(list_df) {
 
 #' Get email from options
 #' @return Character string. Email of the requester.
+#' @keywords internal
 #' @export
 oa_email <- function() {
   email <- Sys.getenv("openalexR.mailto")
@@ -128,6 +129,7 @@ oa_email <- function() {
 
 #' Get apikey from options
 #' @return Character string. API key of the requester.
+#' @keywords internal
 #' @export
 oa_apikey <- function() {
   apikey <- Sys.getenv("openalexR.apikey")

@@ -22,6 +22,7 @@ reference:
 - contents:
   - oa_query
   - oa_request
+  - oa_generate
 
 - title: To dataframe
   desc: convert the JSON object to tibble/dataframe
