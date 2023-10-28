@@ -12,3 +12,4 @@ Character string. Email of the requester.
 \description{
 Get email from options
 }
+\keyword{internal}

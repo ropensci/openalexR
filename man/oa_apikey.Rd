@@ -12,3 +12,4 @@ Character string. API key of the requester.
 \description{
 Get apikey from options
 }
+\keyword{internal}
