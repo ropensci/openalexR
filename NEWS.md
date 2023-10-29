@@ -1,9 +1,13 @@
 # openalexR (development version)
 * Breaking change: two arguments in `oa_snowball` are renamed:
-citing_filter is now citing_params,
-and cited_by_filter is now cited_by_params.
-* improve `oa_snowball` performance
-* allowed the use of `options$sample` with `search`
+`citing_filter` is now `citing_params`,
+and `cited_by_filter` is now `cited_by_params`.
+* Introduced `oa_generate`: A generator function to make request to OpenAlex API
+and returns one record at a time.
+* Improved paging control: the user can now specify the `pages` they want in 
+`oa_fetch` or `oa_request`.
+* Improve `oa_snowball` performance.
+* Allowed the use of `options$sample` with `search`.
 
 # openalexR 1.2.2
 * solved issue with CRAN test
