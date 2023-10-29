@@ -51,13 +51,14 @@ oa_generate <- function(...) {
         paging <- "cursor"
         query_ls[paging] <- "*"
         res <- api_request(query_url, ua, query_ls, api_key = api_key)
-        is_group_by <- grepl("group_by", query_url)
-        if (is_group_by) {
-          return(res$group_by)
-        }
-
         if (is.null(res$meta)) {
           return(res)
+        }
+
+        if (grepl("group_by", query_url)) {
+          result_name <- "group_by"
+        } else {
+          result_name <- "results"
         }
         n_items <- res$meta$count
 
@@ -70,7 +71,7 @@ oa_generate <- function(...) {
           if (verbose) {
             message("Getting record ", i, " of ", n_items, " records...")
           }
-          coro::yield(res$results[[(i - 1) %% 200 + 1]])
+          coro::yield(res[[result_name]][[(i - 1) %% 200 + 1]])
           if (i %% 200 == 0) {
             next_page <- get_next_page(paging, 0, res)
             query_ls[[paging]] <- next_page

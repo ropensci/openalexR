@@ -320,9 +320,13 @@ oa_request <- function(query_url,
   ua <- httr::user_agent("https://github.com/ropensci/openalexR/")
 
   # building query...
-  # first, download info about n. of items returned by the query
-  is_group_by <- grepl("group_by", query_url)
-  query_ls <- if (is_group_by) list() else list("per-page" = 1)
+  if (grepl("group_by", query_url)) {
+    result_name <- "group_by"
+    query_ls <- list()
+  } else {
+    result_name <- "results"
+    query_ls <- list("per-page" = 1)
+  }
 
   if (!is.null(mailto)) {
     if (isValidEmail(mailto)) {
@@ -332,11 +336,8 @@ oa_request <- function(query_url,
     }
   }
 
+  # first, download info about n. of items returned by the query
   res <- api_request(query_url, ua, query = query_ls, api_key = api_key)
-
-  if (is_group_by) {
-    return(res$group_by)
-  }
 
   if (!is.null(res$meta)) {
     ## return only item counting
@@ -388,7 +389,7 @@ oa_request <- function(query_url,
     next_page <- get_next_page(paging, i, res)
     query_ls[[paging]] <- next_page
     res <- api_request(query_url, ua, query = query_ls)
-    if (!is.null(res$results)) data[[i]] <- res$results
+    if (!is.null(res[[result_name]])) data[[i]] <- res[[result_name]]
   }
 
   unlist(data, recursive = FALSE)
