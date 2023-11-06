@@ -63,8 +63,8 @@ test_that("oa_snowball works for author orcids", {
     author.orcid = orcids,
     from_publication_date = "2022-01-01",
     to_publication_date = "2022-12-31",
-    citing_filter = list(from_publication_date = "2022-10-01"),
-    cited_by_filter = list(from_publication_date = "2021-10-01")
+    citing_params = list(from_publication_date = "2022-10-01"),
+    cited_by_params = list(from_publication_date = "2021-10-01")
   )
 
   nodes <- snowball_orcid$nodes

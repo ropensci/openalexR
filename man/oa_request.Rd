@@ -8,6 +8,7 @@ oa_request(
   query_url,
   per_page = 200,
   paging = "cursor",
+  pages = NULL,
   count_only = FALSE,
   mailto = oa_email(),
   api_key = oa_apikey(),
@@ -25,8 +26,13 @@ Defaults to 200.}
 
 \item{paging}{Character.
 Either "cursor" for cursor paging or "page" for basic paging.
-When used with options$sample, please set `paging = "page"`
-to avoid duplicates.}
+When used with `options$sample` and or `pages`,
+paging is also automatically set to basic paging: `paging = "page"`
+to avoid duplicates and get the right page.
+See https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/paging.}
+
+\item{pages}{Integer vector.
+The range of pages to return. If NULL, return all pages.}
 
 \item{count_only}{Logical.
 If TRUE, the function returns only the number of item matching the query.
@@ -79,11 +85,11 @@ res <- oa_request(
   verbose = FALSE
 )
 
-#  The author Massimo Aria is associated to the OpenAlex-id A923435168.
+#  The author Massimo Aria is associated to the OpenAlex-id A5069892096.
 
 
 query_author <- oa_query(
-  identifier = "A923435168",
+  identifier = "A5069892096",
   entity = "authors",
   endpoint = "https://api.openalex.org"
 )

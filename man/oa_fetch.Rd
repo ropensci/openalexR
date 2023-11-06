@@ -16,6 +16,8 @@ oa_fetch(
   abstract = TRUE,
   endpoint = "https://api.openalex.org",
   per_page = 200,
+  paging = NULL,
+  pages = NULL,
   count_only = FALSE,
   mailto = oa_email(),
   api_key = oa_apikey(),
@@ -77,6 +79,16 @@ Defaults to endpoint = "https://api.openalex.org".}
 The per-page argument can assume any number between 1 and 200.
 Defaults to 200.}
 
+\item{paging}{Character.
+Either "cursor" for cursor paging or "page" for basic paging.
+When used with `options$sample` and or `pages`,
+paging is also automatically set to basic paging: `paging = "page"`
+to avoid duplicates and get the right page.
+See https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/paging.}
+
+\item{pages}{Integer vector.
+The range of pages to return. If NULL, return all pages.}
+
 \item{count_only}{Logical.
 If TRUE, the function returns only the number of item matching the query.
 Defaults to FALSE.}
@@ -88,7 +100,9 @@ Gives OpenAlex an email to enter the polite pool.}
 Your OpenAlex Premium API key, if available.}
 
 \item{verbose}{Logical. If TRUE, print information on querying process.
-Default to \code{verbose = FALSE}.}
+Default to \code{verbose = FALSE}.
+To shorten the printed query URL, set the environment variable openalexR.print
+to the number of characters to print: \code{Sys.setenv(openalexR.print = 70)}.}
 }
 \value{
 A data.frame or a list. Result of the query.
@@ -129,7 +143,7 @@ oa_fetch(
 )
 
 oa_fetch(
-  identifier = c("A923435168", "A2208157607"),
+  identifier = c("A5069892096", "A5023888391"),
   verbose = TRUE
 )
 }

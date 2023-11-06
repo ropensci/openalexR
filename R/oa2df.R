@@ -60,8 +60,6 @@ oa2df <- function(data, entity, options = NULL, count_only = FALSE, group_by = N
   }
 
   if (entity != "snowball"){
-    # replace NULL with NA
-    data <- simple_rapply(data, `%||%`, y = NA)
     ch <- ifelse(is.null(options$select), "id", options$select[[1]])
     if (!is.null(data[[ch]])) {
       data <- list(data)
@@ -190,7 +188,6 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
     if (verbose) pb$tick()
 
     paper <- data[[i]]
-    paper <- simple_rapply(paper, `%||%`, y = NA)
 
     fields <- works_process[works_process$field %in% names(paper), ]
     sim_fields <- mapply(
@@ -310,7 +307,6 @@ abstract_build <- function(ab) {
 #'
 #' @export
 authors2df <- function(data, verbose = TRUE) {
-
   n <- length(data)
   pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)
@@ -408,7 +404,6 @@ authors2df <- function(data, verbose = TRUE) {
 #'
 #' @export
 institutions2df <- function(data, verbose = TRUE) {
-
   n <- length(data)
   pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)

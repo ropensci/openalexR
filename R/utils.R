@@ -1,12 +1,3 @@
-# apply a function to all elements of a list
-
-simple_rapply <- function(x, fn, ...) {
-  if (is.list(x)) {
-    lapply(x, simple_rapply, fn, ...)
-  } else {
-    fn(x, ...)
-  }
-}
 
 `%||%` <- function(x, y) if (is.null(x)) y else x
 
@@ -14,8 +5,7 @@ replace_w_na <- function(x){
   lapply(x, `%||%`, y = NA)
 }
 
-subs_na <- function(x, type = c("row_df", "col_df", "flat", "rbind_df", "identical"), prefix = NULL) {
-  type <- match.arg(type)
+subs_na <- function(x, type, prefix = NULL) {
   if (length(x) == 0) {
     return(NA)
   }
@@ -27,8 +17,7 @@ subs_na <- function(x, type = c("row_df", "col_df", "flat", "rbind_df", "identic
   out <- switch(type,
     row_df = as.data.frame(replace_w_na(x)),
     flat = unlist(x),
-    rbind_df = do.call(rbind.data.frame, lapply(x, replace_w_na)
-    )
+    rbind_df = do.call(rbind.data.frame, lapply(x, replace_w_na))
   )
 
   if (!is.null(prefix)) {
@@ -80,6 +69,14 @@ oa_email <- function() {
     email <- getOption("openalexR.mailto", default = NULL)
   }
   email
+}
+
+oa_print <- function() {
+  p <- as.integer(Sys.getenv("openalexR.print"))
+  if (is.na(p)){
+    return(NULL)
+  }
+  p
 }
 
 oa_apikey <- function() {
