@@ -87,6 +87,8 @@ oa2df <- function(data, entity, options = NULL, count_only = FALSE, group_by = N
 #'
 #' @param abstract Logical. If TRUE, the function returns also the abstract of each item.
 #' Defaults to TRUE.
+#' @param pb Progress bar object. If verbose, computed from `oa_progress`.
+#' NULL otherwise.
 #' @inheritParams oa2df
 #'
 #' @return a data.frame.
@@ -131,7 +133,8 @@ oa2df <- function(data, entity, options = NULL, count_only = FALSE, group_by = N
 #'
 #' @export
 #'
-works2df <- function(data, abstract = TRUE, verbose = TRUE) {
+works2df <- function(data, abstract = TRUE, verbose = TRUE,
+                     pb = if (verbose) oa_progress(length(data)) else NULL) {
 
   col_order <- c(
     "id", "display_name", "author", "ab", "publication_date", "relevance_score",
@@ -181,7 +184,6 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE) {
   empty_inst <- empty_list(inst_cols)
 
   n <- length(data)
-  pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)
 
   for (i in seq.int(n)) {
@@ -271,7 +273,7 @@ abstract_build <- function(ab) {
 #' It converts bibliographic collection of authors' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
 #' The function converts a list of authors' records obtained using \code{oa_request} into a data frame/tibble.
 #'
-#' @inheritParams oa2df
+#' @inheritParams works2df
 #'
 #' @return a data.frame.
 #'
@@ -306,9 +308,9 @@ abstract_build <- function(ab) {
 #' }
 #'
 #' @export
-authors2df <- function(data, verbose = TRUE) {
+authors2df <- function(data, verbose = TRUE,
+                       pb = if (verbose) oa_progress(length(data)) else NULL) {
   n <- length(data)
-  pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)
 
   inst_cols <- c("id", "display_name", "ror", "country_code", "type", "lineage")
@@ -375,7 +377,7 @@ authors2df <- function(data, verbose = TRUE) {
 #' It converts bibliographic collection of institutions' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
 #' The function converts a list of institutions' records obtained using \code{oa_request} into a data frame/tibble.
 #'
-#' @inheritParams oa2df
+#' @inheritParams works2df
 #'
 #' @return a data.frame.
 #'
@@ -403,9 +405,9 @@ authors2df <- function(data, verbose = TRUE) {
 #' }
 #'
 #' @export
-institutions2df <- function(data, verbose = TRUE) {
+institutions2df <- function(data, verbose = TRUE,
+                            pb = if (verbose) oa_progress(length(data)) else NULL) {
   n <- length(data)
-  pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)
 
   institution_process <- tibble::tribble(
@@ -476,7 +478,7 @@ institutions2df <- function(data, verbose = TRUE) {
 #' It converts bibliographic collection of venues' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
 #' The function converts a list of venues' records obtained using \code{oa_request} into a data frame/tibble.
 #'
-#' @inheritParams oa2df
+#' @inheritParams works2df
 #'
 #' @return a data.frame.
 #'
@@ -506,10 +508,10 @@ institutions2df <- function(data, verbose = TRUE) {
 #' }
 #'
 #' @export
-venues2df <- function(data, verbose = TRUE) {
+venues2df <- function(data, verbose = TRUE,
+                      pb = if (verbose) oa_progress(length(data)) else NULL) {
 
   n <- length(data)
-  pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)
   venue_process <- tibble::tribble(
     ~type, ~field,
@@ -562,7 +564,7 @@ venues2df <- function(data, verbose = TRUE) {
 #' It converts bibliographic collection of concepts' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
 #' The function converts a list of concepts' records obtained using \code{oa_request} into a data frame/tibble.
 #'
-#' @inheritParams oa2df
+#' @inheritParams works2df
 #'
 #' @return a data.frame.
 #'
@@ -592,7 +594,8 @@ venues2df <- function(data, verbose = TRUE) {
 #' }
 #'
 #' @export
-concepts2df <- function(data, verbose = TRUE) {
+concepts2df <- function(data, verbose = TRUE,
+                        pb = if (verbose) oa_progress(length(data)) else NULL) {
 
   concept_process <- tibble::tribble(
     ~type, ~field,
@@ -614,7 +617,6 @@ concepts2df <- function(data, verbose = TRUE) {
   )
 
   n <- length(data)
-  pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)
 
   for (i in seq.int(n)) {
@@ -661,7 +663,7 @@ concepts2df <- function(data, verbose = TRUE) {
 #' It converts bibliographic collection of funders' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
 #' The function converts a list of funders' records obtained using \code{oa_request} into a data frame/tibble.
 #'
-#' @inheritParams oa2df
+#' @inheritParams works2df
 #'
 #' @return a data.frame.
 #'
@@ -683,7 +685,8 @@ concepts2df <- function(data, verbose = TRUE) {
 #' }
 #'
 #' @export
-funders2df <- function(data, verbose = TRUE) {
+funders2df <- function(data, verbose = TRUE,
+                       pb = if (verbose) oa_progress(length(data)) else NULL) {
 
   funder_process <- tibble::tribble(
     ~type, ~field,
@@ -707,7 +710,6 @@ funders2df <- function(data, verbose = TRUE) {
   )
 
   n <- length(data)
-  pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)
 
   for (i in seq.int(n)) {
@@ -735,7 +737,7 @@ funders2df <- function(data, verbose = TRUE) {
 #' It converts bibliographic collection of sources' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
 #' The function converts a list of sources' records obtained using \code{oa_request} into a data frame/tibble.
 #'
-#' @inheritParams oa2df
+#' @inheritParams works2df
 #'
 #' @return a data.frame.
 #'
@@ -757,7 +759,8 @@ funders2df <- function(data, verbose = TRUE) {
 #' }
 #'
 #' @export
-sources2df <- function(data, verbose = TRUE) {
+sources2df <- function(data, verbose = TRUE,
+                       pb = if (verbose) oa_progress(length(data)) else NULL) {
 
   source_process <- tibble::tribble(
     ~type, ~field,
@@ -791,7 +794,6 @@ sources2df <- function(data, verbose = TRUE) {
   )
 
   n <- length(data)
-  pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)
 
   for (i in seq.int(n)) {
@@ -819,7 +821,7 @@ sources2df <- function(data, verbose = TRUE) {
 #' It converts bibliographic collection of publishers' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
 #' The function converts a list of publishers' records obtained using \code{oa_request} into a data frame/tibble.
 #'
-#' @inheritParams oa2df
+#' @inheritParams works2df
 #'
 #' @return a data.frame.
 #'
@@ -841,7 +843,8 @@ sources2df <- function(data, verbose = TRUE) {
 #' }
 #'
 #' @export
-publishers2df <- function(data, verbose = TRUE) {
+publishers2df <- function(data, verbose = TRUE,
+                          pb = if (verbose) oa_progress(length(data)) else NULL) {
 
   publisher_process <- tibble::tribble(
     ~type, ~field,
@@ -867,7 +870,6 @@ publishers2df <- function(data, verbose = TRUE) {
   )
 
   n <- length(data)
-  pb <- oa_progress(n)
   list_df <- vector(mode = "list", length = n)
 
   for (i in seq.int(n)) {
