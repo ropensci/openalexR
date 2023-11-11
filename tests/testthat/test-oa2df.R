@@ -1,4 +1,6 @@
 test_that("oa2df works", {
+  skip_on_cran()
+
   naples <- oa_fetch(identifier = "I71267560")
   expect_s3_class(naples, "data.frame")
   expect_s3_class(naples, "tbl")

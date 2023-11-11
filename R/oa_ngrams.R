@@ -67,7 +67,9 @@ oa_ngrams <- function(works_identifier, ...,
       n <- length(query_urls)
 
       #ngrams_failed_template <- data.frame(id = NA, doi = NA, count = NA, ngrams = I(list(NULL)))
-      pb <- oa_progress(n)
+      if (verbose) {
+        pb <- oa_progress(n)
+      }
 
       # Fetch
       if (utils::packageVersion("curl") >= "5") {
@@ -91,7 +93,10 @@ oa_ngrams <- function(works_identifier, ...,
           options("oa_ngrams.message.curlv5" = FALSE)
         }
         # Serial fetch
-        pb_dl <- oa_progress(n, "OpenAlex downloading")
+        if (verbose) {
+          pb_dl <- oa_progress(n, "OpenAlex downloading")
+        }
+
         ngrams_list <- vector("list", n)
         for (i in seq_len(n)) {
           if (verbose) pb_dl$tick()
