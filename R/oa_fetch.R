@@ -372,9 +372,8 @@ oa_request <- function(query_url,
       "Getting ", n_pages, pg_plural, " of results",
       " with a total of ", n_items, " records..."
     )
+    pb <- oa_progress(n = n_pages, text = "OpenAlex downloading")
   }
-
-  pb <- oa_progress(n = n_pages, text = "OpenAlex downloading")
 
   # Setting items per page
   query_ls[["per-page"]] <- per_page
