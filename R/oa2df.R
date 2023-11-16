@@ -55,7 +55,7 @@ oa2df <- function(data, entity, options = NULL, count_only = FALSE, group_by = N
     return(do.call(rbind.data.frame, data))
   }
 
-  if (count_only && length(data) == 4) {
+  if (count_only && length(data) < 8) { # assuming less than 8 fields in output$meta
     return(unlist(data))
   }
 
