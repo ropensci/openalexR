@@ -138,6 +138,14 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
     return(NULL)
   }
 
+  if (isTRUE(count_only)) {
+    if (output == "list"){
+      return(unlist(final_res, recursive = FALSE))
+    } else {
+      return(do.call(cbind,res))
+    }
+  }
+
   if (output == "list") {
     unlist(final_res, recursive = FALSE)
   } else {
