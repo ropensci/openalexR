@@ -358,7 +358,7 @@ authors2df <- function(data, verbose = TRUE,
 
     if (!is.null(item$affiliations)) {
       affiliations_other <- sapply(item$affiliations, function(x) x$institution$id)
-      if (!is.na(sub_affiliation$affiliation_id)) {
+      if (!is.null(sub_affiliation$affiliation_id)) {
         affiliations_other <- affiliations_other[affiliations_other != sub_affiliation$affiliation_id]
       }
       sub_affiliation$affiliations_other <- list(affiliations_other)
