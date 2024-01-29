@@ -357,9 +357,11 @@ authors2df <- function(data, verbose = TRUE,
     sub_affiliation <- replace_w_na(sub_affiliation)
 
     if (!is.null(item$affiliations)) {
-      sub_affiliation$affiliations_other <- list(
-        sapply(item$affiliations, function(x) x$institution$id)
-      )
+      affiliations_other <- sapply(item$affiliations, function(x) x$institution$id)
+      if (!is.na(sub_affiliation$affiliation_id)) {
+        affiliations_other <- affiliations_other[affiliations_other != sub_affiliation$affiliation_id]
+      }
+      sub_affiliation$affiliations_other <- list(affiliations_other)
     }
 
     list_df[[i]] <- c(sim_fields, sub_affiliation)
