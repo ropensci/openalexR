@@ -315,6 +315,7 @@ authors2df <- function(data, verbose = TRUE,
 
   inst_cols <- c("id", "display_name", "ror", "country_code", "type", "lineage")
   empty_inst <- empty_list(inst_cols)
+  empty_inst$affiliations_other <- list(NULL)
 
   author_process <- tibble::tribble(
     ~type, ~field,
@@ -343,7 +344,6 @@ authors2df <- function(data, verbose = TRUE,
       fields$type,
       SIMPLIFY = FALSE
     )
-
     sub_affiliation <- item$last_known_institution
     if (!is.null(sub_affiliation)) {
       if (is.na(sub_affiliation[[1]])) {
@@ -356,6 +356,12 @@ authors2df <- function(data, verbose = TRUE,
     }
     sub_affiliation <- replace_w_na(sub_affiliation)
 
+    if (!is.null(item$affiliations)) {
+      sub_affiliation$affiliations_other <- list(
+        sapply(item$affiliations, function(x) x$institution$id)
+      )
+    }
+
     list_df[[i]] <- c(sim_fields, sub_affiliation)
   }
 
@@ -364,6 +370,7 @@ authors2df <- function(data, verbose = TRUE,
     "ids", "orcid", "works_count", "cited_by_count", "counts_by_year",
     "affiliation_display_name", "affiliation_id", "affiliation_ror",
     "affiliation_country_code", "affiliation_type", "affiliation_lineage",
+    "affiliations_other",
     "x_concepts", "works_api_url"
   )
 
