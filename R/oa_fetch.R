@@ -141,6 +141,8 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
   if (output == "list") {
     unlist(final_res, recursive = FALSE)
   } else {
+    # Flatten out the initial chunking of 50 at a time
+    final_res <- list(unlist(final_res, recursive = FALSE))
     do.call(rbind, lapply(
       final_res, oa2df,
       entity = entity, options = options, abstract = abstract,
