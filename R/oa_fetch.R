@@ -552,7 +552,7 @@ oa_query <- function(filter = NULL,
     filter <- filter[-empty_filters]
     stop(
       "Filters must have a value: ",
-      paste(names(empty_filters), collapse = ","),
+      paste(names(empty_filters), collapse = ", "),
       call. = FALSE
     )
   }
