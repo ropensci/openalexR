@@ -549,6 +549,16 @@ oa_query <- function(filter = NULL,
   entity <- match.arg(entity, oa_entities())
   filter <- c(filter, list(...))
 
+  empty_filters <- which(lengths(filter) == 0)
+  if (length(empty_filters) > 0) {
+    filter <- filter[-empty_filters]
+    stop(
+      "Filters must have a value: ",
+      paste(names(empty_filters), collapse = ", "),
+      call. = FALSE
+    )
+  }
+
   if (length(filter) > 0 || multiple_id) {
     null_locations <- vapply(filter, is.null, logical(1))
     filter[null_locations] <- NULL # remove NULL elements
