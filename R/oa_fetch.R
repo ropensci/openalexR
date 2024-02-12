@@ -666,6 +666,14 @@ api_request <- function(query_url, ua, query = query, api_key = oa_apikey()) {
     return(list())
   }
 
+  if (httr::status_code(res) == 503) {
+    message(
+      "HTTP status 503 Response object too large. ",
+      "Please try setting `per_page = 25` in your function call!"
+    )
+    return(list())
+  }
+
   parsed <- jsonlite::fromJSON(
     httr::content(res, "text", encoding = "UTF-8"),
     simplifyVector = FALSE
