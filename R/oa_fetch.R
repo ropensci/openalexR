@@ -5,8 +5,10 @@
 #' @examples
 #' oa_entities()
 oa_entities <- function() {
-  c("works", "authors", "venues", "institutions", "concepts",
-    "funders", "sources", "publishers")
+  c(
+    "works", "authors", "venues", "institutions", "concepts",
+    "funders", "sources", "publishers"
+  )
 }
 
 #' A composition function to perform query building, requesting,
@@ -98,9 +100,9 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 
   if (!is.null(options$sample) && (options$sample > per_page)) {
     paging <- "page"
-  } else if (!is.null(options$page)){
+  } else if (!is.null(options$page)) {
     paging <- "page"
-  } else if (is.null(paging)){
+  } else if (is.null(paging)) {
     paging <- "cursor"
   }
 
@@ -320,7 +322,8 @@ oa_request <- function(query_url,
   ua <- httr::user_agent("https://github.com/ropensci/openalexR/")
 
   # building query...
-  if (grepl("group_by", query_url)) {
+  is_group_by <- grepl("group_by", query_url)
+  if (is_group_by) {
     result_name <- "group_by"
     query_ls <- list()
   } else {
@@ -347,11 +350,34 @@ oa_request <- function(query_url,
   } else {
     return(res)
   }
+
+  # Setting items per page
+  query_ls[["per-page"]] <- per_page
+
+  if (is_group_by) {
+    data <- vector("list")
+    res <- NULL
+    i <- 1
+    next_page <- get_next_page("cursor", i, res)
+    if (verbose) cat("\nDownloading groups...\n|")
+    while (!is.null(next_page)) {
+      if (verbose) cat("=")
+      Sys.sleep(1 / 100)
+      query_ls[[paging]] <- next_page
+      res <- api_request(query_url, ua, query = query_ls)
+      data <- c(data, res[[result_name]])
+      i <- i + 1
+      next_page <- get_next_page("cursor", i, res)
+    }
+    cat("\n")
+    return(data)
+  }
+
   n_items <- res$meta$count
   n_pages <- ceiling(n_items / per_page)
 
   ## number of pages
-  if (is.null(pages)){
+  if (is.null(pages)) {
     pages <- seq.int(n_pages)
   } else {
     pages <- pages[pages <= n_pages]
@@ -376,9 +402,6 @@ oa_request <- function(query_url,
   }
 
   pb <- oa_progress(n = n_pages, text = "OpenAlex downloading")
-
-  # Setting items per page
-  query_ls[["per-page"]] <- per_page
 
   # Activation of cursor pagination
   data <- vector("list", length = n_pages)
@@ -545,7 +568,6 @@ oa_query <- function(filter = NULL,
                      endpoint = "https://api.openalex.org",
                      verbose = FALSE,
                      ...) {
-
   entity <- match.arg(entity, oa_entities())
   filter <- c(filter, list(...))
 
@@ -564,7 +586,10 @@ oa_query <- function(filter = NULL,
   }
 
   if (is.null(identifier) || multiple_id) {
-    if (length(filter) == 0 && is.null(search) && is.null(options$sample)) {
+    if (length(filter) == 0 &&
+      is.null(search) &&
+      is.null(group_by) &&
+      is.null(options$sample)) {
       message("Identifier is missing, please specify filter or search argument.")
       return()
     }
@@ -589,7 +614,7 @@ oa_query <- function(filter = NULL,
     query = query
   )
 
-  if (is.null(oa_print())){
+  if (is.null(oa_print())) {
     url_display <- query_url
   } else {
     query_url <- utils::URLdecode(query_url)
