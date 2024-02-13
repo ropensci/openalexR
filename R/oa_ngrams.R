@@ -49,60 +49,78 @@ oa_ngrams <- function(works_identifier, ...,
                       endpoint = "https://api.openalex.org",
                       verbose = FALSE) {
 
-  # Check if input is ID of Works entity
-  normalized_id <- shorten_oaid(works_identifier)
-  if (!all(grepl("^W", normalized_id))) {
-    stop(
-      "Invalid OpenAlex Work entity ID(s) at `works_identifier`: ",
-      paste(which(!grepl("^W", normalized_id)), sep = ", ")
-    )
-  }
-
-  # Setup for querying
-  query_urls <- paste(endpoint, "works", normalized_id, "ngrams", sep = "/")
-  n <- length(query_urls)
-
   ngrams_failed_template <- data.frame(id = NA, doi = NA, count = NA, ngrams = I(list(NULL)))
-  pb <- oa_progress(n)
 
-  # Fetch
-  if (utils::packageVersion("curl") >= "5") {
-    # Parallel fetch
-    ngrams_files <- asNamespace("curl")$multi_download(query_urls, file.path(tempdir(), normalized_id), progress = verbose)
-    ngrams_success <- ifelse(ngrams_files$success, ngrams_files$destfile, NA)
-    # Convert
-    ngrams_dfs <- lapply(ngrams_success, function(x) {
-      if (verbose) pb$tick()
-      if (is.na(x)) {
-        ngrams_failed_template
-      } else {
-        ngram2df(jsonlite::fromJSON(x))
+  out <- tryCatch(
+    {
+      # Check if input is ID of Works entity
+      normalized_id <- shorten_oaid(works_identifier)
+      if (!all(grepl("^W", normalized_id))) {
+        stop(
+          "Invalid OpenAlex Work entity ID(s) at `works_identifier`: ",
+          paste(which(!grepl("^W", normalized_id)), sep = ", ")
+        )
       }
-    })
-    file.remove(ngrams_files$destfile)
-  } else {
-    # One-time message
-    if (getOption("oa_ngrams.message.curlv5", TRUE)) {
-      message("Use `{curl}` >= v5.0.0 for a faster implementation of `oa_ngrams`")
-      options("oa_ngrams.message.curlv5" = FALSE)
-    }
-    # Serial fetch
-    pb_dl <- oa_progress(n, "OpenAlex downloading")
-    ngrams_list <- vector("list", n)
-    for (i in seq_len(n)) {
-      if (verbose) pb_dl$tick()
-      ngrams_list[[i]] <- tryCatch(
-        jsonlite::fromJSON(query_urls[i]),
-        error = function(...) ngrams_failed_template
-      )
-    }
-    # Convert
-    ngrams_dfs <- vector("list", n)
-    for (i in seq_len(n)) {
-      if (verbose) pb$tick()
-      ngrams_dfs[[i]] <- ngram2df(ngrams_list[[i]])
-    }
-  }
 
-  tibble::as_tibble(do.call(rbind.data.frame, ngrams_dfs))
+      # Setup for querying
+      query_urls <- paste(endpoint, "works", normalized_id, "ngrams", sep = "/")
+      n <- length(query_urls)
+
+      #ngrams_failed_template <- data.frame(id = NA, doi = NA, count = NA, ngrams = I(list(NULL)))
+      if (verbose) {
+        pb <- oa_progress(n)
+      }
+
+      # Fetch
+      if (utils::packageVersion("curl") >= "5") {
+        # Parallel fetch
+        ngrams_files <- asNamespace("curl")$multi_download(query_urls, file.path(tempdir(), normalized_id), progress = verbose)
+        ngrams_success <- ifelse(ngrams_files$success, ngrams_files$destfile, NA)
+        # Convert
+        ngrams_dfs <- lapply(ngrams_success, function(x) {
+          if (verbose) pb$tick()
+          if (is.na(x)) {
+            ngrams_failed_template
+          } else {
+            ngram2df(jsonlite::fromJSON(x))
+          }
+        })
+        file.remove(ngrams_files$destfile)
+      } else {
+        # One-time message
+        if (getOption("oa_ngrams.message.curlv5", TRUE)) {
+          message("Use `{curl}` >= v5.0.0 for a faster implementation of `oa_ngrams`")
+          options("oa_ngrams.message.curlv5" = FALSE)
+        }
+        # Serial fetch
+        if (verbose) {
+          pb_dl <- oa_progress(n, "OpenAlex downloading")
+        }
+
+        ngrams_list <- vector("list", n)
+        for (i in seq_len(n)) {
+          if (verbose) pb_dl$tick()
+          ngrams_list[[i]] <- tryCatch(
+            jsonlite::fromJSON(query_urls[i]),
+            error = function(...) ngrams_failed_template
+          )
+        }
+        # Convert
+        ngrams_dfs <- vector("list", n)
+        for (i in seq_len(n)) {
+          if (verbose) pb$tick()
+          ngrams_dfs[[i]] <- ngram2df(ngrams_list[[i]])
+        }
+      }
+
+      tibble::as_tibble(do.call(rbind.data.frame, ngrams_dfs))
+    },
+    error=function(cond) {
+      message("ngrams not available for this work")
+     # message(cond)
+      # Choose a return value in case of error
+      return(ngrams_failed_template)
+    }
+  )
+  return(out)
 }

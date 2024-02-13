@@ -179,8 +179,8 @@ tech_insts <- oa_fetch(
 dplyr::glimpse(tech_insts)
 
 peer_venues <- oa_fetch(
-  entity = "venues", 
-  publisher = "Peerj",
+  entity = "sources", 
+  display_name = "PeerJ",
   x_concepts.id = "C185592680",
   is_oa = TRUE,
   is_in_doaj = TRUE

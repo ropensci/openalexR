@@ -44,7 +44,7 @@ The only difference here is that, instead of grouping by `is_oa`, we're interest
 open_access <- oa_fetch(
   entity = "works",
   institutions.ror = "00b30xv10",
-  type = "journal-article",
+  type = "article",
   from_publication_date = "2012-08-24",
   is_paratext = "false",
   is_oa = "true",
@@ -55,7 +55,7 @@ open_access <- oa_fetch(
 closed_access <- oa_fetch(
   entity = "works",
   institutions.ror = "00b30xv10",
-  type = "journal-article",
+  type = "article",
   from_publication_date = "2012-08-24",
   is_paratext = "false",
   is_oa = "false",

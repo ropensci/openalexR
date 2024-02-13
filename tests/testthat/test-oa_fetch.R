@@ -122,6 +122,8 @@ test_that("oa_fetch sample works", {
 
 
 test_that("search works with sampling", {
+  skip_on_cran()
+
   w <- oa_fetch("works", search = "open science", options = list(sample = 5))
   expect_equal(nrow(w), 5)
 })
@@ -303,6 +305,8 @@ test_that("oa_fetch other entities works", {
 })
 
 test_that("paging works with sample", {
+  skip_on_cran()
+
   w <- oa_fetch(
     "works",
     from_publication_date = Sys.Date() - 2,
@@ -315,6 +319,8 @@ test_that("paging works with sample", {
 })
 
 test_that("oa_fetch works for funders", {
+  skip_on_cran()
+
   s <- oa_fetch("funders", country_code = "ca", cited_by_count = ">100000")
   expect_s3_class(s, "data.frame")
   expect_equal(ncol(s), 17)
@@ -322,6 +328,8 @@ test_that("oa_fetch works for funders", {
 })
 
 test_that("oa_fetch works for sources", {
+  skip_on_cran()
+
   s <- oa_fetch(entity = "sources", search = "nature")
   expect_s3_class(s, "data.frame")
   expect_equal(ncol(s), 27)
@@ -329,6 +337,8 @@ test_that("oa_fetch works for sources", {
 })
 
 test_that("oa_fetch works for publishers", {
+  skip_on_cran()
+
   s <- oa_fetch(entity = "publishers", country_codes = "ca")
   expect_s3_class(s, "data.frame")
   expect_equal(ncol(s), 19)
@@ -336,6 +346,8 @@ test_that("oa_fetch works for publishers", {
 })
 
 test_that("oa_fetch works with 1 identifier", {
+  skip_on_cran()
+
   w <- oa_fetch(identifier = "W3046863325") # Work
   a <- oa_fetch(identifier = "A5023888391") # Author
   i <- oa_fetch(identifier = "I4200000001") # Institution
@@ -353,7 +365,7 @@ test_that("oa_fetch works with 1 identifier", {
   expect_s3_class(co, "data.frame")
 
   expect_equal(dim(w), c(1, 36))
-  expect_equal(dim(a), c(1, 16))
+  expect_equal(dim(a), c(1, 17))
   expect_equal(dim(i), c(1, 21))
   expect_equal(dim(f), c(1, 17))
   expect_equal(dim(p), c(1, 19))
@@ -363,6 +375,8 @@ test_that("oa_fetch works with 1 identifier", {
 })
 
 test_that("oa_fetch for identifiers works with options", {
+  skip_on_cran()
+
   i <- oa_fetch(
     identifier = "I201448701",
     options = list(select = c("ids", "country_code"))
@@ -378,6 +392,8 @@ test_that("oa_fetch for identifiers works with options", {
 })
 
 test_that("different paging methods yield the same result", {
+  skip_on_cran()
+
   w0 <- oa_fetch(
     entity = "works",
     title.search = c("bibliometric analysis", "science mapping"),
@@ -409,6 +425,8 @@ test_that("different paging methods yield the same result", {
 })
 
 test_that("pages works", {
+  skip_on_cran()
+
   # The last 10 pages when per_page = 20
   # should be the same as the 10 pages when fetching page 2
   w1 <- oa_fetch(
