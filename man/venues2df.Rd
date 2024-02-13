@@ -4,7 +4,11 @@
 \alias{venues2df}
 \title{Convert OpenAlex collection of venues' records from list format to data frame}
 \usage{
-venues2df(data, verbose = TRUE)
+venues2df(
+  data,
+  verbose = TRUE,
+  pb = if (verbose) oa_progress(length(data)) else NULL
+)
 }
 \arguments{
 \item{data}{List. Output of \code{oa_request}.}
@@ -12,6 +16,9 @@ venues2df(data, verbose = TRUE)
 \item{verbose}{Logical.
 If TRUE, print information about the dataframe conversion process.
 Defaults to TRUE.}
+
+\item{pb}{Progress bar object. If verbose, computed from `oa_progress`.
+NULL otherwise.}
 }
 \value{
 a data.frame.

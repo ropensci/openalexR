@@ -143,6 +143,8 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
   if (output == "list") {
     unlist(final_res, recursive = FALSE)
   } else {
+    # Flatten out the initial chunking of 50 at a time
+    final_res <- list(unlist(final_res, recursive = FALSE))
     do.call(rbind, lapply(
       final_res, oa2df,
       entity = entity, options = options, abstract = abstract,
@@ -202,35 +204,20 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 #' #   An R-tool for comprehensive science mapping analysis.
 #' #   Journal of informetrics, 11(4), 959-975.
 #'
-#'
-#' query_work <- oa_query(
-#'   identifier = "W2755950973",
-#'   entity = "works",
-#'   endpoint = "https://api.openalex.org"
-#' )
-#'
-#' res <- oa_request(
-#'   query_url = query_work,
-#'   count_only = FALSE,
-#'   verbose = FALSE
-#' )
+#' res <- oa_request(query_url = "https://api.openalex.org/works/W2755950973")
 #'
 #' #  The author Massimo Aria is associated to the OpenAlex-id A5069892096.
 #'
-#'
 #' query_author <- oa_query(
 #'   identifier = "A5069892096",
-#'   entity = "authors",
-#'   endpoint = "https://api.openalex.org"
+#'   entity = "authors"
 #' )
-#'
+#' query_author
 #' res <- oa_request(
 #'   query_url = query_author,
 #'   count_only = FALSE,
 #'   verbose = FALSE
 #' )
-#'
-#'
 #'
 #' ### EXAMPLE 2: all works citing a particular work.
 #'
@@ -247,8 +234,8 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 #' query2 <- oa_query(
 #'   identifier = NULL,
 #'   entity = "works",
-#'   filter = c(cites = "W2755950973"),
-#'   from_publication_date = "2021-01-01",
+#'   cites = "W2755950973",
+#'   from_publication_date = "2021-12-01",
 #'   to_publication_date = "2021-12-31",
 #'   search = NULL,
 #'   endpoint = "https://api.openalex.org"
@@ -269,13 +256,10 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 #'
 #'
 #' query3 <- oa_query(
-#'   identifier = NULL,
 #'   entity = "works",
-#'   filter = c(title.search = '"bibliometric analysis"|"science mapping"'),
-#'   from_publication_date = "2020-01-01",
-#'   to_publication_date = "2021-12-31",
-#'   search = NULL,
-#'   endpoint = "https://api.openalex.org"
+#'   title.search = c("bibliometric analysis", "science mapping"),
+#'   from_publication_date = "2021-12-01",
+#'   to_publication_date = "2021-12-31"
 #' )
 #'
 #' res3 <- oa_request(
@@ -291,13 +275,10 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 #' # Query only to know how many works could be retrieved (count_only=TRUE)
 #'
 #' query4 <- oa_query(
-#'   identifier = NULL,
 #'   entity = "works",
-#'   filter = 'title.search:"bibliometric analysis"|"science mapping"',
+#'   title.search = c("bibliometric analysis", "science mapping"),
 #'   from_publication_date = "2020-01-01",
-#'   to_publication_date = "2021-12-31",
-#'   search = NULL,
-#'   endpoint = "https://api.openalex.org"
+#'   to_publication_date = "2021-12-31"
 #' )
 #'
 #' res4 <- oa_request(
@@ -399,9 +380,8 @@ oa_request <- function(query_url,
       "Getting ", n_pages, pg_plural, " of results",
       " with a total of ", n_items, " records..."
     )
+    pb <- oa_progress(n = n_pages, text = "OpenAlex downloading")
   }
-
-  pb <- oa_progress(n = n_pages, text = "OpenAlex downloading")
 
   # Activation of cursor pagination
   data <- vector("list", length = n_pages)
@@ -512,11 +492,9 @@ get_next_page <- function(paging, i, res = NULL) {
 #'   verbose = TRUE
 #' )
 #'
-#'
 #' #  The author Massimo Aria is associated to the OpenAlex-id A5069892096:
 #'
 #' query_auth <- oa_query(identifier = "A5069892096", verbose = TRUE)
-#'
 #'
 #' ### EXAMPLE 2: all works citing a particular work.
 #'
@@ -570,6 +548,16 @@ oa_query <- function(filter = NULL,
                      ...) {
   entity <- match.arg(entity, oa_entities())
   filter <- c(filter, list(...))
+
+  empty_filters <- which(lengths(filter) == 0)
+  if (length(empty_filters) > 0) {
+    filter <- filter[-empty_filters]
+    stop(
+      "Filters must have a value: ",
+      paste(names(empty_filters), collapse = ", "),
+      call. = FALSE
+    )
+  }
 
   if (length(filter) > 0 || multiple_id) {
     null_locations <- vapply(filter, is.null, logical(1))
