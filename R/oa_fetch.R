@@ -625,28 +625,27 @@ oa_random <- function(entity = oa_entities(),
 api_request <- function(query_url, ua, query = query, api_key = oa_apikey()) {
   res <- httr::GET(query_url, ua, query = query, httr::add_headers(api_key = api_key))
 
-  if (httr::status_code(res) == 200) {
-    if (httr::http_type(res) != "application/json") {
-      stop("API did not return json", call. = FALSE)
-    }
-
-    data <- jsonlite::fromJSON(
-      httr::content(res, as = "text", encoding = "utf-8"),
-      simplifyVector = FALSE
-    )
-
-    return(data)
-  }
-
   if (httr::status_code(res) == 429) {
     message("HTTP status 429 Too Many Requests")
     return(list())
   }
 
-  parsed <- jsonlite::fromJSON(
-    httr::content(res, "text", encoding = "UTF-8"),
-    simplifyVector = FALSE
-  )
+  m <- httr::content(res, "text", encoding = "UTF-8")
+
+  if (httr::status_code(res) == 503) {
+    mssg <- regmatches(m, regexpr("(?<=<title>).*?(?=<\\/title>)", m, perl = TRUE))
+    message(mssg, ". Please try setting `per_page = 25` in your function call!")
+    return(list())
+  }
+
+  parsed <- jsonlite::fromJSON(m, simplifyVector = FALSE)
+
+  if (httr::status_code(res) == 200) {
+    if (httr::http_type(res) != "application/json") {
+      stop("API did not return json", call. = FALSE)
+    }
+    return(parsed)
+  }
 
   if (httr::http_error(res)) {
     stop(
