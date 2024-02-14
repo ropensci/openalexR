@@ -108,11 +108,9 @@ query_work <- oa_query(
   verbose = TRUE
 )
 
-
 #  The author Massimo Aria is associated to the OpenAlex-id A5069892096:
 
 query_auth <- oa_query(identifier = "A5069892096", verbose = TRUE)
-
 
 ### EXAMPLE 2: all works citing a particular work.
 
