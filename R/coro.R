@@ -49,7 +49,8 @@ oa_generate <- function(...) {
           }
         }
         paging <- "cursor"
-        query_ls[paging] <- "*"
+        next_page <- "*"
+        query_ls[[paging]] <- next_page
         res <- api_request(query_url, ua, query_ls, api_key = api_key)
         if (is.null(res$meta)) {
           return(res)
@@ -70,7 +71,6 @@ oa_generate <- function(...) {
         }
 
         i <- 0
-        next_page <- "*"
         while (!is.null(next_page)) {
           i <- i + 1
           if (verbose) message(mssg(i))
