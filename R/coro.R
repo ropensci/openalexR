@@ -54,12 +54,6 @@ oa_generate <- function(...) {
         if (is.null(res$meta)) {
           return(res)
         }
-
-        if (grepl("group_by", query_url)) {
-          result_name <- "group_by"
-        } else {
-          result_name <- "results"
-        }
         n_items <- res$meta$count
 
         if (n_items <= 0) {
@@ -67,10 +61,20 @@ oa_generate <- function(...) {
           return()
         }
 
-        for (i in seq.int(n_items)) { # cursor pagination
-          if (verbose) {
-            message("Getting record ", i, " of ", n_items, " records...")
-          }
+        if (grepl("group_by", query_url)) {
+          result_name <- "group_by"
+          mssg <- function(i) sprintf("Downloading group %s", i)
+        } else {
+          result_name <- "results"
+          mssg <- function(i) sprintf("Getting record %s of %s records...", i, n_items)
+        }
+
+        i <- 0
+        next_page <- "*"
+        while (!is.null(next_page)) {
+          i <- i + 1
+          if (verbose) message(mssg(i))
+          Sys.sleep(1 / 100)
           coro::yield(res[[result_name]][[(i - 1) %% 200 + 1]])
           if (i %% 200 == 0) {
             next_page <- get_next_page(paging, 0, res)
