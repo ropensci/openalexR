@@ -63,28 +63,12 @@ id_type <- function(identifier) {
   )
 }
 
-oa_email <- function() {
-  email <- Sys.getenv("openalexR.mailto")
-  if (email == "") {
-    email <- getOption("openalexR.mailto", default = NULL)
-  }
-  email
-}
-
 oa_print <- function() {
   p <- as.integer(Sys.getenv("openalexR.print"))
   if (is.na(p)){
     return(NULL)
   }
   p
-}
-
-oa_apikey <- function() {
-  apikey <- Sys.getenv("openalexR.apikey")
-  if (apikey == "") {
-    apikey <- getOption("openalexR.apikey", default = NULL)
-  }
-  apikey
 }
 
 oa_progress <- function(n, text = "converting") {
@@ -129,4 +113,28 @@ rbind_oa_ls <- function(list_df) {
       }
     )
   )
+}
+
+#' Get email from options
+#' @return Character string. Email of the requester.
+#' @keywords internal
+#' @export
+oa_email <- function() {
+  email <- Sys.getenv("openalexR.mailto")
+  if (email == "") {
+    email <- getOption("openalexR.mailto", default = NULL)
+  }
+  email
+}
+
+#' Get apikey from options
+#' @return Character string. API key of the requester.
+#' @keywords internal
+#' @export
+oa_apikey <- function() {
+  apikey <- Sys.getenv("openalexR.apikey")
+  if (apikey == "") {
+    apikey <- getOption("openalexR.apikey", default = NULL)
+  }
+  apikey
 }
