@@ -230,7 +230,7 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
           } else {
             empty_list(c("au_id", "au_display_name", "au_orcid"))
           }
-          c(l_author, l["author_position"], aff_raw, first_inst)
+          c(l_author, l[c("author_position", "is_corresponding")], aff_raw, first_inst)
         }), "rbind_df"
       )
     }
