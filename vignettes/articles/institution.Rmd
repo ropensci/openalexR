@@ -48,8 +48,7 @@ open_access <- oa_fetch(
   from_publication_date = "2012-08-24",
   is_paratext = "false",
   is_oa = "true",
-  group_by = "publication_year",
-  count_only = TRUE
+  group_by = "publication_year"
 )
 
 closed_access <- oa_fetch(
@@ -59,8 +58,7 @@ closed_access <- oa_fetch(
   from_publication_date = "2012-08-24",
   is_paratext = "false",
   is_oa = "false",
-  group_by = "publication_year",
-  count_only = TRUE
+  group_by = "publication_year"
 )
 
 uf_df <- closed_access %>%
