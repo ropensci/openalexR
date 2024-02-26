@@ -143,7 +143,8 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
     "is_oa_anywhere", "oa_status", "oa_url", "any_repository_has_fulltext",
     "language", "grants", "cited_by_count", "counts_by_year",
     "publication_year", "cited_by_api_url", "ids", "doi", "type",
-    "referenced_works", "related_works", "is_paratext", "is_retracted", "concepts"
+    "referenced_works", "related_works", "is_paratext", "is_retracted", "concepts",
+    "apc"
   )
   works_process <- tibble::tribble(
     ~type, ~field,
@@ -164,6 +165,8 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
     "flat", "related_works",
     "rbind_df", "counts_by_year",
     "rbind_df", "concepts",
+    "flat", "apc_list",
+    "flat", "apc_paid",
     "flat", "ids"
   )
 
@@ -245,7 +248,15 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
       names(open_access)[[1]] <- "is_oa_anywhere"
     }
 
-    out_ls <- c(sim_fields, venue, open_access, paper_biblio, list(author = author, ab = ab))
+    # Process APC
+    apc_fields <- list(value = NA, currency = NA, value_usd = NA, provenance = NA)
+    apc <- list(rbind.data.frame(
+      c(type = "list", modifyList(apc_fields, paper$apc_list)),
+      c(type = "paid", modifyList(apc_fields, paper$apc_paid))
+    ))
+
+    out_ls <- c(sim_fields, venue, open_access, paper_biblio,
+                list(author = author, ab = ab, apc = apc))
     out_ls[sapply(out_ls, is.null)] <- NULL
     list_df[[i]] <- out_ls
   }
