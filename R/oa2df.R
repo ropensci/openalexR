@@ -202,7 +202,7 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
       SIMPLIFY = FALSE
     )
 
-    author <- venue <- ab <- NULL
+    author <- venue <- ab <- apc <- NULL
 
     if (!is.null(paper$primary_location)) {
       so_info <- paper$primary_location["source"]
@@ -249,11 +249,13 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
     }
 
     # Process APC
-    apc_fields <- list(value = NA, currency = NA, value_usd = NA, provenance = NA)
-    apc <- list(rbind.data.frame(
-      c(type = "list", modifyList(apc_fields, as.list(paper$apc_list))),
-      c(type = "paid", modifyList(apc_fields, as.list(paper$apc_paid)))
-    ))
+    if (any(lengths(paper[c("apc_list", "apc_paid")]) > 0)) {
+      apc_fields <- list(value = NA, currency = NA, value_usd = NA, provenance = NA)
+      apc <- list(rbind.data.frame(
+        c(type = "list", modifyList(apc_fields, as.list(paper$apc_list))),
+        c(type = "paid", modifyList(apc_fields, as.list(paper$apc_paid)))
+      ))
+    }
 
     out_ls <- c(sim_fields, venue, open_access, paper_biblio,
                 list(author = author, ab = ab, apc = apc))
