@@ -84,3 +84,29 @@ oa2df_coverage$works <- tibble::tribble(
                   "type_crossref",                            NA,                                                       NA,
                    "updated_date",                            NA,                                                       NA
   )
+
+oa2df_coverage$authors <- tibble::tribble(
+                    ~original,                 ~covered_by, ~comments,
+                         "id",                        "id",        NA,
+                      "orcid",                     "orcid",        NA,
+               "display_name",              "display_name",        NA,
+  "display_name_alternatives", "display_name_alternatives",        NA,
+                "works_count",               "works_count",        NA,
+             "cited_by_count",            "cited_by_count",        NA,
+              "summary_stats",                          NA,        NA,
+                        "ids",                       "ids",        NA,
+               "affiliations",  "affiliation_display_name",        NA,
+               "affiliations",            "affiliation_id",        NA,
+               "affiliations",           "affiliation_ror",        NA,
+               "affiliations",  "affiliation_country_code",        NA,
+               "affiliations",          "affiliation_type",        NA,
+               "affiliations",       "affiliation_lineage",        NA,
+               "affiliations",        "affiliations_other",        NA,
+     "last_known_institution",                          NA,        "first entry in `affiliation_id`",
+    "last_known_institutions",                          NA,        "`affiliation_id` + `affiliations_other`",
+                 "x_concepts",                "x_concepts",        NA,
+             "counts_by_year",            "counts_by_year",        NA,
+              "works_api_url",             "works_api_url",        NA,
+               "updated_date",                          NA,        NA,
+               "created_date",                          NA,        NA
+  )

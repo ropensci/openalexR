@@ -6,7 +6,11 @@ test_that("field coverage information is up to date", {
     c(covered_by, "relevance_score")
   })
 
-  # Works entity
+  # Works
   w <- oa_fetch("works", options = list(sample = 1))
   expect_true(all(colnames(w) %in% cols$works))
+
+  # Authors
+  a <- oa_fetch("authors", options = list(sample = 1))
+  expect_true(all(colnames(a) %in% cols$authors))
 })
