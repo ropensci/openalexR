@@ -6,6 +6,7 @@
 #' @return Data frame of field coverage information
 #' @export
 #'
+#' @seealso oa_entities()
 #' @examples
 #' oa_entities()
 #' head(get_coverage(entity = "works"))
@@ -83,12 +84,3 @@ oa2df_coverage$works <- tibble::tribble(
                   "type_crossref",                            NA,                                                       NA,
                    "updated_date",                            NA,                                                       NA
   )
-
-
-
-
-
-
-
-
-

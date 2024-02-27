@@ -20,3 +20,6 @@ Get coverage of OpenAlex fields in openalexR
 oa_entities()
 head(get_coverage(entity = "works"))
 }
+\seealso{
+oa_entities()
+}
