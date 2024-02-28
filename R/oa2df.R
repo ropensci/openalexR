@@ -258,7 +258,7 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
           # Keep info about other entities as-is
           topic[vapply(topic, is.list, logical(1))]
         )
-        relev_df <- openalexR:::subs_na(relev, "rbind_df")[[1]]
+        relev_df <- subs_na(relev, "rbind_df")[[1]]
         relev_df <- tibble::rownames_to_column(relev_df, "name")
         cbind(i = i, score = topic$score, relev_df)
       })
