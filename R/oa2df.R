@@ -143,7 +143,8 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
     "is_oa_anywhere", "oa_status", "oa_url", "any_repository_has_fulltext",
     "language", "grants", "cited_by_count", "counts_by_year",
     "publication_year", "cited_by_api_url", "ids", "doi", "type",
-    "referenced_works", "related_works", "is_paratext", "is_retracted", "concepts"
+    "referenced_works", "related_works", "is_paratext", "is_retracted",
+    "concepts", "topics"
   )
   works_process <- tibble::tribble(
     ~type, ~field,
@@ -245,7 +246,31 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
       names(open_access)[[1]] <- "is_oa_anywhere"
     }
 
-    out_ls <- c(sim_fields, venue, open_access, paper_biblio, list(author = author, ab = ab))
+    # Topics
+    process_paper_topics <- function(paper) {
+      topics <- paper$topics
+      if (is.null(topics)) return(NULL)
+      topics_ls <- lapply(seq_along(topics), function(i) {
+        topic <- topics[[i]]
+        relev <- c(
+          # Hoist fields for the topic entity
+          list(topic = topic[c("id", "display_name")]),
+          # Keep info about other entities as-is
+          topic[vapply(topic, is.list, logical(1))]
+        )
+        relev_df <- openalexR:::subs_na(relev, "rbind_df")[[1]]
+        relev_df <- tibble::rownames_to_column(relev_df, "name")
+        cbind(i = i, score = topic$score, relev_df)
+      })
+      topics_df <- do.call(rbind.data.frame, topics_ls)
+      list(tibble::as_tibble(topics_df))
+    }
+    topics <- process_paper_topics(paper)
+
+    out_ls <- c(
+      sim_fields, venue, open_access, paper_biblio,
+      list(author = author, ab = ab, topics = topics)
+    )
     out_ls[sapply(out_ls, is.null)] <- NULL
     list_df[[i]] <- out_ls
   }
