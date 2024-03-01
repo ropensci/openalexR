@@ -3,6 +3,7 @@
 export(authors2df)
 export(concepts2df)
 export(funders2df)
+export(get_coverage)
 export(institutions2df)
 export(oa2bibliometrix)
 export(oa2df)
