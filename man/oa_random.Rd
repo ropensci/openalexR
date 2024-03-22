@@ -12,7 +12,8 @@ oa_random(
 }
 \arguments{
 \item{entity}{Character. Scholarly entity of the search.
-The argument can be one of c("works", "authors", "venues", "institutions", "concepts").
+The argument can be one of
+c("works", "authors", "institutions", "concepts", "funders", "sources", "publishers").
 If not provided, `entity` is guessed from `identifier`.}
 
 \item{output}{Character. Type of output, either a list or a tibble/data.frame.}

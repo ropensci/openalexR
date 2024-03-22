@@ -5,7 +5,8 @@
 #'
 #' @param data List. Output of \code{oa_request}.
 #' @param entity Character. Scholarly entity of the search.
-#' The argument can be one of c("works", "authors", "venues", "institutions", "concepts").
+#' The argument can be one of
+#' c("works", "authors", "institutions", "concepts", "funders", "sources", "publishers").
 #' @param abstract Logical. If TRUE, the function returns also the abstract of each item.
 #' Ignored if entity is different from "works". Defaults to TRUE.
 #' @param verbose Logical.
@@ -70,7 +71,6 @@ oa2df <- function(data, entity, options = NULL, count_only = FALSE, group_by = N
     works = works2df(data, abstract, verbose),
     authors = authors2df(data, verbose),
     institutions = institutions2df(data, verbose),
-    venues = venues2df(data, verbose),
     concepts = concepts2df(data, verbose),
     funders = funders2df(data, verbose),
     sources = sources2df(data, verbose),
@@ -500,92 +500,6 @@ institutions2df <- function(data, verbose = TRUE,
     "associated_institutions", "relevance_score", "works_count",
     "cited_by_count", "counts_by_year",
     "works_api_url", "x_concepts", "updated_date", "created_date"
-  )
-
-  out_df <- rbind_oa_ls(list_df)
-  out_df[, intersect(col_order, names(out_df))]
-}
-
-
-#' Convert OpenAlex collection of venues' records from list format to data frame
-#'
-#' It converts bibliographic collection of venues' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
-#' The function converts a list of venues' records obtained using \code{oa_request} into a data frame/tibble.
-#'
-#' @inheritParams works2df
-#'
-#' @return a data.frame.
-#'
-#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
-#'
-#'
-#' @examples
-#' \dontrun{
-#'
-#' # Query to search information about the Journal of Informetrics (OA id:V205292342)
-#'
-#'
-#' query_inst <- oa_query(
-#'   identifier = "V205292342",
-#'   entity = "venues"
-#' )
-#'
-#' res <- oa_request(
-#'   query_url = query_inst,
-#'   count_only = FALSE,
-#'   verbose = FALSE
-#' )
-#'
-#' df <- oa2df(res, entity = "venues")
-#'
-#' df
-#' }
-#'
-#' @export
-venues2df <- function(data, verbose = TRUE,
-                      pb = if (verbose) oa_progress(length(data)) else NULL) {
-
-  n <- length(data)
-  list_df <- vector(mode = "list", length = n)
-  venue_process <- tibble::tribble(
-    ~type, ~field,
-    "identical", "id",
-    "identical", "display_name",
-    "identical", "host_organization_name",
-    "identical", "works_count",
-    "identical", "cited_by_count",
-    "identical", "is_oa",
-    "identical", "is_in_doaj",
-    "identical", "homepage_url",
-    "identical", "works_api_url",
-    "identical", "type",
-    "identical", "relevance_score",
-    "flat", "issn_l",
-    "flat", "issn",
-    "rbind_df", "counts_by_year",
-    "rbind_df", "x_concepts",
-    "flat", "ids"
-  )
-
-  for (i in seq.int(n)) {
-    if (verbose) pb$tick()
-
-    item <- data[[i]]
-
-    fields <- venue_process[venue_process$field %in% names(item), ]
-    sim_fields <- mapply(
-      function(x, y) subs_na(item[[x]], type = y),
-      fields$field,
-      fields$type,
-      SIMPLIFY = FALSE
-    )
-    list_df[[i]] <- sim_fields
-  }
-
-  col_order <- c(
-    "id", "display_name", "host_organization_name", "issn", "issn_l", "is_oa", "is_in_doaj",
-    "ids", "homepage_url", "relevance_score", "works_count", "cited_by_count",
-    "counts_by_year", "x_concepts", "works_api_url", "type"
   )
 
   out_df <- rbind_oa_ls(list_df)

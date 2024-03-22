@@ -26,7 +26,8 @@ oa_fetch(
 }
 \arguments{
 \item{entity}{Character. Scholarly entity of the search.
-The argument can be one of c("works", "authors", "venues", "institutions", "concepts").
+The argument can be one of
+c("works", "authors", "institutions", "concepts", "funders", "sources", "publishers").
 If not provided, `entity` is guessed from `identifier`.}
 
 \item{identifier}{Character. OpenAlex ID(s) as item identifier(s).
@@ -41,7 +42,7 @@ Defaults to NULL, which returns all fields.
 https://docs.openalex.org/how-to-use-the-api/get-single-entities/select-fields
 
 - `sort` Character. Attribute to sort by.
-For example: "display_name" for venues or "cited_by_count:desc" for works.
+For example: "display_name" for sources or "cited_by_count:desc" for works.
 See more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sort-entity-lists>.
 
 - `sample` Integer. Number of (random) records to return.
