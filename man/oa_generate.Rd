@@ -20,13 +20,34 @@ TODO check group_by
 }
 \examples{
 if (require("coro")) {
-  query_url <- "https://api.openalex.org/works?filter=cites\%3AW2755950973"
+  query_url <- "https://api.openalex.org/works?filter=cites\%3AW1160808132"
   oar <- oa_generate(query_url, verbose = TRUE)
   p1 <- oar() # record 1
   p2 <- oar() # record 2
   p3 <- oar() # record 3
   head(p1)
   head(p3)
+
+  # You can also call the generate function until exhausted.
+  # More details at https://coro.r-lib.org/articles/generator.html.
+
+  oar <- oa_generate(query_url)
+  record_i <- NULL
+  j <- 0
+  while (!(is.symbol(record_i) && record_i == ".__exhausted__.")) {
+    j <- j + 1
+    recs_100 <- vector("list", 100)
+    for (i in seq.int(100)) {
+      record_i <- oar()
+      recs_100[[i]] <- record_i
+    }
+    # saveRDS(recs_100, sprintf("rec-\%s.rds", j))
+  }
+  record_i
+  j
+  # 398 works total, so j = 4 makes sense.
+  # the last two elements of the latest recs_100 is .__exhausted__.
+  str(tail(recs_100), max.level = 1)
 }
 
 }
