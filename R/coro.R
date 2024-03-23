@@ -62,24 +62,39 @@ oa_generate <- function(...) {
           return()
         }
 
+        i <- 0
+        j <- 0
+
         if (grepl("group_by", query_url)) {
           result_name <- "group_by"
           mssg <- function(i) sprintf("Downloading group %s", i)
+          groups_count <- res$meta$groups_count
+
+          while (!is.null(next_page) && (j <= groups_count)) {
+            i <- i + 1
+            j <- (i - 1) %% 200 + 1
+            if (verbose) message(mssg(i))
+            coro::yield(res[[result_name]][[j]])
+            if (j == 200) {
+              next_page <- get_next_page(paging, 0, res)
+              query_ls[[paging]] <- next_page
+              res <- api_request(query_url, ua, query = query_ls)
+              groups_count <- res$meta$groups_count
+            }
+          }
         } else {
           result_name <- "results"
           mssg <- function(i) sprintf("Getting record %s of %s records...", i, n_items)
-        }
 
-        i <- 0
-        while (!is.null(next_page)) {
-          i <- i + 1
-          if (verbose) message(mssg(i))
-          Sys.sleep(1 / 100)
-          coro::yield(res[[result_name]][[(i - 1) %% 200 + 1]])
-          if (i %% 200 == 0) {
-            next_page <- get_next_page(paging, 0, res)
-            query_ls[[paging]] <- next_page
-            res <- api_request(query_url, ua, query = query_ls)
+          for (i in seq.int(n_items)){
+            j <- (i - 1) %% 200 + 1
+            if (verbose) message(mssg(i))
+            coro::yield(res[[result_name]][[j]])
+            if (j == 200) {
+              next_page <- get_next_page(paging, 0, res)
+              query_ls[[paging]] <- next_page
+              res <- api_request(query_url, ua, query = query_ls)
+            }
           }
         }
       }
