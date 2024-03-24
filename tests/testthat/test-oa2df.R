@@ -7,7 +7,7 @@ test_that("oa2df works", {
   expect_true(grepl("Naples", naples$display_name))
   expect_equal(naples$country_code, "IT")
 
-  nejm <- oa_fetch(identifier = "V62468778")
+  nejm <- oa_fetch(identifier = "S62468778")
   expect_equal(nejm$display_name, "The New England Journal of Medicine")
   expect_s3_class(nejm, "data.frame")
   expect_s3_class(nejm, "tbl")

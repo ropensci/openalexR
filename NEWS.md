@@ -9,6 +9,7 @@ and returns one record at a time.
 `oa_fetch` or `oa_request`.
 * Improve `oa_snowball` performance.
 * Allowed the use of `options$sample` with `search`.
+* "venues"" is no longer a valid value for `entity`. Use "sources" instead.
 
 # openalexR 1.2.2
 * solved issue with CRAN test
