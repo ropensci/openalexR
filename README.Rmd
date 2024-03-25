@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: end -->
 
-**openalexR** helps you interface with the [OpenAlex](https://openalex.org) API to retrieve bibliographic infomation about publications, authors, venues, institutions and concepts with 5 main functions:
+**openalexR** helps you interface with the [OpenAlex](https://openalex.org) API to retrieve bibliographic information about publications, authors, institutions, sources, funders, publishers, topics and concepts with 5 main functions:
 
 -   `oa_fetch`: composes three functions below so the user can execute everything in one step, *i.e.*, `oa_query |> oa_request |> oa2df`
 
@@ -86,7 +86,7 @@ knitr::opts_chunk$set(dev.args = list(bg = "transparent"))
 
 ## 🌿 Examples
 
-There are different [filters](https://ropensci.github.io/openalexR/articles/Filters)/arguments you can use in `oa_fetch`, depending on which [entity](https://docs.openalex.org/#data) you're interested in: works, authors, venues, institutions, or concepts. We show a few examples below.
+There are different [filters](https://ropensci.github.io/openalexR/articles/Filters)/arguments you can use in `oa_fetch`, depending on which [entity](https://docs.openalex.org/#data) you're interested in: works, authors, sources, funders, institutions, or concepts. We show a few examples below.
 
 ### 📚 Works
 
@@ -298,7 +298,7 @@ We first download all records regarding journals that have published more than 3
 # library(ggtext)
 
 jours_all <- oa_fetch(
-  entity = "venues",
+  entity = "sources",
   works_count = ">200000",
   verbose = TRUE
 )
@@ -427,7 +427,7 @@ Schema credits: [\@dhimmel](https://github.com/dhimmel)
 
 -   **Authors** are people who create works
 
--   **Venues** are journals and repositories that host works
+-   **Sources** are journals and repositories that host works
 
 -   **Institutions** are universities and other orgs that are affiliated with works (via authors)
 

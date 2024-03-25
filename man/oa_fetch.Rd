@@ -2,8 +2,7 @@
 % Please edit documentation in R/oa_fetch.R
 \name{oa_fetch}
 \alias{oa_fetch}
-\title{A composition function to perform query building, requesting,
-and convert the result to a tibble/data frame.}
+\title{Fetching records}
 \usage{
 oa_fetch(
   entity = if (is.null(identifier)) NULL else id_type(shorten_oaid(identifier[[1]])),

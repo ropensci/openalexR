@@ -35,7 +35,7 @@ email [aria\@unina.it](mailto:aria@unina.it){.email}
 
 # An R-package to gather bibliographic data from OpenAlex
 
-**openalexR** helps you interface with the [OpenAlex](https://openalex.org) API to retrieve bibliographic infomation about publications, authors, venues, institutions and concepts with 4 main functions:
+**openalexR** helps you interface with the [OpenAlex](https://openalex.org) API to retrieve bibliographic infomation about publications, authors, institutions, sources, funders, publishers, topics and concepts with 5 main functions:
 
 -   `oa_query()`: generates a valid query, written following the OpenAlex API syntax, from a set of arguments provided by the user.
 
@@ -254,21 +254,6 @@ do.call(oa_fetch, c(italian_insts, list(count_only = TRUE)))
 dplyr::glimpse(do.call(oa_fetch, italian_insts))
 ```
 
-## Venues (think journals)
-
-**Example**: We want download all records regarding journals that have published more than 100,000 works:
-
-```{r}
-big_journals <- list(
-  entity = "venues",
-  works_count = ">100000",
-  verbose = TRUE
-)
-
-do.call(oa_fetch, c(big_journals, list(count_only = TRUE)))
-dplyr::glimpse(do.call(oa_fetch, big_journals))
-```
-
 ## Concepts (think theme, keywords)
 
 **Example**: We want to download the records of all the concepts that concern at least one million works:
@@ -338,19 +323,11 @@ do.call(oa_fetch, bib_ls) %>%
 
 # About OpenAlex
 
-![oar-img](man/figures/oar.png)
-
-::: {style="text-align: right"}
-Schema credits: [\@dhimmel](https://github.com/dhimmel)
-:::
-
 [OpenAlex](https://openalex.org) is a fully open catalog of the global research system. It's named after the ancient [Library of Alexandria](https://en.wikipedia.org/wiki/Library_of_Alexandria). The OpenAlex dataset describes scholarly entities and how those entities are connected to each other. There are five types of entities:
 
 -   **Works** are papers, books, datasets, etc; they cite other works
 
 -   **Authors** are people who create works
-
--   **Venues** are journals and repositories that host works
 
 -   **Institutions** are universities and other orgs that are affiliated with works (via authors)
 
