@@ -1,8 +1,8 @@
 
 `%||%` <- function(x, y) if (is.null(x)) y else x
 
-replace_w_na <- function(x){
-  lapply(x, `%||%`, y = NA)
+replace_w_na <- function(x, y = NA){
+  lapply(x, `%||%`, y = y)
 }
 
 subs_na <- function(x, type, prefix = NULL) {
@@ -53,7 +53,6 @@ id_type <- function(identifier) {
   switch(toupper(substr(identifier, 1, 1)),
     W = "works",
     A = "authors",
-    V = "venues",
     I = "institutions",
     C = "concepts",
     S = "sources",
