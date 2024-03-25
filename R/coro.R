@@ -4,10 +4,11 @@
 # Stateful environment for singletons
 the <- new.env()
 
+#' Iterating through records
+#'
 #' A generator for making request to OpenAlex API
 #' Returns one record at a time.
 #'
-#' TODO check group_by
 #' @param ... arguments passed to the generator including
 #' `query_url`, `mailto`, `api_key`, and `verbose`.
 #' See `oa_request` for details on these arguments.
