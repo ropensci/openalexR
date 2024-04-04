@@ -20,8 +20,8 @@ Review](https://badges.ropensci.org/560_status.svg)](https://github.com/ropensci
 
 **openalexR** helps you interface with the
 [OpenAlex](https://openalex.org) API to retrieve bibliographic
-infomation about publications, authors, venues, institutions and
-concepts with 5 main functions:
+information about publications, authors, institutions, sources, funders,
+publishers, topics and concepts with 5 main functions:
 
 - `oa_fetch`: composes three functions below so the user can execute
   everything in one step, *i.e.*, `oa_query |> oa_request |> oa2df`
@@ -93,8 +93,8 @@ There are different
 [filters](https://ropensci.github.io/openalexR/articles/Filters)/arguments
 you can use in `oa_fetch`, depending on which
 [entity](https://docs.openalex.org/#data) you’re interested in: works,
-authors, venues, institutions, or concepts. We show a few examples
-below.
+authors, sources, funders, institutions, or concepts. We show a few
+examples below.
 
 ### 📚 Works
 
@@ -152,21 +152,21 @@ works_from_orcids <- oa_fetch(
   verbose = TRUE
 )
 #> Requesting url: https://api.openalex.org/works?filter=author.orcid%3A0000-0001-6187-6610%7C0000-0002-8517-9411
-#> Getting 2 pages of results with a total of 229 records...
+#> Getting 1 page of results with a total of 183 records...
 
 works_from_orcids |>
   show_works() |>
   knitr::kable()
 ```
 
-| id          | display_name                                                                                 | first_author      | last_author            | so                                                                    | url                                            | is_oa | top_concepts                          |
-|:------------|:---------------------------------------------------------------------------------------------|:------------------|:-----------------------|:----------------------------------------------------------------------|:-----------------------------------------------|:------|:--------------------------------------|
-| W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis                          | Massimo Aria      | Corrado Cuccurullo     | Journal of Informetrics                                               | <https://doi.org/10.1016/j.joi.2017.08.007>    | FALSE | Workflow, Bibliometrics, Software     |
-| W2741809807 | The state of OA: a large-scale analysis of the prevalence and impact of Open Access articles | Heather Piwowar   | Stefanie Haustein      | PeerJ                                                                 | <https://doi.org/10.7717/peerj.4375>           | TRUE  | Citation, License, Open science       |
-| W2122130843 | Scientometrics 2.0: New metrics of scholarly impact on the social Web                        | Jason Priem       | Bradely H. Hemminger   | First Monday                                                          | <https://doi.org/10.5210/fm.v15i7.2874>        | FALSE | Bookmarking, Altmetrics, Social media |
-| W2041540760 | How and why scholars cite on Twitter                                                         | Jason Priem       | Kaitlin Light Costello | Proceedings of the Association for Information Science and Technology | <https://doi.org/10.1002/meet.14504701201>     | TRUE  | Citation, Conversation, Social media  |
-| W2038196424 | Coverage and adoption of altmetrics sources in the bibliometric community                    | Stefanie Haustein | Jens Terliesner        | Scientometrics                                                        | <https://doi.org/10.1007/s11192-013-1221-3>    | FALSE | Altmetrics, Bookmarking, Social media |
-| W2396414759 | The Altmetrics Collection                                                                    | Jason Priem       | Dario Taraborelli      | PLOS ONE                                                              | <https://doi.org/10.1371/journal.pone.0048753> | TRUE  | Altmetrics                            |
+| id          | display_name                                                                                                                              | first_author       | last_author        | so                             | url                                          | is_oa | top_concepts                                                    |
+|:------------|:------------------------------------------------------------------------------------------------------------------------------------------|:-------------------|:-------------------|:-------------------------------|:---------------------------------------------|:------|:----------------------------------------------------------------|
+| W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis                                                                       | Massimo Aria       | Corrado Cuccurullo | Journal of Informetrics        | <https://doi.org/10.1016/j.joi.2017.08.007>  | FALSE | Workflow, Bibliometrics, Software                               |
+| W2408216567 | Foundations and trends in performance management. A twenty-five years bibliometric analysis in business and public administration domains | Corrado Cuccurullo | Fabrizia Sarto     | Scientometrics                 | <https://doi.org/10.1007/s11192-016-1948-8>  | FALSE | Domain (mathematical analysis), Content analysis, Public domain |
+| W3005144120 | Mapping the Evolution of Social Research and Data Science on 30 Years of Social Indicators Research                                       | Massimo Aria       | Maria Spano        | Social Indicators Research     | <https://doi.org/10.1007/s11205-020-02281-3> | FALSE | Human geography, Data collection, Position (finance)            |
+| W4221118572 | Thematic Analysis as a New Culturomic Tool: The Social Media Coverage on COVID-19 Pandemic in Italy                                       | Massimo Aria       | Maria Spano        | Sustainability                 | <https://doi.org/10.3390/su14063643>         | TRUE  | Thematic map, Social media, Bibliometrics                       |
+| W4319869569 | Systematic literature review of 10 years of cyclist safety research                                                                       | Antonella Scarano  | Alfonso Montella   | Accident Analysis & Prevention | <https://doi.org/10.1016/j.aap.2023.106996>  | FALSE | Centrality, Crash, SAFER                                        |
+| W1979874437 | Analysis of powered two-wheeler crashes in Italy by classification trees and rules discovery                                              | Alfonso Montella   | Filomena Mauriello | Accident Analysis & Prevention | <https://doi.org/10.1016/j.aap.2011.04.025>  | FALSE | Crash, Identification (biology), Decision tree                  |
 
 **Goal**: Download all works that have been cited more than 50 times,
 published between 2020 and 2021, and include the strings “bibliometric
@@ -184,7 +184,7 @@ works_search <- oa_fetch(
   verbose = TRUE
 )
 #> Requesting url: https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc
-#> Getting 1 page of results with a total of 142 records...
+#> Getting 1 page of results with a total of 192 records...
 
 works_search |>
   show_works() |>
@@ -222,8 +222,7 @@ authors_from_orcids |>
 
 | id          | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
 |:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------|
-| A5069892096 | Massimo Aria | 0000-0002-8517-9411 |         176 |           5978 | University of Naples Federico II | Statistics, Pathology, Internal medicine |
-| A5023888391 | Jason Priem  | 0000-0001-6187-6610 |          52 |           2163 | OurResearch                      | World Wide Web, Library science, Law     |
+| A5069892096 | Massimo Aria | 0000-0002-8517-9411 |         183 |           6982 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
 
 **Goal**: Acquire information on the authors of this package.
 
@@ -242,8 +241,7 @@ authors_from_names |>
 
 | id          | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
 |:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------|
-| A5069892096 | Massimo Aria | 0000-0002-8517-9411 |         176 |           5978 | University of Naples Federico II | Statistics, Pathology, Internal medicine |
-| A5023888391 | Jason Priem  | 0000-0001-6187-6610 |          52 |           2163 | OurResearch                      | World Wide Web, Library science, Law     |
+| A5069892096 | Massimo Aria | 0000-0002-8517-9411 |         183 |           6982 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
 
 **Goal**: Download all authors’ records of scholars who work at the
 [University of Naples Federico
@@ -263,7 +261,7 @@ my_arguments <- list(
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #>      count db_response_time_ms page per_page
-#> [1,]    20                 175    1        1
+#> [1,]    26                 397    1        1
 
 if (do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))[1]>0){
 do.call(oa_fetch, my_arguments) |>
@@ -272,14 +270,14 @@ do.call(oa_fetch, my_arguments) |>
 }
 ```
 
-| id          | display_name         | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                         |
-|:------------|:---------------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------------------|
-| A5072318694 | G. Chiefari          | NA                  |         878 |          45134 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
-| A5035636337 | S. Patricelli        | NA                  |         793 |          42464 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
-| A5051324603 | Massimo Chiariello   | NA                  |         738 |          15003 | University of Naples Federico II | Internal medicine, Cardiology, Endocrinology         |
-| A5026402548 | Gabriella Fabbrocini | 0000-0002-0064-1874 |         724 |          10355 | University of Naples Federico II | Dermatology, Internal medicine, Pathology            |
-| A5057084037 | Fabrizio Pane        | 0000-0003-2563-4125 |         707 |          19076 | University of Naples Federico II | Internal medicine, Immunology, Genetics              |
-| A5070034601 | Annamaria Colao      | 0000-0003-4049-2559 |         684 |          26625 | University of Naples Federico II | Internal medicine, Endocrinology, Pathology          |
+| id          | display_name       | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                         |
+|:------------|:-------------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------------------|
+| A5079315175 | L. Merola          | 0000-0002-1822-1114 |        1776 |          68545 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
+| A5072318694 | G. Chiefari        | NA                  |         878 |          45271 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
+| A5023058736 | F. Fienga          | 0000-0001-5978-4952 |         854 |          15571 | University of Naples Federico II | Quantum mechanics, Nuclear physics, Particle physics |
+| A5003544129 | Annamaria Colao    | NA                  |         806 |          23635 | University of Naples Federico II | Internal medicine, Endocrinology, Biochemistry       |
+| A5035636337 | S. Patricelli      | NA                  |         793 |          42526 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
+| A5051324603 | Massimo Chiariello | NA                  |         738 |          15111 | University of Naples Federico II | Internal medicine, Cardiology, Endocrinology         |
 
 ## 🍒 Example analyses
 
@@ -316,6 +314,7 @@ concept_df |>
     min(works_count) < 400000,
     label_params = list(nudge_y = 10^5, segment.color = NA)
   )
+#> Warning: Ignoring unknown parameters: linewidth
 #> label_key: display_name
 ```
 
@@ -336,7 +335,7 @@ italy_insts <- oa_fetch(
   verbose = TRUE
 )
 #> Requesting url: https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation
-#> Getting 2 pages of results with a total of 234 records...
+#> Getting 2 pages of results with a total of 232 records...
 
 italy_insts |>
   slice_max(cited_by_count, n = 8) |>
@@ -391,7 +390,7 @@ more than 300,000 works, then visualize their scored concepts:
 # library(ggtext)
 
 jours_all <- oa_fetch(
-  entity = "venues",
+  entity = "sources",
   works_count = ">200000",
   verbose = TRUE
 )
@@ -442,6 +441,7 @@ jours |>
   ) +
   scale_fill_brewer(palette = "Set1", guide = "none") +
   labs(y = NULL, x = NULL, title = "Journal clocks")
+#> Warning: Ignoring unknown parameters: linewidth
 ```
 
 <img src="man/figures/README-big-journals-1.png" width="100%" />
@@ -475,7 +475,7 @@ snowball_docs <- oa_snowball(
 #> Getting 1 page of results with a total of 2 records...
 #> Collecting all documents citing the target papers...
 #> Requesting url: https://api.openalex.org/works?filter=cites%3AW1963991285%7CW1964141474
-#> Getting 3 pages of results with a total of 501 records...
+#> Getting 3 pages of results with a total of 521 records...
 #> Collecting all documents cited by the target papers...
 #> Requesting url: https://api.openalex.org/works?filter=cited_by%3AW1963991285%7CW1964141474
 #> Getting 1 page of results with a total of 87 records...
@@ -494,11 +494,6 @@ ggraph(graph = as_tbl_graph(snowball_docs), layout = "stress") +
     legend.position = "bottom"
   ) +
   guides(fill = "none")
-#> Warning: Using the `size` aesthetic in this geom was deprecated in ggplot2 3.4.0.
-#> ℹ Please use `linewidth` in the `default_aes` field and elsewhere instead.
-#> This warning is displayed once every 8 hours.
-#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-#> generated.
 ```
 
 <img src="man/figures/README-snowballing-1.png" width="100%" />
@@ -589,7 +584,7 @@ connected to each other. There are five types of entities:
 
 - **Authors** are people who create works
 
-- **Venues** are journals and repositories that host works
+- **Sources** are journals and repositories that host works
 
 - **Institutions** are universities and other orgs that are affiliated
   with works (via authors)

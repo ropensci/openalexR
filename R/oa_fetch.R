@@ -11,6 +11,8 @@ oa_entities <- function() {
   )
 }
 
+#' Fetching records
+#'
 #' A composition function to perform query building, requesting,
 #' and convert the result to a tibble/data frame.
 #' @inheritParams oa_query

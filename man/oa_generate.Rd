@@ -2,8 +2,7 @@
 % Please edit documentation in R/coro.R
 \name{oa_generate}
 \alias{oa_generate}
-\title{A generator for making request to OpenAlex API
-Returns one record at a time.}
+\title{Iterating through records}
 \usage{
 oa_generate(...)
 }
@@ -16,17 +15,51 @@ See `oa_request` for details on these arguments.}
 Generator function.
 }
 \description{
-TODO check group_by
+A generator for making request to OpenAlex API
+Returns one record at a time.
 }
 \examples{
 if (require("coro")) {
-  query_url <- "https://api.openalex.org/works?filter=cites\%3AW2755950973"
+  # Example 1: basic usage getting one record at a time
+  query_url <- "https://api.openalex.org/works?filter=cites\%3AW1160808132"
   oar <- oa_generate(query_url, verbose = TRUE)
   p1 <- oar() # record 1
   p2 <- oar() # record 2
   p3 <- oar() # record 3
   head(p1)
   head(p3)
+
+  # Example 2: using `coro::loop()` to iterate through the generator
+  query_url <- "https://api.openalex.org/works?filter=cited_by\%3AW1847168837"
+  oar <- oa_generate(query_url)
+  coro::loop(for (x in oar) {
+    print(x$id)
+  })
+
+  # Example 3: save records in blocks of 100
+  query_url <- "https://api.openalex.org/works?filter=cites\%3AW1160808132"
+  oar <- oa_generate(query_url)
+  n <- 100
+  recs <- vector("list", n)
+  i <- 0
+
+  coro::loop(for (x in oar) {
+    j <- i \%\% n + 1
+    recs[[j]] <- x
+    if (j == n) {
+      # saveRDS(recs, sprintf("rec-\%s.rds", i \%/\% n))
+      recs <- vector("list", n) # reset recs
+    }
+    i <- i + 1
+  })
+  head(x)
+  j
+  # 398 works total, so j = 98 makes sense.
+
+  # You can also manually call the generator until exhausted
+  # using `while (!coro::is_exhausted(record_i))`.
+  # More details at https://coro.r-lib.org/articles/generator.html.
+
 }
 
 }
