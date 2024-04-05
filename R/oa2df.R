@@ -137,7 +137,7 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
                      pb = if (verbose) oa_progress(length(data)) else NULL) {
 
   col_order <- c(
-    "id", "display_name", "author", "ab", "publication_date", "relevance_score",
+    "id", "title", "display_name", "author", "ab", "publication_date", "relevance_score",
     "so", "so_id", "host_organization", "issn_l", "url", "pdf_url",
     "license", "version", "first_page", "last_page", "volume", "issue", "is_oa",
     "is_oa_anywhere", "oa_status", "oa_url", "any_repository_has_fulltext",
@@ -150,6 +150,7 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
     ~type, ~field,
     "identical", "id",
     "identical", "display_name",
+    "identical", "title",
     "identical", "publication_date",
     "identical", "doi",
     "identical", "type",
