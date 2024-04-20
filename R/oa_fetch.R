@@ -654,6 +654,10 @@ oa_random <- function(entity = oa_entities(),
 api_request <- function(query_url, ua, query, api_key = oa_apikey()) {
   res <- httr::GET(query_url, ua, query = query, httr::add_headers(api_key = api_key))
 
+  if (httr::status_code(res) == 400) {
+    stop("HTTP status 400 Request Line is too large")
+  }
+
   if (httr::status_code(res) == 429) {
     message("HTTP status 429 Too Many Requests")
     return(list())
