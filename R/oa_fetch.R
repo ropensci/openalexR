@@ -403,6 +403,7 @@ oa_request <- function(query_url,
   if (grepl("filter", query_url) && grepl("works", query_url)) {
     truncated <- unlist(truncated_authors(data))
     if (length(truncated)) {
+      truncated <- shorten_oaid(truncated)
       warning(
         "The following work(s) have truncated lists of authors: ",
         paste(truncated, collapse = ", "),
