@@ -405,16 +405,16 @@ oa_request <- function(query_url,
     if (length(truncated)) {
       truncated <- shorten_oaid(truncated)
       warning(
-        "The following work(s) have truncated lists of authors: ",
+        "\nThe following work(s) have truncated lists of authors: ",
         paste(truncated, collapse = ", "),
-        ".\n  Query each work separately by its identifier to get full list of authors.\n",
-        "  For example:\n  ",
+        ".\nQuery each work separately by its identifier to get full list of authors.\n",
+        "For example:\n  ",
         paste0(
           "lapply(c(\"",
           paste(utils::head(truncated, 2), collapse = "\", \""),
           "\"), \\(x) oa_fetch(identifier = x))"
         ),
-        "\n  Details at https://docs.openalex.org/api-entities/authors/limitations."
+        "\nDetails at https://docs.openalex.org/api-entities/authors/limitations."
       )
     }
   }
