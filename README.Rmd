@@ -189,7 +189,7 @@ Let's first check how many records match the query, then download the entire col
 ```{r}
 my_arguments <- list(
   entity = "authors",
-  last_known_institution.id = "I71267560",
+  last_known_institutions.id = "I71267560",
   works_count = ">499"
 )
 

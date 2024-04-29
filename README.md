@@ -136,7 +136,7 @@ works_from_dois |>
 
 | id          | display_name                                                              | first_author      | last_author        | so                      | url                                         | is_oa | top_concepts                          |
 |:------------|:--------------------------------------------------------------------------|:------------------|:-------------------|:------------------------|:--------------------------------------------|:------|:--------------------------------------|
-| W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis       | Massimo Aria      | Corrado Cuccurullo | Journal of Informetrics | <https://doi.org/10.1016/j.joi.2017.08.007> | FALSE | Workflow, Bibliometrics, Software     |
+| W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis       | Massimo Aria      | Corrado Cuccurullo | Journal of informetrics | <https://doi.org/10.1016/j.joi.2017.08.007> | FALSE | Workflow, Bibliometrics, Software     |
 | W2038196424 | Coverage and adoption of altmetrics sources in the bibliometric community | Stefanie Haustein | Jens Terliesner    | Scientometrics          | <https://doi.org/10.1007/s11192-013-1221-3> | FALSE | Altmetrics, Bookmarking, Social media |
 
 **Goal**: Download all works published by a set of authors (known
@@ -152,21 +152,21 @@ works_from_orcids <- oa_fetch(
   verbose = TRUE
 )
 #> Requesting url: https://api.openalex.org/works?filter=author.orcid%3A0000-0001-6187-6610%7C0000-0002-8517-9411
-#> Getting 1 page of results with a total of 183 records...
+#> Getting 2 pages of results with a total of 251 records...
 
 works_from_orcids |>
   show_works() |>
   knitr::kable()
 ```
 
-| id          | display_name                                                                                                                              | first_author       | last_author        | so                             | url                                          | is_oa | top_concepts                                                    |
-|:------------|:------------------------------------------------------------------------------------------------------------------------------------------|:-------------------|:-------------------|:-------------------------------|:---------------------------------------------|:------|:----------------------------------------------------------------|
-| W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis                                                                       | Massimo Aria       | Corrado Cuccurullo | Journal of Informetrics        | <https://doi.org/10.1016/j.joi.2017.08.007>  | FALSE | Workflow, Bibliometrics, Software                               |
-| W2408216567 | Foundations and trends in performance management. A twenty-five years bibliometric analysis in business and public administration domains | Corrado Cuccurullo | Fabrizia Sarto     | Scientometrics                 | <https://doi.org/10.1007/s11192-016-1948-8>  | FALSE | Domain (mathematical analysis), Content analysis, Public domain |
-| W3005144120 | Mapping the Evolution of Social Research and Data Science on 30 Years of Social Indicators Research                                       | Massimo Aria       | Maria Spano        | Social Indicators Research     | <https://doi.org/10.1007/s11205-020-02281-3> | FALSE | Human geography, Data collection, Position (finance)            |
-| W4221118572 | Thematic Analysis as a New Culturomic Tool: The Social Media Coverage on COVID-19 Pandemic in Italy                                       | Massimo Aria       | Maria Spano        | Sustainability                 | <https://doi.org/10.3390/su14063643>         | TRUE  | Thematic map, Social media, Bibliometrics                       |
-| W4319869569 | Systematic literature review of 10 years of cyclist safety research                                                                       | Antonella Scarano  | Alfonso Montella   | Accident Analysis & Prevention | <https://doi.org/10.1016/j.aap.2023.106996>  | FALSE | Centrality, Crash, SAFER                                        |
-| W1979874437 | Analysis of powered two-wheeler crashes in Italy by classification trees and rules discovery                                              | Alfonso Montella   | Filomena Mauriello | Accident Analysis & Prevention | <https://doi.org/10.1016/j.aap.2011.04.025>  | FALSE | Crash, Identification (biology), Decision tree                  |
+| id          | display_name                                                                                 | first_author      | last_author            | so                                     | url                                            | is_oa | top_concepts                          |
+|:------------|:---------------------------------------------------------------------------------------------|:------------------|:-----------------------|:---------------------------------------|:-----------------------------------------------|:------|:--------------------------------------|
+| W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis                          | Massimo Aria      | Corrado Cuccurullo     | Journal of informetrics                | <https://doi.org/10.1016/j.joi.2017.08.007>    | FALSE | Workflow, Bibliometrics, Software     |
+| W2741809807 | The state of OA: a large-scale analysis of the prevalence and impact of Open Access articles | Heather Piwowar   | Stefanie Haustein      | PeerJ                                  | <https://doi.org/10.7717/peerj.4375>           | TRUE  | Citation, License, Bibliometrics      |
+| W2122130843 | Scientometrics 2.0: New metrics of scholarly impact on the social Web                        | Jason Priem       | Bradely H. Hemminger   | First Monday                           | <https://doi.org/10.5210/fm.v15i7.2874>        | FALSE | Bookmarking, Altmetrics, Social media |
+| W2038196424 | Coverage and adoption of altmetrics sources in the bibliometric community                    | Stefanie Haustein | Jens Terliesner        | Scientometrics                         | <https://doi.org/10.1007/s11192-013-1221-3>    | FALSE | Altmetrics, Bookmarking, Social media |
+| W2396414759 | The Altmetrics Collection                                                                    | Jason Priem       | Dario Taraborelli      | PloS one                               | <https://doi.org/10.1371/journal.pone.0048753> | TRUE  | Social media, Citation, Altmetrics    |
+| W2041540760 | How and why scholars cite on Twitter                                                         | Jason Priem       | Kaitlin Light Costello | Proceedings of the ASIS annual meeting | <https://doi.org/10.1002/meet.14504701201>     | TRUE  | Citation, Conversation, Social media  |
 
 **Goal**: Download all works that have been cited more than 50 times,
 published between 2020 and 2021, and include the strings “bibliometric
@@ -184,7 +184,7 @@ works_search <- oa_fetch(
   verbose = TRUE
 )
 #> Requesting url: https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc
-#> Getting 1 page of results with a total of 192 records...
+#> Getting 2 pages of results with a total of 217 records...
 
 works_search |>
   show_works() |>
@@ -193,12 +193,12 @@ works_search |>
 
 | id          | display_name                                                                                                                  | first_author        | last_author        | so                                        | url                                             | is_oa | top_concepts                                                  |
 |:------------|:------------------------------------------------------------------------------------------------------------------------------|:--------------------|:-------------------|:------------------------------------------|:------------------------------------------------|:------|:--------------------------------------------------------------|
-| W3160856016 | How to conduct a bibliometric analysis: An overview and guidelines                                                            | Naveen Donthu       | Weng Marc Lim      | Journal of Business Research              | <https://doi.org/10.1016/j.jbusres.2021.04.070> | TRUE  | Bibliometrics, Field (mathematics), Resource (disambiguation) |
-| W3038273726 | Investigating the emerging COVID-19 research trends in the field of business and management: A bibliometric analysis approach | Surabhi Verma       | Anders Gustafsson  | Journal of Business Research              | <https://doi.org/10.1016/j.jbusres.2020.06.057> | TRUE  | Bibliometrics, Field (mathematics), Empirical research        |
-| W2990450011 | Forty-five years of Journal of Business Research: A bibliometric analysis                                                     | Naveen Donthu       | Debidutta Pattnaik | Journal of Business Research              | <https://doi.org/10.1016/j.jbusres.2019.10.039> | FALSE | Publishing, Bibliometrics, Empirical research                 |
-| W3001491100 | Software tools for conducting bibliometric analysis in science: An up-to-date review                                          | José A. Moral-Muñoz | Manuel J. Cobo     | Profesional De La Informacion             | <https://doi.org/10.3145/epi.2020.ene.03>       | TRUE  | Bibliometrics, Visualization, Set (abstract data type)        |
-| W3044902155 | Financial literacy: A systematic review and bibliometric analysis                                                             | Kirti Goyal         | Satish Kumar       | International Journal of Consumer Studies | <https://doi.org/10.1111/ijcs.12605>            | FALSE | Financial literacy, Content analysis, Citation                |
-| W2990688366 | A bibliometric analysis of board diversity: Current status, development, and future research directions                       | H. Kent Baker       | Arunima Haldar     | Journal of Business Research              | <https://doi.org/10.1016/j.jbusres.2019.11.025> | FALSE | Diversity (politics), Ethnic group, Bibliometrics             |
+| W3160856016 | How to conduct a bibliometric analysis: An overview and guidelines                                                            | Naveen Donthu       | Weng Marc Lim      | Journal of business research              | <https://doi.org/10.1016/j.jbusres.2021.04.070> | TRUE  | Bibliometrics, Field (mathematics), Resource (disambiguation) |
+| W3038273726 | Investigating the emerging COVID-19 research trends in the field of business and management: A bibliometric analysis approach | Surabhi Verma       | Anders Gustafsson  | Journal of business research              | <https://doi.org/10.1016/j.jbusres.2020.06.057> | TRUE  | Bibliometrics, Field (mathematics), Empirical research        |
+| W2990450011 | Forty-five years of Journal of Business Research: A bibliometric analysis                                                     | Naveen Donthu       | Debidutta Pattnaik | Journal of business research              | <https://doi.org/10.1016/j.jbusres.2019.10.039> | FALSE | Publishing, Bibliometrics, Empirical research                 |
+| W3001491100 | Software tools for conducting bibliometric analysis in science: An up-to-date review                                          | José A. Moral-Muñoz | Manuel J. Cobo     | El Profesional de la información          | <https://doi.org/10.3145/epi.2020.ene.03>       | TRUE  | Bibliometrics, Visualization, Set (abstract data type)        |
+| W3044902155 | Financial literacy: A systematic review and bibliometric analysis                                                             | Kirti Goyal         | Satish Kumar       | International journal of consumer studies | <https://doi.org/10.1111/ijcs.12605>            | FALSE | Financial literacy, Content analysis, Citation                |
+| W2990688366 | A bibliometric analysis of board diversity: Current status, development, and future research directions                       | H. Kent Baker       | Arunima Haldar     | Journal of business research              | <https://doi.org/10.1016/j.jbusres.2019.11.025> | FALSE | Diversity (politics), Ethnic group, Bibliometrics             |
 
 ### 🧑 Authors
 
@@ -222,7 +222,8 @@ authors_from_orcids |>
 
 | id          | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
 |:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------|
-| A5069892096 | Massimo Aria | 0000-0002-8517-9411 |         183 |           6982 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
+| A5069892096 | Massimo Aria | 0000-0002-8517-9411 |         184 |           7530 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
+| A5023888391 | Jason Priem  | 0000-0001-6187-6610 |          69 |           2437 | OurResearch                      | World Wide Web, Library science, Law     |
 
 **Goal**: Acquire information on the authors of this package.
 
@@ -241,7 +242,8 @@ authors_from_names |>
 
 | id          | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
 |:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------|
-| A5069892096 | Massimo Aria | 0000-0002-8517-9411 |         183 |           6982 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
+| A5069892096 | Massimo Aria | 0000-0002-8517-9411 |         184 |           7530 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
+| A5023888391 | Jason Priem  | 0000-0001-6187-6610 |          69 |           2437 | OurResearch                      | World Wide Web, Library science, Law     |
 
 **Goal**: Download all authors’ records of scholars who work at the
 [University of Naples Federico
@@ -255,13 +257,13 @@ then adding `count_only` (default `FALSE`) to this list:
 ``` r
 my_arguments <- list(
   entity = "authors",
-  last_known_institution.id = "I71267560",
+  last_known_institutions.id = "I71267560",
   works_count = ">499"
 )
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #>      count db_response_time_ms page per_page
-#> [1,]    26                 397    1        1
+#> [1,]    49                 123    1        1
 
 if (do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))[1]>0){
 do.call(oa_fetch, my_arguments) |>
@@ -270,14 +272,14 @@ do.call(oa_fetch, my_arguments) |>
 }
 ```
 
-| id          | display_name       | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                         |
-|:------------|:-------------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------------------|
-| A5079315175 | L. Merola          | 0000-0002-1822-1114 |        1776 |          68545 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
-| A5072318694 | G. Chiefari        | NA                  |         878 |          45271 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
-| A5023058736 | F. Fienga          | 0000-0001-5978-4952 |         854 |          15571 | University of Naples Federico II | Quantum mechanics, Nuclear physics, Particle physics |
-| A5003544129 | Annamaria Colao    | NA                  |         806 |          23635 | University of Naples Federico II | Internal medicine, Endocrinology, Biochemistry       |
-| A5035636337 | S. Patricelli      | NA                  |         793 |          42526 | University of Naples Federico II | Quantum mechanics, Particle physics, Nuclear physics |
-| A5051324603 | Massimo Chiariello | NA                  |         738 |          15111 | University of Naples Federico II | Internal medicine, Cardiology, Endocrinology         |
+| id          | display_name          | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                         |
+|:------------|:----------------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------------------|
+| A5066548119 | D. della Volpe        | 0000-0001-8530-7447 |        1709 |          67469 | University of Naples Federico II | Quantum mechanics, Nuclear physics, Particle physics |
+| A5032217427 | Nicola Longo          | 0000-0002-3677-1216 |        1160 |          12620 | University of Naples Federico II | Internal medicine, Genetics, Pathology               |
+| A5015790909 | Davide Rossi          | 0000-0002-2837-1597 |        1031 |          23522 | University of Sydney             | Genetics, Internal medicine, Immunology              |
+| A5076706548 | Salvatore Capozziello | 0000-0003-4886-2024 |         918 |          33561 | INFN Sezione di Napoli           | Quantum mechanics, Astronomy, Theoretical physics    |
+| A5072318694 | G. Chiefari           | NA                  |         881 |          46310 | INFN Sezione di Napoli           | Quantum mechanics, Particle physics, Nuclear physics |
+| A5023058736 | F. Fienga             | 0000-0001-5978-4952 |         855 |          16983 | University of Naples Federico II | Quantum mechanics, Nuclear physics, Particle physics |
 
 ## 🍒 Example analyses
 
@@ -314,7 +316,6 @@ concept_df |>
     min(works_count) < 400000,
     label_params = list(nudge_y = 10^5, segment.color = NA)
   )
-#> Warning: Ignoring unknown parameters: linewidth
 #> label_key: display_name
 ```
 
@@ -441,7 +442,6 @@ jours |>
   ) +
   scale_fill_brewer(palette = "Set1", guide = "none") +
   labs(y = NULL, x = NULL, title = "Journal clocks")
-#> Warning: Ignoring unknown parameters: linewidth
 ```
 
 <img src="man/figures/README-big-journals-1.png" width="100%" />
@@ -475,10 +475,10 @@ snowball_docs <- oa_snowball(
 #> Getting 1 page of results with a total of 2 records...
 #> Collecting all documents citing the target papers...
 #> Requesting url: https://api.openalex.org/works?filter=cites%3AW1963991285%7CW1964141474
-#> Getting 3 pages of results with a total of 521 records...
+#> Getting 3 pages of results with a total of 533 records...
 #> Collecting all documents cited by the target papers...
 #> Requesting url: https://api.openalex.org/works?filter=cited_by%3AW1963991285%7CW1964141474
-#> Getting 1 page of results with a total of 87 records...
+#> Getting 1 page of results with a total of 91 records...
 
 ggraph(graph = as_tbl_graph(snowball_docs), layout = "stress") +
   geom_edge_link(aes(alpha = after_stat(index)), show.legend = FALSE) +
@@ -494,6 +494,16 @@ ggraph(graph = as_tbl_graph(snowball_docs), layout = "stress") +
     legend.position = "bottom"
   ) +
   guides(fill = "none")
+#> Warning: The `scale_name` argument of `continuous_scale()` is deprecated as of ggplot2
+#> 3.5.0.
+#> This warning is displayed once every 8 hours.
+#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+#> generated.
+#> Warning: Using the `size` aesthetic in this geom was deprecated in ggplot2 3.4.0.
+#> ℹ Please use `linewidth` in the `default_aes` field and elsewhere instead.
+#> This warning is displayed once every 8 hours.
+#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+#> generated.
 ```
 
 <img src="man/figures/README-snowballing-1.png" width="100%" />

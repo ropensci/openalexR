@@ -141,19 +141,20 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
   if (length(final_res[[1]]) == 0) { # || is.null(final_res[[1]][[1]]$id)
     return(NULL)
   }
+  final_res <- unlist(final_res, recursive = FALSE)
 
   if (output == "list") {
-    unlist(final_res, recursive = FALSE)
-  } else {
-    # Flatten out the initial chunking of 50 at a time
-    final_res <- list(unlist(final_res, recursive = FALSE))
-    do.call(rbind, lapply(
-      final_res, oa2df,
-      entity = entity, options = options, abstract = abstract,
-      count_only = count_only, group_by = group_by,
-      verbose = verbose
-    ))
+    return(final_res)
   }
+
+  # Flatten out the initial chunking of 50 at a time
+  final_res <- list(final_res)
+  do.call(rbind, lapply(
+    final_res, oa2df,
+    entity = entity, options = options, abstract = abstract,
+    count_only = count_only, group_by = group_by,
+    verbose = verbose
+  ))
 }
 
 #' Get bibliographic records from OpenAlex database
@@ -397,7 +398,38 @@ oa_request <- function(query_url,
     if (!is.null(res[[result_name]])) data[[i]] <- res[[result_name]]
   }
 
-  unlist(data, recursive = FALSE)
+  data <- unlist(data, recursive = FALSE)
+
+  if (grepl("filter", query_url) && grepl("works", query_url)) {
+    truncated <- unlist(truncated_authors(data))
+    if (length(truncated)) {
+      truncated <- shorten_oaid(truncated)
+      warning(
+        "\nThe following work(s) have truncated lists of authors: ",
+        paste(truncated, collapse = ", "),
+        ".\nQuery each work separately by its identifier to get full list of authors.\n",
+        "For example:\n  ",
+        paste0(
+          "lapply(c(\"",
+          paste(utils::head(truncated, 2), collapse = "\", \""),
+          "\"), \\(x) oa_fetch(identifier = x))"
+        ),
+        "\nDetails at https://docs.openalex.org/api-entities/authors/limitations."
+      )
+    }
+  }
+
+  data
+}
+
+truncated_authors <- function(list_result) {
+  lapply(
+    list_result,
+    function(x){
+      trunc <- x$is_authors_truncated
+      if (!is.null(trunc) && trunc) x$id else NULL
+    }
+  )
 }
 
 get_next_page <- function(paging, i, res = NULL) {

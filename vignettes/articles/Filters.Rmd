@@ -73,10 +73,10 @@ See the [original documentation](https://docs.openalex.org/how-to-use-the-api/ge
 |-----------------------------------------|--------------------------------------------------------------------------------------------|
 | `works_count`                           | \">99\"                                                                                    |
 | `cited_by_count`                        | \">1000\"                                                                                  |
-| `last_known_institution.id`             | \"I4200000001\"                                                                            |
-| `last_known_institution.ror`            | \"02nr0ka47\"                                                                              |
-| `last_known_institution.country_code`   | \"CA\"                                                                                     |
-| `last_known_institution.type`           | \"nonprofit\"                                                                              |
+| `last_known_institutions.id`            | \"I4200000001\"                                                                            |
+| `last_known_institutions.ror`           | \"02nr0ka47\"                                                                              |
+| `last_known_institutions.country_code`  | \"CA\"                                                                                     |
+| `last_known_institutions.type`          | \"nonprofit\"                                                                              |
 | `openalex`                              | \"A2208157607\"                                                                            |
 | `orcid`                                 | \"0000-0001-6187-6610\"                                                                    |
 | `mag`                                   | \"2208157607\"                                                                             |
