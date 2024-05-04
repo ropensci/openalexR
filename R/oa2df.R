@@ -48,7 +48,7 @@
 #'
 #' @export
 oa2df <- function(data, entity, options = NULL, count_only = FALSE, group_by = NULL, abstract = TRUE, verbose = TRUE) {
-  if (length(data) == 0){
+  if (length(data) == 0) {
     return(NULL)
   }
 
@@ -60,7 +60,7 @@ oa2df <- function(data, entity, options = NULL, count_only = FALSE, group_by = N
     return(unlist(data))
   }
 
-  if (entity != "snowball"){
+  if (entity != "snowball") {
     ch <- ifelse(is.null(options$select), "id", options$select[[1]])
     if (!is.null(data[[ch]])) {
       data <- list(data)
@@ -135,7 +135,6 @@ oa2df <- function(data, entity, options = NULL, count_only = FALSE, group_by = N
 #'
 works2df <- function(data, abstract = TRUE, verbose = TRUE,
                      pb = if (verbose) oa_progress(length(data)) else NULL) {
-
   col_order <- c(
     "id", "title", "display_name", "author", "ab", "publication_date", "relevance_score",
     "so", "so_id", "host_organization", "issn_l", "url", "pdf_url",
@@ -226,7 +225,14 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
             first_inst <- empty_inst
           }
           first_inst <- prepend(first_inst, "institution")
-          aff_raw <- list(au_affiliation_raw = replace_w_na(l$raw_affiliation_string[1]))
+          aff_raw <- list(
+            au_affiliation_raw =
+              if (length(l$raw_affiliation_strings)) {
+                l$raw_affiliation_strings[[1]]
+              } else {
+                NA_character_
+              }
+          )
           l_author <- if (length(l$author) > 0) {
             prepend(replace_w_na(l$author), "au")
           } else {
@@ -243,14 +249,16 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
     }
     paper_biblio <- replace_w_na(paper$biblio)
     open_access <- replace_w_na(paper$open_access)
-    if (length(open_access) > 0){
+    if (length(open_access) > 0) {
       names(open_access)[[1]] <- "is_oa_anywhere"
     }
 
     # Topics
     process_paper_topics <- function(paper) {
       topics <- paper$topics
-      if (is.null(topics)) return(NULL)
+      if (is.null(topics)) {
+        return(NULL)
+      }
       topics_ls <- lapply(seq_along(topics), function(i) {
         topic <- topics[[i]]
         relev <- c(
@@ -544,7 +552,6 @@ institutions2df <- function(data, verbose = TRUE,
 #' @export
 concepts2df <- function(data, verbose = TRUE,
                         pb = if (verbose) oa_progress(length(data)) else NULL) {
-
   concept_process <- tibble::tribble(
     ~type, ~field,
     "identical", "id",
@@ -635,7 +642,6 @@ concepts2df <- function(data, verbose = TRUE,
 #' @export
 funders2df <- function(data, verbose = TRUE,
                        pb = if (verbose) oa_progress(length(data)) else NULL) {
-
   funder_process <- tibble::tribble(
     ~type, ~field,
     "identical", "id",
@@ -709,7 +715,6 @@ funders2df <- function(data, verbose = TRUE,
 #' @export
 sources2df <- function(data, verbose = TRUE,
                        pb = if (verbose) oa_progress(length(data)) else NULL) {
-
   source_process <- tibble::tribble(
     ~type, ~field,
     "identical", "id",
@@ -793,7 +798,6 @@ sources2df <- function(data, verbose = TRUE,
 #' @export
 publishers2df <- function(data, verbose = TRUE,
                           pb = if (verbose) oa_progress(length(data)) else NULL) {
-
   publisher_process <- tibble::tribble(
     ~type, ~field,
     "identical", "id",
