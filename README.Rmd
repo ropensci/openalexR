@@ -34,6 +34,12 @@ knitr::opts_chunk$set(
 
 -   `oa_random`: get random entity, *e.g.*, `oa_random("works")` gives a different work each time you run it
 
+## 📜 Citation
+
+If you use openalexR in research, please cite:
+
+  Aria, M., Le T., Cuccurullo, C., Belfiore, A. & Choe, J. (2014), *openalexR: An R-Tool for Collecting Bibliometric Data from OpenAlex*, **The R Journal**, 15(4), 167-180, DOI: https://doi.org/10.32614/RJ-2023-089.
+
 ## 🙌 Support OpenAlex
 
 If OpenAlex has helped you, consider writing a [Testimonial](https://forms.monday.com/forms/4d5ad5a8e6a72ae31987a29118f1d437?r=use1) which will help support the OpenAlex team and show that their work is making a *real and necessary* impact.
