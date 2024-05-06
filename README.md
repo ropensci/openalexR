@@ -39,6 +39,15 @@ publishers, topics and concepts with 5 main functions:
 - `oa_random`: get random entity, *e.g.*, `oa_random("works")` gives a
   different work each time you run it
 
+## 📜 Citation
+
+If you use openalexR in research, please cite:
+
+Aria, M., Le T., Cuccurullo, C., Belfiore, A. & Choe, J. (2014),
+*openalexR: An R-Tool for Collecting Bibliometric Data from OpenAlex*,
+**The R Journal**, 15(4), 167-180, DOI:
+<https://doi.org/10.32614/RJ-2023-089>.
+
 ## 🙌 Support OpenAlex
 
 If OpenAlex has helped you, consider writing a
@@ -190,7 +199,7 @@ works_search <- oa_fetch(
   verbose = TRUE
 )
 #> Requesting url: https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc
-#> Getting 2 pages of results with a total of 221 records...
+#> Getting 2 pages of results with a total of 237 records...
 
 works_search |>
   show_works() |>
@@ -204,7 +213,7 @@ works_search |>
 | W3001491100 | Software tools for conducting bibliometric analysis in science: An up-to-date review                                          | José A. Moral-Muñoz | Manuel J. Cobo     | El Profesional de la información          | <https://doi.org/10.3145/epi.2020.ene.03>       | TRUE  | Bibliometrics, Visualization, Set (abstract data type)        |
 | W2990450011 | Forty-five years of Journal of Business Research: A bibliometric analysis                                                     | Naveen Donthu       | Debidutta Pattnaik | Journal of business research              | <https://doi.org/10.1016/j.jbusres.2019.10.039> | FALSE | Publishing, Bibliometrics, Empirical research                 |
 | W3044902155 | Financial literacy: A systematic review and bibliometric analysis                                                             | Kirti Goyal         | Satish Kumar       | International journal of consumer studies | <https://doi.org/10.1111/ijcs.12605>            | FALSE | Financial literacy, Content analysis, Citation                |
-| W3042215340 | A bibliometric analysis using VOSviewer of publications on COVID-19                                                           | Yuetian Yu          | Erzhen Chen        | Annals of translational medicine          | <https://doi.org/10.21037/atm-20-4235>          | TRUE  | Citation, Bibliometrics, China                                |
+| W2990688366 | A bibliometric analysis of board diversity: Current status, development, and future research directions                       | H. Kent Baker       | Arunima Haldar     | Journal of business research              | <https://doi.org/10.1016/j.jbusres.2019.11.025> | FALSE | Diversity (politics), Ethnic group, Bibliometrics             |
 
 ### 🧑 Authors
 
@@ -229,7 +238,7 @@ authors_from_orcids |>
 | id          | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
 |:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------|
 | A5069892096 | Massimo Aria | 0000-0002-8517-9411 |         184 |           7750 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
-| A5023888391 | Jason Priem  | 0000-0001-6187-6610 |          67 |           2532 | OurResearch                      | World Wide Web, Library science, Law     |
+| A5023888391 | Jason Priem  | 0000-0001-6187-6610 |          67 |           2535 | OurResearch                      | World Wide Web, Library science, Law     |
 
 **Goal**: Acquire information on the authors of this package.
 
@@ -249,7 +258,7 @@ authors_from_names |>
 | id          | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
 |:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------|
 | A5069892096 | Massimo Aria | 0000-0002-8517-9411 |         184 |           7750 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
-| A5023888391 | Jason Priem  | 0000-0001-6187-6610 |          67 |           2532 | OurResearch                      | World Wide Web, Library science, Law     |
+| A5023888391 | Jason Priem  | 0000-0001-6187-6610 |          67 |           2535 | OurResearch                      | World Wide Web, Library science, Law     |
 
 **Goal**: Download all authors’ records of scholars who work at the
 [University of Naples Federico
@@ -269,7 +278,7 @@ my_arguments <- list(
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #>      count db_response_time_ms page per_page
-#> [1,]    33                 127    1        1
+#> [1,]    35                 131    1        1
 
 if (do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))[1]>0){
 do.call(oa_fetch, my_arguments) |>
@@ -282,7 +291,7 @@ do.call(oa_fetch, my_arguments) |>
 |:------------|:----------------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------------------|
 | A5066548119 | D. della Volpe        | 0000-0001-8530-7447 |        1708 |          67588 | University of Naples Federico II | Quantum mechanics, Nuclear physics, Particle physics |
 | A5032217427 | Nicola Longo          | 0000-0002-3677-1216 |        1175 |          12977 | University of Naples Federico II | Internal medicine, Genetics, Pathology               |
-| A5076706548 | Salvatore Capozziello | 0000-0003-4886-2024 |         914 |          34029 | INFN Sezione di Napoli           | Quantum mechanics, Astronomy, Theoretical physics    |
+| A5076706548 | Salvatore Capozziello | 0000-0003-4886-2024 |         913 |          34110 | INFN Sezione di Napoli           | Quantum mechanics, Astronomy, Theoretical physics    |
 | A5072318694 | G. Chiefari           | NA                  |         883 |          46442 | INFN Sezione di Napoli           | Quantum mechanics, Particle physics, Nuclear physics |
 | A5064797795 | A. O. M. Iorio        | NA                  |         798 |          46038 | INFN Sezione di Napoli           | Particle physics, Nuclear physics, Quantum mechanics |
 | A5035636337 | S. Patricelli         | NA                  |         795 |          43655 | INFN Sezione di Napoli           | Quantum mechanics, Particle physics, Nuclear physics |
