@@ -38,7 +38,7 @@ knitr::opts_chunk$set(
 
 If you use openalexR in research, please cite:
 
-  Aria, M., Le T., Cuccurullo, C., Belfiore, A. & Choe, J. (2014), *openalexR: An R-Tool for Collecting Bibliometric Data from OpenAlex*, **The R Journal**, 15(4), 167-180, DOI: https://doi.org/10.32614/RJ-2023-089.
+  Aria, M., Le T., Cuccurullo, C., Belfiore, A. & Choe, J. (2024), *openalexR: An R-Tool for Collecting Bibliometric Data from OpenAlex*, **The R Journal**, 15(4), 167-180, DOI: https://doi.org/10.32614/RJ-2023-089.
 
 ## 🙌 Support OpenAlex
 

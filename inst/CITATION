@@ -11,6 +11,6 @@ bibentry(bibtype="Article",
          issn = "2073-4859",
          pages = "167-180",
          textVersion =
-           paste("Aria, M., Le, T., Cuccurullo, C., Belfiore, A. & Choe, J. (2014),",
+           paste("Aria, M., Le, T., Cuccurullo, C., Belfiore, A. & Choe, J. (2024),",
            "openalexR: An R-Tool for Collecting Bibliometric Data from OpenAlex,",
            "The R Journal, 15(4), 167-180."))
