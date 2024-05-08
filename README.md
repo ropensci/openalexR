@@ -278,7 +278,7 @@ my_arguments <- list(
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #>      count db_response_time_ms page per_page
-#> [1,]    33                 130    1        1
+#> [1,]    31                 116    1        1
 
 if (do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))[1]>0){
 do.call(oa_fetch, my_arguments) |>
@@ -289,12 +289,12 @@ do.call(oa_fetch, my_arguments) |>
 
 | id          | display_name          | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                         |
 |:------------|:----------------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------------------|
-| A5032217427 | Nicola Longo          | 0000-0002-3677-1216 |        1175 |          12977 | University of Naples Federico II | Internal medicine, Genetics, Pathology               |
+| A5032217427 | Nicola Longo          | 0000-0002-3677-1216 |        1177 |          12936 | University of Naples Federico II | Internal medicine, Genetics, Pathology               |
 | A5076706548 | Salvatore Capozziello | 0000-0003-4886-2024 |         913 |          34110 | INFN Sezione di Napoli           | Quantum mechanics, Astronomy, Theoretical physics    |
-| A5064797795 | A. O. M. Iorio        | NA                  |         798 |          46038 | INFN Sezione di Napoli           | Particle physics, Nuclear physics, Quantum mechanics |
 | A5035636337 | S. Patricelli         | NA                  |         795 |          43655 | INFN Sezione di Napoli           | Quantum mechanics, Particle physics, Nuclear physics |
 | A5051324603 | Massimo Chiariello    | NA                  |         740 |          15347 | University of Naples Federico II | Internal medicine, Cardiology, Endocrinology         |
-| A5078562748 | Sabino De Placido     | 0000-0001-5077-6286 |         737 |          26049 | University of Naples Federico II | Genetics, Internal medicine, Oncology                |
+| A5026402548 | Gabriella Fabbrocini  | 0000-0002-0064-1874 |         735 |          11722 | University of Naples Federico II | Dermatology, Internal medicine, Pathology            |
+| A5078562748 | Sabino De Placido     | 0000-0001-5077-6286 |         735 |          26074 | University of Naples Federico II | Genetics, Internal medicine, Oncology                |
 
 ## 🍒 Example analyses
 
