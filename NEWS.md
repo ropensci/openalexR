@@ -1,3 +1,6 @@
+# openalexR 1.3.1
+* solved bug in au_affiliation_raw in PR#241
+
 # openalexR 1.3.0
 * Breaking change: two arguments in `oa_snowball` are renamed:
 `citing_filter` is now `citing_params`,
@@ -14,6 +17,7 @@ and returns one record at a time.
 # openalexR 1.2.2
 * solved issue with CRAN test
 * 
+
 # openalexR 1.2.1
 * many improvements in bibliometrix support
 * solved issue with CRAN test
