@@ -35,7 +35,7 @@ See more at <https://docs.openalex.org/how-to-use-the-api/get-single-entities#th
 
 \item{entity}{Character. Scholarly entity of the search.
 The argument can be one of
-c("works", "authors", "institutions", "concepts", "funders", "sources", "publishers").
+c("works", "authors", "institutions", "concepts", "funders", "sources", "publishers", "topics").
 If not provided, `entity` is guessed from `identifier`.}
 
 \item{options}{List. Additional parameters to add in the query. For example:

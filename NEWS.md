@@ -1,4 +1,5 @@
 # openalexR 1.4.0
+* "topics" are now available in oa_fetch
 
 # openalexR 1.3.1
 * solved bug in au_affiliation_raw in PR#241

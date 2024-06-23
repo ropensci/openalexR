@@ -19,7 +19,7 @@ oa2df(
 
 \item{entity}{Character. Scholarly entity of the search.
 The argument can be one of
-c("works", "authors", "institutions", "concepts", "funders", "sources", "publishers").}
+c("works", "authors", "institutions", "concepts", "funders", "sources", "publishers", "topics").}
 
 \item{options}{List. Additional parameters to add in the query. For example:
 

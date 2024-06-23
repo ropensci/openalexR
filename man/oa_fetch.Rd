@@ -26,7 +26,7 @@ oa_fetch(
 \arguments{
 \item{entity}{Character. Scholarly entity of the search.
 The argument can be one of
-c("works", "authors", "institutions", "concepts", "funders", "sources", "publishers").
+c("works", "authors", "institutions", "concepts", "funders", "sources", "publishers", "topics").
 If not provided, `entity` is guessed from `identifier`.}
 
 \item{identifier}{Character. OpenAlex ID(s) as item identifier(s).

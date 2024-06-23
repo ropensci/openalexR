@@ -58,6 +58,7 @@ id_type <- function(identifier) {
     S = "sources",
     P = "publishers",
     `F` = "funders",
+    `T` = "topics",
     NA
   )
 }
