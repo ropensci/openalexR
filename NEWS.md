@@ -1,3 +1,5 @@
+# openalexR 1.4.0
+
 # openalexR 1.3.1
 * solved bug in au_affiliation_raw in PR#241
 
