@@ -299,11 +299,13 @@ test_that("oa_fetch other entities works", {
   random_sources <- oa_fetch(entity = "sources", options = list(sample = 20))
   random_concepts <- oa_fetch(entity = "concepts", options = list(sample = 20))
   random_institutions <- oa_fetch(entity = "institutions", options = list(sample = 20))
+  random_topics <- oa_fetch(entity = "topics", options = list(sample = 20))
 
   expect_equal(nrow(random_authors), 20)
   expect_equal(nrow(random_sources), 20)
   expect_equal(nrow(random_concepts), 20)
   expect_equal(nrow(random_institutions), 20)
+  expect_equal(nrow(random_topics), 20)
 })
 
 test_that("paging works with sample", {
