@@ -11,6 +11,10 @@ process_topics(entity, extra)
 
 \item{extra}{Character. Either "score" (work) or "count" (author).}
 }
+\value{
+List. A list of one tibble with the processed topics.
+}
 \description{
 Process topics
 }
+\keyword{internal}

@@ -147,7 +147,7 @@ oa_apikey <- function() {
 #'
 #' @return List. A list of one tibble with the processed topics.
 #' @keywords internal
-#' @examples
+#'
 process_topics <- function(entity, extra) {
   topics <- entity$topics
   if (is.null(topics)) {
