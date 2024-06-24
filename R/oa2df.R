@@ -254,32 +254,10 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
       names(open_access)[[1]] <- "is_oa_anywhere"
     }
 
-    # Topics
-    process_paper_topics <- function(paper) {
-      topics <- paper$topics
-      if (is.null(topics)) {
-        return(NULL)
-      }
-      topics_ls <- lapply(seq_along(topics), function(i) {
-        topic <- topics[[i]]
-        relev <- c(
-          # Hoist fields for the topic entity
-          list(topic = topic[c("id", "display_name")]),
-          # Keep info about other entities as-is
-          topic[vapply(topic, is.list, logical(1))]
-        )
-        relev_df <- subs_na(relev, "rbind_df")[[1]]
-        relev_df <- tibble::rownames_to_column(relev_df, "name")
-        cbind(i = i, score = topic$score, relev_df)
-      })
-      topics_df <- do.call(rbind.data.frame, topics_ls)
-      list(tibble::as_tibble(topics_df))
-    }
-    topics <- process_paper_topics(paper)
-
+    topics <- process_topics(paper, "score")
     out_ls <- c(
       sim_fields, venue, open_access, paper_biblio,
-      list(author = author, ab = ab, topics = topics)
+      list(author = author, ab = ab), topics
     )
     out_ls[sapply(out_ls, is.null)] <- NULL
     list_df[[i]] <- out_ls
@@ -363,7 +341,6 @@ authors2df <- function(data, verbose = TRUE,
     "identical", "relevance_score",
     "flat", "display_name_alternatives",
     "rbind_df", "counts_by_year",
-    "rbind_df", "x_concepts",
     "flat", "ids"
   )
 
@@ -397,8 +374,8 @@ authors2df <- function(data, verbose = TRUE,
       }
       sub_affiliation$affiliations_other <- list(affiliations_other)
     }
-
-    list_df[[i]] <- c(sim_fields, sub_affiliation)
+    topics <- process_topics(item, "count")
+    list_df[[i]] <- c(sim_fields, sub_affiliation, topics)
   }
 
   col_order <- c(
@@ -407,7 +384,7 @@ authors2df <- function(data, verbose = TRUE,
     "affiliation_display_name", "affiliation_id", "affiliation_ror",
     "affiliation_country_code", "affiliation_type", "affiliation_lineage",
     "affiliations_other",
-    "x_concepts", "works_api_url"
+    "topics", "works_api_url"
   )
 
   out_df <- rbind_oa_ls(list_df)
@@ -473,7 +450,6 @@ institutions2df <- function(data, verbose = TRUE,
     "flat", "display_name_acronyms",
     "row_df", "geo",
     "rbind_df", "counts_by_year",
-    "rbind_df", "x_concepts",
     "rbind_df", "associated_institutions",
     "flat", "ids"
   )
@@ -498,7 +474,8 @@ institutions2df <- function(data, verbose = TRUE,
         )
       )
     }
-    list_df[[i]] <- c(sim_fields, interna)
+    topics <- process_topics(item, "count")
+    list_df[[i]] <- c(sim_fields, interna, topics)
   }
 
 
@@ -508,7 +485,7 @@ institutions2df <- function(data, verbose = TRUE,
     "homepage_url", "image_url", "image_thumbnail_url",
     "associated_institutions", "relevance_score", "works_count",
     "cited_by_count", "counts_by_year",
-    "works_api_url", "x_concepts", "updated_date", "created_date"
+    "works_api_url", "topics", "updated_date", "created_date"
   )
 
   out_df <- rbind_oa_ls(list_df)
@@ -740,7 +717,6 @@ sources2df <- function(data, verbose = TRUE,
     "flat", "alternate_titles",
     "identical", "abbreviated_title",
     "identical", "type",
-    "rbind_df", "x_concepts",
     "rbind_df", "counts_by_year",
     "identical", "works_api_url",
     "identical", "updated_date",
@@ -761,7 +737,8 @@ sources2df <- function(data, verbose = TRUE,
       fields$type,
       SIMPLIFY = FALSE
     )
-    list_df[[i]] <- sim_fields
+    topics <- process_topics(item, "count")
+    list_df[[i]] <- c(sim_fields, topics)
   }
 
   out_df <- rbind_oa_ls(list_df)
