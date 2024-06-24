@@ -145,8 +145,8 @@ oa_apikey <- function() {
 #' @param entity List. One single work or author to process.
 #' @param extra Character. Either "score" (work) or "count" (author).
 #'
-#' @return
-#'
+#' @return List. A list of one tibble with the processed topics.
+#' @keywords internal
 #' @examples
 process_topics <- function(entity, extra) {
   topics <- entity$topics
