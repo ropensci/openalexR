@@ -161,27 +161,30 @@ works_from_orcids <- oa_fetch(
   verbose = TRUE
 )
 #> Requesting url: https://api.openalex.org/works?filter=author.orcid%3A0000-0001-6187-6610%7C0000-0002-8517-9411
-#> Getting 2 pages of results with a total of 252 records...
+#> Getting 2 pages of results with a total of 260 records...
 #> Warning in oa_request(oa_query(filter = filter_i, multiple_id = multiple_id, : 
 #> The following work(s) have truncated lists of authors: W4230863633.
 #> Query each work separately by its identifier to get full list of authors.
 #> For example:
 #>   lapply(c("W4230863633"), \(x) oa_fetch(identifier = x))
 #> Details at https://docs.openalex.org/api-entities/authors/limitations.
+```
+
+``` r
 
 works_from_orcids |>
   show_works() |>
   knitr::kable()
 ```
 
-| id          | display_name                                                                                                                              | first_author       | last_author          | so                      | url                                            | is_oa | top_concepts                                                    |
-|:------------|:------------------------------------------------------------------------------------------------------------------------------------------|:-------------------|:---------------------|:------------------------|:-----------------------------------------------|:------|:----------------------------------------------------------------|
-| W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis                                                                       | Massimo Aria       | Corrado Cuccurullo   | Journal of informetrics | <https://doi.org/10.1016/j.joi.2017.08.007>    | FALSE | Workflow, Bibliometrics, Software                               |
-| W2741809807 | The state of OA: a large-scale analysis of the prevalence and impact of Open Access articles                                              | Heather Piwowar    | Stefanie Haustein    | PeerJ                   | <https://doi.org/10.7717/peerj.4375>           | TRUE  | Citation, License, Bibliometrics                                |
-| W2122130843 | Scientometrics 2.0: New metrics of scholarly impact on the social Web                                                                     | Jason Priem        | Bradely H. Hemminger | First Monday            | <https://doi.org/10.5210/fm.v15i7.2874>        | FALSE | Bookmarking, Altmetrics, Social media                           |
-| W2038196424 | Coverage and adoption of altmetrics sources in the bibliometric community                                                                 | Stefanie Haustein  | Jens Terliesner      | Scientometrics          | <https://doi.org/10.1007/s11192-013-1221-3>    | FALSE | Altmetrics, Bookmarking, Social media                           |
-| W2396414759 | The Altmetrics Collection                                                                                                                 | Jason Priem        | Dario Taraborelli    | PloS one                | <https://doi.org/10.1371/journal.pone.0048753> | TRUE  | Social media, Citation, Altmetrics                              |
-| W2408216567 | Foundations and trends in performance management. A twenty-five years bibliometric analysis in business and public administration domains | Corrado Cuccurullo | Fabrizia Sarto       | Scientometrics          | <https://doi.org/10.1007/s11192-016-1948-8>    | FALSE | Domain (mathematical analysis), Content analysis, Public domain |
+| id          | display_name                                                                                                                              | first_author       | last_author          | so                         | url                                          | is_oa | top_concepts                                                    |
+|:------------|:------------------------------------------------------------------------------------------------------------------------------------------|:-------------------|:---------------------|:---------------------------|:---------------------------------------------|:------|:----------------------------------------------------------------|
+| W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis                                                                       | Massimo Aria       | Corrado Cuccurullo   | Journal of informetrics    | <https://doi.org/10.1016/j.joi.2017.08.007>  | FALSE | Workflow, Bibliometrics, Software                               |
+| W2741809807 | The state of OA: a large-scale analysis of the prevalence and impact of Open Access articles                                              | Heather Piwowar    | Stefanie Haustein    | PeerJ                      | <https://doi.org/10.7717/peerj.4375>         | TRUE  | Citation, License, Bibliometrics                                |
+| W2122130843 | Scientometrics 2.0: New metrics of scholarly impact on the social Web                                                                     | Jason Priem        | Bradely H. Hemminger | First Monday               | <https://doi.org/10.5210/fm.v15i7.2874>      | FALSE | Bookmarking, Altmetrics, Social media                           |
+| W3005144120 | Mapping the Evolution of Social Research and Data Science on 30 Years of Social Indicators Research                                       | Massimo Aria       | Maria Spano          | Social indicators research | <https://doi.org/10.1007/s11205-020-02281-3> | FALSE | Human geography, Data collection, Position (finance)            |
+| W2038196424 | Coverage and adoption of altmetrics sources in the bibliometric community                                                                 | Stefanie Haustein  | Jens Terliesner      | Scientometrics             | <https://doi.org/10.1007/s11192-013-1221-3>  | FALSE | Altmetrics, Bookmarking, Social media                           |
+| W2408216567 | Foundations and trends in performance management. A twenty-five years bibliometric analysis in business and public administration domains | Corrado Cuccurullo | Fabrizia Sarto       | Scientometrics             | <https://doi.org/10.1007/s11192-016-1948-8>  | FALSE | Domain (mathematical analysis), Content analysis, Public domain |
 
 **Goal**: Download all works that have been cited more than 50 times,
 published between 2020 and 2021, and include the strings “bibliometric
@@ -199,7 +202,10 @@ works_search <- oa_fetch(
   verbose = TRUE
 )
 #> Requesting url: https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc
-#> Getting 2 pages of results with a total of 239 records...
+#> Getting 2 pages of results with a total of 258 records...
+```
+
+``` r
 
 works_search |>
   show_works() |>
@@ -235,10 +241,10 @@ authors_from_orcids |>
   knitr::kable()
 ```
 
-| id          | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
-|:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------|
-| A5069892096 | Massimo Aria | 0000-0002-8517-9411 |         184 |           7750 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
-| A5023888391 | Jason Priem  | 0000-0001-6187-6610 |          67 |           2535 | OurResearch                      | World Wide Web, Library science, Law     |
+| id          | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                                                |
+|:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:----------------------------------------------------------------------------|
+| A5069892096 | Massimo Aria | 0000-0002-8517-9411 |         192 |           8282 | University of Naples Federico II | Physiology, Pathology and Forensic Medicine, Periodontics                   |
+| A5023888391 | Jason Priem  | 0000-0001-6187-6610 |          67 |           2541 | OurResearch                      | Statistics, Probability and Uncertainty, Information Systems, Communication |
 
 **Goal**: Acquire information on the authors of this package.
 
@@ -255,10 +261,10 @@ authors_from_names |>
   knitr::kable()
 ```
 
-| id          | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                             |
-|:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------|
-| A5069892096 | Massimo Aria | 0000-0002-8517-9411 |         184 |           7750 | University of Naples Federico II | Statistics, Internal medicine, Pathology |
-| A5023888391 | Jason Priem  | 0000-0001-6187-6610 |          67 |           2535 | OurResearch                      | World Wide Web, Library science, Law     |
+| id          | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                                                |
+|:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:----------------------------------------------------------------------------|
+| A5069892096 | Massimo Aria | 0000-0002-8517-9411 |         192 |           8282 | University of Naples Federico II | Physiology, Pathology and Forensic Medicine, Periodontics                   |
+| A5023888391 | Jason Priem  | 0000-0001-6187-6610 |          67 |           2541 | OurResearch                      | Statistics, Probability and Uncertainty, Information Systems, Communication |
 
 **Goal**: Download all authors’ records of scholars who work at the
 [University of Naples Federico
@@ -278,7 +284,10 @@ my_arguments <- list(
 
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #>      count db_response_time_ms page per_page
-#> [1,]    31                 116    1        1
+#> [1,]    36                 177    1        1
+```
+
+``` r
 
 if (do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))[1]>0){
 do.call(oa_fetch, my_arguments) |>
@@ -287,14 +296,14 @@ do.call(oa_fetch, my_arguments) |>
 }
 ```
 
-| id          | display_name          | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                         |
-|:------------|:----------------------|:--------------------|------------:|---------------:|:---------------------------------|:-----------------------------------------------------|
-| A5032217427 | Nicola Longo          | 0000-0002-3677-1216 |        1177 |          12936 | University of Naples Federico II | Internal medicine, Genetics, Pathology               |
-| A5076706548 | Salvatore Capozziello | 0000-0003-4886-2024 |         913 |          34110 | INFN Sezione di Napoli           | Quantum mechanics, Astronomy, Theoretical physics    |
-| A5035636337 | S. Patricelli         | NA                  |         795 |          43655 | INFN Sezione di Napoli           | Quantum mechanics, Particle physics, Nuclear physics |
-| A5051324603 | Massimo Chiariello    | NA                  |         740 |          15347 | University of Naples Federico II | Internal medicine, Cardiology, Endocrinology         |
-| A5026402548 | Gabriella Fabbrocini  | 0000-0002-0064-1874 |         735 |          11722 | University of Naples Federico II | Dermatology, Internal medicine, Pathology            |
-| A5078562748 | Sabino De Placido     | 0000-0001-5077-6286 |         735 |          26074 | University of Naples Federico II | Genetics, Internal medicine, Oncology                |
+| id          | display_name             | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                                                                      |
+|:------------|:-------------------------|:--------------------|------------:|---------------:|:---------------------------------|:--------------------------------------------------------------------------------------------------|
+| A5063152727 | L. Lista                 | 0000-0001-6471-5492 |        2374 |          73504 | INFN Sezione di Napoli           | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5069689088 | C. Sciacca               | 0000-0002-8412-4072 |        2372 |          60702 | INFN Sezione di Napoli           | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5019451576 | Alberto Orso Maria Iorio | 0000-0002-3798-1135 |        1227 |          29599 | INFN Sezione di Napoli           | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5078843367 | G. De Nardo              | NA                  |         968 |          28236 | University of Naples Federico II | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5076706548 | Salvatore Capozziello    | 0000-0003-4886-2024 |         930 |          34384 | University of Naples Federico II | Astronomy and Astrophysics, Nuclear and High Energy Physics, Astronomy and Astrophysics           |
+| A5023058736 | Francesco Fienga         | 0000-0001-5978-4952 |         846 |          17271 | University of Naples Federico II | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
 
 ## 🍒 Example analyses
 
@@ -352,6 +361,9 @@ italy_insts <- oa_fetch(
 )
 #> Requesting url: https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation
 #> Getting 2 pages of results with a total of 232 records...
+```
+
+``` r
 
 italy_insts |>
   slice_max(cited_by_count, n = 8) |>
@@ -377,12 +389,12 @@ And what do they publish on?
 # library(wordcloud)
 
 concept_cloud <- italy_insts |>
-  select(inst_id = id, x_concepts) |>
-  tidyr::unnest(x_concepts) |>
-  filter(level == 1) |>
-  select(display_name, score) |>
+  select(inst_id = id, topics) |>
+  tidyr::unnest(topics) |>
+  filter(name == "field") |>
+  select(display_name, count) |>
   group_by(display_name) |>
-  summarise(score = sum(score))
+  summarise(score = sqrt(sum(count)))
 
 pal <- c("black", scales::brewer_pal(palette = "Set1")(5))
 set.seed(1)
@@ -411,17 +423,26 @@ jours_all <- oa_fetch(
   verbose = TRUE
 )
 
+clean_journal_name <- function(x) {
+  x |>
+    gsub("\\(.*?\\)", "", x = _) |>
+    gsub("Journal of the|Journal of", "J.", x = _) |>
+    gsub("/.*", "", x = _)
+}
+
 jours <- jours_all |>
-  filter(!is.na(x_concepts), type != "ebook platform") |>
+  filter(type == "journal") |>
   slice_max(cited_by_count, n = 9) |>
   distinct(display_name, .keep_all = TRUE) |>
-  select(jour = display_name, x_concepts) |>
-  tidyr::unnest(x_concepts) |>
-  filter(level == 0) |>
+  select(jour = display_name, topics) |>
+  tidyr::unnest(topics) |>
+  filter(name == "field") |>
+  group_by(id, jour, display_name) |> 
+  summarise(score = (sum(count))^(1/3), .groups = "drop") |> 
   left_join(concept_abbrev, by = join_by(id, display_name)) |>
   mutate(
     abbreviation = gsub(" ", "<br>", abbreviation),
-    jour = gsub("Journal of|Journal of the", "J.", gsub("\\(.*?\\)", "", jour))
+    jour = clean_journal_name(jour),
   ) |>
   tidyr::complete(jour, abbreviation, fill = list(score = 0)) |>
   group_by(jour) |>
@@ -435,9 +456,9 @@ jours |>
   ggplot() +
   aes(fill = jour, y = score, x = abbreviation, group = jour) +
   facet_wrap(~jour) +
-  geom_hline(yintercept = c(45, 90), colour = "grey90", linewidth = 0.2) +
+  geom_hline(yintercept = c(25, 50), colour = "grey90", linewidth = 0.2) +
   geom_segment(
-    aes(x = abbreviation, xend = abbreviation, y = 0, yend = 100),
+    aes(x = abbreviation, xend = abbreviation, y = 0, yend = 55),
     color = "grey95"
   ) +
   geom_col(color = "grey20") +
@@ -452,7 +473,7 @@ jours |>
     axis.ticks.y = element_blank()
   ) +
   ggtext::geom_richtext(
-    aes(y = 120, label = label),
+    aes(y = 75, label = label),
     fill = NA, label.color = NA, size = 3
   ) +
   scale_fill_brewer(palette = "Set1", guide = "none") +
@@ -481,6 +502,9 @@ library(tidygraph)
 #> The following object is masked from 'package:stats':
 #> 
 #>     filter
+```
+
+``` r
 
 snowball_docs <- oa_snowball(
   identifier = c("W1964141474", "W1963991285"),
@@ -490,10 +514,13 @@ snowball_docs <- oa_snowball(
 #> Getting 1 page of results with a total of 2 records...
 #> Collecting all documents citing the target papers...
 #> Requesting url: https://api.openalex.org/works?filter=cites%3AW1963991285%7CW1964141474
-#> Getting 3 pages of results with a total of 533 records...
+#> Getting 3 pages of results with a total of 540 records...
 #> Collecting all documents cited by the target papers...
 #> Requesting url: https://api.openalex.org/works?filter=cited_by%3AW1963991285%7CW1964141474
 #> Getting 1 page of results with a total of 91 records...
+```
+
+``` r
 
 ggraph(graph = as_tbl_graph(snowball_docs), layout = "stress") +
   geom_edge_link(aes(alpha = after_stat(index)), show.legend = FALSE) +
@@ -533,6 +560,9 @@ ngrams_data
 #>   <chr>                            <chr>                            <int> <list>
 #> 1 https://openalex.org/W1964141474 https://doi.org/10.1016/j.conb.…  2733 <df>  
 #> 2 https://openalex.org/W1963991285 https://doi.org/10.1126/science…  2338 <df>
+```
+
+``` r
 
 lapply(ngrams_data$ngrams, head, 3)
 #> [[1]]
@@ -554,6 +584,9 @@ lapply(ngrams_data$ngrams, head, 3)
 #> 1   0.0003756574
 #> 2   0.0003756574
 #> 3   0.0003756574
+```
+
+``` r
 
 ngrams_data |>
   tidyr::unnest(ngrams) |>

@@ -1,4 +1,3 @@
-
 #' Simplify the OpenAlex authors result
 #'
 #' This function is mostly for the package's internal use,
@@ -32,13 +31,13 @@ show_authors <- function(x, simp_func = utils::head) {
   }
 
   x$top_concepts <- vapply(
-    x$x_concepts,
+    x$topics,
     function(y) {
       if (is.logical(y)) {
         return(NA_character_)
       }
-      op_level <- min(1, max(y$level))
-      paste(utils::head(y[y$level == op_level, "display_name"], 3),
+      top_subfields <- y[y$name == "subfield", ]
+      paste(utils::head(top_subfields, 3)$display_name,
         collapse = ", "
       )
     },
@@ -113,6 +112,9 @@ show_works <- function(x, simp_func = utils::head) {
 }
 
 get_auth_position <- function(y, position = "first") {
+  if (length(y) == 1 && is.na(y)) {
+    return(NA_character_)
+  }
   last <- y[y$author_position == position, "au_display_name"]
   if (length(last) == 0) {
     return(NA_character_)

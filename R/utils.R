@@ -138,3 +138,33 @@ oa_apikey <- function() {
   }
   apikey
 }
+
+
+#' Process topics
+#'
+#' @param entity List. One single work or author to process.
+#' @param extra Character. Either "score" (work) or "count" (author).
+#'
+#' @return List. A list of one tibble with the processed topics.
+#' @keywords internal
+#'
+process_topics <- function(entity, extra) {
+  topics <- entity$topics
+  if (is.null(topics)) {
+    return(NULL)
+  }
+  topics_ls <- lapply(seq_along(topics), function(i) {
+    topic <- topics[[i]]
+    relev <- c(
+      # Hoist fields for the topic entity
+      list(topic = topic[c("id", "display_name")]),
+      # Keep info about other entities as-is
+      topic[vapply(topic, is.list, logical(1))]
+    )
+    relev_df <- subs_na(relev, "rbind_df")[[1]]
+    relev_df <- tibble::rownames_to_column(relev_df, "name")
+    cbind(i = i, topic[extra], relev_df)
+  })
+  topics_df <- do.call(rbind.data.frame, topics_ls)
+  list(topics = list(tibble::as_tibble(topics_df)))
+}

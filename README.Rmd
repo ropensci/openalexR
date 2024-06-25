@@ -278,12 +278,12 @@ And what do they publish on?
 # library(wordcloud)
 
 concept_cloud <- italy_insts |>
-  select(inst_id = id, x_concepts) |>
-  tidyr::unnest(x_concepts) |>
-  filter(level == 1) |>
-  select(display_name, score) |>
+  select(inst_id = id, topics) |>
+  tidyr::unnest(topics) |>
+  filter(name == "field") |>
+  select(display_name, count) |>
   group_by(display_name) |>
-  summarise(score = sum(score))
+  summarise(score = sqrt(sum(count)))
 
 pal <- c("black", scales::brewer_pal(palette = "Set1")(5))
 set.seed(1)
@@ -309,17 +309,26 @@ jours_all <- oa_fetch(
   verbose = TRUE
 )
 
+clean_journal_name <- function(x) {
+  x |>
+    gsub("\\(.*?\\)", "", x = _) |>
+    gsub("Journal of the|Journal of", "J.", x = _) |>
+    gsub("/.*", "", x = _)
+}
+
 jours <- jours_all |>
-  filter(!is.na(x_concepts), type != "ebook platform") |>
+  filter(type == "journal") |>
   slice_max(cited_by_count, n = 9) |>
   distinct(display_name, .keep_all = TRUE) |>
-  select(jour = display_name, x_concepts) |>
-  tidyr::unnest(x_concepts) |>
-  filter(level == 0) |>
+  select(jour = display_name, topics) |>
+  tidyr::unnest(topics) |>
+  filter(name == "field") |>
+  group_by(id, jour, display_name) |> 
+  summarise(score = (sum(count))^(1/3), .groups = "drop") |> 
   left_join(concept_abbrev, by = join_by(id, display_name)) |>
   mutate(
     abbreviation = gsub(" ", "<br>", abbreviation),
-    jour = gsub("Journal of|Journal of the", "J.", gsub("\\(.*?\\)", "", jour))
+    jour = clean_journal_name(jour),
   ) |>
   tidyr::complete(jour, abbreviation, fill = list(score = 0)) |>
   group_by(jour) |>
@@ -333,9 +342,9 @@ jours |>
   ggplot() +
   aes(fill = jour, y = score, x = abbreviation, group = jour) +
   facet_wrap(~jour) +
-  geom_hline(yintercept = c(45, 90), colour = "grey90", linewidth = 0.2) +
+  geom_hline(yintercept = c(25, 50), colour = "grey90", linewidth = 0.2) +
   geom_segment(
-    aes(x = abbreviation, xend = abbreviation, y = 0, yend = 100),
+    aes(x = abbreviation, xend = abbreviation, y = 0, yend = 55),
     color = "grey95"
   ) +
   geom_col(color = "grey20") +
@@ -350,7 +359,7 @@ jours |>
     axis.ticks.y = element_blank()
   ) +
   ggtext::geom_richtext(
-    aes(y = 120, label = label),
+    aes(y = 75, label = label),
     fill = NA, label.color = NA, size = 3
   ) +
   scale_fill_brewer(palette = "Set1", guide = "none") +
