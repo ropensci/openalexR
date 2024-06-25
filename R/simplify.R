@@ -112,7 +112,7 @@ show_works <- function(x, simp_func = utils::head) {
 }
 
 get_auth_position <- function(y, position = "first") {
-  if (identical(y, NA)) {
+  if (length(y) == 1 && is.na(y)) {
     return(NA_character_)
   }
   last <- y[y$author_position == position, "au_display_name"]
