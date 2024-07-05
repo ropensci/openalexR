@@ -346,7 +346,7 @@ oa_request <- function(query_url,
     if (verbose) cat("\nDownloading groups...\n|")
     while (!is.null(next_page)) {
       if (verbose) cat("=")
-      Sys.sleep(1 / 100)
+      Sys.sleep(1 / 10)
       query_ls[[paging]] <- next_page
       res <- api_request(query_url, ua, query = query_ls)
       data <- c(data, res[[result_name]])
@@ -391,7 +391,7 @@ oa_request <- function(query_url,
   res <- NULL
   for (i in pages) {
     if (verbose) pb$tick()
-    Sys.sleep(1 / 100)
+    Sys.sleep(1 / 10)
     next_page <- get_next_page(paging, i, res)
     query_ls[[paging]] <- next_page
     res <- api_request(query_url, ua, query = query_ls)
