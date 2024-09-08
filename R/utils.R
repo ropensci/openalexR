@@ -92,11 +92,11 @@ asl <- function(z) {
 }
 
 shorten_oaid <- function(id) {
-  gsub("^https://openalex.org/", "", id)
+  gsub("https://openalex.org/", "", id, fixed = TRUE)
 }
 
 shorten_orcid <- function(id) {
-  gsub("^https://orcid.org/", "", id)
+  gsub("https://orcid.org/", "", id, fixed = TRUE)
 }
 
 rbind_oa_ls <- function(list_df) {
@@ -162,7 +162,7 @@ process_topics <- function(entity, extra) {
       topic[vapply(topic, is.list, logical(1))]
     )
     relev_df <- subs_na(relev, "rbind_df")[[1]]
-    relev_df <- tibble::rownames_to_column(relev_df, "name")
+    relev_df$name <- rownames(relev_df)
     cbind(i = i, topic[extra], relev_df)
   })
   topics_df <- do.call(rbind.data.frame, topics_ls)
