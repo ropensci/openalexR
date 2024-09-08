@@ -162,7 +162,7 @@ process_topics <- function(entity, extra) {
       topic[vapply(topic, is.list, logical(1))]
     )
     relev_df <- subs_na(relev, "rbind_df")[[1]]
-    relev_df <- tibble::rownames_to_column(relev_df, "name")
+    relev_df$name <- rownames(relev_df)
     cbind(i = i, topic[extra], relev_df)
   })
   topics_df <- do.call(rbind.data.frame, topics_ls)
