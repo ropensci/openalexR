@@ -92,11 +92,11 @@ asl <- function(z) {
 }
 
 shorten_oaid <- function(id) {
-  gsub("^https://openalex.org/", "", id)
+  gsub("https://openalex.org/", "", id, fixed = TRUE)
 }
 
 shorten_orcid <- function(id) {
-  gsub("^https://orcid.org/", "", id)
+  gsub("https://orcid.org/", "", id, fixed = TRUE)
 }
 
 rbind_oa_ls <- function(list_df) {
