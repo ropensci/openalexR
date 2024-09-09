@@ -114,6 +114,11 @@ oa_snowball <- function(identifier = NULL,
 
   # relationships/edges
   edges <- rbind(citing_rel, cited_rel)
+  if (is.null(edges)) {
+    message("No citations and no references for ", identifier)
+    edges <- tibble::tibble(from = character(0), to = character(0))
+    return(list(nodes = nodes, edges = edges))
+  }
   # remove duplicates when two input identifiers cite each other
   edges <- edges[!duplicated(edges), ]
   # remove edges to/from NA nodes

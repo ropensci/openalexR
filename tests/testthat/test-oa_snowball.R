@@ -31,7 +31,7 @@ test_that("oa_snowball works for recent articles with no citations yet", {
 
   Sys.sleep(1/10)
   snowball_docs <- oa_snowball(
-    identifier = c("W4295757800", "W4296128995", "W4297497355")
+    identifier = c("W2033458484")
   )
   expect_true(is.list(snowball_docs))
 })
