@@ -294,14 +294,16 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 #' }
 #' @export
 #'
-oa_request <- function(query_url,
-                       per_page = 200,
-                       paging = "cursor",
-                       pages = NULL,
-                       count_only = FALSE,
-                       mailto = oa_email(),
-                       api_key = oa_apikey(),
-                       verbose = FALSE) {
+oa_request <- function(
+    query_url,
+    per_page = 200,
+    paging = "cursor",
+    pages = NULL,
+    count_only = FALSE,
+    mailto = oa_email(),
+    api_key = oa_apikey(),
+    verbose = FALSE,
+    json_dir = NULL) {
   # https://httr.r-lib.org/articles/api-packages.html#set-a-user-agent
   ua <- httr::user_agent("https://github.com/ropensci/openalexR/")
 
@@ -348,8 +350,10 @@ oa_request <- function(query_url,
       if (verbose) cat("=")
       Sys.sleep(1 / 10)
       query_ls[[paging]] <- next_page
-      res <- api_request(query_url, ua, query = query_ls)
-      data <- c(data, res[[result_name]])
+      res <- api_request(query_url, ua, query = query_ls, json_dir = json_dir)
+      if (!is.null(json_dir)) {
+        data <- c(data, res[[result_name]])
+      }
       i <- i + 1
       next_page <- get_next_page("cursor", i, res)
     }
@@ -394,8 +398,10 @@ oa_request <- function(query_url,
     Sys.sleep(1 / 10)
     next_page <- get_next_page(paging, i, res)
     query_ls[[paging]] <- next_page
-    res <- api_request(query_url, ua, query = query_ls)
-    if (!is.null(res[[result_name]])) data[[i]] <- res[[result_name]]
+    res <- api_request(query_url, ua, query = query_ls, json_dir = json_dir)
+    if (!is.null(json_dir)) {
+      if (!is.null(res[[result_name]])) data[[i]] <- res[[result_name]]
+    }
   }
 
   data <- unlist(data, recursive = FALSE)
@@ -418,14 +424,17 @@ oa_request <- function(query_url,
       )
     }
   }
-
-  data
+  if (!is.null(json_dir)) {
+    data <- json_dir
+  }
+  return(data)
 }
+
 
 truncated_authors <- function(list_result) {
   lapply(
     list_result,
-    function(x){
+    function(x) {
       trunc <- x$is_authors_truncated
       if (!is.null(trunc) && trunc) x$id else NULL
     }
@@ -683,7 +692,12 @@ oa_random <- function(entity = oa_entities(),
   final_res
 }
 
-api_request <- function(query_url, ua, query, api_key = oa_apikey()) {
+api_request <- function(
+    query_url,
+    ua,
+    query,
+    api_key = oa_apikey(),
+    json_dir = NULL) {
   res <- httr::GET(query_url, ua, query = query, httr::add_headers(api_key = api_key))
 
   if (httr::status_code(res) == 400) {
@@ -708,6 +722,35 @@ api_request <- function(query_url, ua, query, api_key = oa_apikey()) {
   if (httr::status_code(res) == 200) {
     if (httr::http_type(res) != "application/json") {
       stop("API did not return json", call. = FALSE)
+    }
+    if (!is.null(json_dir)) {
+      suppressWarnings(
+        last_num <- list.files(
+          json_dir,
+          pattern = "*.json$",
+          recursive = FALSE,
+          full.names = FALSE
+        ) |>
+          basename() |>
+          gsub(
+            pattern = ".json|result_",
+            replacement = ""
+          ) |>
+          as.numeric() |>
+          max(
+            na.rm = TRUE
+          )
+      )
+
+      if (is.infinite(last_num)) {
+        last_num <- 0
+      }
+      json_name <- file.path(json_dir, paste0("result_", last_num + 1, ".json"))
+
+      writeLines(
+        m,
+        json_name
+      )
     }
     return(parsed)
   }

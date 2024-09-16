@@ -12,7 +12,8 @@ oa_request(
   count_only = FALSE,
   mailto = oa_email(),
   api_key = oa_apikey(),
-  verbose = FALSE
+  verbose = FALSE,
+  json_dir = NULL
 )
 }
 \arguments{
