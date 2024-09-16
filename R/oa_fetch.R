@@ -187,6 +187,9 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 #' Your OpenAlex Premium API key, if available.
 #' @param verbose Logical.
 #' If TRUE, print information about the querying process. Defaults to TRUE.
+#' @param json_dir existing directory
+#' The directory to which the raw json files returned from OpenAlex will be written. If set,
+#' no processing of the jsons will be done and the function returns the json_dir path.
 #'
 #' @return a data.frame or a list of bibliographic records.
 #'

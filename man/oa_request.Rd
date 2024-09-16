@@ -47,6 +47,10 @@ Your OpenAlex Premium API key, if available.}
 
 \item{verbose}{Logical.
 If TRUE, print information about the querying process. Defaults to TRUE.}
+
+\item{json_dir}{existing directory
+The directory to which the raw json files returned from OpenAlex will be written. If set,
+no processing of the jsons will be done and the function returns the json_dir path.}
 }
 \value{
 a data.frame or a list of bibliographic records.
