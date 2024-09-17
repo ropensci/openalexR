@@ -354,7 +354,7 @@ oa_request <- function(
       Sys.sleep(1 / 10)
       query_ls[[paging]] <- next_page
       res <- api_request(query_url, ua, query = query_ls, json_dir = json_dir)
-      if (!is.null(json_dir)) {
+      if (is.null(json_dir)) {
         data <- c(data, res[[result_name]])
       }
       i <- i + 1
@@ -402,7 +402,7 @@ oa_request <- function(
     next_page <- get_next_page(paging, i, res)
     query_ls[[paging]] <- next_page
     res <- api_request(query_url, ua, query = query_ls, json_dir = json_dir)
-    if (!is.null(json_dir)) {
+    if (is.null(json_dir)) {
       if (!is.null(res[[result_name]])) data[[i]] <- res[[result_name]]
     }
   }
