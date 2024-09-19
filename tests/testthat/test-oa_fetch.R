@@ -50,11 +50,15 @@ test_that("oa_fetch works", {
   expect_true("au_affiliation_raw" %in% names(multi_works$author[[1]]))
 
   Sys.sleep(1 / 10)
-  expect_warning(filtered_works <- oa_fetch(
+  # warn about truncated authors
+  expect_warning(oa_fetch(identifier = c("W4381194940", "W4386241859")))
+
+  Sys.sleep(1 / 10)
+  filtered_works <- oa_fetch(
     entity = "w",
     publication_date = "2020-08-01",
     cited_by_count = ">1000"
-  ))
+  )
   expect_s3_class(filtered_works, "data.frame")
 
   expect_warning(oa_fetch(doi = "123"))

@@ -18,6 +18,13 @@ Generator function.
 A generator for making request to OpenAlex API
 Returns one record at a time.
 }
+\section{Details}{
+
+For the case without group_by, setting `verbose = TRUE` when you call `oar()`
+for the first time will give the total number of records in the message.
+With group_by, unfortunately we don't have a way to know the total until we query until exhausted.
+}
+
 \examples{
 if (require("coro")) {
   # Example 1: basic usage getting one record at a time
