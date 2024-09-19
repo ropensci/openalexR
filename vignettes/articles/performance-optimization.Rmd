@@ -26,9 +26,9 @@ library(dplyr)
 
 ## The `select` strategy
 
-The `options` argument of `oa_fetch()` specifies a list of additional parameters to add to the query, such as `select`, `sort`, and `sample`.
+The `options` argument of `oa_fetch()` specifies a list of additional parameters to add to the query, such as `select`, `sort`, `sample`, and `seed`.
 Of these, `select` can be used to specify which fields of the entities are to be returned by OpenAlex.
-By specifying only the kinds of information about entities that you care about, you can reduce the overall size of the query result, which will in turn speed up the processing of the raw JSON and converting of the JSON into a data frame.
+By specifying only the kinds of information about entities that you care about, you can reduce the overall size of the query result, which will in turn speed up the fetching of the raw JSON and its conversion to a data frame.
 
 For example, suppose that we are looking for a sample of works from the [Topic](https://docs.openalex.org/api-entities/topics) of [Language Development and Acquisition in Children](https://openalex.org/topics/T10730) (`"T10730"`).
 
@@ -91,8 +91,8 @@ output_list <- oa_fetch(
 str(output_list, max.level = 1)
 ```
 
-The list output is quite unruly - each entity returns dozens of fields, some of which may be multiply nested.
-Moreover, some entities have missing fields entirely.
+The list output can get quite unruly - each record contains dozens of fields, some of which may be multiply nested.
+Moreover, some records may have missing or incomplete fields, so extra care must be taken with the `output = "list"` approach.
 
 One advantage of returning the output as a list is that you can always come back to process them as data frames later.
 Instead of retrieving *and* converting the results simultaneously, which may stress `oa_fetch()` for large queries, you can retrieve all the results first *and then* convert them after the fact.
@@ -104,9 +104,10 @@ works2df(output_list) %>%
   show_works()
 ```
 
-Lastly, opting out of the data frame conversion means that you can use your own implementation for converting the list output.
+Additionally, opting out of the data frame conversion also means that you can use your own preferred implementation for converting the list output.
 This can be a very powerful optimization strategy when combined with the `select` option.
-For example, if you know that you are only selecting scalar fields, you can very quickly convert the list output into a tidy data frame using more powerful tools like `data.table::rbindlist()` or even just `rbind()`:
+
+For example, if you know that you are only selecting scalar fields, you can very quickly convert the list output into a tidy data using more powerful tools like `data.table::rbindlist()` or even just `rbind()`:
 
 ```{r}
 oa_fetch(
@@ -122,11 +123,11 @@ oa_fetch(
 
 ## The `oa_generate()` strategy
 
-If your code still seems slow, it is possible you run out of memory (especially when you do a snowball search like with `oa_snowball`).
-So it might help to chunk your work and save the output of each step, then piece them back together later in a different session/program.[^1]
+If your code still seems slow, it is possible that you may have run out of memory (especially when you do a snowball search like with `oa_snowball`).
+In such cases, it might help to chunk your work and save the output of each step, then piece them back together later in a different session/program.[^1]
 
 [^1]: Determining whether memory is sufficient to store all records at the beginning is not straightforward.
-    We believe the (power) user should be in charge of this step, combining \`count_only = TRUE\` with what their knowledge of their machine's RAM specs to determine whether they should write out the stepwise results themselves.
+    We believe the (power) user should be in charge of this step, combining \`count_only = TRUE\` with their knowledge of their machine's RAM specs to determine whether they should write out the stepwise results themselves.
     Related GH issues: [here](https://github.com/ropensci/openalexR/issues/129#issuecomment-1642664363) and [here](https://github.com/ropensci/openalexR/issues/95#issuecomment-1513964112).
 
 The `oa_generate()` function is a lower-level function that allows you to process one record at a time.
@@ -162,17 +163,20 @@ coro::loop(for (x in oar) {
   j <- i %% n + 1
   recs[[j]] <- x
   if (j == n) {
-    saveRDS(recs, sprintf("rec-%s.rds", i %/% n))
+    saveRDS(recs, file.path(tempdir(), sprintf("rec-%s.rds", i %/% n)))
     recs <- vector("list", n) # reset recs
   }
   i <- i + 1
 })
+
+dir(tempdir(), pattern = "rec-\\d.rds$")
+#> [1] "rec-0.rds" "rec-1.rds" "rec-2.rds" "rec-3.rds"
 ```
 
 ### Tips on generating the query URL to the OpenAlex API
 
 You can certainly build your query using `oa_query()` and carefully read the [API documentation](https://docs.openalex.org/) to see what fields/filters are available.
 However, I sometimes find it super helpful to use the OpenAlex web interface to build the query [interactively](https://openalex.org/works?page=1&filter=authorships.author.id%3Aa5086928770,open_access.is_oa%3Atrue&view=list,report,api).
-Make sure you select the Gear icon on the right and toggle on "Api query".
+Make sure you select the Gear icon on the top right and toggle on "Api query".
 
-![](images/openalex-web.png)
+![Screenshot of OpenAlex web interface for generating API query URLs](images/openalex-web.png)
