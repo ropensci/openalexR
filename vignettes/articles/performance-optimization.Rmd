@@ -91,7 +91,7 @@ output_list <- oa_fetch(
 str(output_list, max.level = 1)
 ```
 
-The list output can get quite unruly - each record contains dozens of fields, some of which may be multiply nested.
+The list output can get quite unruly — each record contains dozens of fields, some of which may be multiply nested.
 Moreover, some records may have missing or incomplete fields, so extra care must be taken with the `output = "list"` approach.
 
 One advantage of returning the output as a list is that you can always come back to process them as data frames later.
@@ -175,8 +175,14 @@ dir(tempdir(), pattern = "rec-\\d.rds$")
 
 ### Tips on generating the query URL to the OpenAlex API
 
-You can certainly build your query using `oa_query()` and carefully read the [API documentation](https://docs.openalex.org/) to see what fields/filters are available.
-However, I sometimes find it super helpful to use the OpenAlex web interface to build the query [interactively](https://openalex.org/works?page=1&filter=authorships.author.id%3Aa5086928770,open_access.is_oa%3Atrue&view=list,report,api).
-Make sure you select the Gear icon on the top right and toggle on "Api query".
+To build your query, you can use `oa_query()` and carefully read the [API documentation](https://docs.openalex.org/) to see what fields/filters are available.
+For example, I know `cites` is a filter we can use:
+
+```{r}
+oa_query(entity = "works", cites = "W1160808132")
+```
+
+However, you might find it helpful to use the OpenAlex web interface to build the query [interactively](https://openalex.org/works?page=1&filter=authorships.author.id%3Aa5086928770,open_access.is_oa%3Atrue&view=list,report,api).
+Make sure you select the Gear icon on the right and toggle on "Api query".
 
 ![Screenshot of OpenAlex web interface for generating API query URLs](images/openalex-web.png)
