@@ -16,7 +16,8 @@ The argument can be one of
 c("works", "authors", "institutions", "concepts", "funders", "sources", "publishers", "topics").
 If not provided, `entity` is guessed from `identifier`.}
 
-\item{output}{Character. Type of output, either a list or a tibble/data.frame.}
+\item{output}{Character.
+Type of output, one of `"tibble"`, `"dataframe"`, `"list"`, or `"json"`.}
 
 \item{endpoint}{Character. URL of the OpenAlex Endpoint API server.
 Defaults to endpoint = "https://api.openalex.org".}

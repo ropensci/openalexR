@@ -12,6 +12,7 @@ oa_request(
   count_only = FALSE,
   mailto = oa_email(),
   api_key = oa_apikey(),
+  parse = TRUE,
   verbose = FALSE
 )
 }
@@ -43,6 +44,9 @@ Gives OpenAlex an email to enter the polite pool.}
 
 \item{api_key}{Character string.
 Your OpenAlex Premium API key, if available.}
+
+\item{parse}{Logical.
+If FALSE, returns the raw JSON response as string.}
 
 \item{verbose}{Logical.
 If TRUE, print information about the querying process. Defaults to TRUE.}

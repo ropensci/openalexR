@@ -20,7 +20,8 @@ oa_entities <- function() {
 #' @param abstract Logical. If TRUE, the function returns also the abstract of each item.
 #' Default to \code{abstract = TRUE}.
 #' The argument is ignored if entity is different from "works".
-#' @param output Character. Type of output, either a list or a tibble/data.frame.
+#' @param output Character.
+#' Type of output, one of `"tibble"`, `"dataframe"`, `"list"`, or `"json"`.
 #'
 #' @return A data.frame or a list. Result of the query.
 #' @export
@@ -186,6 +187,8 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 #' Gives OpenAlex an email to enter the polite pool.
 #' @param api_key Character string.
 #' Your OpenAlex Premium API key, if available.
+#' @param parse Logical.
+#' If FALSE, returns the raw JSON response as string.
 #' @param verbose Logical.
 #' If TRUE, print information about the querying process. Defaults to TRUE.
 #'
