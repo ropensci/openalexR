@@ -67,7 +67,7 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
                      options = NULL,
                      search = NULL,
                      group_by = NULL,
-                     output = c("tibble", "dataframe", "list"),
+                     output = c("tibble", "dataframe", "list", "json"),
                      abstract = TRUE,
                      endpoint = "https://api.openalex.org",
                      per_page = 200,
@@ -134,6 +134,7 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
       count_only = count_only,
       mailto = mailto,
       api_key = api_key,
+      parse = output != "json",
       verbose = verbose
     )
   }
@@ -143,7 +144,7 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
   }
   final_res <- unlist(final_res, recursive = FALSE)
 
-  if (output == "list") {
+  if (output %in% c("list", "json")) {
     return(final_res)
   }
 
@@ -301,6 +302,7 @@ oa_request <- function(query_url,
                        count_only = FALSE,
                        mailto = oa_email(),
                        api_key = oa_apikey(),
+                       parse = TRUE,
                        verbose = FALSE) {
   # https://httr.r-lib.org/articles/api-packages.html#set-a-user-agent
   ua <- httr::user_agent("https://github.com/ropensci/openalexR/")
@@ -394,11 +396,19 @@ oa_request <- function(query_url,
     Sys.sleep(1 / 10)
     next_page <- get_next_page(paging, i, res)
     query_ls[[paging]] <- next_page
-    res <- api_request(query_url, ua, query = query_ls)
-    if (!is.null(res[[result_name]])) data[[i]] <- res[[result_name]]
-  }
 
+    if (parse) {
+      res <- api_request(query_url, ua, query = query_ls, parse = TRUE)
+      if (!is.null(res[[result_name]])) data[[i]] <- res[[result_name]]
+    } else {
+      json <- api_request(query_url, ua, query = query_ls, parse = FALSE)
+      data[[i]] <- json
+    }
+  }
   data <- unlist(data, recursive = FALSE)
+
+  # `output = "json"` early exit
+  if (!parse) return(data)
 
   if (grepl("filter", query_url) && grepl("works", query_url)) {
     truncated <- unlist(truncated_authors(data))
@@ -683,8 +693,10 @@ oa_random <- function(entity = oa_entities(),
   final_res
 }
 
-api_request <- function(query_url, ua, query, api_key = oa_apikey()) {
+api_request <- function(query_url, ua, query, api_key = oa_apikey(), parse = TRUE) {
   res <- httr::GET(query_url, ua, query = query, httr::add_headers(api_key = api_key))
+
+  empty_res <- if (parse) list() else "{}"
 
   if (httr::status_code(res) == 400) {
     stop("HTTP status 400 Request Line is too large")
@@ -692,27 +704,29 @@ api_request <- function(query_url, ua, query, api_key = oa_apikey()) {
 
   if (httr::status_code(res) == 429) {
     message("HTTP status 429 Too Many Requests")
-    return(list())
+    return(empty_res)
   }
 
   m <- httr::content(res, "text", encoding = "UTF-8")
+  if (parse) {
+    m <- jsonlite::fromJSON(m, simplifyVector = FALSE)
+  }
 
   if (httr::status_code(res) == 503) {
     mssg <- regmatches(m, regexpr("(?<=<title>).*?(?=<\\/title>)", m, perl = TRUE))
     message(mssg, ". Please try setting `per_page = 25` in your function call!")
-    return(list())
+    return(empty_res)
   }
-
-  parsed <- jsonlite::fromJSON(m, simplifyVector = FALSE)
 
   if (httr::status_code(res) == 200) {
     if (httr::http_type(res) != "application/json") {
       stop("API did not return json", call. = FALSE)
     }
-    return(parsed)
+    return(m) # Depending on `parse`, results can be raw JSON or parsed R list
   }
 
   if (httr::http_error(res)) {
+    parsed <- jsonlite::fromJSON(m, simplifyVector = FALSE)
     stop(
       sprintf(
         "OpenAlex API request failed [%s]\n%s\n<%s>",
@@ -726,6 +740,6 @@ api_request <- function(query_url, ua, query, api_key = oa_apikey()) {
 
   if (httr::status_code(res) != 429 & httr::status_code(res) != 200) {
     message("HTTP status ", httr::status_code(res))
-    return(list())
+    return(empty_res)
   }
 }
