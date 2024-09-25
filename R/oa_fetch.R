@@ -21,7 +21,7 @@ oa_entities <- function() {
 #' Default to \code{abstract = TRUE}.
 #' The argument is ignored if entity is different from "works".
 #' @param output Character.
-#' Type of output, one of `"tibble"`, `"dataframe"`, `"list"`, or `"json"`.
+#' Type of output, one of `"tibble"`, `"dataframe"`, `"list"`, or `"raw"`.
 #'
 #' @return A data.frame or a list. Result of the query.
 #' @export
@@ -68,7 +68,7 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
                      options = NULL,
                      search = NULL,
                      group_by = NULL,
-                     output = c("tibble", "dataframe", "list", "json"),
+                     output = c("tibble", "dataframe", "list", "raw"),
                      abstract = TRUE,
                      endpoint = "https://api.openalex.org",
                      per_page = 200,
@@ -135,7 +135,7 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
       count_only = count_only,
       mailto = mailto,
       api_key = api_key,
-      parse = output != "json",
+      parse = output != "raw",
       verbose = verbose
     )
   }
@@ -145,7 +145,7 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
   }
   final_res <- unlist(final_res, recursive = FALSE)
 
-  if (output %in% c("list", "json")) {
+  if (output %in% c("list", "raw")) {
     return(final_res)
   }
 
@@ -404,13 +404,13 @@ oa_request <- function(query_url,
       res <- api_request(query_url, ua, query = query_ls, parse = TRUE)
       if (!is.null(res[[result_name]])) data[[i]] <- res[[result_name]]
     } else {
-      json <- api_request(query_url, ua, query = query_ls, parse = FALSE)
-      data[[i]] <- json
+      raw <- api_request(query_url, ua, query = query_ls, parse = FALSE)
+      data[[i]] <- raw
     }
   }
   data <- unlist(data, recursive = FALSE)
 
-  # `output = "json"` early exit
+  # `output = "raw"` early exit
   if (!parse) return(data)
 
   if (grepl("filter", query_url) && grepl("works", query_url)) {
