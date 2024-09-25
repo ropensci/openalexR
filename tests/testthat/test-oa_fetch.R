@@ -453,3 +453,37 @@ test_that("pages works", {
   )
   expect_equal(w1[11:20,], w2)
 })
+
+test_that("output=raw works", {
+  skip_on_cran()
+
+  output_raw <- oa_fetch(
+    entity = "works",
+    search = "language",
+    per_page = 2,
+    options = list(sample = 5, seed = 1),
+    output = "raw"
+  )
+
+  # length and type checks
+  expect_type(output_raw, "character")
+  expect_length(output_raw, ceiling(5 / 2)) # length determined by pages
+  raw_parsed <- lapply(output_raw, function(x) {
+    jsonlite::fromJSON(x, simplifyVector = FALSE)$results
+  })
+  expect_equal(lengths(raw_parsed), c(2, 2, 1)) # num results in each page
+  raw_parsed_flattened <- unlist(raw_parsed, recursive = FALSE)
+
+  # equivalence check to tibble format
+  expect_identical(
+    works2df(raw_parsed_flattened),
+    oa_fetch(
+      entity = "works",
+      search = "language",
+      per_page = 2,
+      options = list(sample = 5, seed = 1),
+      output = "tibble"
+    )
+  )
+
+})
