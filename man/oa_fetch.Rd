@@ -11,7 +11,7 @@ oa_fetch(
   options = NULL,
   search = NULL,
   group_by = NULL,
-  output = c("tibble", "dataframe", "list"),
+  output = c("tibble", "dataframe", "list", "raw"),
   abstract = TRUE,
   endpoint = "https://api.openalex.org",
   per_page = 200,
@@ -66,7 +66,14 @@ To filter using search, append .search to the end of the attribute you're filter
 For example: "oa_status" for works.
 See more at <https://docs.openalex.org/how-to-use-the-api/get-groups-of-entities>.}
 
-\item{output}{Character. Type of output, either a list or a tibble/data.frame.}
+\item{output}{Character.
+Type of output, one of `"tibble"`, `"dataframe"`, `"list"`, or `"raw"`.
+\itemize{
+ \item{"tibble"}: {a tibble tidy data}
+ \item{"dataframe"}: {a base data.frame tidy data}
+ \item{"list"}: {a list of parsed JSON contents}
+ \item{"raw"}: {a list of raw JSON strings (length depends on query)}
+}}
 
 \item{abstract}{Logical. If TRUE, the function returns also the abstract of each item.
 Default to \code{abstract = TRUE}.

@@ -16,7 +16,14 @@ The argument can be one of
 c("works", "authors", "institutions", "concepts", "funders", "sources", "publishers", "topics").
 If not provided, `entity` is guessed from `identifier`.}
 
-\item{output}{Character. Type of output, either a list or a tibble/data.frame.}
+\item{output}{Character.
+Type of output, one of `"tibble"`, `"dataframe"`, `"list"`, or `"raw"`.
+\itemize{
+ \item{"tibble"}: {a tibble tidy data}
+ \item{"dataframe"}: {a base data.frame tidy data}
+ \item{"list"}: {a list of parsed JSON contents}
+ \item{"raw"}: {a list of raw JSON strings (length depends on query)}
+}}
 
 \item{endpoint}{Character. URL of the OpenAlex Endpoint API server.
 Defaults to endpoint = "https://api.openalex.org".}
