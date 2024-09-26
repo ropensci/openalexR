@@ -200,6 +200,7 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
       fields$type,
       SIMPLIFY = FALSE
     )
+    sim_fields$publication_date <- as.Date(sim_fields$publication_date)
 
     author <- venue <- ab <- NULL
 
