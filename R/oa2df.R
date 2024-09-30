@@ -984,5 +984,5 @@ snowball2df <- function(data, verbose = FALSE) {
   nodes_augmented$connection_count <-
     nodes_augmented$backward_count + nodes_augmented$forward_count
 
-  nodes_augmented
+  tibble::as_tibble(nodes_augmented)
 }
