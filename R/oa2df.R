@@ -911,11 +911,6 @@ topics2df <- function(data, verbose = TRUE,
 
 #' Flatten snowball result
 #'
-#' |  id|title |...|cited_by_count| referenced_works   |cited_by |...|
-#' | 100|foo   |...|             1| 98, 99             |101      |...|
-#' | 200|bar   |...|             2| 198, 199           |201, 202 |...|
-#' | 300|wug   |...|             2| 296, 297, 298, 299 |301, 302 |...|
-#'
 #' @param data List result from `oa_snowball`.
 #' @param verbose Logical. If TRUE, print information on wrangling process.
 #'
