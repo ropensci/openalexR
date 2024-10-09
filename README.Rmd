@@ -122,6 +122,22 @@ works_from_dois |>
   knitr::kable()
 ```
 
+**Goal**: Download all works given their PMIDs.
+
+Use `pmid` as a filter:
+
+```{r}
+works_from_pmids <- oa_fetch(
+  entity = "works",
+  pmid = c("14907713", 32572199),
+  verbose = TRUE
+)
+works_from_pmids |>
+  show_works() |>
+  knitr::kable()
+```
+
+
 **Goal**: Download all works published by a set of authors (known ORCIDs).
 
 Use `author.orcid` as a filter (either canonical form with <https://orcid.org/> or without will work):
@@ -132,7 +148,6 @@ works_from_orcids <- oa_fetch(
   author.orcid = c("0000-0001-6187-6610", "0000-0002-8517-9411"),
   verbose = TRUE
 )
-
 works_from_orcids |>
   show_works() |>
   knitr::kable()
@@ -150,7 +165,6 @@ works_search <- oa_fetch(
   options = list(sort = "cited_by_count:desc"),
   verbose = TRUE
 )
-
 works_search |>
   show_works() |>
   knitr::kable()
@@ -167,7 +181,6 @@ authors_from_orcids <- oa_fetch(
   entity = "authors",
   orcid = c("0000-0001-6187-6610", "0000-0002-8517-9411")
 )
-
 authors_from_orcids |>
   show_authors() |>
   knitr::kable()
@@ -198,7 +211,6 @@ my_arguments <- list(
   last_known_institutions.id = "I71267560",
   works_count = ">499"
 )
-
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 
 if (do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))[1]>0){
@@ -222,7 +234,6 @@ concept_df <- oa_fetch(
   ancestors.id = "https://openalex.org/C86803240", # Biology
   works_count = ">1000000"
 )
-
 concept_df |>
   select(display_name, counts_by_year) |>
   tidyr::unnest(counts_by_year) |>
@@ -255,7 +266,6 @@ italy_insts <- oa_fetch(
   type = "education",
   verbose = TRUE
 )
-
 italy_insts |>
   slice_max(cited_by_count, n = 8) |>
   mutate(display_name = forcats::fct_reorder(display_name, cited_by_count)) |>
@@ -276,7 +286,6 @@ And what do they publish on?
 ```{r concept-cloud, fig.height=5, fig.width=7}
 # The package wordcloud needs to be installed to run this chunk
 # library(wordcloud)
-
 concept_cloud <- italy_insts |>
   select(inst_id = id, topics) |>
   tidyr::unnest(topics) |>
@@ -284,7 +293,6 @@ concept_cloud <- italy_insts |>
   select(display_name, count) |>
   group_by(display_name) |>
   summarise(score = sqrt(sum(count)))
-
 pal <- c("black", scales::brewer_pal(palette = "Set1")(5))
 set.seed(1)
 wordcloud::wordcloud(
@@ -302,7 +310,6 @@ We first download all records regarding journals that have published more than 3
 ```{r big-journals, message=FALSE, fig.height=8, fig.width=8}
 # The package ggtext needs to be installed to run this chunk
 # library(ggtext)
-
 jours_all <- oa_fetch(
   entity = "sources",
   works_count = ">200000",
@@ -379,7 +386,6 @@ snowball_docs <- oa_snowball(
   identifier = c("W1964141474", "W1963991285"),
   verbose = TRUE
 )
-
 ggraph(graph = as_tbl_graph(snowball_docs), layout = "stress") +
   geom_edge_link(aes(alpha = after_stat(index)), show.legend = FALSE) +
   geom_node_point(aes(fill = oa_input, size = cited_by_count), shape = 21, color = "white") +
@@ -398,9 +404,12 @@ ggraph(graph = as_tbl_graph(snowball_docs), layout = "stress") +
 
 ## 🌾 N-grams
 
+**Update 2024-09-15**: The n-gram API endpoint is [not currently in service](https://docs.openalex.org/api-entities/works/get-n-grams#api-endpoint).
+The following code chunk is not evaluated.
+
 OpenAlex offers (limited) support for [fulltext N-grams](https://docs.openalex.org/api-entities/works/get-n-grams#fulltext-coverage) of Work entities (these have IDs starting with `"W"`). Given a vector of work IDs, `oa_ngrams` returns a dataframe of N-gram data (in the `ngrams` list-column) for each work.
 
-```{r ngrams, fig.height=3}
+```{r ngrams, eval=FALSE, fig.height=3}
 ngrams_data <- oa_ngrams(
   works_identifier = c("W1964141474", "W1963991285"),
   verbose = TRUE
