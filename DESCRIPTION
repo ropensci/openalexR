@@ -45,6 +45,7 @@ Suggests:
     purrr,
     ggplot2,
     coro,
+    rentrez,
     covr
 Encoding: UTF-8
 LazyData: true
