@@ -48,7 +48,7 @@ braf_oa |>
   select(1:2)
 ```
 
-This call performs a search using the OpenAlex API, retrieving the top 10 results for the query "BRAF AND melanoma".
+This call performs a search using the OpenAlex API, retrieving the 10 most relevant results for the query "BRAF AND melanoma".
 
 By default, an `oa_fetch()` call will return all records associated with a search, for example, querying "BRAF AND melanoma" in OpenAlex may return over 54,000 records.
 Fetching all of these records would be unnecessarily slow, especially when we are often only interested in the top, say, 10 results (based on citation count or relevance — more on sorting below).
