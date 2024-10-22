@@ -271,16 +271,7 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
 }
 
 abstract_build <- function(ab) {
-  if (is.null(ab)) {
-    return(NA)
-  }
-  w <- rep(names(ab), lengths(ab))
-  ind <- unlist(ab)
-  if (is.null(ind)) {
-    return("")
-  }
-
-  paste(w[order(ind)], collapse = " ", sep = "")
+  paste(names(ab), collapse = " ")
 }
 
 
