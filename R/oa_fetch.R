@@ -335,12 +335,17 @@ oa_request <- function(query_url,
   }
 
   # first, download info about n. of items returned by the query
-  res <- api_request(query_url, ua, query = query_ls, api_key = api_key)
+  res <- api_request(query_url, ua, query = query_ls, api_key = api_key, parse = FALSE)
+  res_parsed <- jsonlite::fromJSON(res, simplifyVector = FALSE)
+  res_meta <- res_parsed$meta
+  if (parse) {
+    res <- res_parsed
+  }
 
-  if (!is.null(res$meta)) {
+  if (!is.null(res_meta)) {
     ## return only item counting
     if (count_only) {
-      return(res$meta)
+      return(res_meta)
     }
   } else {
     return(res)
@@ -368,7 +373,7 @@ oa_request <- function(query_url,
     return(data)
   }
 
-  n_items <- res$meta$count
+  n_items <- res_meta$count
   n_pages <- ceiling(n_items / per_page)
 
   ## number of pages
