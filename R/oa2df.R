@@ -144,7 +144,7 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
     "language", "grants", "cited_by_count", "counts_by_year",
     "publication_year", "cited_by_api_url", "ids", "doi", "type",
     "referenced_works", "related_works", "is_paratext", "is_retracted",
-    "concepts", "topics"
+    "concepts", "topics", "apc"
   )
   works_process <- tibble::tribble(
     ~type, ~field,
@@ -166,6 +166,8 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
     "flat", "related_works",
     "rbind_df", "counts_by_year",
     "rbind_df", "concepts",
+    "flat", "apc_list",
+    "flat", "apc_paid",
     "flat", "ids"
   )
 
@@ -204,7 +206,7 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
       sim_fields$publication_date <- as.Date(sim_fields$publication_date)
     }
 
-    author <- venue <- ab <- NULL
+    author <- venue <- ab <- apc <- NULL
 
     if (!is.null(paper$primary_location)) {
       so_info <- paper$primary_location["source"]
@@ -257,11 +259,17 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
       names(open_access)[[1]] <- "is_oa_anywhere"
     }
 
+    # Process APC
+    if (any(lengths(paper[c("apc_list", "apc_paid")]) > 0)) {
+      apc_fields <- list(value = NA, currency = NA, value_usd = NA, provenance = NA)
+      apc <- list(rbind.data.frame(
+        c(type = "list", modifyList(apc_fields, as.list(paper$apc_list))),
+        c(type = "paid", modifyList(apc_fields, as.list(paper$apc_paid)))
+      ))
+    }
     topics <- process_topics(paper, "score")
-    out_ls <- c(
-      sim_fields, venue, open_access, paper_biblio,
-      list(author = author, ab = ab), topics
-    )
+    out_ls <- c(sim_fields, venue, open_access, paper_biblio,
+                list(author = author, ab = ab, apc = apc), topics)
     out_ls[sapply(out_ls, is.null)] <- NULL
     list_df[[i]] <- out_ls
   }
