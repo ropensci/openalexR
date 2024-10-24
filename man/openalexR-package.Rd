@@ -25,12 +25,12 @@ Useful links:
 Authors:
 \itemize{
   \item Trang Le \email{grixor@gmail.com} (\href{https://orcid.org/0000-0003-3737-6565}{ORCID})
+  \item June Choe \email{jchoe001@gmail.com} (\href{https://orcid.org/0000-0002-0701-921X}{ORCID})
 }
 
 Other contributors:
 \itemize{
   \item Corrado Cuccurullo \email{cuccurullocorrado@gmail.com} (\href{https://orcid.org/0000-0002-7401-8575}{ORCID}) [contributor]
-  \item June Choe \email{jchoe001@gmail.com} (\href{https://orcid.org/0000-0002-0701-921X}{ORCID}) [contributor]
 }
 
 }

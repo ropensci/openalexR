@@ -1,4 +1,12 @@
-# openalexR (development version)
+# openalexR 1.4.0
+* "topics" are now a valid entity in oa_fetch
+* The column "topics" replaces concepts in most entities' returned dataframes
+* For Works, "topics" and "concepts" are now returned as separate columns
+
+# openalexR 1.3.1
+* solved bug in au_affiliation_raw in PR#241
+
+# openalexR 1.3.0
 * Breaking change: two arguments in `oa_snowball` are renamed:
 `citing_filter` is now `citing_params`,
 and `cited_by_filter` is now `cited_by_params`.
@@ -9,10 +17,12 @@ and returns one record at a time.
 `oa_fetch` or `oa_request`.
 * Improve `oa_snowball` performance.
 * Allowed the use of `options$sample` with `search`.
+* "venues"" is no longer a valid value for `entity`. Use "sources" instead.
 
 # openalexR 1.2.2
 * solved issue with CRAN test
 * 
+
 # openalexR 1.2.1
 * many improvements in bibliometrix support
 * solved issue with CRAN test

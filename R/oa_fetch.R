@@ -6,11 +6,13 @@
 #' oa_entities()
 oa_entities <- function() {
   c(
-    "works", "authors", "venues", "institutions", "concepts",
-    "funders", "sources", "publishers"
+    "works", "authors", "institutions", "concepts",
+    "funders", "sources", "publishers", "topics"
   )
 }
 
+#' Fetching records
+#'
 #' A composition function to perform query building, requesting,
 #' and convert the result to a tibble/data frame.
 #' @inheritParams oa_query
@@ -18,7 +20,14 @@ oa_entities <- function() {
 #' @param abstract Logical. If TRUE, the function returns also the abstract of each item.
 #' Default to \code{abstract = TRUE}.
 #' The argument is ignored if entity is different from "works".
-#' @param output Character. Type of output, either a list or a tibble/data.frame.
+#' @param output Character.
+#' Type of output, one of `"tibble"`, `"dataframe"`, `"list"`, or `"raw"`.
+##' \itemize{
+##'  \item{"tibble"}: {a tibble tidy data}
+##'  \item{"dataframe"}: {a base data.frame tidy data}
+##'  \item{"list"}: {a list of parsed JSON contents}
+##'  \item{"raw"}: {a list of raw JSON strings (length depends on query)}
+##' }
 #'
 #' @return A data.frame or a list. Result of the query.
 #' @export
@@ -65,7 +74,7 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
                      options = NULL,
                      search = NULL,
                      group_by = NULL,
-                     output = c("tibble", "dataframe", "list"),
+                     output = c("tibble", "dataframe", "list", "raw"),
                      abstract = TRUE,
                      endpoint = "https://api.openalex.org",
                      per_page = 200,
@@ -132,6 +141,7 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
       count_only = count_only,
       mailto = mailto,
       api_key = api_key,
+      parse = output != "raw",
       verbose = verbose
     )
   }
@@ -139,19 +149,20 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
   if (length(final_res[[1]]) == 0) { # || is.null(final_res[[1]][[1]]$id)
     return(NULL)
   }
+  final_res <- unlist(final_res, recursive = FALSE)
 
-  if (output == "list") {
-    unlist(final_res, recursive = FALSE)
-  } else {
-    # Flatten out the initial chunking of 50 at a time
-    final_res <- list(unlist(final_res, recursive = FALSE))
-    do.call(rbind, lapply(
-      final_res, oa2df,
-      entity = entity, options = options, abstract = abstract,
-      count_only = count_only, group_by = group_by,
-      verbose = verbose
-    ))
+  if (output %in% c("list", "raw")) {
+    return(final_res)
   }
+
+  # Flatten out the initial chunking of 50 at a time
+  final_res <- list(final_res)
+  do.call(rbind, lapply(
+    final_res, oa2df,
+    entity = entity, options = options, abstract = abstract,
+    count_only = count_only, group_by = group_by,
+    verbose = verbose
+  ))
 }
 
 #' Get bibliographic records from OpenAlex database
@@ -182,6 +193,8 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 #' Gives OpenAlex an email to enter the polite pool.
 #' @param api_key Character string.
 #' Your OpenAlex Premium API key, if available.
+#' @param parse Logical.
+#' If FALSE, returns the raw JSON response as string.
 #' @param verbose Logical.
 #' If TRUE, print information about the querying process. Defaults to TRUE.
 #'
@@ -298,6 +311,7 @@ oa_request <- function(query_url,
                        count_only = FALSE,
                        mailto = oa_email(),
                        api_key = oa_apikey(),
+                       parse = TRUE,
                        verbose = FALSE) {
   # https://httr.r-lib.org/articles/api-packages.html#set-a-user-agent
   ua <- httr::user_agent("https://github.com/ropensci/openalexR/")
@@ -321,12 +335,17 @@ oa_request <- function(query_url,
   }
 
   # first, download info about n. of items returned by the query
-  res <- api_request(query_url, ua, query = query_ls, api_key = api_key)
+  res <- api_request(query_url, ua, query = query_ls, api_key = api_key, parse = FALSE)
+  res_parsed <- jsonlite::fromJSON(res, simplifyVector = FALSE)
+  res_meta <- res_parsed$meta
+  if (parse) {
+    res <- res_parsed
+  }
 
-  if (!is.null(res$meta)) {
+  if (!is.null(res_meta)) {
     ## return only item counting
     if (count_only) {
-      return(res$meta)
+      return(res_meta)
     }
   } else {
     return(res)
@@ -343,7 +362,7 @@ oa_request <- function(query_url,
     if (verbose) cat("\nDownloading groups...\n|")
     while (!is.null(next_page)) {
       if (verbose) cat("=")
-      Sys.sleep(1 / 100)
+      Sys.sleep(1 / 10)
       query_ls[[paging]] <- next_page
       res <- api_request(query_url, ua, query = query_ls)
       data <- c(data, res[[result_name]])
@@ -354,7 +373,7 @@ oa_request <- function(query_url,
     return(data)
   }
 
-  n_items <- res$meta$count
+  n_items <- res_meta$count
   n_pages <- ceiling(n_items / per_page)
 
   ## number of pages
@@ -388,14 +407,53 @@ oa_request <- function(query_url,
   res <- NULL
   for (i in pages) {
     if (verbose) pb$tick()
-    Sys.sleep(1 / 100)
+    Sys.sleep(1 / 10)
     next_page <- get_next_page(paging, i, res)
     query_ls[[paging]] <- next_page
-    res <- api_request(query_url, ua, query = query_ls)
-    if (!is.null(res[[result_name]])) data[[i]] <- res[[result_name]]
+
+    if (parse) {
+      res <- api_request(query_url, ua, query = query_ls, parse = TRUE)
+      if (!is.null(res[[result_name]])) data[[i]] <- res[[result_name]]
+    } else {
+      raw <- api_request(query_url, ua, query = query_ls, parse = FALSE)
+      data[[i]] <- raw
+    }
+  }
+  data <- unlist(data, recursive = FALSE)
+
+  # `output = "raw"` early exit
+  if (!parse) return(data)
+
+  if (grepl("filter", query_url) && grepl("works", query_url)) {
+    truncated <- unlist(truncated_authors(data))
+    if (length(truncated)) {
+      truncated <- shorten_oaid(truncated)
+      warning(
+        "\nThe following work(s) have truncated lists of authors: ",
+        paste(truncated, collapse = ", "),
+        ".\nQuery each work separately by its identifier to get full list of authors.\n",
+        "For example:\n  ",
+        paste0(
+          "lapply(c(\"",
+          paste(utils::head(truncated, 2), collapse = "\", \""),
+          "\"), \\(x) oa_fetch(identifier = x))"
+        ),
+        "\nDetails at https://docs.openalex.org/api-entities/authors/limitations."
+      )
+    }
   }
 
-  unlist(data, recursive = FALSE)
+  data
+}
+
+truncated_authors <- function(list_result) {
+  lapply(
+    list_result,
+    function(x){
+      trunc <- x$is_authors_truncated
+      if (!is.null(trunc) && trunc) x$id else NULL
+    }
+  )
 }
 
 get_next_page <- function(paging, i, res = NULL) {
@@ -426,7 +484,8 @@ get_next_page <- function(paging, i, res = NULL) {
 #' @param identifier Character. OpenAlex ID(s) as item identifier(s).
 #' See more at <https://docs.openalex.org/how-to-use-the-api/get-single-entities#the-openalex-id>.
 #' @param entity Character. Scholarly entity of the search.
-#' The argument can be one of c("works", "authors", "venues", "institutions", "concepts").
+#' The argument can be one of
+#' c("works", "authors", "institutions", "concepts", "funders", "sources", "publishers", "topics").
 #' If not provided, `entity` is guessed from `identifier`.
 #' @param options List. Additional parameters to add in the query. For example:
 #'
@@ -435,7 +494,7 @@ get_next_page <- function(paging, i, res = NULL) {
 #' https://docs.openalex.org/how-to-use-the-api/get-single-entities/select-fields
 #'
 #' - `sort` Character. Attribute to sort by.
-#' For example: "display_name" for venues or "cited_by_count:desc" for works.
+#' For example: "display_name" for sources or "cited_by_count:desc" for works.
 #' See more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sort-entity-lists>.
 #'
 #' - `sample` Integer. Number of (random) records to return.
@@ -648,32 +707,40 @@ oa_random <- function(entity = oa_entities(),
   final_res
 }
 
-api_request <- function(query_url, ua, query, api_key = oa_apikey()) {
+api_request <- function(query_url, ua, query, api_key = oa_apikey(), parse = TRUE) {
   res <- httr::GET(query_url, ua, query = query, httr::add_headers(api_key = api_key))
+
+  empty_res <- if (parse) list() else "{}"
+
+  if (httr::status_code(res) == 400) {
+    stop("HTTP status 400 Request Line is too large")
+  }
 
   if (httr::status_code(res) == 429) {
     message("HTTP status 429 Too Many Requests")
-    return(list())
+    return(empty_res)
   }
 
   m <- httr::content(res, "text", encoding = "UTF-8")
+  if (parse) {
+    m <- jsonlite::fromJSON(m, simplifyVector = FALSE)
+  }
 
   if (httr::status_code(res) == 503) {
     mssg <- regmatches(m, regexpr("(?<=<title>).*?(?=<\\/title>)", m, perl = TRUE))
     message(mssg, ". Please try setting `per_page = 25` in your function call!")
-    return(list())
+    return(empty_res)
   }
-
-  parsed <- jsonlite::fromJSON(m, simplifyVector = FALSE)
 
   if (httr::status_code(res) == 200) {
     if (httr::http_type(res) != "application/json") {
       stop("API did not return json", call. = FALSE)
     }
-    return(parsed)
+    return(m) # Depending on `parse`, results can be raw JSON or parsed R list
   }
 
   if (httr::http_error(res)) {
+    parsed <- jsonlite::fromJSON(m, simplifyVector = FALSE)
     stop(
       sprintf(
         "OpenAlex API request failed [%s]\n%s\n<%s>",
@@ -687,6 +754,6 @@ api_request <- function(query_url, ua, query, api_key = oa_apikey()) {
 
   if (httr::status_code(res) != 429 & httr::status_code(res) != 200) {
     message("HTTP status ", httr::status_code(res))
-    return(list())
+    return(empty_res)
   }
 }

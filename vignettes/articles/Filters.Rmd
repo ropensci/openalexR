@@ -13,9 +13,9 @@ knitr::opts_chunk$set(
 In your `oa_fetch` calls, you can specify additional arguments to *filter* your search result.
 Available arguments/filters for each entity and associated example values are in the tables below.
 
-**Note**: `x_concepts.id` in all entities are experimental.
+**Note**: `x_concepts.id` are being deprecated and will be removed soon!
 
-See the [original documentation](https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/filter-entity-lists) from Open Alex.
+See the [OpenAlex documentation](https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/filter-entity-lists) for the latest list of valid filters. 
 
 ## Available arguments by entity
 
@@ -73,10 +73,10 @@ See the [original documentation](https://docs.openalex.org/how-to-use-the-api/ge
 |-----------------------------------------|--------------------------------------------------------------------------------------------|
 | `works_count`                           | \">99\"                                                                                    |
 | `cited_by_count`                        | \">1000\"                                                                                  |
-| `last_known_institution.id`             | \"I4200000001\"                                                                            |
-| `last_known_institution.ror`            | \"02nr0ka47\"                                                                              |
-| `last_known_institution.country_code`   | \"CA\"                                                                                     |
-| `last_known_institution.type`           | \"nonprofit\"                                                                              |
+| `last_known_institutions.id`            | \"I4200000001\"                                                                            |
+| `last_known_institutions.ror`           | \"02nr0ka47\"                                                                              |
+| `last_known_institutions.country_code`  | \"CA\"                                                                                     |
+| `last_known_institutions.type`          | \"nonprofit\"                                                                              |
 | `openalex`                              | \"A2208157607\"                                                                            |
 | `orcid`                                 | \"0000-0001-6187-6610\"                                                                    |
 | `mag`                                   | \"2208157607\"                                                                             |
@@ -88,7 +88,7 @@ See the [original documentation](https://docs.openalex.org/how-to-use-the-api/ge
 | `search`                                | \"Phillip Kuo\"                                                                            |
 | `has_orcid`                             | TRUE                                                                                       |
 
-### Venues
+### Sources
 
 | Filter                                  | Example value                                                                              |
 |-----------------------------------------|--------------------------------------------------------------------------------------------|
@@ -158,30 +158,23 @@ authors_from_names <- oa_fetch(
   search = "Phillip Kuo"
  )
 
-
-lib_concepts <- oa_fetch(
-  entity = "concepts", 
-  level = 3,
+lib_topics <- oa_fetch(
+  entity = "topics", 
   works_count = "<999",
-  cited_by_count = ">10000",
-  ancestors.id = "C161191863",
-  has_wikidata = TRUE
+  cited_by_count = ">10000"
 )
-dplyr::glimpse(lib_concepts)
+dplyr::glimpse(lib_topics)
 
 tech_insts <- oa_fetch(
   entity = "institutions", 
-  country_code = "CN",
-  x_concepts.id = "C41008148",
-  display_name.search = "technology",
-  has_ror = FALSE
+  country_code = "IL",
+  display_name.search = "technology"
 )
 dplyr::glimpse(tech_insts)
 
 peer_venues <- oa_fetch(
   entity = "sources", 
   display_name = "PeerJ",
-  x_concepts.id = "C185592680",
   is_oa = TRUE,
   is_in_doaj = TRUE
 )

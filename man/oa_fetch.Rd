@@ -2,8 +2,7 @@
 % Please edit documentation in R/oa_fetch.R
 \name{oa_fetch}
 \alias{oa_fetch}
-\title{A composition function to perform query building, requesting,
-and convert the result to a tibble/data frame.}
+\title{Fetching records}
 \usage{
 oa_fetch(
   entity = if (is.null(identifier)) NULL else id_type(shorten_oaid(identifier[[1]])),
@@ -12,7 +11,7 @@ oa_fetch(
   options = NULL,
   search = NULL,
   group_by = NULL,
-  output = c("tibble", "dataframe", "list"),
+  output = c("tibble", "dataframe", "list", "raw"),
   abstract = TRUE,
   endpoint = "https://api.openalex.org",
   per_page = 200,
@@ -26,7 +25,8 @@ oa_fetch(
 }
 \arguments{
 \item{entity}{Character. Scholarly entity of the search.
-The argument can be one of c("works", "authors", "venues", "institutions", "concepts").
+The argument can be one of
+c("works", "authors", "institutions", "concepts", "funders", "sources", "publishers", "topics").
 If not provided, `entity` is guessed from `identifier`.}
 
 \item{identifier}{Character. OpenAlex ID(s) as item identifier(s).
@@ -41,7 +41,7 @@ Defaults to NULL, which returns all fields.
 https://docs.openalex.org/how-to-use-the-api/get-single-entities/select-fields
 
 - `sort` Character. Attribute to sort by.
-For example: "display_name" for venues or "cited_by_count:desc" for works.
+For example: "display_name" for sources or "cited_by_count:desc" for works.
 See more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sort-entity-lists>.
 
 - `sample` Integer. Number of (random) records to return.
@@ -66,7 +66,14 @@ To filter using search, append .search to the end of the attribute you're filter
 For example: "oa_status" for works.
 See more at <https://docs.openalex.org/how-to-use-the-api/get-groups-of-entities>.}
 
-\item{output}{Character. Type of output, either a list or a tibble/data.frame.}
+\item{output}{Character.
+Type of output, one of `"tibble"`, `"dataframe"`, `"list"`, or `"raw"`.
+\itemize{
+ \item{"tibble"}: {a tibble tidy data}
+ \item{"dataframe"}: {a base data.frame tidy data}
+ \item{"list"}: {a list of parsed JSON contents}
+ \item{"raw"}: {a list of raw JSON strings (length depends on query)}
+}}
 
 \item{abstract}{Logical. If TRUE, the function returns also the abstract of each item.
 Default to \code{abstract = TRUE}.

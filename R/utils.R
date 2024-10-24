@@ -1,8 +1,8 @@
 
 `%||%` <- function(x, y) if (is.null(x)) y else x
 
-replace_w_na <- function(x){
-  lapply(x, `%||%`, y = NA)
+replace_w_na <- function(x, y = NA){
+  lapply(x, `%||%`, y = y)
 }
 
 subs_na <- function(x, type, prefix = NULL) {
@@ -53,12 +53,12 @@ id_type <- function(identifier) {
   switch(toupper(substr(identifier, 1, 1)),
     W = "works",
     A = "authors",
-    V = "venues",
     I = "institutions",
     C = "concepts",
     S = "sources",
     P = "publishers",
     `F` = "funders",
+    `T` = "topics",
     NA
   )
 }
@@ -92,11 +92,11 @@ asl <- function(z) {
 }
 
 shorten_oaid <- function(id) {
-  gsub("^https://openalex.org/", "", id)
+  gsub("https://openalex.org/", "", id, fixed = TRUE)
 }
 
 shorten_orcid <- function(id) {
-  gsub("^https://orcid.org/", "", id)
+  gsub("https://orcid.org/", "", id, fixed = TRUE)
 }
 
 rbind_oa_ls <- function(list_df) {
@@ -137,4 +137,34 @@ oa_apikey <- function() {
     apikey <- getOption("openalexR.apikey", default = NULL)
   }
   apikey
+}
+
+
+#' Process topics
+#'
+#' @param entity List. One single work or author to process.
+#' @param extra Character. Either "score" (work) or "count" (author).
+#'
+#' @return List. A list of one tibble with the processed topics.
+#' @keywords internal
+#'
+process_topics <- function(entity, extra) {
+  topics <- entity$topics
+  if (is.null(topics)) {
+    return(NULL)
+  }
+  topics_ls <- lapply(seq_along(topics), function(i) {
+    topic <- topics[[i]]
+    relev <- c(
+      # Hoist fields for the topic entity
+      list(topic = topic[c("id", "display_name")]),
+      # Keep info about other entities as-is
+      topic[vapply(topic, is.list, logical(1))]
+    )
+    relev_df <- subs_na(relev, "rbind_df")[[1]]
+    relev_df$name <- rownames(relev_df)
+    cbind(i = i, topic[extra], relev_df)
+  })
+  topics_df <- do.call(rbind.data.frame, topics_ls)
+  list(topics = list(tibble::as_tibble(topics_df)))
 }

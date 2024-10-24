@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: end -->
 
-**openalexR** helps you interface with the [OpenAlex](https://openalex.org) API to retrieve bibliographic infomation about publications, authors, venues, institutions and concepts with 5 main functions:
+**openalexR** helps you interface with the [OpenAlex](https://openalex.org) API to retrieve bibliographic information about publications, authors, institutions, sources, funders, publishers, topics and concepts with 5 main functions:
 
 -   `oa_fetch`: composes three functions below so the user can execute everything in one step, *i.e.*, `oa_query |> oa_request |> oa2df`
 
@@ -33,6 +33,12 @@ knitr::opts_chunk$set(
 -   `oa2df`: converts the JSON object in classical bibliographic tibble/data frame.
 
 -   `oa_random`: get random entity, *e.g.*, `oa_random("works")` gives a different work each time you run it
+
+## 📜 Citation
+
+If you use openalexR in research, please cite:
+
+  Aria, M., Le T., Cuccurullo, C., Belfiore, A. & Choe, J. (2024), *openalexR: An R-Tool for Collecting Bibliometric Data from OpenAlex*, **The R Journal**, 15(4), 167-180, DOI: https://doi.org/10.32614/RJ-2023-089.
 
 ## 🙌 Support OpenAlex
 
@@ -86,7 +92,7 @@ knitr::opts_chunk$set(dev.args = list(bg = "transparent"))
 
 ## 🌿 Examples
 
-There are different [filters](https://ropensci.github.io/openalexR/articles/Filters)/arguments you can use in `oa_fetch`, depending on which [entity](https://docs.openalex.org/#data) you're interested in: works, authors, venues, institutions, or concepts. We show a few examples below.
+There are different [filters](https://ropensci.github.io/openalexR/articles/Filters)/arguments you can use in `oa_fetch`, depending on which [entity](https://docs.openalex.org/#data) you're interested in: works, authors, sources, funders, institutions, or concepts. We show a few examples below.
 
 ### 📚 Works
 
@@ -116,6 +122,22 @@ works_from_dois |>
   knitr::kable()
 ```
 
+**Goal**: Download all works given their PMIDs.
+
+Use `pmid` as a filter:
+
+```{r}
+works_from_pmids <- oa_fetch(
+  entity = "works",
+  pmid = c("14907713", 32572199),
+  verbose = TRUE
+)
+works_from_pmids |>
+  show_works() |>
+  knitr::kable()
+```
+
+
 **Goal**: Download all works published by a set of authors (known ORCIDs).
 
 Use `author.orcid` as a filter (either canonical form with <https://orcid.org/> or without will work):
@@ -126,7 +148,6 @@ works_from_orcids <- oa_fetch(
   author.orcid = c("0000-0001-6187-6610", "0000-0002-8517-9411"),
   verbose = TRUE
 )
-
 works_from_orcids |>
   show_works() |>
   knitr::kable()
@@ -144,7 +165,6 @@ works_search <- oa_fetch(
   options = list(sort = "cited_by_count:desc"),
   verbose = TRUE
 )
-
 works_search |>
   show_works() |>
   knitr::kable()
@@ -161,7 +181,6 @@ authors_from_orcids <- oa_fetch(
   entity = "authors",
   orcid = c("0000-0001-6187-6610", "0000-0002-8517-9411")
 )
-
 authors_from_orcids |>
   show_authors() |>
   knitr::kable()
@@ -189,10 +208,9 @@ Let's first check how many records match the query, then download the entire col
 ```{r}
 my_arguments <- list(
   entity = "authors",
-  last_known_institution.id = "I71267560",
+  last_known_institutions.id = "I71267560",
   works_count = ">499"
 )
-
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 
 if (do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))[1]>0){
@@ -216,7 +234,6 @@ concept_df <- oa_fetch(
   ancestors.id = "https://openalex.org/C86803240", # Biology
   works_count = ">1000000"
 )
-
 concept_df |>
   select(display_name, counts_by_year) |>
   tidyr::unnest(counts_by_year) |>
@@ -249,7 +266,6 @@ italy_insts <- oa_fetch(
   type = "education",
   verbose = TRUE
 )
-
 italy_insts |>
   slice_max(cited_by_count, n = 8) |>
   mutate(display_name = forcats::fct_reorder(display_name, cited_by_count)) |>
@@ -270,15 +286,13 @@ And what do they publish on?
 ```{r concept-cloud, fig.height=5, fig.width=7}
 # The package wordcloud needs to be installed to run this chunk
 # library(wordcloud)
-
 concept_cloud <- italy_insts |>
-  select(inst_id = id, x_concepts) |>
-  tidyr::unnest(x_concepts) |>
-  filter(level == 1) |>
-  select(display_name, score) |>
+  select(inst_id = id, topics) |>
+  tidyr::unnest(topics) |>
+  filter(name == "field") |>
+  select(display_name, count) |>
   group_by(display_name) |>
-  summarise(score = sum(score))
-
+  summarise(score = sqrt(sum(count)))
 pal <- c("black", scales::brewer_pal(palette = "Set1")(5))
 set.seed(1)
 wordcloud::wordcloud(
@@ -296,24 +310,32 @@ We first download all records regarding journals that have published more than 3
 ```{r big-journals, message=FALSE, fig.height=8, fig.width=8}
 # The package ggtext needs to be installed to run this chunk
 # library(ggtext)
-
 jours_all <- oa_fetch(
-  entity = "venues",
+  entity = "sources",
   works_count = ">200000",
   verbose = TRUE
 )
 
+clean_journal_name <- function(x) {
+  x |>
+    gsub("\\(.*?\\)", "", x = _) |>
+    gsub("Journal of the|Journal of", "J.", x = _) |>
+    gsub("/.*", "", x = _)
+}
+
 jours <- jours_all |>
-  filter(!is.na(x_concepts), type != "ebook platform") |>
+  filter(type == "journal") |>
   slice_max(cited_by_count, n = 9) |>
   distinct(display_name, .keep_all = TRUE) |>
-  select(jour = display_name, x_concepts) |>
-  tidyr::unnest(x_concepts) |>
-  filter(level == 0) |>
+  select(jour = display_name, topics) |>
+  tidyr::unnest(topics) |>
+  filter(name == "field") |>
+  group_by(id, jour, display_name) |> 
+  summarise(score = (sum(count))^(1/3), .groups = "drop") |> 
   left_join(concept_abbrev, by = join_by(id, display_name)) |>
   mutate(
     abbreviation = gsub(" ", "<br>", abbreviation),
-    jour = gsub("Journal of|Journal of the", "J.", gsub("\\(.*?\\)", "", jour))
+    jour = clean_journal_name(jour),
   ) |>
   tidyr::complete(jour, abbreviation, fill = list(score = 0)) |>
   group_by(jour) |>
@@ -327,9 +349,9 @@ jours |>
   ggplot() +
   aes(fill = jour, y = score, x = abbreviation, group = jour) +
   facet_wrap(~jour) +
-  geom_hline(yintercept = c(45, 90), colour = "grey90", linewidth = 0.2) +
+  geom_hline(yintercept = c(25, 50), colour = "grey90", linewidth = 0.2) +
   geom_segment(
-    aes(x = abbreviation, xend = abbreviation, y = 0, yend = 100),
+    aes(x = abbreviation, xend = abbreviation, y = 0, yend = 55),
     color = "grey95"
   ) +
   geom_col(color = "grey20") +
@@ -344,7 +366,7 @@ jours |>
     axis.ticks.y = element_blank()
   ) +
   ggtext::geom_richtext(
-    aes(y = 120, label = label),
+    aes(y = 75, label = label),
     fill = NA, label.color = NA, size = 3
   ) +
   scale_fill_brewer(palette = "Set1", guide = "none") +
@@ -364,7 +386,6 @@ snowball_docs <- oa_snowball(
   identifier = c("W1964141474", "W1963991285"),
   verbose = TRUE
 )
-
 ggraph(graph = as_tbl_graph(snowball_docs), layout = "stress") +
   geom_edge_link(aes(alpha = after_stat(index)), show.legend = FALSE) +
   geom_node_point(aes(fill = oa_input, size = cited_by_count), shape = 21, color = "white") +
@@ -383,9 +404,12 @@ ggraph(graph = as_tbl_graph(snowball_docs), layout = "stress") +
 
 ## 🌾 N-grams
 
+**Update 2024-09-15**: The n-gram API endpoint is [not currently in service](https://docs.openalex.org/api-entities/works/get-n-grams#api-endpoint).
+The following code chunk is not evaluated.
+
 OpenAlex offers (limited) support for [fulltext N-grams](https://docs.openalex.org/api-entities/works/get-n-grams#fulltext-coverage) of Work entities (these have IDs starting with `"W"`). Given a vector of work IDs, `oa_ngrams` returns a dataframe of N-gram data (in the `ngrams` list-column) for each work.
 
-```{r ngrams, fig.height=3}
+```{r ngrams, eval=FALSE, fig.height=3}
 ngrams_data <- oa_ngrams(
   works_identifier = c("W1964141474", "W1963991285"),
   verbose = TRUE
@@ -427,7 +451,7 @@ Schema credits: [\@dhimmel](https://github.com/dhimmel)
 
 -   **Authors** are people who create works
 
--   **Venues** are journals and repositories that host works
+-   **Sources** are journals and repositories that host works
 
 -   **Institutions** are universities and other orgs that are affiliated with works (via authors)
 

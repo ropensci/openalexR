@@ -1,0 +1,93 @@
+---
+title: "Literature search"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+While `oa_fetch()` offers a convenient and flexible way of retrieving results from queries to the OpenAlex API, we may want to specify some of its arguments to optimize your API calls for certain use cases.
+
+This vignette shows how to perform an efficient literature search, comparing to a similar search in PubMed using the [**rentrez**](https://github.com/ropensci/rentrez) package.
+
+```{r setup, message=FALSE}
+library(openalexR)
+library(dplyr)
+library(rentrez)
+```
+
+# Motivating example
+
+Suppose you're interested in finding publications that explore the links between the **BRAF** gene and **melanoma**.
+
+With the **rentrez** package, we can use the `entrez_search` function retrieves up to 10 records matching the search query from the PubMed database.
+
+```{r}
+braf_pubmed <- entrez_search(db = "pubmed", term = "BRAF and melanoma", retmax = 10)
+braf_pubmed
+braf_pubmed$ids |> 
+  entrez_summary(db = "pubmed") |> 
+  extract_from_esummary("title") |> 
+  tibble::enframe("id", "title")
+```
+
+On the other hand, with **openalexR**, we can use the `search` argument of `oa_fetch()`:
+
+```{r}
+braf_oa <- oa_fetch(
+  search = "BRAF AND melanoma",
+  pages = 1,
+  per_page = 10,
+  verbose = TRUE
+)
+braf_oa |> 
+  show_works(simp_func = identity) |> 
+  select(1:2)
+```
+
+This call performs a search using the OpenAlex API, retrieving the 10 most relevant results for the query "BRAF AND melanoma".
+
+By default, an `oa_fetch()` call will return all records associated with a search, for example, querying "BRAF AND melanoma" in OpenAlex may return over 54,000 records.
+Fetching all of these records would be unnecessarily slow, especially when we are often only interested in the top, say, 10 results (based on citation count or relevance — more on sorting below).
+
+We can limit the number of results with the arguments `per_page` (number of records to return per page, between 1 and 200, default 200) and `pages` (range of pages to return, *e.g.*, `1:3` for the first 3 pages, default NULL to return all pages).
+For example, if you want the top 250 records, you can set
+
+-   `per_page = 50, pages = 1:5` to get exactly 250 records; or
+-   `per_page = 200, pages = 1:2` to get 400 records, then you can slice the dataframe one more time to get the first 250.
+
+# Sorting results
+
+By default, the results from `oa_fetch` are sorted based on *relevance_score*, a measure of how closely each result matches the query.[^1]
+If a different ordering is desired, such as sorting by citation count, you can specify `sort` in the `options` argument.
+
+[^1]: *relevance_score* also includes a weighting term for citation counts: more highly-cited entities score higher.
+
+Here are the commonly used sorting options:
+
+-   `relevance_score`: Default, ranks results based on query match relevance.
+-   `cited_by_count`: Sorts results based on the number of times the work has been cited.
+-   `publication_date`: Sorts by publication date.
+
+```{r}
+results <- openalexR::oa_fetch(
+  search = "BRAF AND melanoma", 
+  pages = 1,
+  per_page = 10,
+  options = list(sort = "cited_by_count:desc"),
+  verbose = TRUE
+)
+```
+
+# Conclusion
+
+The `openalexR` package provides a powerful and flexible interface for conducting academic literature searches using the OpenAlex API. By controlling the number of results and the sorting order, you can tailor your search to retrieve the most relevant or impactful publications.
+In cases where large datasets are involved, it's useful to limit the number of results returned to ensure efficient and timely searches.
+
+We encourage users to explore further options provided by `openalexR` to refine their search and retrieve the specific data they need for their research projects:
+
+-   <https://docs.openalex.org/api-entities/works/search-works>
+-   <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/search-entities>

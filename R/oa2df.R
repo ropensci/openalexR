@@ -5,7 +5,8 @@
 #'
 #' @param data List. Output of \code{oa_request}.
 #' @param entity Character. Scholarly entity of the search.
-#' The argument can be one of c("works", "authors", "venues", "institutions", "concepts").
+#' The argument can be one of
+#' c("works", "authors", "institutions", "concepts", "funders", "sources", "publishers", "topics").
 #' @param abstract Logical. If TRUE, the function returns also the abstract of each item.
 #' Ignored if entity is different from "works". Defaults to TRUE.
 #' @param verbose Logical.
@@ -47,7 +48,7 @@
 #'
 #' @export
 oa2df <- function(data, entity, options = NULL, count_only = FALSE, group_by = NULL, abstract = TRUE, verbose = TRUE) {
-  if (length(data) == 0){
+  if (length(data) == 0) {
     return(NULL)
   }
 
@@ -59,7 +60,7 @@ oa2df <- function(data, entity, options = NULL, count_only = FALSE, group_by = N
     return(unlist(data))
   }
 
-  if (entity != "snowball"){
+  if (entity != "snowball") {
     ch <- ifelse(is.null(options$select), "id", options$select[[1]])
     if (!is.null(data[[ch]])) {
       data <- list(data)
@@ -70,11 +71,11 @@ oa2df <- function(data, entity, options = NULL, count_only = FALSE, group_by = N
     works = works2df(data, abstract, verbose),
     authors = authors2df(data, verbose),
     institutions = institutions2df(data, verbose),
-    venues = venues2df(data, verbose),
     concepts = concepts2df(data, verbose),
     funders = funders2df(data, verbose),
     sources = sources2df(data, verbose),
     publishers = publishers2df(data, verbose),
+    topics = topics2df(data, verbose),
     snowball = snowball2df(data)
   )
 }
@@ -135,21 +136,21 @@ oa2df <- function(data, entity, options = NULL, count_only = FALSE, group_by = N
 #'
 works2df <- function(data, abstract = TRUE, verbose = TRUE,
                      pb = if (verbose) oa_progress(length(data)) else NULL) {
-
   col_order <- c(
-    "id", "display_name", "author", "ab", "publication_date", "relevance_score",
+    "id", "title", "display_name", "author", "ab", "publication_date", "relevance_score",
     "so", "so_id", "host_organization", "issn_l", "url", "pdf_url",
     "license", "version", "first_page", "last_page", "volume", "issue", "is_oa",
     "is_oa_anywhere", "oa_status", "oa_url", "any_repository_has_fulltext",
     "language", "grants", "cited_by_count", "counts_by_year",
     "publication_year", "cited_by_api_url", "ids", "doi", "type",
-    "referenced_works", "related_works", "is_paratext", "is_retracted", "concepts",
-    "apc"
+    "referenced_works", "related_works", "is_paratext", "is_retracted",
+    "concepts", "topics", "apc"
   )
   works_process <- tibble::tribble(
     ~type, ~field,
     "identical", "id",
     "identical", "display_name",
+    "identical", "title",
     "identical", "publication_date",
     "identical", "doi",
     "identical", "type",
@@ -201,6 +202,9 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
       fields$type,
       SIMPLIFY = FALSE
     )
+    if (!is.null(sim_fields$publication_date)) {
+      sim_fields$publication_date <- as.Date(sim_fields$publication_date)
+    }
 
     author <- venue <- ab <- apc <- NULL
 
@@ -227,7 +231,14 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
             first_inst <- empty_inst
           }
           first_inst <- prepend(first_inst, "institution")
-          aff_raw <- list(au_affiliation_raw = l$raw_affiliation_string[1])
+          aff_raw <- list(
+            au_affiliation_raw =
+              if (length(l$raw_affiliation_strings)) {
+                l$raw_affiliation_strings[[1]]
+              } else {
+                NA_character_
+              }
+          )
           l_author <- if (length(l$author) > 0) {
             prepend(replace_w_na(l$author), "au")
           } else {
@@ -244,7 +255,7 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
     }
     paper_biblio <- replace_w_na(paper$biblio)
     open_access <- replace_w_na(paper$open_access)
-    if (length(open_access) > 0){
+    if (length(open_access) > 0) {
       names(open_access)[[1]] <- "is_oa_anywhere"
     }
 
@@ -256,9 +267,9 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
         c(type = "paid", modifyList(apc_fields, as.list(paper$apc_paid)))
       ))
     }
-
+    topics <- process_topics(paper, "score")
     out_ls <- c(sim_fields, venue, open_access, paper_biblio,
-                list(author = author, ab = ab, apc = apc))
+                list(author = author, ab = ab, apc = apc), topics)
     out_ls[sapply(out_ls, is.null)] <- NULL
     list_df[[i]] <- out_ls
   }
@@ -305,8 +316,8 @@ abstract_build <- function(ab) {
 #' query_author <- oa_query(
 #'   identifier = NULL,
 #'   entity = "authors",
-#'   last_known_institution.id = "I71267560",
-#'   works_count = ">99"
+#'   last_known_institutions.id = "I71267560",
+#'   works_count = ">500"
 #' )
 #'
 #' res <- oa_request(
@@ -341,7 +352,6 @@ authors2df <- function(data, verbose = TRUE,
     "identical", "relevance_score",
     "flat", "display_name_alternatives",
     "rbind_df", "counts_by_year",
-    "rbind_df", "x_concepts",
     "flat", "ids"
   )
 
@@ -357,14 +367,13 @@ authors2df <- function(data, verbose = TRUE,
       fields$type,
       SIMPLIFY = FALSE
     )
-    sub_affiliation <- item$last_known_institution
-    if (!is.null(sub_affiliation)) {
+    sub_affiliation <- item$last_known_institutions
+    if (!is.null(sub_affiliation) && length(sub_affiliation)) {
+      sub_affiliation <- sub_affiliation[[1]]
       if (is.na(sub_affiliation[[1]])) {
         sub_affiliation <- empty_inst
       }
-      if (length(sub_affiliation$lineage) > 1) {
-        sub_affiliation$lineage <- paste(sub_affiliation$lineage, collapse = ", ")
-      }
+      sub_affiliation$lineage <- paste(sub_affiliation$lineage, collapse = ", ")
       sub_affiliation <- prepend(sub_affiliation, "affiliation")
     }
     sub_affiliation <- replace_w_na(sub_affiliation)
@@ -376,8 +385,8 @@ authors2df <- function(data, verbose = TRUE,
       }
       sub_affiliation$affiliations_other <- list(affiliations_other)
     }
-
-    list_df[[i]] <- c(sim_fields, sub_affiliation)
+    topics <- process_topics(item, "count")
+    list_df[[i]] <- c(sim_fields, sub_affiliation, topics)
   }
 
   col_order <- c(
@@ -386,7 +395,7 @@ authors2df <- function(data, verbose = TRUE,
     "affiliation_display_name", "affiliation_id", "affiliation_ror",
     "affiliation_country_code", "affiliation_type", "affiliation_lineage",
     "affiliations_other",
-    "x_concepts", "works_api_url"
+    "topics", "works_api_url"
   )
 
   out_df <- rbind_oa_ls(list_df)
@@ -452,7 +461,6 @@ institutions2df <- function(data, verbose = TRUE,
     "flat", "display_name_acronyms",
     "row_df", "geo",
     "rbind_df", "counts_by_year",
-    "rbind_df", "x_concepts",
     "rbind_df", "associated_institutions",
     "flat", "ids"
   )
@@ -477,7 +485,8 @@ institutions2df <- function(data, verbose = TRUE,
         )
       )
     }
-    list_df[[i]] <- c(sim_fields, interna)
+    topics <- process_topics(item, "count")
+    list_df[[i]] <- c(sim_fields, interna, topics)
   }
 
 
@@ -487,93 +496,7 @@ institutions2df <- function(data, verbose = TRUE,
     "homepage_url", "image_url", "image_thumbnail_url",
     "associated_institutions", "relevance_score", "works_count",
     "cited_by_count", "counts_by_year",
-    "works_api_url", "x_concepts", "updated_date", "created_date"
-  )
-
-  out_df <- rbind_oa_ls(list_df)
-  out_df[, intersect(col_order, names(out_df))]
-}
-
-
-#' Convert OpenAlex collection of venues' records from list format to data frame
-#'
-#' It converts bibliographic collection of venues' records gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
-#' The function converts a list of venues' records obtained using \code{oa_request} into a data frame/tibble.
-#'
-#' @inheritParams works2df
-#'
-#' @return a data.frame.
-#'
-#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
-#'
-#'
-#' @examples
-#' \dontrun{
-#'
-#' # Query to search information about the Journal of Informetrics (OA id:V205292342)
-#'
-#'
-#' query_inst <- oa_query(
-#'   identifier = "V205292342",
-#'   entity = "venues"
-#' )
-#'
-#' res <- oa_request(
-#'   query_url = query_inst,
-#'   count_only = FALSE,
-#'   verbose = FALSE
-#' )
-#'
-#' df <- oa2df(res, entity = "venues")
-#'
-#' df
-#' }
-#'
-#' @export
-venues2df <- function(data, verbose = TRUE,
-                      pb = if (verbose) oa_progress(length(data)) else NULL) {
-
-  n <- length(data)
-  list_df <- vector(mode = "list", length = n)
-  venue_process <- tibble::tribble(
-    ~type, ~field,
-    "identical", "id",
-    "identical", "display_name",
-    "identical", "host_organization_name",
-    "identical", "works_count",
-    "identical", "cited_by_count",
-    "identical", "is_oa",
-    "identical", "is_in_doaj",
-    "identical", "homepage_url",
-    "identical", "works_api_url",
-    "identical", "type",
-    "identical", "relevance_score",
-    "flat", "issn_l",
-    "flat", "issn",
-    "rbind_df", "counts_by_year",
-    "rbind_df", "x_concepts",
-    "flat", "ids"
-  )
-
-  for (i in seq.int(n)) {
-    if (verbose) pb$tick()
-
-    item <- data[[i]]
-
-    fields <- venue_process[venue_process$field %in% names(item), ]
-    sim_fields <- mapply(
-      function(x, y) subs_na(item[[x]], type = y),
-      fields$field,
-      fields$type,
-      SIMPLIFY = FALSE
-    )
-    list_df[[i]] <- sim_fields
-  }
-
-  col_order <- c(
-    "id", "display_name", "host_organization_name", "issn", "issn_l", "is_oa", "is_in_doaj",
-    "ids", "homepage_url", "relevance_score", "works_count", "cited_by_count",
-    "counts_by_year", "x_concepts", "works_api_url", "type"
+    "works_api_url", "topics", "updated_date", "created_date"
   )
 
   out_df <- rbind_oa_ls(list_df)
@@ -618,7 +541,6 @@ venues2df <- function(data, verbose = TRUE,
 #' @export
 concepts2df <- function(data, verbose = TRUE,
                         pb = if (verbose) oa_progress(length(data)) else NULL) {
-
   concept_process <- tibble::tribble(
     ~type, ~field,
     "identical", "id",
@@ -709,7 +631,6 @@ concepts2df <- function(data, verbose = TRUE,
 #' @export
 funders2df <- function(data, verbose = TRUE,
                        pb = if (verbose) oa_progress(length(data)) else NULL) {
-
   funder_process <- tibble::tribble(
     ~type, ~field,
     "identical", "id",
@@ -783,7 +704,6 @@ funders2df <- function(data, verbose = TRUE,
 #' @export
 sources2df <- function(data, verbose = TRUE,
                        pb = if (verbose) oa_progress(length(data)) else NULL) {
-
   source_process <- tibble::tribble(
     ~type, ~field,
     "identical", "id",
@@ -801,14 +721,13 @@ sources2df <- function(data, verbose = TRUE,
     "identical", "is_in_doaj",
     "flat", "ids",
     "identical", "homepage_url",
-    "identical", "apc_prices",
+    "rbind_df", "apc_prices",
     "identical", "apc_usd",
     "identical", "country_code",
     "flat", "societies",
     "flat", "alternate_titles",
     "identical", "abbreviated_title",
     "identical", "type",
-    "rbind_df", "x_concepts",
     "rbind_df", "counts_by_year",
     "identical", "works_api_url",
     "identical", "updated_date",
@@ -829,7 +748,8 @@ sources2df <- function(data, verbose = TRUE,
       fields$type,
       SIMPLIFY = FALSE
     )
-    list_df[[i]] <- sim_fields
+    topics <- process_topics(item, "count")
+    list_df[[i]] <- c(sim_fields, topics)
   }
 
   out_df <- rbind_oa_ls(list_df)
@@ -867,7 +787,6 @@ sources2df <- function(data, verbose = TRUE,
 #' @export
 publishers2df <- function(data, verbose = TRUE,
                           pb = if (verbose) oa_progress(length(data)) else NULL) {
-
   publisher_process <- tibble::tribble(
     ~type, ~field,
     "identical", "id",
@@ -910,6 +829,90 @@ publishers2df <- function(data, verbose = TRUE,
 
   out_df <- rbind_oa_ls(list_df)
   out_df
+}
+
+
+#' Convert OpenAlex collection of topics' records from list format to data frame
+#'
+#' It converts collection of topics' records gathered from the OpenAlex database.
+#' The function converts a list of topics' records obtained using \code{oa_request} into a data frame/tibble.
+#'
+#' @inheritParams works2df
+#'
+#' @return a data.frame.
+#'
+#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
+#'
+#'
+#' @examples
+#' \dontrun{
+#'
+#' # Query to search information about all Italian educational institutions
+#'
+#'
+#' query_inst <- oa_query(
+#'   entity = "topics",
+#'   display_name.search = "electrodynamics"
+#' )
+#'
+#' res <- oa_request(
+#'   query_url = query_inst,
+#'   count_only = FALSE,
+#'   verbose = FALSE
+#' )
+#'
+#' df <- oa2df(res, entity = "topics")
+#'
+#' df
+#' }
+#'
+#' @export
+topics2df <- function(data, verbose = TRUE,
+                        pb = if (verbose) oa_progress(length(data)) else NULL) {
+  topic_process <- tibble::tribble(
+    ~type, ~field,
+    "identical", "id",
+    "identical", "display_name",
+    "identical", "description",
+    "flat", "ids",
+    "identical", "relevance_score",
+    "identical", "works_count",
+    "identical", "cited_by_count",
+    "identical", "updated_date",
+    "identical", "created_date",
+    "rbind_df", "siblings",
+    "flat", "keywords"
+  )
+
+  n <- length(data)
+  list_df <- vector(mode = "list", length = n)
+
+  for (i in seq.int(n)) {
+    if (verbose) pb$tick()
+
+    item <- data[[i]]
+    fields <- topic_process[topic_process$field %in% names(item), ]
+    sim_fields <- mapply(
+      function(x, y) subs_na(item[[x]], type = y),
+      fields$field,
+      fields$type,
+      SIMPLIFY = FALSE
+    )
+    domains <- unlist(item[c("subfield", "field", "domain")], recursive = FALSE)
+    domains <- as.data.frame(do.call(cbind, domains))
+    names(domains) <- gsub("\\.", "_", names(domains))
+    list_df[[i]] <- c(sim_fields, domains)
+  }
+
+  col_order <- c(
+    "id", "display_name", "description", "keywords", "ids",
+    "subfield_id", "subfield_display_name", "field_id", "field_display_name",
+    "domain_id", "domain_display_name", "siblings", "relevance_score",
+    "works_count", "cited_by_count", "updated_date", "created_date"
+  )
+
+  out_df <- rbind_oa_ls(list_df)
+  out_df[, intersect(col_order, names(out_df))]
 }
 
 
