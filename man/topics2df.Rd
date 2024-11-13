@@ -35,15 +35,10 @@ The function converts a list of topics' records obtained using \code{oa_request}
 # Query to search information about all Italian educational institutions
 
 
-query_inst <- oa_query(
+res <- oa_query(
   entity = "topics",
-  display_name.search = "electrodynamics"
-)
-
-res <- oa_request(
-  query_url = query_inst,
-  count_only = FALSE,
-  verbose = FALSE
+  display_name.search = "electrodynamics",
+  output = "list"
 )
 
 df <- oa2df(res, entity = "topics")

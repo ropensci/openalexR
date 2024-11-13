@@ -1,3 +1,14 @@
+# openalexR 2.0.0
+* Breaking changes in column names in the output of `oa_fetch`:
+  * `so` is now `source_display_name`
+  * `so_id` is now `source_id`
+  * `ab` is now `abstract`
+  * `url` is now `landing_page_url`
+  * the nested columns under `authors` no longer have the `au` prefix
+  
+* Deprecated `oa2bibliometrix()`. Use `bibliometrix::convert2df()` 
+(from the **bibliometrix** R package) instead.
+
 # openalexR 1.4.0
 * "topics" are now a valid entity in oa_fetch
 * The column "topics" replaces concepts in most entities' returned dataframes

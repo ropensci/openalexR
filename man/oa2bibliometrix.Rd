@@ -17,6 +17,9 @@ It converts bibliographic collections gathered from OpenAlex database \href{http
 bibliometrix data frame (\href{https://bibliometrix.org/}{https://bibliometrix.org/})
 Column names follow https://images.webofknowledge.com/images/help/WOS/hs_wos_fieldtags.html.
 }
+\details{
+Use \code{bibliometrix::convert2df()} (bibliometrix R package) instead.
+}
 \examples{
 \dontrun{
 
@@ -31,13 +34,10 @@ Column names follow https://images.webofknowledge.com/images/help/WOS/hs_wos_fie
 #  Results have to be sorted by relevance score in a descending order.
 
 query <- oa_query(
-  identifier = NULL,
   entity = "works",
   cites = "W2755950973",
-  from_publication_date = "2021-01-01",
-  to_publication_date = "2021-12-31",
-  search = NULL,
-  endpoint = "https://api.openalex.org"
+  from_publication_date = "2021-10-01",
+  to_publication_date = "2021-12-31"
 )
 
 res <- oa_request(

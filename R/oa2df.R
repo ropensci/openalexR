@@ -137,8 +137,8 @@ oa2df <- function(data, entity, options = NULL, count_only = FALSE, group_by = N
 works2df <- function(data, abstract = TRUE, verbose = TRUE,
                      pb = if (verbose) oa_progress(length(data)) else NULL) {
   col_order <- c(
-    "id", "title", "display_name", "author", "ab", "publication_date", "relevance_score",
-    "so", "so_id", "host_organization", "issn_l", "url", "pdf_url",
+    "id", "title", "display_name", "author", "abstract", "publication_date", "relevance_score",
+    "source_display_name", "source_id", "issn_l", "landing_page_url", "pdf_url",
     "license", "version", "first_page", "last_page", "volume", "issue", "is_oa",
     "is_oa_anywhere", "oa_status", "oa_url", "any_repository_has_fulltext",
     "language", "grants", "cited_by_count", "counts_by_year",
@@ -171,21 +171,11 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
     "flat", "ids"
   )
 
-  venue_cols <- c(
-    url = "landing_page_url",
-    pdf_url = "pdf_url",
-    is_oa = "is_oa",
-    license = "license",
-    version = "version"
-  )
   so_cols <- c(
-    so_id = "id",
-    so = "display_name",
-    issn_l = "issn_l",
-    host_organization = "host_organization_name"
+    source_id = "id",
+    source_display_name = "display_name",
+    issn_l = "issn_l"
   )
-  inst_cols <- c("id", "display_name", "ror", "country_code", "type", "lineage")
-  empty_inst <- empty_list(inst_cols)
 
   n <- length(data)
   list_df <- vector(mode = "list", length = n)
@@ -205,71 +195,33 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
     if (!is.null(sim_fields$publication_date)) {
       sim_fields$publication_date <- as.Date(sim_fields$publication_date)
     }
-
-    author <- venue <- ab <- apc <- NULL
-
-    if (!is.null(paper$primary_location)) {
-      so_info <- paper$primary_location["source"]
-      so_info <- if (length(so_info[[1]]) == 0) NA else so_info[[1]]
-      venue_info <- replace_w_na(paper$primary_location[venue_cols])
-      venue <- setNames(
-        c(venue_info, so_info[so_cols]),
-        c(names(venue_cols), names(so_cols))
-      )
-    }
-
-    # authorships and affilitation
-    if (!is.null(paper$authorships)) {
-      author <- subs_na(
-        lapply(paper$authorships, function(l) {
-          l_inst <- l$institutions
-          inst_idx <- lengths(l_inst) > 0
-          if (length(inst_idx) > 0 && any(inst_idx)) {
-            first_inst <- l_inst[inst_idx][[1]]
-            first_inst$lineage <- paste(first_inst$lineage, collapse = ", ")
-          } else {
-            first_inst <- empty_inst
-          }
-          first_inst <- prepend(first_inst, "institution")
-          aff_raw <- list(
-            au_affiliation_raw =
-              if (length(l$raw_affiliation_strings)) {
-                l$raw_affiliation_strings[[1]]
-              } else {
-                NA_character_
-              }
-          )
-          l_author <- if (length(l$author) > 0) {
-            prepend(replace_w_na(l$author), "au")
-          } else {
-            empty_list(c("au_id", "au_display_name", "au_orcid"))
-          }
-          c(l_author, l[c("author_position", "is_corresponding")], aff_raw, first_inst)
-        }), "rbind_df"
-      )
-    }
-
-    # Abstract
-    if (!is.null(paper$abstract_inverted_index) && abstract) {
-      ab <- abstract_build(paper$abstract_inverted_index)
-    }
+    author <- process_paper_authors(paper$authorships)
+    ab <- abstract_build(paper$abstract_inverted_index, abstract)
     paper_biblio <- replace_w_na(paper$biblio)
     open_access <- replace_w_na(paper$open_access)
     if (length(open_access) > 0) {
       names(open_access)[[1]] <- "is_oa_anywhere"
     }
 
+    so_info <- paper$primary_location
+    venue <- so_info[names(so_info) != "source"]
+    source <- so_info$source
+    if (!is.null(source)){
+      source <- setNames(source[so_cols], names(so_cols))
+    }
+
     # Process APC
+    apc <- NULL
     if (any(lengths(paper[c("apc_list", "apc_paid")]) > 0)) {
       apc_fields <- list(value = NA, currency = NA, value_usd = NA, provenance = NA)
       apc <- list(rbind.data.frame(
-        c(type = "list", modifyList(apc_fields, as.list(paper$apc_list))),
-        c(type = "paid", modifyList(apc_fields, as.list(paper$apc_paid)))
+        c(type = "list", utils::modifyList(apc_fields, as.list(paper$apc_list))),
+        c(type = "paid", utils::modifyList(apc_fields, as.list(paper$apc_paid)))
       ))
     }
     topics <- process_topics(paper, "score")
-    out_ls <- c(sim_fields, venue, open_access, paper_biblio,
-                list(author = author, ab = ab, apc = apc), topics)
+    out_ls <- c(sim_fields, venue, source, open_access, paper_biblio,
+                list(author = author, abstract = ab, apc = apc), topics)
     out_ls[sapply(out_ls, is.null)] <- NULL
     list_df[[i]] <- out_ls
   }
@@ -278,9 +230,16 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
   out_df[, intersect(col_order, names(out_df))]
 }
 
-abstract_build <- function(ab) {
-  if (is.null(ab)) {
-    return(NA)
+#' Build abstract from inverted index
+#'
+#' @param ab List. Inverted index of abstract.
+#' @param build Logical. If TRUE, build the abstract.
+#'
+#' @return Character string. The abstract of the paper.
+#' @keywords internal
+abstract_build <- function(ab, build = TRUE) {
+  if (is.null(ab) || !build) {
+    return(NULL)
   }
   w <- rep(names(ab), lengths(ab))
   ind <- unlist(ab)
@@ -290,6 +249,62 @@ abstract_build <- function(ab) {
 
   paste(w[order(ind)], collapse = " ", sep = "")
 }
+
+#' Process paper authorships
+#'
+#' @param authorships List. Authorships element of paper.
+#'
+#' @return List. A list of one dataframe with the processed authors:
+#' id, display_name, orcid, author_position, is_corresponding, affiliations, affiliation_raw
+#' @keywords internal
+process_paper_authors <- function(authorships){
+  if (is.null(authorships)) {
+    return(NULL)
+  }
+  authors_ls <- lapply(authorships, function(l) {
+    l_author <- if (length(l$author)) {
+      replace_w_na(l$author)
+    } else {
+      empty_list(names(l$author))
+    }
+
+    affiliation_raw <- if (length(l$raw_affiliation_strings)) {
+      l$raw_affiliation_strings[[1]]
+    } else {
+      NA_character_
+    }
+
+    affs <- list(
+      affiliations = process_affil(l$institutions),
+      affiliation_raw = affiliation_raw
+    )
+
+    c(l_author, l[c("author_position", "is_corresponding")], affs)
+  })
+
+  list(rbind_oa_ls(authors_ls))
+}
+
+
+#' Process affiliations
+#'
+#' @param l_institution List. Nested elements include
+#' id, display_name, ror, country_code, type, lineage
+#'
+#' @return Dataframe of with the following columns:
+#' id, display_name, ror, country_code, type, lineage
+#' @keywords internal
+process_affil <- function(l_institution){
+  if (!length(l_institution)){
+    return(list(empty_df()))
+  }
+  l_inst <- lapply(l_institution, function(x) {
+    x$lineage <- paste(x$lineage, collapse = ", ")
+    x
+  })
+  subs_na(l_inst, "rbind_df")
+}
+
 
 
 #' Convert OpenAlex collection of authors' records from list format to data frame
@@ -313,17 +328,11 @@ abstract_build <- function(ab) {
 #' # University of Naples Federico II is associated to the OpenAlex id I71267560.
 #'
 #'
-#' query_author <- oa_query(
-#'   identifier = NULL,
+#' res <- oa_fetch(
 #'   entity = "authors",
 #'   last_known_institutions.id = "I71267560",
-#'   works_count = ">500"
-#' )
-#'
-#' res <- oa_request(
-#'   query_url = query_author,
-#'   count_only = FALSE,
-#'   verbose = FALSE
+#'   works_count = ">700",
+#'   output = "list"
 #' )
 #'
 #' df <- oa2df(res, entity = "authors")
@@ -339,7 +348,6 @@ authors2df <- function(data, verbose = TRUE,
 
   inst_cols <- c("id", "display_name", "ror", "country_code", "type", "lineage")
   empty_inst <- empty_list(inst_cols)
-  empty_inst$affiliations_other <- list(NULL)
 
   author_process <- tibble::tribble(
     ~type, ~field,
@@ -367,6 +375,8 @@ authors2df <- function(data, verbose = TRUE,
       fields$type,
       SIMPLIFY = FALSE
     )
+
+    # current affiliation
     sub_affiliation <- item$last_known_institutions
     if (!is.null(sub_affiliation) && length(sub_affiliation)) {
       sub_affiliation <- sub_affiliation[[1]]
@@ -378,15 +388,16 @@ authors2df <- function(data, verbose = TRUE,
     }
     sub_affiliation <- replace_w_na(sub_affiliation)
 
+    # all affiliations
     if (!is.null(item$affiliations)) {
-      affiliations_other <- sapply(item$affiliations, function(x) x$institution$id)
-      if (!is.null(sub_affiliation$affiliation_id)) {
-        affiliations_other <- affiliations_other[affiliations_other != sub_affiliation$affiliation_id]
-      }
-      sub_affiliation$affiliations_other <- list(affiliations_other)
+      l_inst <- lapply(item$affiliations, function(x) x$institution)
+      affs <- list(affiliations = process_affil(l_inst))
+    } else {
+      affs <- NULL
     }
+
     topics <- process_topics(item, "count")
-    list_df[[i]] <- c(sim_fields, sub_affiliation, topics)
+    list_df[[i]] <- c(sim_fields, sub_affiliation, affs, topics)
   }
 
   col_order <- c(
@@ -394,8 +405,7 @@ authors2df <- function(data, verbose = TRUE,
     "ids", "orcid", "works_count", "cited_by_count", "counts_by_year",
     "affiliation_display_name", "affiliation_id", "affiliation_ror",
     "affiliation_country_code", "affiliation_type", "affiliation_lineage",
-    "affiliations_other",
-    "topics", "works_api_url"
+    "affiliations", "topics", "works_api_url"
   )
 
   out_df <- rbind_oa_ls(list_df)
@@ -420,16 +430,11 @@ authors2df <- function(data, verbose = TRUE,
 #'
 #' # Query to search information about all Italian educational institutions
 #'
-#' query_inst <- oa_query(
+#' res <- oa_fetch(
 #'   entity = "institutions",
 #'   country_code = "it",
-#'   type = "education"
-#' )
-#'
-#' res <- oa_request(
-#'   query_url = query_inst,
-#'   count_only = FALSE,
-#'   verbose = FALSE
+#'   type = "education",
+#'   output = "list"
 #' )
 #'
 #' oa2df(res, entity = "institutions")
@@ -522,15 +527,10 @@ institutions2df <- function(data, verbose = TRUE,
 #' # Query to search information about all Italian educational institutions
 #'
 #'
-#' query_inst <- oa_query(
+#' res <- oa_query(
 #'   entity = "concepts",
-#'   display_name.search = "electrodynamics"
-#' )
-#'
-#' res <- oa_request(
-#'   query_url = query_inst,
-#'   count_only = FALSE,
-#'   verbose = FALSE
+#'   display_name.search = "electrodynamics",
+#'   output = "list"
 #' )
 #'
 #' df <- oa2df(res, entity = "concepts")
@@ -850,15 +850,10 @@ publishers2df <- function(data, verbose = TRUE,
 #' # Query to search information about all Italian educational institutions
 #'
 #'
-#' query_inst <- oa_query(
+#' res <- oa_query(
 #'   entity = "topics",
-#'   display_name.search = "electrodynamics"
-#' )
-#'
-#' res <- oa_request(
-#'   query_url = query_inst,
-#'   count_only = FALSE,
-#'   verbose = FALSE
+#'   display_name.search = "electrodynamics",
+#'   output = "list"
 #' )
 #'
 #' df <- oa2df(res, entity = "topics")

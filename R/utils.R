@@ -1,7 +1,7 @@
 
 `%||%` <- function(x, y) if (is.null(x)) y else x
 
-replace_w_na <- function(x, y = NA){
+replace_w_na <- function(x, y = NA) {
   lapply(x, `%||%`, y = y)
 }
 
@@ -36,6 +36,13 @@ empty_list <- function(vars) {
   setNames(as.list(rep(NA, length(vars))), vars)
 }
 
+empty_df <- function(column_names = c("id", "display_name", "ror", "country_code", "type", "lineage")) {
+  setNames(data.frame(
+    lapply(column_names, function(x) character(0)),
+    stringsAsFactors = FALSE
+  ), column_names)
+}
+
 isValidEmail <- function(x) {
   grepl("\\<[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}\\>", as.character(x), ignore.case = TRUE)
 }
@@ -65,7 +72,7 @@ id_type <- function(identifier) {
 
 oa_print <- function() {
   p <- as.integer(Sys.getenv("openalexR.print"))
-  if (is.na(p)){
+  if (is.na(p)) {
     return(NULL)
   }
   p
