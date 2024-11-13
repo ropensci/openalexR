@@ -47,7 +47,7 @@ test_that("oa_fetch works", {
     paste0("https://openalex.org/", sort(work_ids))
   )
 
-  expect_true("au_affiliation_raw" %in% names(multi_works$author[[1]]))
+  expect_true("affiliation_raw" %in% names(multi_works$author[[1]]))
 
   Sys.sleep(1 / 10)
   # warn about truncated authors
@@ -372,7 +372,7 @@ test_that("oa_fetch works with 1 identifier", {
   expect_s3_class(s, "data.frame")
   expect_s3_class(co, "data.frame")
 
-  expect_equal(dim(w), c(1, 39))
+  expect_equal(dim(w), c(1, 38))
   expect_equal(dim(a), c(1, 17))
   expect_equal(dim(i), c(1, 21))
   expect_equal(dim(f), c(1, 17))
