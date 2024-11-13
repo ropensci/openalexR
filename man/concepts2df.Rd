@@ -35,15 +35,10 @@ The function converts a list of concepts' records obtained using \code{oa_reques
 # Query to search information about all Italian educational institutions
 
 
-query_inst <- oa_query(
+res <- oa_query(
   entity = "concepts",
-  display_name.search = "electrodynamics"
-)
-
-res <- oa_request(
-  query_url = query_inst,
-  count_only = FALSE,
-  verbose = FALSE
+  display_name.search = "electrodynamics",
+  output = "list"
 )
 
 df <- oa2df(res, entity = "concepts")

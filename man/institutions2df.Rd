@@ -34,16 +34,11 @@ The function converts a list of institutions' records obtained using \code{oa_re
 
 # Query to search information about all Italian educational institutions
 
-query_inst <- oa_query(
+res <- oa_fetch(
   entity = "institutions",
   country_code = "it",
-  type = "education"
-)
-
-res <- oa_request(
-  query_url = query_inst,
-  count_only = FALSE,
-  verbose = FALSE
+  type = "education",
+  output = "list"
 )
 
 oa2df(res, entity = "institutions")
