@@ -16,3 +16,4 @@ id, display_name, orcid, author_position, is_corresponding, affiliations, affili
 \description{
 Process paper authorships
 }
+\keyword{internal}

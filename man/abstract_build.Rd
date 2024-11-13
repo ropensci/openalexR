@@ -17,3 +17,4 @@ Character string. The abstract of the paper.
 \description{
 Build abstract from inverted index
 }
+\keyword{internal}

@@ -236,6 +236,7 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
 #' @param build Logical. If TRUE, build the abstract.
 #'
 #' @return Character string. The abstract of the paper.
+#' @keywords internal
 abstract_build <- function(ab, build = TRUE) {
   if (is.null(ab) || !build) {
     return(NULL)
@@ -255,7 +256,7 @@ abstract_build <- function(ab, build = TRUE) {
 #'
 #' @return List. A list of one dataframe with the processed authors:
 #' id, display_name, orcid, author_position, is_corresponding, affiliations, affiliation_raw
-#'
+#' @keywords internal
 process_paper_authors <- function(authorships){
   if (is.null(authorships)) {
     return(NULL)
@@ -292,7 +293,7 @@ process_paper_authors <- function(authorships){
 #'
 #' @return Dataframe of with the following columns:
 #' id, display_name, ror, country_code, type, lineage
-#'
+#' @keywords internal
 process_affil <- function(l_institution){
   if (!length(l_institution)){
     return(list(empty_df()))

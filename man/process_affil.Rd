@@ -17,3 +17,4 @@ id, display_name, ror, country_code, type, lineage
 \description{
 Process affiliations
 }
+\keyword{internal}
