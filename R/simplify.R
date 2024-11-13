@@ -36,7 +36,7 @@ show_authors <- function(x, simp_func = utils::head) {
       if (is.logical(y)) {
         return(NA_character_)
       }
-      top_subfields <- y[y$name == "subfield", ]
+      top_subfields <- y[y$type == "subfield", ]
       paste(utils::head(top_subfields, 3)$display_name,
         collapse = ", "
       )

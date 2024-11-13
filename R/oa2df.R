@@ -137,14 +137,15 @@ oa2df <- function(data, entity, options = NULL, count_only = FALSE, group_by = N
 works2df <- function(data, abstract = TRUE, verbose = TRUE,
                      pb = if (verbose) oa_progress(length(data)) else NULL) {
   col_order <- c(
-    "id", "title", "display_name", "author", "abstract", "publication_date", "relevance_score",
-    "source_display_name", "source_id", "issn_l", "landing_page_url", "pdf_url",
-    "license", "version", "first_page", "last_page", "volume", "issue", "is_oa",
-    "is_oa_anywhere", "oa_status", "oa_url", "any_repository_has_fulltext",
-    "language", "grants", "cited_by_count", "counts_by_year",
-    "publication_year", "cited_by_api_url", "ids", "doi", "type",
-    "referenced_works", "related_works", "is_paratext", "is_retracted",
-    "concepts", "topics", "apc"
+    "id", "title", "display_name", "author", "abstract", "doi",
+    "publication_date", "publication_year", "relevance_score", "fwci",
+    "cited_by_count", "counts_by_year", "cited_by_api_url", "ids", "type",
+    "is_oa", "is_oa_anywhere", "oa_status", "oa_url",
+    "any_repository_has_fulltext", "source_display_name", "source_id", "issn_l",
+    "landing_page_url", "pdf_url", "license", "version", "referenced_works",
+    "referenced_works_count", "related_works", "concepts", "topics",
+    "is_paratext", "is_retracted", "language", "grants", "apc",
+    "first_page", "last_page", "volume", "issue"
   )
   works_process <- tibble::tribble(
     ~type, ~field,
@@ -161,6 +162,8 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
     "identical", "is_retracted",
     "identical", "relevance_score",
     "identical", "language",
+    "identical", "fwci",
+    "identical", "referenced_works_count",
     "flat", "grants",
     "flat", "referenced_works",
     "flat", "related_works",
@@ -229,82 +232,6 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
   out_df <- rbind_oa_ls(list_df)
   out_df[, intersect(col_order, names(out_df))]
 }
-
-#' Build abstract from inverted index
-#'
-#' @param ab List. Inverted index of abstract.
-#' @param build Logical. If TRUE, build the abstract.
-#'
-#' @return Character string. The abstract of the paper.
-#' @keywords internal
-abstract_build <- function(ab, build = TRUE) {
-  if (is.null(ab) || !build) {
-    return(NULL)
-  }
-  w <- rep(names(ab), lengths(ab))
-  ind <- unlist(ab)
-  if (is.null(ind)) {
-    return("")
-  }
-
-  paste(w[order(ind)], collapse = " ", sep = "")
-}
-
-#' Process paper authorships
-#'
-#' @param authorships List. Authorships element of paper.
-#'
-#' @return List. A list of one dataframe with the processed authors:
-#' id, display_name, orcid, author_position, is_corresponding, affiliations, affiliation_raw
-#' @keywords internal
-process_paper_authors <- function(authorships){
-  if (is.null(authorships)) {
-    return(NULL)
-  }
-  authors_ls <- lapply(authorships, function(l) {
-    l_author <- if (length(l$author)) {
-      replace_w_na(l$author)
-    } else {
-      empty_list(names(l$author))
-    }
-
-    affiliation_raw <- if (length(l$raw_affiliation_strings)) {
-      l$raw_affiliation_strings[[1]]
-    } else {
-      NA_character_
-    }
-
-    affs <- list(
-      affiliations = process_affil(l$institutions),
-      affiliation_raw = affiliation_raw
-    )
-
-    c(l_author, l[c("author_position", "is_corresponding")], affs)
-  })
-
-  list(rbind_oa_ls(authors_ls))
-}
-
-
-#' Process affiliations
-#'
-#' @param l_institution List. Nested elements include
-#' id, display_name, ror, country_code, type, lineage
-#'
-#' @return Dataframe of with the following columns:
-#' id, display_name, ror, country_code, type, lineage
-#' @keywords internal
-process_affil <- function(l_institution){
-  if (!length(l_institution)){
-    return(list(empty_df()))
-  }
-  l_inst <- lapply(l_institution, function(x) {
-    x$lineage <- paste(x$lineage, collapse = ", ")
-    x
-  })
-  subs_na(l_inst, "rbind_df")
-}
-
 
 
 #' Convert OpenAlex collection of authors' records from list format to data frame
