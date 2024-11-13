@@ -18,7 +18,7 @@ bibliometrix data frame (\href{https://bibliometrix.org/}{https://bibliometrix.o
 Column names follow https://images.webofknowledge.com/images/help/WOS/hs_wos_fieldtags.html.
 }
 \details{
-Use \code{\link{bibliometrix::convert2df()}} (bibliometrix R package) instead.
+Use \code{bibliometrix::convert2df()} (bibliometrix R package) instead.
 }
 \examples{
 \dontrun{

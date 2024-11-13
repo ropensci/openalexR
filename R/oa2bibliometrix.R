@@ -6,7 +6,7 @@
 #'
 #' @param df is bibliographic collection of works donwloaded from OpenALex.
 #' @return a data.frame with class "bibliometrix".
-#' @details Use \code{\link{bibliometrix::convert2df()}} (bibliometrix R package) instead.
+#' @details Use \code{bibliometrix::convert2df()} (bibliometrix R package) instead.
 #'
 #' @examples
 #' \dontrun{
@@ -62,7 +62,6 @@ oa2bibliometrix <- function(df) {
         c("AU", "RP", "C1", "AU_UN", "AU_CO")
       ))
     } else {
-      # l$institution_country_code[is.na(l$institution_country_code)] <- "Not available"
       AU <- au_collapse(l$display_name)
       C1 <- au_collapse(l$affiliation_raw)
       RP <- au_collapse(l$affiliation_raw[1])
