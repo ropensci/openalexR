@@ -6,7 +6,7 @@
 #'
 #' @param df is bibliographic collection of works donwloaded from OpenALex.
 #' @return a data.frame with class "bibliometrix".
-#'
+#' @details Use \code{\link{bibliometrix::convert2df()}} (bibliometrix R package) instead.
 #'
 #' @examples
 #' \dontrun{
@@ -22,13 +22,10 @@
 #' #  Results have to be sorted by relevance score in a descending order.
 #'
 #' query <- oa_query(
-#'   identifier = NULL,
 #'   entity = "works",
 #'   cites = "W2755950973",
-#'   from_publication_date = "2021-01-01",
-#'   to_publication_date = "2021-12-31",
-#'   search = NULL,
-#'   endpoint = "https://api.openalex.org"
+#'   from_publication_date = "2021-10-01",
+#'   to_publication_date = "2021-12-31"
 #' )
 #'
 #' res <- oa_request(
@@ -45,6 +42,8 @@
 #' @export
 #'
 oa2bibliometrix <- function(df) {
+  .Deprecated(msg = "oa2bibliometrix() is deprecated. Please use bibliometrix::convert2df() instead.")
+
   df$id_oa <- shorten_oaid(df$id)
   names(df)[names(df) == "id"] <- "id_url"
 
@@ -57,18 +56,18 @@ oa2bibliometrix <- function(df) {
   countrycode$Country <- as.character(countrycode$Country)
 
   # Authors
-  AU_info <- lapply(df$author, function(l) {
+  AU_info <- lapply(df$author[7], function(l) {
     if (length(l) == 0 || (length(l) == 1 && is.na(l))){
       return(empty_list(
         c("AU", "RP", "C1", "AU_UN", "AU_CO")
       ))
     } else {
-      l$institution_country_code[is.na(l$institution_country_code)] <- "Not available"
-      AU <- au_collapse(l$au_display_name)
-      C1 <- au_collapse(l$au_affiliation_raw)
-      RP <- au_collapse(l$au_affiliation_raw[1])
-      AU_UN <- au_collapse(l$institution_display_name)
-      AU_CO <- au_collapse(countrycode[l$institution_country_code, 1])
+      # l$institution_country_code[is.na(l$institution_country_code)] <- "Not available"
+      AU <- au_collapse(l$display_name)
+      C1 <- au_collapse(l$affiliation_raw)
+      RP <- au_collapse(l$affiliation_raw[1])
+      AU_UN <- au_collapse(lapply(l$affiliations, function(x) x$display_name))
+      AU_CO <- au_collapse(countrycode[unlist(lapply(l$affiliations, function(x) x$country_code)), 1])
       list(AU = AU, RP = RP, C1 = C1, AU_UN = AU_UN, AU_CO = AU_CO)
     }
   })
@@ -91,11 +90,11 @@ oa2bibliometrix <- function(df) {
   df <- cbind(AU_info, ID, df)
 
   df$TI <- toupper(df$display_name)
-  df$AB <- toupper(df$ab)
-  df$SO <- toupper(df$so)
+  df$AB <- toupper(df$abstract)
+  df$SO <- toupper(df$source_display_name)
   df$DT <- toupper(df$type)
   df$DB <- "OPENALEX"
-  df$JI <- shorten_oaid(df$so_id)
+  df$JI <- shorten_oaid(df$source_id)
   df$J9 <- df$JI
   df$PY <- df$publication_year
   df$TC <- df$cited_by_count
