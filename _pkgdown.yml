@@ -3,7 +3,7 @@ url: https://docs.ropensci.org/openalexR/
 template:
   bootstrap: 5
   bslib:
-    primary: "#BB4827"
+    primary: "#1a3b6e"
     border-radius: 0.5rem
     btn-border-radius: 0.25rem
 reference:

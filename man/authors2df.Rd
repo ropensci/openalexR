@@ -38,17 +38,11 @@ The function converts a list of authors' records obtained using \code{oa_request
 # University of Naples Federico II is associated to the OpenAlex id I71267560.
 
 
-query_author <- oa_query(
-  identifier = NULL,
+res <- oa_fetch(
   entity = "authors",
-  last_known_institution.id = "I71267560",
-  works_count = ">99"
-)
-
-res <- oa_request(
-  query_url = query_author,
-  count_only = FALSE,
-  verbose = FALSE
+  last_known_institutions.id = "I71267560",
+  works_count = ">700",
+  output = "list"
 )
 
 df <- oa2df(res, entity = "authors")

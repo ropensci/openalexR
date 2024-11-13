@@ -1,0 +1,16 @@
+citHeader("If you use openalexR in research, please cite:")
+
+bibentry(bibtype="Article",
+         title = "openalexR: An R-Tool for Collecting Bibliometric Data from OpenAlex",
+         author = "Aria Massimo and Le Trang and Cuccurullo Corrado and Belfiore Alessandra and Choe June",
+         journal = "The R Journal",
+         year = "2024",
+         doi = "10.32614/RJ-2023-089",
+         volume = "15",
+         issue = "4",
+         issn = "2073-4859",
+         pages = "167-180",
+         textVersion =
+           paste("Aria, M., Le, T., Cuccurullo, C., Belfiore, A. & Choe, J. (2024),",
+           "openalexR: An R-Tool for Collecting Bibliometric Data from OpenAlex,",
+           "The R Journal, 15(4), 167-180."))

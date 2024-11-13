@@ -32,6 +32,15 @@
 #'   cited_by_params = list(),
 #'   verbose = TRUE
 #' )
+#'
+#' # Identical to above, but searches using paper DOIs
+#' snowball_docs_doi <- oa_snowball(
+#'   doi = c("10.1016/j.joi.2017.08.007", "10.7717/peerj.4375"),
+#'   citing_params = list(from_publication_date = "2022-01-01"),
+#'   cited_by_params = list(),
+#'   verbose = TRUE
+#' )
+#'
 #' }
 oa_snowball <- function(identifier = NULL,
                         ...,
@@ -105,6 +114,11 @@ oa_snowball <- function(identifier = NULL,
 
   # relationships/edges
   edges <- rbind(citing_rel, cited_rel)
+  if (is.null(edges)) {
+    message("No citations and no references for ", identifier)
+    edges <- tibble::tibble(from = character(0), to = character(0))
+    return(list(nodes = nodes, edges = edges))
+  }
   # remove duplicates when two input identifiers cite each other
   edges <- edges[!duplicated(edges), ]
   # remove edges to/from NA nodes
