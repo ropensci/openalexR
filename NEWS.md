@@ -1,10 +1,19 @@
 # openalexR 2.0.0
 * Breaking changes in column names in the output of `oa_fetch`:
-  * `so` is now `source_display_name`
-  * `so_id` is now `source_id`
-  * `ab` is now `abstract`
-  * `url` is now `landing_page_url`
-  * the nested columns under `authors` no longer have the `au` prefix
+  * Works:
+    * `so` is now `source_display_name`
+    * `so_id` is now `source_id`
+    * `ab` is now `abstract`
+    * `url` is now `landing_page_url`
+    * `author` is now `authorships`
+    * the nested columns under `authors` no longer have the `au` prefix
+  * Authors:
+    * `affiliation*` is removed
+    * `last_known_institutions` is added
+    * `2yr_mean_citedness`, `h_index`, `i10_index` are added
+* Removed `concepts` as an entity
+* Added `keywords` as an entity # TODO
+* Added get_coverage() to track the oa2df-mapped columns of OpenAlex fields
   
 * Deprecated `oa2bibliometrix()`. Use `bibliometrix::convert2df()` 
 (from the **bibliometrix** R package) instead.
