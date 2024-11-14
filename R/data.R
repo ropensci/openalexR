@@ -21,3 +21,16 @@
 #'     }
 #'
 "countrycode"
+
+#' Coverage of OpenAlex entity fields after converting to data frame.
+#'
+#' List with 8 elements associated with 8 OpenAlex entities.
+#'
+#' @format Each element is a dataframe with 3 columns
+#'  \describe{
+#'     \item{original}{original field name from OpenAlex}
+#'     \item{oa2df}{new column name in output dataframe from oa2df}
+#'     \item{comment}{additional notes}
+#'     }
+#'
+"oa2df_coverage"
