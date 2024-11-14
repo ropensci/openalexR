@@ -12,6 +12,7 @@
 #' head(get_coverage(entity = "works"))
 get_coverage <- function(entity = NULL) {
   utils::data("oa2df_coverage", envir = environment(), package = "openalexR")
+  oa2df_coverage <- oa2df_coverage
 
   if (!is.null(entity)) {
     entity <- match.arg(entity, oa_entities())
