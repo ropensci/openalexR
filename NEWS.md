@@ -3,17 +3,19 @@
   * Works:
     * `so` is now `source_display_name`
     * `so_id` is now `source_id`
+    * `host_organization` now contains the id of the host organization
+    * `host_organization_name` now contains the name of the host organization
     * `ab` is now `abstract`
     * `url` is now `landing_page_url`
     * `author` is now `authorships`
     * the nested columns under `authors` no longer have the `au` prefix
+    * New columns: `fwci`, `referenced_works_count`, `keywords`
   * Authors:
     * `affiliation*` is removed
-    * `last_known_institutions` is added
-    * `2yr_mean_citedness`, `h_index`, `i10_index` are added
+    * New columns: `last_known_institutions`, `2yr_mean_citedness`, `h_index`, `i10_index`
 * Removed `concepts` as an entity
-* Added `keywords` as an entity # TODO
-* Added get_coverage() to track the oa2df-mapped columns of OpenAlex fields
+* Added `keywords` as an entity
+* Added `get_coverage()` to track the oa2df-mapped columns of OpenAlex fields
   
 * Deprecated `oa2bibliometrix()`. Use `bibliometrix::convert2df()` 
 (from the **bibliometrix** R package) instead.
