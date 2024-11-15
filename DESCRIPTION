@@ -46,6 +46,7 @@ Suggests:
     ggplot2,
     coro,
     rentrez,
+    rrapply,
     covr
 Encoding: UTF-8
 LazyData: true

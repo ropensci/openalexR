@@ -18,9 +18,22 @@ The default output from an `oa_fetch` call is a tibble.
 This object type allows each row to be one unit of entity (article, institution, etc.), which is often helpful for downstream wrangling.
 It **simplifies** and combines complex output elements in [list columns](https://dcl-prog.stanford.edu/list-columns.html), which can be **extracted** or **exploded** with `dplyr::rowwise` or `purrr::map`.
 
-**IMPORTANT**: in "flattening" the list output to a tibble, we have made a few decisions to simplify the original nested list such as retaining only one affiliation for each author if you're querying *Works* (details in [`oa_df` source code](https://github.com/ropensci/openalexR/blob/main/R/oa2df.R)).
+**IMPORTANT**: Although the list-to-tibble conversion can be trivial, in "flattening" the list output to a tibble, we took the opinionated approach and made a few decisions to simplify the original nested list such as retaining only a subset of the fields of *Works* (details in [`oa_df` source code](https://github.com/ropensci/openalexR/blob/main/R/oa2df.R)).
+If you think that everyone would benefit from an additional field being returned in the final dataframe, please [open an issue](https://github.com/ropensci/openalexR/issues/new).
+
 While the tibble output is sufficient in most use cases, you may need to obtain the original nested list with all the information on an entity for your special research problem.
 If so, please specify `output = "list"` in your `oa_fetch` call.
+Then, you can wrangle the list output however you like, for example:
+
+```{r}
+x <- oa_fetch(
+  identifier = c("A5023888391", "A5042522694"),
+  output = "list"
+)
+d <- rrapply::rrapply(x, how = "melt")    
+head(d)
+```
+
 
 ## Example 1: institutions
 
@@ -116,7 +129,7 @@ multi_insts <- works %>%
   rowwise() %>%
   mutate(
     openalex = stringr::str_extract(id, "W\\d+"),
-    institutions = list(unique(author$institution_display_name)),
+    institutions = list(unique(authorships$institution_display_name)),
     .keep = "none"
   )
 
@@ -143,7 +156,7 @@ works_list <- oa_fetch(
   output = "list"
 )
 
-work_authors <- lapply(works_list, \(x) x$author)
+work_authors <- lapply(works_list, \(x) x$authorships)
 
 unique_insts <- sapply(
   work_authors,
