@@ -372,7 +372,7 @@ test_that("oa_fetch works with 1 identifier", {
   expect_s3_class(s, "data.frame")
   expect_s3_class(co, "data.frame")
 
-  expect_equal(dim(w), c(1, 41))
+  expect_equal(dim(w), c(1, 43))
   expect_equal(dim(a), c(1, 14))
   expect_equal(dim(i), c(1, 22))
   expect_equal(dim(f), c(1, 17))

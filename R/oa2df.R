@@ -151,6 +151,7 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
     "cited_by_count", "counts_by_year", "cited_by_api_url", "ids", "type",
     "is_oa", "is_oa_anywhere", "oa_status", "oa_url",
     "any_repository_has_fulltext", "source_display_name", "source_id", "issn_l",
+    "host_organization", "host_organization_name",
     "landing_page_url", "pdf_url", "license", "version", "referenced_works",
     "referenced_works_count", "related_works", "concepts", "topics", "keywords",
     "is_paratext", "is_retracted", "language", "grants", "apc",
@@ -187,7 +188,9 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
   so_cols <- c(
     source_id = "id",
     source_display_name = "display_name",
-    issn_l = "issn_l"
+    issn_l = "issn_l",
+    host_organization = "host_organization",
+    host_organization_name = "host_organization_name"
   )
 
   n <- length(data)
