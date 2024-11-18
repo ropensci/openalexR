@@ -21,7 +21,7 @@ Review](https://badges.ropensci.org/560_status.svg)](https://github.com/ropensci
 **openalexR** helps you interface with the
 [OpenAlex](https://openalex.org) API to retrieve bibliographic
 information about publications, authors, institutions, sources, funders,
-publishers, topics and concepts with 5 main functions:
+publishers, topics and keywords with 5 main functions:
 
 - `oa_fetch`: composes three functions below so the user can execute
   everything in one step, *i.e.*, `oa_query |> oa_request |> oa2df`
@@ -101,9 +101,8 @@ library(ggplot2)
 There are different
 [filters](https://ropensci.github.io/openalexR/articles/Filters)/arguments
 you can use in `oa_fetch`, depending on which
-[entity](https://docs.openalex.org/#data) you’re interested in: works,
-authors, sources, funders, institutions, or concepts. We show a few
-examples below.
+[entity](https://docs.openalex.org/#data) you’re interested in: . We
+show a few examples below.
 
 ### 📚 Works
 
@@ -121,6 +120,10 @@ works_from_dois <- oa_fetch(
 )
 #> Requesting url: https://api.openalex.org/works?filter=doi%3A10.1016%2Fj.joi.2017.08.007%7Chttps%3A%2F%2Fdoi.org%2F10.1007%2Fs11192-013-1221-3
 #> Getting 1 page of results with a total of 2 records...
+#> Warning: Note: `oa_fetch` and `oa2df` now return new names for some columns in openalexR v2.0.0.
+#>     See NEWS.md for the list of changes.
+#>     Call `get_coverage()` to view the all updated columns and their original names in OpenAlex.
+#> This warning is displayed once every 8 hours.
 ```
 
 We can view the output tibble/dataframe, `works_from_dois`,
@@ -143,10 +146,10 @@ works_from_dois |>
   knitr::kable()
 ```
 
-| id          | display_name                                                              | first_author      | last_author        | so                      | url                                         | is_oa | top_concepts                          |
-|:------------|:--------------------------------------------------------------------------|:------------------|:-------------------|:------------------------|:--------------------------------------------|:------|:--------------------------------------|
-| W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis       | Massimo Aria      | Corrado Cuccurullo | Journal of Informetrics | <https://doi.org/10.1016/j.joi.2017.08.007> | FALSE | Workflow, Bibliometrics, Software     |
-| W2038196424 | Coverage and adoption of altmetrics sources in the bibliometric community | Stefanie Haustein | Jens Terliesner    | Scientometrics          | <https://doi.org/10.1007/s11192-013-1221-3> | FALSE | Altmetrics, Bookmarking, Social media |
+| id | display_name | first_author | last_author | is_oa | top_concepts |
+|:---|:---|:---|:---|:---|:---|
+| W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis | Massimo Aria | Corrado Cuccurullo | FALSE | Workflow, Bibliometrics, Software |
+| W2038196424 | Coverage and adoption of altmetrics sources in the bibliometric community | Stefanie Haustein | Jens Terliesner | FALSE | Altmetrics, Bookmarking, Social media |
 
 **Goal**: Download all works given their PMIDs.
 
@@ -160,18 +163,15 @@ works_from_pmids <- oa_fetch(
 )
 #> Requesting url: https://api.openalex.org/works?filter=pmid%3A14907713%7C32572199
 #> Getting 1 page of results with a total of 2 records...
-```
-
-``` r
 works_from_pmids |>
   show_works() |>
   knitr::kable()
 ```
 
-| id          | display_name                                                                       | first_author    | last_author     | so                              | url                                             | is_oa | top_concepts                 |
-|:------------|:-----------------------------------------------------------------------------------|:----------------|:----------------|:--------------------------------|:------------------------------------------------|:------|:-----------------------------|
-| W1775749144 | PROTEIN MEASUREMENT WITH THE FOLIN PHENOL REAGENT                                  | Oliver H. Lowry | ROSE J. RANDALL | Journal of Biological Chemistry | <https://doi.org/10.1016/s0021-9258(19)52451-6> | TRUE  | Reagent, Phenol              |
-| W3036882247 | Integrating spatial gene expression and breast tumour morphology via deep learning | Bryan He        | James Zou       | Nature Biomedical Engineering   | <https://doi.org/10.1038/s41551-020-0578-x>     | FALSE | Histopathology, Gene, Cancer |
+| id | display_name | first_author | last_author | is_oa | top_concepts |
+|:---|:---|:---|:---|:---|:---|
+| W1775749144 | PROTEIN MEASUREMENT WITH THE FOLIN PHENOL REAGENT | OliverH. Lowry | RoseJ. Randall | TRUE | Reagent, Phenol |
+| W3036882247 | Integrating spatial gene expression and breast tumour morphology via deep learning | Bryan He | James Zou | FALSE | Histopathology, Gene, Cancer |
 
 **Goal**: Download all works published by a set of authors (known
 ORCIDs).
@@ -186,29 +186,26 @@ works_from_orcids <- oa_fetch(
   verbose = TRUE
 )
 #> Requesting url: https://api.openalex.org/works?filter=author.orcid%3A0000-0001-6187-6610%7C0000-0002-8517-9411
-#> Getting 2 pages of results with a total of 259 records...
+#> Getting 2 pages of results with a total of 258 records...
 #> Warning in oa_request(oa_query(filter = filter_i, multiple_id = multiple_id, : 
 #> The following work(s) have truncated lists of authors: W4230863633.
 #> Query each work separately by its identifier to get full list of authors.
 #> For example:
 #>   lapply(c("W4230863633"), \(x) oa_fetch(identifier = x))
 #> Details at https://docs.openalex.org/api-entities/authors/limitations.
-```
-
-``` r
 works_from_orcids |>
   show_works() |>
   knitr::kable()
 ```
 
-| id          | display_name                                                                                        | first_author    | last_author          | so                         | url                                                                                | is_oa | top_concepts                                         |
-|:------------|:----------------------------------------------------------------------------------------------------|:----------------|:---------------------|:---------------------------|:-----------------------------------------------------------------------------------|:------|:-----------------------------------------------------|
-| W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis                                 | Massimo Aria    | Corrado Cuccurullo   | Journal of Informetrics    | <https://doi.org/10.1016/j.joi.2017.08.007>                                        | FALSE | Workflow, Bibliometrics, Software                    |
-| W2741809807 | The state of OA: a large-scale analysis of the prevalence and impact of Open Access articles        | Heather Piwowar | Stefanie Haustein    | PeerJ                      | <https://doi.org/10.7717/peerj.4375>                                               | TRUE  | Citation, License, Bibliometrics                     |
-| W2122130843 | Scientometrics 2.0: New metrics of scholarly impact on the social Web                               | Jason Priem     | Bradely H. Hemminger | First Monday               | <https://doi.org/10.5210/fm.v15i7.2874>                                            | FALSE | Bookmarking, Altmetrics, Social media                |
-| W1553564559 | Altmetrics in the wild: Using social media to explore scholarly impact                              | Jason Priem     | Bradley M. Hemminger | arXiv (Cornell University) | <https://arxiv.org/abs/1203.4745>                                                  | TRUE  | Altmetrics, Social media, Citation                   |
-| W3005144120 | Mapping the Evolution of Social Research and Data Science on 30 Years of Social Indicators Research | Massimo Aria    | Maria Spano          | Social Indicators Research | <https://doi.org/10.1007/s11205-020-02281-3>                                       | FALSE | Human geography, Data collection, Position (finance) |
-| W3130540911 | altmetrics: a manifesto                                                                             | Jason Priem     | Cameron Neylon       | NA                         | <https://digitalcommons.unl.edu/cgi/viewcontent.cgi?article=1187&context=scholcom> | FALSE | Altmetrics, Manifesto                                |
+| id | display_name | first_author | last_author | is_oa | top_concepts |
+|:---|:---|:---|:---|:---|:---|
+| W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis | Massimo Aria | Corrado Cuccurullo | FALSE | Workflow, Bibliometrics, Software |
+| W2741809807 | The state of OA: a large-scale analysis of the prevalence and impact of Open Access articles | Heather Piwowar | Stefanie Haustein | TRUE | Citation, License, Bibliometrics |
+| W2122130843 | Scientometrics 2.0: New metrics of scholarly impact on the social Web | Jason Priem | Bradely H. Hemminger | FALSE | Bookmarking, Altmetrics, Social media |
+| W1553564559 | Altmetrics in the wild: Using social media to explore scholarly impact | Jason Priem | Bradley M. Hemminger | TRUE | Altmetrics, Social media, Citation |
+| W3005144120 | Mapping the Evolution of Social Research and Data Science on 30 Years of Social Indicators Research | Massimo Aria | Maria Spano | FALSE | Human geography, Data collection, Position (finance) |
+| W3130540911 | altmetrics: a manifesto | Jason Priem | Cameron Neylon | FALSE | Altmetrics, Manifesto |
 
 **Goal**: Download all works that have been cited more than 50 times,
 published between 2020 and 2021, and include the strings “bibliometric
@@ -226,23 +223,20 @@ works_search <- oa_fetch(
   verbose = TRUE
 )
 #> Requesting url: https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc
-#> Getting 2 pages of results with a total of 372 records...
-```
-
-``` r
+#> Getting 2 pages of results with a total of 376 records...
 works_search |>
   show_works() |>
   knitr::kable()
 ```
 
-| id          | display_name                                                                                                                               | first_author        | last_author        | so                                             | url                                             | is_oa | top_concepts                                                  |
-|:------------|:-------------------------------------------------------------------------------------------------------------------------------------------|:--------------------|:-------------------|:-----------------------------------------------|:------------------------------------------------|:------|:--------------------------------------------------------------|
-| W3160856016 | How to conduct a bibliometric analysis: An overview and guidelines                                                                         | Naveen Donthu       | Weng Marc Lim      | Journal of Business Research                   | <https://doi.org/10.1016/j.jbusres.2021.04.070> | TRUE  | Bibliometrics, Field (mathematics), Resource (disambiguation) |
-| W3001491100 | Software tools for conducting bibliometric analysis in science: An up-to-date review                                                       | José A. Moral-Muñoz | Manuel J. Cobo     | El Profesional de la Informacion               | <https://doi.org/10.3145/epi.2020.ene.03>       | TRUE  | Bibliometrics, Visualization, Set (abstract data type)        |
-| W3038273726 | Investigating the emerging COVID-19 research trends in the field of business and management: A bibliometric analysis approach              | Surabhi Verma       | Anders Gustafsson  | Journal of Business Research                   | <https://doi.org/10.1016/j.jbusres.2020.06.057> | TRUE  | Bibliometrics, Field (mathematics), Empirical research        |
-| W3044902155 | Financial literacy: A systematic review and bibliometric analysis                                                                          | Kirti Goyal         | Satish Kumar       | International Journal of Consumer Studies      | <https://doi.org/10.1111/ijcs.12605>            | FALSE | Financial literacy, Content analysis, Citation                |
-| W3042215340 | A bibliometric analysis using VOSviewer of publications on COVID-19                                                                        | Yuetian Yu          | Erzhen Chen        | Annals of Translational Medicine               | <https://doi.org/10.21037/atm-20-4235>          | TRUE  | Citation, Bibliometrics, China                                |
-| W3198357836 | Artificial intelligence and machine learning in finance: Identifying foundations, themes, and research clusters from bibliometric analysis | John W. Goodell     | Debidutta Pattnaik | Journal of Behavioral and Experimental Finance | <https://doi.org/10.1016/j.jbef.2021.100577>    | FALSE | Scholarship, Valuation (finance), Corporate finance           |
+| id | display_name | first_author | last_author | is_oa | top_concepts |
+|:---|:---|:---|:---|:---|:---|
+| W3160856016 | How to conduct a bibliometric analysis: An overview and guidelines | Naveen Donthu | Weng Marc Lim | TRUE | Bibliometrics, Field (mathematics), Resource (disambiguation) |
+| W3001491100 | Software tools for conducting bibliometric analysis in science: An up-to-date review | José A. Moral-Muñoz | Manuel J. Cobo | TRUE | Bibliometrics, Visualization, Set (abstract data type) |
+| W3038273726 | Investigating the emerging COVID-19 research trends in the field of business and management: A bibliometric analysis approach | Surabhi Verma | Anders Gustafsson | TRUE | Bibliometrics, Field (mathematics), Empirical research |
+| W3044902155 | Financial literacy: A systematic review and bibliometric analysis | Kirti Goyal | Satish Kumar | FALSE | Financial literacy, Content analysis, Citation |
+| W3042215340 | A bibliometric analysis using VOSviewer of publications on COVID-19 | Yuetian Yu | Erzhen Chen | TRUE | Citation, Bibliometrics, China |
+| W3198357836 | Artificial intelligence and machine learning in finance: Identifying foundations, themes, and research clusters from bibliometric analysis | John W. Goodell | Debidutta Pattnaik | FALSE | Scholarship, Valuation (finance), Corporate finance |
 
 ### 🧑 Authors
 
@@ -263,10 +257,10 @@ authors_from_orcids |>
   knitr::kable()
 ```
 
-| id          | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                                                |
-|:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:----------------------------------------------------------------------------|
-| A5069892096 | Massimo Aria | 0000-0002-8517-9411 |         197 |          10881 | University of Naples Federico II | Physiology, Pathology and Forensic Medicine, Periodontics                   |
-| A5023888391 | Jason Priem  | 0000-0001-6187-6610 |          62 |           3673 | OurResearch                      | Statistics, Probability and Uncertainty, Information Systems, Communication |
+| id | display_name | orcid | works_count | cited_by_count | top_concepts |
+|:---|:---|:---|---:|---:|:---|
+| A5069892096 | Massimo Aria | 0000-0002-8517-9411 | 196 | 11199 | Physiology, Pathology and Forensic Medicine, Periodontics |
+| A5023888391 | Jason Priem | 0000-0001-6187-6610 | 62 | 3700 | Statistics, Probability and Uncertainty, Information Systems, Communication |
 
 **Goal**: Acquire information on the authors of this package.
 
@@ -283,10 +277,10 @@ authors_from_names |>
   knitr::kable()
 ```
 
-| id          | display_name | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                                                |
-|:------------|:-------------|:--------------------|------------:|---------------:|:---------------------------------|:----------------------------------------------------------------------------|
-| A5069892096 | Massimo Aria | 0000-0002-8517-9411 |         197 |          10881 | University of Naples Federico II | Physiology, Pathology and Forensic Medicine, Periodontics                   |
-| A5023888391 | Jason Priem  | 0000-0001-6187-6610 |          62 |           3673 | OurResearch                      | Statistics, Probability and Uncertainty, Information Systems, Communication |
+| id | display_name | orcid | works_count | cited_by_count | top_concepts |
+|:---|:---|:---|---:|---:|:---|
+| A5069892096 | Massimo Aria | 0000-0002-8517-9411 | 196 | 11199 | Physiology, Pathology and Forensic Medicine, Periodontics |
+| A5023888391 | Jason Priem | 0000-0001-6187-6610 | 62 | 3700 | Statistics, Probability and Uncertainty, Information Systems, Communication |
 
 **Goal**: Download all authors’ records of scholars who work at the
 [University of Naples Federico
@@ -305,77 +299,33 @@ my_arguments <- list(
 )
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #>      count db_response_time_ms page per_page
-#> [1,]    44                  81    1        1
-```
-
-``` r
+#> [1,]    46                 101    1        1
 
 if (do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))[1]>0){
 do.call(oa_fetch, my_arguments) |>
   show_authors() |>
   knitr::kable()
 }
-#> Warning: Unknown or uninitialised column: `name`.
+#> Warning: Unknown or uninitialised column: `type`.
 #> Warning: Unknown or uninitialised column: `display_name`.
-#> Warning: Unknown or uninitialised column: `name`.
+#> Warning: Unknown or uninitialised column: `type`.
 #> Warning: Unknown or uninitialised column: `display_name`.
-#> Warning: Unknown or uninitialised column: `name`.
+#> Warning: Unknown or uninitialised column: `type`.
 #> Warning: Unknown or uninitialised column: `display_name`.
-#> Warning: Unknown or uninitialised column: `name`.
-#> Warning: Unknown or uninitialised column: `display_name`.
-#> Warning: Unknown or uninitialised column: `name`.
-#> Warning: Unknown or uninitialised column: `display_name`.
-#> Warning: Unknown or uninitialised column: `name`.
+#> Warning: Unknown or uninitialised column: `type`.
 #> Warning: Unknown or uninitialised column: `display_name`.
 ```
 
-| id          | display_name         | orcid               | works_count | cited_by_count | affiliation_display_name         | top_concepts                                                                                      |
-|:------------|:---------------------|:--------------------|------------:|---------------:|:---------------------------------|:--------------------------------------------------------------------------------------------------|
-| A5106552509 | C. Sciacca           | 0000-0002-8412-4072 |        3803 |         140341 | INFN Sezione di Napoli           |                                                                                                   |
-| A5091797706 | L. Lista             | 0000-0001-6471-5492 |        3730 |         162016 | INFN Sezione di Napoli           | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
-| A5003544129 | Annamaria Colao      | 0000-0001-6986-266X |        1305 |          44071 | University of Naples Federico II | Endocrinology, Diabetes and Metabolism, Endocrinology, Diabetes and Metabolism, Surgery           |
-| A5106315809 | M. Merola            | 0000-0002-7082-8108 |        1194 |          66583 | INFN Sezione di Napoli           |                                                                                                   |
-| A5026402548 | Gabriella Fabbrocini | 0000-0002-0064-1874 |         992 |          16411 | University of Naples Federico II | Dermatology, Immunology, Dermatology                                                              |
-| A5064690950 | R. De Rosa           | 0000-0002-4004-947X |         915 |          89676 | University of Naples Federico II | Astronomy and Astrophysics, Ocean Engineering, Astronomy and Astrophysics                         |
+| id | display_name | orcid | works_count | cited_by_count | top_concepts |
+|:---|:---|:---|---:|---:|:---|
+| A5106552509 | C. Sciacca | 0000-0002-8412-4072 | 2724 | 95115 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5106315809 | M. Merola | 0000-0002-7082-8108 | 1330 | 70881 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5003544129 | Annamaria Colao | 0000-0001-6986-266X | 1314 | 44254 | Endocrinology, Diabetes and Metabolism, Endocrinology, Diabetes and Metabolism, Surgery |
+| A5076706548 | Salvatore Capozziello | 0000-0003-4886-2024 | 1029 | 34726 | Astronomy and Astrophysics, Nuclear and High Energy Physics, Astronomy and Astrophysics |
+| A5081032576 | Giovanni Esposito | 0000-0003-0565-7127 | 1024 | 20760 | Surgery, Cardiology and Cardiovascular Medicine, Radiology, Nuclear Medicine and Imaging |
+| A5026402548 | Gabriella Fabbrocini | 0000-0002-0064-1874 | 992 | 16667 | Dermatology, Immunology, Dermatology |
 
 ## 🍒 Example analyses
-
-**Goal**: track the popularity of *Biology* concepts over time.
-
-We first download the records of all level-1 concepts/keywords that
-concern over one million works:
-
-``` r
-library(gghighlight)
-concept_df <- oa_fetch(
-  entity = "concepts",
-  level = 1,
-  ancestors.id = "https://openalex.org/C86803240", # Biology
-  works_count = ">1000000"
-)
-concept_df |>
-  select(display_name, counts_by_year) |>
-  tidyr::unnest(counts_by_year) |>
-  filter(year < 2022) |>
-  ggplot() +
-  aes(x = year, y = works_count, color = display_name) +
-  facet_wrap(~display_name) +
-  geom_line(linewidth = 0.7) +
-  scale_color_brewer(palette = "Dark2") +
-  labs(
-    x = NULL, y = "Works count",
-    title = "Virology spiked in 2020."
-  ) +
-  guides(color = "none") +
-  gghighlight(
-    max(works_count) > 200000,
-    min(works_count) < 400000,
-    label_params = list(nudge_y = 10^5, segment.color = NA)
-  )
-#> label_key: display_name
-```
-
-<img src="man/figures/README-biological-concepts-1.png" width="100%" />
 
 **Goal**: Rank institutions in Italy by total number of citations.
 
@@ -393,9 +343,6 @@ italy_insts <- oa_fetch(
 )
 #> Requesting url: https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation
 #> Getting 2 pages of results with a total of 232 records...
-```
-
-``` r
 italy_insts |>
   slice_max(cited_by_count, n = 8) |>
   mutate(display_name = forcats::fct_reorder(display_name, cited_by_count)) |>
@@ -421,7 +368,7 @@ And what do they publish on?
 concept_cloud <- italy_insts |>
   select(inst_id = id, topics) |>
   tidyr::unnest(topics) |>
-  filter(name == "field") |>
+  filter(type == "field") |>
   select(display_name, count) |>
   group_by(display_name) |>
   summarise(score = sqrt(sum(count)))
@@ -440,7 +387,7 @@ wordcloud::wordcloud(
 **Goal**: Visualize big journals’ topics.
 
 We first download all records regarding journals that have published
-more than 300,000 works, then visualize their scored concepts:
+more than 300,000 works, then visualize their scored topics:
 
 ``` r
 # The package ggtext needs to be installed to run this chunk
@@ -464,7 +411,7 @@ jours <- jours_all |>
   distinct(display_name, .keep_all = TRUE) |>
   select(jour = display_name, topics) |>
   tidyr::unnest(topics) |>
-  filter(name == "field") |>
+  filter(type == "field") |>
   group_by(id, jour, display_name) |> 
   summarise(score = (sum(count))^(1/3), .groups = "drop") |> 
   left_join(concept_abbrev, by = join_by(id, display_name)) |>
@@ -530,9 +477,6 @@ library(tidygraph)
 #> The following object is masked from 'package:stats':
 #> 
 #>     filter
-```
-
-``` r
 
 snowball_docs <- oa_snowball(
   identifier = c("W1964141474", "W1963991285"),
@@ -542,13 +486,10 @@ snowball_docs <- oa_snowball(
 #> Getting 1 page of results with a total of 2 records...
 #> Collecting all documents citing the target papers...
 #> Requesting url: https://api.openalex.org/works?filter=cites%3AW1963991285%7CW1964141474
-#> Getting 3 pages of results with a total of 593 records...
+#> Getting 3 pages of results with a total of 591 records...
 #> Collecting all documents cited by the target papers...
 #> Requesting url: https://api.openalex.org/works?filter=cited_by%3AW1963991285%7CW1964141474
 #> Getting 1 page of results with a total of 94 records...
-```
-
-``` r
 ggraph(graph = as_tbl_graph(snowball_docs), layout = "stress") +
   geom_edge_link(aes(alpha = after_stat(index)), show.legend = FALSE) +
   geom_node_point(aes(fill = oa_input, size = cited_by_count), shape = 21, color = "white") +
@@ -639,7 +580,16 @@ connected to each other. There are five types of entities:
 - **Institutions** are universities and other orgs that are affiliated
   with works (via authors)
 
-- **Concepts** *tag* Works with a topic
+- **Publishers** are companies that publish works
+
+- **Funders** are organizations that fund works
+
+- **Topics** are tags automatically given to works based on information
+  about the work; grouped into subfields, which are grouped into fields,
+  which are grouped into top-level domains
+
+- **Keywords** are terms associated with works derived from Topics (at
+  most 5 per work)
 
 ## 🤝 Code of Conduct
 

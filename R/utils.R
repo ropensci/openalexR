@@ -147,6 +147,82 @@ oa_apikey <- function() {
 }
 
 
+#' Build abstract from inverted index
+#'
+#' @param ab List. Inverted index of abstract.
+#' @param build Logical. If TRUE, build the abstract.
+#'
+#' @return Character string. The abstract of the paper.
+#' @keywords internal
+abstract_build <- function(ab, build = TRUE) {
+  if (is.null(ab) || !build) {
+    return(NULL)
+  }
+  w <- rep(names(ab), lengths(ab))
+  ind <- unlist(ab)
+  if (is.null(ind)) {
+    return("")
+  }
+
+  paste(w[order(ind)], collapse = " ", sep = "")
+}
+
+#' Process paper authorships
+#'
+#' @param authorships List. Authorships element of paper.
+#'
+#' @return List. A list of one dataframe with the processed authors:
+#' id, display_name, orcid, author_position, is_corresponding, affiliations, affiliation_raw
+#' @keywords internal
+process_paper_authors <- function(authorships){
+  if (is.null(authorships)) {
+    return(NULL)
+  }
+  authors_ls <- lapply(authorships, function(l) {
+    l_author <- if (length(l$author)) {
+      replace_w_na(l$author)
+    } else {
+      empty_list(names(l$author))
+    }
+
+    affiliation_raw <- if (length(l$raw_affiliation_strings)) {
+      l$raw_affiliation_strings[[1]]
+    } else {
+      NA_character_
+    }
+
+    affs <- list(
+      affiliations = process_affil(l$institutions),
+      affiliation_raw = affiliation_raw
+    )
+
+    c(l_author, l[c("author_position", "is_corresponding")], affs)
+  })
+
+  list(rbind_oa_ls(authors_ls))
+}
+
+
+#' Process affiliations
+#'
+#' @param l_institution List. Nested elements include
+#' id, display_name, ror, country_code, type, lineage
+#'
+#' @return Dataframe of with the following columns:
+#' id, display_name, ror, country_code, type, lineage
+#' @keywords internal
+process_affil <- function(l_institution){
+  if (!length(l_institution)){
+    return(list(empty_df()))
+  }
+  l_inst <- lapply(l_institution, function(x) {
+    x$lineage <- paste(x$lineage, collapse = ", ")
+    x
+  })
+  subs_na(l_inst, "rbind_df")
+}
+
+
 #' Process topics
 #'
 #' @param entity List. One single work or author to process.
@@ -169,7 +245,7 @@ process_topics <- function(entity, extra) {
       topic[vapply(topic, is.list, logical(1))]
     )
     relev_df <- subs_na(relev, "rbind_df")[[1]]
-    relev_df$name <- rownames(relev_df)
+    relev_df$type <- rownames(relev_df)
     cbind(i = i, topic[extra], relev_df)
   })
   topics_df <- do.call(rbind.data.frame, topics_ls)

@@ -254,19 +254,19 @@ do.call(oa_fetch, c(italian_insts, list(count_only = TRUE)))
 dplyr::glimpse(do.call(oa_fetch, italian_insts))
 ```
 
-## Concepts (think theme, keywords)
+## Keywords
 
-**Example**: We want to download the records of all the concepts that concern at least one million works:
+**Example**: We want to download the records of all the keywords that more than 1000 works were tagged with:
 
 ```{r}
-popular_concepts <- list(
-  entity = "concepts",
-  works_count = ">1000000",
+popular_keywords <- list(
+  entity = "keywords",
+  works_count = ">1000",
   verbose = TRUE
 )
 
-do.call(oa_fetch, c(popular_concepts, list(count_only = TRUE)))
-dplyr::glimpse(do.call(oa_fetch, popular_concepts))
+do.call(oa_fetch, c(popular_keywords, list(count_only = TRUE)))
+dplyr::glimpse(do.call(oa_fetch, popular_keywords))
 ```
 
 ## Other examples

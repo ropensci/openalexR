@@ -34,4 +34,6 @@ reference:
   - countrycode
   - concept_abbrev
   - oa_entities
+  - get_coverage
+  - oa2df_coverage
   - oa2bibliometrix

@@ -13,7 +13,7 @@ oa_random(
 \arguments{
 \item{entity}{Character. Scholarly entity of the search.
 The argument can be one of
-c("works", "authors", "institutions", "concepts", "funders", "sources", "publishers", "topics").
+c("works", "authors", "institutions", "keywords", "funders", "sources", "publishers", "topics").
 If not provided, `entity` is guessed from `identifier`.}
 
 \item{output}{Character.

@@ -1,12 +1,12 @@
 #' Convert OpenAlex collection from list to data frame
 #'
 #' It converts bibliographic collections gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
-#' The function converts a collection of records about works, authors, institutions, venues or concepts obtained using \code{oa_request} into a data frame/tibble.
+#' The function converts a collection of records about works, authors, institutions, venues or keywords obtained using \code{oa_request} into a data frame/tibble.
 #'
 #' @param data List. Output of \code{oa_request}.
 #' @param entity Character. Scholarly entity of the search.
 #' The argument can be one of
-#' c("works", "authors", "institutions", "concepts", "funders", "sources", "publishers", "topics").
+#' c("works", "authors", "institutions", "keywords", "funders", "sources", "publishers", "topics").
 #' @param abstract Logical. If TRUE, the function returns also the abstract of each item.
 #' Ignored if entity is different from "works". Defaults to TRUE.
 #' @param verbose Logical.
@@ -48,6 +48,14 @@
 #'
 #' @export
 oa2df <- function(data, entity, options = NULL, count_only = FALSE, group_by = NULL, abstract = TRUE, verbose = TRUE) {
+  rlang::warn(
+    "Note: `oa_fetch` and `oa2df` now return new names for some columns in openalexR v2.0.0.
+    See NEWS.md for the list of changes.
+    Call `get_coverage()` to view the all updated columns and their original names in OpenAlex.",
+    .frequency = "regularly",
+    .frequency_id = "oa2df_column_change"
+  )
+
   if (length(data) == 0) {
     return(NULL)
   }
@@ -72,6 +80,7 @@ oa2df <- function(data, entity, options = NULL, count_only = FALSE, group_by = N
     authors = authors2df(data, verbose),
     institutions = institutions2df(data, verbose),
     concepts = concepts2df(data, verbose),
+    keywords = keywords2df(data, verbose),
     funders = funders2df(data, verbose),
     sources = sources2df(data, verbose),
     publishers = publishers2df(data, verbose),
@@ -137,14 +146,16 @@ oa2df <- function(data, entity, options = NULL, count_only = FALSE, group_by = N
 works2df <- function(data, abstract = TRUE, verbose = TRUE,
                      pb = if (verbose) oa_progress(length(data)) else NULL) {
   col_order <- c(
-    "id", "title", "display_name", "author", "abstract", "publication_date", "relevance_score",
-    "source_display_name", "source_id", "issn_l", "landing_page_url", "pdf_url",
-    "license", "version", "first_page", "last_page", "volume", "issue", "is_oa",
-    "is_oa_anywhere", "oa_status", "oa_url", "any_repository_has_fulltext",
-    "language", "grants", "cited_by_count", "counts_by_year",
-    "publication_year", "cited_by_api_url", "ids", "doi", "type",
-    "referenced_works", "related_works", "is_paratext", "is_retracted",
-    "concepts", "topics", "apc"
+    "id", "title", "display_name", "authorships", "abstract", "doi",
+    "publication_date", "publication_year", "relevance_score", "fwci",
+    "cited_by_count", "counts_by_year", "cited_by_api_url", "ids", "type",
+    "is_oa", "is_oa_anywhere", "oa_status", "oa_url",
+    "any_repository_has_fulltext", "source_display_name", "source_id", "issn_l",
+    "host_organization", "host_organization_name",
+    "landing_page_url", "pdf_url", "license", "version", "referenced_works",
+    "referenced_works_count", "related_works", "concepts", "topics", "keywords",
+    "is_paratext", "is_retracted", "language", "grants", "apc",
+    "first_page", "last_page", "volume", "issue"
   )
   works_process <- tibble::tribble(
     ~type, ~field,
@@ -161,9 +172,12 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
     "identical", "is_retracted",
     "identical", "relevance_score",
     "identical", "language",
+    "identical", "fwci",
+    "identical", "referenced_works_count",
     "flat", "grants",
     "flat", "referenced_works",
     "flat", "related_works",
+    "rbind_df", "keywords",
     "rbind_df", "counts_by_year",
     "rbind_df", "concepts",
     "flat", "apc_list",
@@ -174,7 +188,9 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
   so_cols <- c(
     source_id = "id",
     source_display_name = "display_name",
-    issn_l = "issn_l"
+    issn_l = "issn_l",
+    host_organization = "host_organization",
+    host_organization_name = "host_organization_name"
   )
 
   n <- length(data)
@@ -195,7 +211,7 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
     if (!is.null(sim_fields$publication_date)) {
       sim_fields$publication_date <- as.Date(sim_fields$publication_date)
     }
-    author <- process_paper_authors(paper$authorships)
+    authorships <- process_paper_authors(paper$authorships)
     ab <- abstract_build(paper$abstract_inverted_index, abstract)
     paper_biblio <- replace_w_na(paper$biblio)
     open_access <- replace_w_na(paper$open_access)
@@ -221,7 +237,7 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
     }
     topics <- process_topics(paper, "score")
     out_ls <- c(sim_fields, venue, source, open_access, paper_biblio,
-                list(author = author, abstract = ab, apc = apc), topics)
+                list(authorships = authorships, abstract = ab, apc = apc), topics)
     out_ls[sapply(out_ls, is.null)] <- NULL
     list_df[[i]] <- out_ls
   }
@@ -229,82 +245,6 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
   out_df <- rbind_oa_ls(list_df)
   out_df[, intersect(col_order, names(out_df))]
 }
-
-#' Build abstract from inverted index
-#'
-#' @param ab List. Inverted index of abstract.
-#' @param build Logical. If TRUE, build the abstract.
-#'
-#' @return Character string. The abstract of the paper.
-#' @keywords internal
-abstract_build <- function(ab, build = TRUE) {
-  if (is.null(ab) || !build) {
-    return(NULL)
-  }
-  w <- rep(names(ab), lengths(ab))
-  ind <- unlist(ab)
-  if (is.null(ind)) {
-    return("")
-  }
-
-  paste(w[order(ind)], collapse = " ", sep = "")
-}
-
-#' Process paper authorships
-#'
-#' @param authorships List. Authorships element of paper.
-#'
-#' @return List. A list of one dataframe with the processed authors:
-#' id, display_name, orcid, author_position, is_corresponding, affiliations, affiliation_raw
-#' @keywords internal
-process_paper_authors <- function(authorships){
-  if (is.null(authorships)) {
-    return(NULL)
-  }
-  authors_ls <- lapply(authorships, function(l) {
-    l_author <- if (length(l$author)) {
-      replace_w_na(l$author)
-    } else {
-      empty_list(names(l$author))
-    }
-
-    affiliation_raw <- if (length(l$raw_affiliation_strings)) {
-      l$raw_affiliation_strings[[1]]
-    } else {
-      NA_character_
-    }
-
-    affs <- list(
-      affiliations = process_affil(l$institutions),
-      affiliation_raw = affiliation_raw
-    )
-
-    c(l_author, l[c("author_position", "is_corresponding")], affs)
-  })
-
-  list(rbind_oa_ls(authors_ls))
-}
-
-
-#' Process affiliations
-#'
-#' @param l_institution List. Nested elements include
-#' id, display_name, ror, country_code, type, lineage
-#'
-#' @return Dataframe of with the following columns:
-#' id, display_name, ror, country_code, type, lineage
-#' @keywords internal
-process_affil <- function(l_institution){
-  if (!length(l_institution)){
-    return(list(empty_df()))
-  }
-  l_inst <- lapply(l_institution, function(x) {
-    x$lineage <- paste(x$lineage, collapse = ", ")
-    x
-  })
-  subs_na(l_inst, "rbind_df")
-}
-
 
 
 #' Convert OpenAlex collection of authors' records from list format to data frame
@@ -346,9 +286,6 @@ authors2df <- function(data, verbose = TRUE,
   n <- length(data)
   list_df <- vector(mode = "list", length = n)
 
-  inst_cols <- c("id", "display_name", "ror", "country_code", "type", "lineage")
-  empty_inst <- empty_list(inst_cols)
-
   author_process <- tibble::tribble(
     ~type, ~field,
     "identical", "id",
@@ -376,36 +313,23 @@ authors2df <- function(data, verbose = TRUE,
       SIMPLIFY = FALSE
     )
 
-    # current affiliation
-    sub_affiliation <- item$last_known_institutions
-    if (!is.null(sub_affiliation) && length(sub_affiliation)) {
-      sub_affiliation <- sub_affiliation[[1]]
-      if (is.na(sub_affiliation[[1]])) {
-        sub_affiliation <- empty_inst
-      }
-      sub_affiliation$lineage <- paste(sub_affiliation$lineage, collapse = ", ")
-      sub_affiliation <- prepend(sub_affiliation, "affiliation")
-    }
-    sub_affiliation <- replace_w_na(sub_affiliation)
-
-    # all affiliations
-    if (!is.null(item$affiliations)) {
-      l_inst <- lapply(item$affiliations, function(x) x$institution)
-      affs <- list(affiliations = process_affil(l_inst))
+    # current affiliations
+    if (!is.null(item$last_known_institutions)) {
+      l_inst <- item$last_known_institutions
+      affs <- list(last_known_institutions = process_affil(l_inst))
     } else {
       affs <- NULL
     }
 
     topics <- process_topics(item, "count")
-    list_df[[i]] <- c(sim_fields, sub_affiliation, affs, topics)
+    list_df[[i]] <- c(sim_fields, affs, item$summary_stats, topics)
   }
 
   col_order <- c(
     "id", "display_name", "display_name_alternatives", "relevance_score",
     "ids", "orcid", "works_count", "cited_by_count", "counts_by_year",
-    "affiliation_display_name", "affiliation_id", "affiliation_ror",
-    "affiliation_country_code", "affiliation_type", "affiliation_lineage",
-    "affiliations", "topics", "works_api_url"
+    "2yr_mean_citedness", "h_index", "i10_index",
+    "last_known_institutions", "topics", "works_api_url"
   )
 
   out_df <- rbind_oa_ls(list_df)
@@ -462,6 +386,7 @@ institutions2df <- function(data, verbose = TRUE,
     "identical", "updated_date",
     "identical", "created_date",
     "identical", "relevance_score",
+    "flat", "summary_stats",
     "flat", "display_name_alternatives",
     "flat", "display_name_acronyms",
     "row_df", "geo",
@@ -484,7 +409,7 @@ institutions2df <- function(data, verbose = TRUE,
     interna <- NULL
     if (!is.null(item$international)) {
       interna <- list(
-        display_name_international = subs_na(
+        international_display_name = subs_na(
           item$international$display_name,
           type = "flat"
         )
@@ -497,10 +422,10 @@ institutions2df <- function(data, verbose = TRUE,
 
   col_order <- c(
     "id", "display_name", "display_name_alternatives", "display_name_acronyms",
-    "display_name_international", "ror", "ids", "country_code", "geo", "type",
+    "international_display_name", "ror", "ids", "country_code", "geo", "type",
     "homepage_url", "image_url", "image_thumbnail_url",
     "associated_institutions", "relevance_score", "works_count",
-    "cited_by_count", "counts_by_year",
+    "cited_by_count", "counts_by_year", "summary_stats",
     "works_api_url", "topics", "updated_date", "created_date"
   )
 
@@ -599,6 +524,37 @@ concepts2df <- function(data, verbose = TRUE,
 
   out_df <- rbind_oa_ls(list_df)
   out_df[, intersect(col_order, names(out_df))]
+}
+
+
+#' Convert keywords from list to data frame
+#'
+#' The function converts a list of keywords obtained using \code{oa_request} or
+#' \code{oa_fetch(output = "list")} into a data frame/tibble. More on keyword at
+#' <https://help.openalex.org/hc/en-us/articles/24736201130391-Keywords>.
+#'
+#' @inheritParams works2df
+#'
+#' @return a data.frame.
+#'
+#'
+#' @examples
+#' \dontrun{
+#'
+#' x <- oa_fetch(
+#'   entity = "keywords",
+#'   options = list(sample = 5),
+#'   output = "list"
+#' )
+#'
+#' df <- oa2df(x, entity = "keywords")
+#'
+#' df
+#' }
+#'
+#' @export
+keywords2df <- function(data, verbose = TRUE) {
+  tibble::as_tibble(subs_na(data, "rbind_df")[[1]])
 }
 
 

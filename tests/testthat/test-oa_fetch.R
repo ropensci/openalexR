@@ -32,7 +32,7 @@ test_that("oa_request gives messages for unexpected input", {
   expect_message(oa_request(query_url, mailto = 123))
 })
 
-test_that("oa_fetch works", {
+test_that("oa_fetch works for multiple works", {
   skip_on_cran()
 
   work_ids <- c("W2741809807", "W3046863325")
@@ -47,7 +47,7 @@ test_that("oa_fetch works", {
     paste0("https://openalex.org/", sort(work_ids))
   )
 
-  expect_true("affiliation_raw" %in% names(multi_works$author[[1]]))
+  expect_true("affiliation_raw" %in% names(multi_works$authorships[[1]]))
 
   Sys.sleep(1 / 10)
   # warn about truncated authors
@@ -372,9 +372,9 @@ test_that("oa_fetch works with 1 identifier", {
   expect_s3_class(s, "data.frame")
   expect_s3_class(co, "data.frame")
 
-  expect_equal(dim(w), c(1, 38))
-  expect_equal(dim(a), c(1, 17))
-  expect_equal(dim(i), c(1, 21))
+  expect_equal(dim(w), c(1, 43))
+  expect_equal(dim(a), c(1, 14))
+  expect_equal(dim(i), c(1, 22))
   expect_equal(dim(f), c(1, 17))
   expect_equal(dim(p), c(1, 19))
   expect_equal(dim(s), c(1, 26))

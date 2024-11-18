@@ -1,9 +1,8 @@
 .onAttach <- function(libname, pkgname) {
   if (!grepl("suppress", Sys.getenv("openalexR.message"), ignore.case = TRUE)){
     packageStartupMessage(
-      "Thank you for using openalexR!\n",
-      "To acknowledge our work, please cite the package by calling ",
-      "`citation(\"openalexR\")`.\n",
+      "openalexR v2.0.0 introduces breaking changes.\n",
+      "See NEWS.md for details.\n\n",
       "To suppress this message, add `openalexR.message = suppressed` ",
       "to your .Renviron file."
     )

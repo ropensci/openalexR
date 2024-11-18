@@ -12,8 +12,8 @@ test_that("oa2df works", {
   expect_s3_class(nejm, "data.frame")
   expect_s3_class(nejm, "tbl")
 
-  www <- oa_fetch(identifier = "C136764020")
-  expect_equal(www$display_name, "World Wide Web")
+  www <- oa_fetch(identifier = "diagnosis", entity = "keywords")
+  expect_equal(www$display_name, "Diagnosis")
   expect_s3_class(www, "data.frame")
   expect_s3_class(www, "tbl")
 })

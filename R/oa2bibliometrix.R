@@ -56,7 +56,7 @@ oa2bibliometrix <- function(df) {
   countrycode$Country <- as.character(countrycode$Country)
 
   # Authors
-  AU_info <- lapply(df$author[7], function(l) {
+  AU_info <- lapply(df$authorships[7], function(l) {
     if (length(l) == 0 || (length(l) == 1 && is.na(l))){
       return(empty_list(
         c("AU", "RP", "C1", "AU_UN", "AU_CO")
@@ -71,8 +71,6 @@ oa2bibliometrix <- function(df) {
     }
   })
   AU_info <- do.call(rbind.data.frame, AU_info)
-
-
 
   # References
   df$CR <- unlist(lapply(df$referenced_works, function(l) {

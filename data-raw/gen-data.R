@@ -44,4 +44,12 @@ concept_abbrev <- tibble::tribble(
   "https://openalex.org/fields/30",   "Pharmacology, Toxicology and Pharmaceutics",       "Pharm"
   )
 
+oa2df_coverage <- list()
+for (entity in setdiff(oa_entities(), "concepts")) {
+  oa2df_coverage[[entity]] <- readr::read_csv(
+    sprintf("data-raw/coverage-%s.csv", entity)
+  )
+}
+
+usethis::use_data(oa2df_coverage, overwrite = TRUE)
 usethis::use_data(concept_abbrev, overwrite = TRUE)
