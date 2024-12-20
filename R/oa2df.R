@@ -230,10 +230,10 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
     apc <- NULL
     if (any(lengths(paper[c("apc_list", "apc_paid")]) > 0)) {
       apc_fields <- list(value = NA, currency = NA, value_usd = NA, provenance = NA)
-      apc <- list(rbind_oa_ls(list(
+      apc <- list(rbind.data.frame(
         c(type = "list", utils::modifyList(apc_fields, replace_w_na(paper$apc_list))),
         c(type = "paid", utils::modifyList(apc_fields, replace_w_na(paper$apc_paid)))
-      )))
+      ))
     }
     topics <- process_topics(paper, "score")
     out_ls <- c(sim_fields, venue, source, open_access, paper_biblio,
