@@ -230,7 +230,8 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
     apc <- NULL
     if (any(lengths(paper[c("apc_list", "apc_paid")]) > 0)) {
       apc_fields <- list(
-        value = NA_real_, currency = NA, value_usd = NA_real_, provenance = NA
+        value = NA_real_, currency = NA_character_,
+        value_usd = NA_real_, provenance = NA_character_
       )
       apc_list <- paper$apc_list[lengths(paper$apc_list) != 0]
       apc_paid <- paper$apc_paid[lengths(paper$apc_paid) != 0]
