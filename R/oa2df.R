@@ -229,10 +229,15 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
     # Process APC
     apc <- NULL
     if (any(lengths(paper[c("apc_list", "apc_paid")]) > 0)) {
-      apc_fields <- list(value = NA, currency = NA, value_usd = NA, provenance = NA)
+      apc_fields <- list(
+        value = NA_real_, currency = NA_character_,
+        value_usd = NA_real_, provenance = NA_character_
+      )
+      apc_list <- paper$apc_list[lengths(paper$apc_list) != 0]
+      apc_paid <- paper$apc_paid[lengths(paper$apc_paid) != 0]
       apc <- list(rbind.data.frame(
-        c(type = "list", utils::modifyList(apc_fields, as.list(paper$apc_list))),
-        c(type = "paid", utils::modifyList(apc_fields, as.list(paper$apc_paid)))
+        c(type = "list", utils::modifyList(apc_fields, as.list(apc_list))),
+        c(type = "paid", utils::modifyList(apc_fields, as.list(apc_paid)))
       ))
     }
     topics <- process_topics(paper, "score")
