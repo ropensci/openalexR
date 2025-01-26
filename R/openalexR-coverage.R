@@ -14,7 +14,7 @@ get_coverage <- function(entity = NULL) {
   oa2df_coverage <- getExportedValue("openalexR", "oa2df_coverage")
 
   if (!is.null(entity)) {
-    entity <- match.arg(entity, oa_entities())
+    entity <- rlang::arg_match(entity, oa_entities())
     oa2df_coverage[[entity]]
   } else {
     oa2df_coverage
