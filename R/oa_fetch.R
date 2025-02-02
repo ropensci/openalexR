@@ -313,8 +313,8 @@ oa_request <- function(query_url,
                        api_key = oa_apikey(),
                        parse = TRUE,
                        verbose = FALSE) {
-  # https://httr.r-lib.org/articles/api-packages.html#set-a-user-agent
-  ua <- httr::user_agent("https://github.com/ropensci/openalexR/")
+
+  ua <- "https://github.com/ropensci/openalexR/"
 
   # building query...
   is_group_by <- grepl("group_by", query_url)
@@ -655,11 +655,12 @@ oa_query <- function(filter = NULL,
     query <- options
   }
 
-  query_url <- httr::modify_url(
-    endpoint,
-    path = path,
-    query = query
-  )
+  my_req_url_query <- \(x,y) do.call(\(...) httr2::req_url_query(x,...), y)
+
+  query_url <- httr2::request(endpoint) |>
+    httr2::req_url_path(path) |>
+    my_req_url_query(query) |>
+    _$url
 
   if (is.null(oa_print())) {
     url_display <- query_url
@@ -708,32 +709,37 @@ oa_random <- function(entity = oa_entities(),
 }
 
 api_request <- function(query_url, ua, query, api_key = oa_apikey(), parse = TRUE) {
-  res <- httr::GET(query_url, ua, query = query, httr::add_headers(api_key = api_key))
+  my_req_url_query <- \(x,y) do.call(\(...) httr2::req_url_query(x,...), y)
+  res <- httr2::request(query_url) |>
+    httr2::req_user_agent(ua) |>
+    my_req_url_query(query) |>
+    httr2::req_headers(api_key = api_key) |>
+    httr2::req_perform()
 
   empty_res <- if (parse) list() else "{}"
 
-  if (httr::status_code(res) == 400) {
+  if (httr2::resp_status(res) == 400) {
     stop("HTTP status 400 Request Line is too large")
   }
 
-  if (httr::status_code(res) == 429) {
+  if (httr2::resp_status(res) == 429) {
     message("HTTP status 429 Too Many Requests")
     return(empty_res)
   }
 
-  m <- httr::content(res, "text", encoding = "UTF-8")
+  m <- httr2::resp_body_string(res)
   if (parse) {
     m <- jsonlite::fromJSON(m, simplifyVector = FALSE)
   }
 
-  if (httr::status_code(res) == 503) {
+  if (httr2::resp_status(res) == 503) {
     mssg <- regmatches(m, regexpr("(?<=<title>).*?(?=<\\/title>)", m, perl = TRUE))
     message(mssg, ". Please try setting `per_page = 25` in your function call!")
     return(empty_res)
   }
 
-  if (httr::status_code(res) == 200) {
-    if (httr::http_type(res) != "application/json") {
+  if (httr2::resp_status(res) == 200) {
+    if (httr2::resp_content_type(res) != "application/json") {
       stop("API did not return json", call. = FALSE)
     }
     return(m) # Depending on `parse`, results can be raw JSON or parsed R list
