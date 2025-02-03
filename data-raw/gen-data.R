@@ -42,7 +42,7 @@ concept_abbrev <- tibble::tribble(
   "https://openalex.org/fields/14",          "Business, Management and Accounting",         "Bus",
   "https://openalex.org/fields/17",                             "Computer Science",    "Comp Sci",
   "https://openalex.org/fields/30",   "Pharmacology, Toxicology and Pharmaceutics",       "Pharm"
-  )
+)
 
 oa2df_coverage <- list()
 for (entity in setdiff(oa_entities(), "concepts")) {

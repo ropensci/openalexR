@@ -340,7 +340,7 @@ test_that("oa_fetch works for sources", {
 
   s <- oa_fetch(entity = "sources", search = "nature")
   expect_s3_class(s, "data.frame")
-  expect_equal(ncol(s), 27)
+  expect_equal(ncol(s), 28)
   expect_true(nrow(s) > 200)
 })
 
@@ -377,7 +377,7 @@ test_that("oa_fetch works with 1 identifier", {
   expect_equal(dim(i), c(1, 22))
   expect_equal(dim(f), c(1, 17))
   expect_equal(dim(p), c(1, 19))
-  expect_equal(dim(s), c(1, 26))
+  expect_equal(dim(s), c(1, 27))
   expect_equal(dim(co), c(1, 16))
 
 })
