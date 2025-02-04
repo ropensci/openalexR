@@ -47,7 +47,8 @@ concept_abbrev <- tibble::tribble(
 oa2df_coverage <- list()
 for (entity in setdiff(oa_entities(), "concepts")) {
   oa2df_coverage[[entity]] <- readr::read_csv(
-    sprintf("data-raw/coverage-%s.csv", entity)
+    sprintf("data-raw/coverage-%s.csv", entity),
+    show_col_types = FALSE
   )
 }
 

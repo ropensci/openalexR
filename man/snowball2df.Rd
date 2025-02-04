@@ -27,10 +27,7 @@ for each work/row i:
 - connection_count: number of works in the universe linked to i (degree of i)
 }
 \description{
-|  id|title |...|cited_by_count| referenced_works   |cited_by |...|
-| 100|foo   |...|             1| 98, 99             |101      |...|
-| 200|bar   |...|             2| 198, 199           |201, 202 |...|
-| 300|wug   |...|             2| 296, 297, 298, 299 |301, 302 |...|
+Flatten snowball result
 }
 \examples{
 \dontrun{

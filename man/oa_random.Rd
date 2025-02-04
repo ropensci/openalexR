@@ -18,11 +18,11 @@ If not provided, `entity` is guessed from `identifier`.}
 
 \item{output}{Character.
 Type of output, one of `"tibble"`, `"dataframe"`, `"list"`, or `"raw"`.
-\itemize{
- \item{"tibble"}: {a tibble tidy data}
- \item{"dataframe"}: {a base data.frame tidy data}
- \item{"list"}: {a list of parsed JSON contents}
- \item{"raw"}: {a list of raw JSON strings (length depends on query)}
+\describe{
+ \item{tibble}{a tibble tidy data}
+ \item{dataframe}{a base data.frame tidy data}
+ \item{list}{a list of parsed JSON contents}
+ \item{raw}{a list of raw JSON strings (length depends on query)}
 }}
 
 \item{endpoint}{Character. URL of the OpenAlex Endpoint API server.
