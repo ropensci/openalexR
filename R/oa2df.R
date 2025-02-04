@@ -48,13 +48,16 @@
 #'
 #' @export
 oa2df <- function(data, entity, options = NULL, count_only = FALSE, group_by = NULL, abstract = TRUE, verbose = TRUE) {
-  rlang::warn(
-    "Note: `oa_fetch` and `oa2df` now return new names for some columns in openalexR v2.0.0.
-    See NEWS.md for the list of changes.
-    Call `get_coverage()` to view the all updated columns and their original names in OpenAlex.",
-    .frequency = "regularly",
-    .frequency_id = "oa2df_column_change"
-  )
+
+  if (rlang::is_interactive()) {
+    rlang::warn(
+      "Note: `oa_fetch` and `oa2df` now return new names for some columns in openalexR v2.0.0.
+      See NEWS.md for the list of changes.
+      Call `get_coverage()` to view the all updated columns and their original names in OpenAlex.",
+      .frequency = "regularly",
+      .frequency_id = "oa2df_column_change"
+    )
+  }
 
   if (length(data) == 0) {
     return(NULL)
