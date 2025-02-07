@@ -407,8 +407,8 @@ test_that("different paging methods yield the same result", {
     title.search = c("bibliometric analysis", "science mapping"),
     cited_by_count = ">50",
     options = list(select = "id"),
-    from_publication_date = "2021-01-01",
-    to_publication_date = "2021-12-31",
+    from_publication_date = "2020-01-01",
+    to_publication_date = "2020-12-31",
     verbose = TRUE
   )
 
@@ -417,13 +417,13 @@ test_that("different paging methods yield the same result", {
     title.search = c("bibliometric analysis", "science mapping"),
     cited_by_count = ">50",
     options = list(select = "id"),
-    from_publication_date = "2021-01-01",
-    to_publication_date = "2021-12-31",
+    from_publication_date = "2020-01-01",
+    to_publication_date = "2020-12-31",
     verbose = TRUE,
     pages = c(2, 4:5),
     per_page = 10
   )
-  
+
   expect_equal(
     w0[c(11:20, 31:min(50, nrow(w0))), ],
     w24
