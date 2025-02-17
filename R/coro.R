@@ -78,7 +78,7 @@ oa_generate <- function(...) {
                mailto = oa_email(),
                api_key = oa_apikey(),
                verbose = FALSE) {
-        ua <- httr::user_agent("https://github.com/ropensci/openalexR/")
+        ua <- "https://github.com/ropensci/openalexR/"
         query_ls <- list("per-page" = 200)
         if (!is.null(mailto)) {
           if (isValidEmail(mailto)) {
