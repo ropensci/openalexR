@@ -370,6 +370,8 @@ oa_request <- function(query_url,
       next_page <- get_next_page("cursor", i, res)
     }
     cat("\n")
+    # Remove elements with NULL key_display_name
+    data <- data[!sapply(data, function(x) is.null(x$key_display_name))]
     return(data)
   }
 
