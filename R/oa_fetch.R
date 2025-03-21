@@ -355,6 +355,11 @@ oa_request <- function(query_url,
   query_ls[["per-page"]] <- per_page
 
   if (is_group_by) {
+    # cursor pagination only when the number of groups is greater than per_page
+    if (res$meta$groups_count < per_page) {
+      return(res[[result_name]])
+    }
+
     data <- vector("list")
     res <- NULL
     i <- 1
