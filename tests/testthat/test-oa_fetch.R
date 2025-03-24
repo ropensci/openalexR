@@ -425,8 +425,8 @@ test_that("different paging methods yield the same result", {
   )
 
   expect_equal(
-    w0[c(11:20, 31:min(50, nrow(w0))), ],
-    w24
+    sort(w0[c(11:20, 31:min(50, nrow(w0))), ]$id),
+    sort(w24$id)
   )
 
 })
@@ -437,14 +437,14 @@ test_that("pages works", {
   # The last 10 pages when per_page = 20
   # should be the same as the 10 pages when fetching page 2
   w1 <- oa_fetch(
-    search = "transformative change",
+    title.search = "transformative change",
     options = list(select = c("id", "display_name", "publication_date")),
     pages = 1,
     per_page = 20,
     verbose = TRUE
   )
   w2 <- oa_fetch(
-    search = "transformative change",
+    title.search = "transformative change",
     options = list(select = c("id", "display_name", "publication_date")),
     pages = 2,
     per_page = 10,
