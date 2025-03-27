@@ -22,11 +22,11 @@ oa_entities <- function() {
 #' The argument is ignored if entity is different from "works".
 #' @param output Character.
 #' Type of output, one of `"tibble"`, `"dataframe"`, `"list"`, or `"raw"`.
-##' \itemize{
-##'  \item{"tibble"}: {a tibble tidy data}
-##'  \item{"dataframe"}: {a base data.frame tidy data}
-##'  \item{"list"}: {a list of parsed JSON contents}
-##'  \item{"raw"}: {a list of raw JSON strings (length depends on query)}
+##' \describe{
+##'  \item{tibble}{a tibble tidy data}
+##'  \item{dataframe}{a base data.frame tidy data}
+##'  \item{list}{a list of parsed JSON contents}
+##'  \item{raw}{a list of raw JSON strings (length depends on query)}
 ##' }
 #'
 #' @return A data.frame or a list. Result of the query.
@@ -355,6 +355,11 @@ oa_request <- function(query_url,
   query_ls[["per-page"]] <- per_page
 
   if (is_group_by) {
+    # cursor pagination only when the number of groups is greater than per_page
+    if (res$meta$groups_count < per_page) {
+      return(res[[result_name]])
+    }
+
     data <- vector("list")
     res <- NULL
     i <- 1
@@ -370,6 +375,8 @@ oa_request <- function(query_url,
       next_page <- get_next_page("cursor", i, res)
     }
     cat("\n")
+    # Remove elements with NULL key_display_name
+    data <- data[!sapply(data, function(x) is.null(x$key_display_name))]
     return(data)
   }
 
