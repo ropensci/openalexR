@@ -83,7 +83,8 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
                      count_only = FALSE,
                      mailto = oa_email(),
                      api_key = oa_apikey(),
-                     verbose = FALSE) {
+                     verbose = FALSE,
+                     timeout = 30) {
   output <- match.arg(output)
   entity <- match.arg(entity, oa_entities())
 
@@ -142,7 +143,8 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
       mailto = mailto,
       api_key = api_key,
       parse = output != "raw",
-      verbose = verbose
+      verbose = verbose,
+      timeout = timeout
     )
   }
 
@@ -197,6 +199,10 @@ oa_fetch <- function(entity = if (is.null(identifier)) NULL else id_type(shorten
 #' If FALSE, returns the raw JSON response as string.
 #' @param verbose Logical.
 #' If TRUE, print information about the querying process. Defaults to TRUE.
+#' @param timeout Numeric.
+#' Maximum number of seconds to wait.
+#' An error will be thrown if the request does not complete in the time limit.
+#' Defaults to 30.
 #'
 #' @return a data.frame or a list of bibliographic records.
 #'
@@ -312,9 +318,10 @@ oa_request <- function(query_url,
                        mailto = oa_email(),
                        api_key = oa_apikey(),
                        parse = TRUE,
-                       verbose = FALSE) {
-  # https://httr.r-lib.org/articles/api-packages.html#set-a-user-agent
-  ua <- httr::user_agent("https://github.com/ropensci/openalexR/")
+                       verbose = FALSE,
+                       timeout = 30) {
+
+  ua <- "https://github.com/ropensci/openalexR/"
 
   # building query...
   is_group_by <- grepl("group_by", query_url)
@@ -335,7 +342,7 @@ oa_request <- function(query_url,
   }
 
   # first, download info about n. of items returned by the query
-  res <- api_request(query_url, ua, query = query_ls, api_key = api_key, parse = FALSE)
+  res <- api_request(query_url, ua, query = query_ls, api_key = api_key, parse = FALSE, timeout = timeout)
   res_parsed <- jsonlite::fromJSON(res, simplifyVector = FALSE)
   res_meta <- res_parsed$meta
   if (parse) {
@@ -369,7 +376,7 @@ oa_request <- function(query_url,
       if (verbose) cat("=")
       Sys.sleep(1 / 10)
       query_ls[[paging]] <- next_page
-      res <- api_request(query_url, ua, query = query_ls)
+      res <- api_request(query_url, ua, query = query_ls, timeout = timeout)
       data <- c(data, res[[result_name]])
       i <- i + 1
       next_page <- get_next_page("cursor", i, res)
@@ -419,10 +426,10 @@ oa_request <- function(query_url,
     query_ls[[paging]] <- next_page
 
     if (parse) {
-      res <- api_request(query_url, ua, query = query_ls, parse = TRUE)
+      res <- api_request(query_url, ua, query = query_ls, parse = TRUE, timeout  = timeout)
       if (!is.null(res[[result_name]])) data[[i]] <- res[[result_name]]
     } else {
-      raw <- api_request(query_url, ua, query = query_ls, parse = FALSE)
+      raw <- api_request(query_url, ua, query = query_ls, parse = FALSE, timeout  = timeout)
       data[[i]] <- raw
     }
   }
@@ -632,7 +639,7 @@ oa_query <- function(filter = NULL,
     flt_ready <- mapply(append_flt, filter, names(filter))
     flt_ready <- paste0(flt_ready, collapse = ",")
   } else {
-    flt_ready <- list()
+    flt_ready <- NULL
   }
 
   if (!is.null(options$select)) {
@@ -662,11 +669,19 @@ oa_query <- function(filter = NULL,
     query <- options
   }
 
-  query_url <- httr::modify_url(
-    endpoint,
-    path = path,
-    query = query
-  )
+  my_req_url_query <- function(x,y) {
+    if(!is.null(y)) {
+      return(do.call(\(...) httr2::req_url_query(x,...), y))
+    }
+    else {
+      return(x)
+    }
+  }
+
+  query_url <- httr2::request(endpoint) |>
+    httr2::req_url_path(path) |>
+    my_req_url_query(query) |>
+    _$url
 
   if (is.null(oa_print())) {
     url_display <- query_url
@@ -714,44 +729,50 @@ oa_random <- function(entity = oa_entities(),
   final_res
 }
 
-api_request <- function(query_url, ua, query, api_key = oa_apikey(), parse = TRUE) {
-  res <- httr::GET(query_url, ua, query = query, httr::add_headers(api_key = api_key))
+api_request <- function(query_url, ua, query, api_key = oa_apikey(), parse = TRUE, timeout=30) {
+  my_req_url_query <- \(x,y) do.call(\(...) httr2::req_url_query(x,...), y)
+  res <- httr2::request(query_url) |>
+    httr2::req_timeout(timeout) |>
+    httr2::req_user_agent(ua) |>
+    my_req_url_query(query) |>
+    httr2::req_headers(api_key = api_key) |>
+    httr2::req_perform()
 
   empty_res <- if (parse) list() else "{}"
 
-  if (httr::status_code(res) == 400) {
+  if (httr2::resp_status(res) == 400) {
     stop("HTTP status 400 Request Line is too large")
   }
 
-  if (httr::status_code(res) == 429) {
+  if (httr2::resp_status(res) == 429) {
     message("HTTP status 429 Too Many Requests")
     return(empty_res)
   }
 
-  m <- httr::content(res, "text", encoding = "UTF-8")
+  m <- httr2::resp_body_string(res)
   if (parse) {
     m <- jsonlite::fromJSON(m, simplifyVector = FALSE)
   }
 
-  if (httr::status_code(res) == 503) {
+  if (httr2::resp_status(res) == 503) {
     mssg <- regmatches(m, regexpr("(?<=<title>).*?(?=<\\/title>)", m, perl = TRUE))
     message(mssg, ". Please try setting `per_page = 25` in your function call!")
     return(empty_res)
   }
 
-  if (httr::status_code(res) == 200) {
-    if (httr::http_type(res) != "application/json") {
+  if (httr2::resp_status(res) == 200) {
+    if (httr2::resp_content_type(res) != "application/json") {
       stop("API did not return json", call. = FALSE)
     }
     return(m) # Depending on `parse`, results can be raw JSON or parsed R list
   }
 
-  if (httr::http_error(res)) {
+  if (httr2::resp_status(res)>=400) {
     parsed <- jsonlite::fromJSON(m, simplifyVector = FALSE)
     stop(
       sprintf(
         "OpenAlex API request failed [%s]\n%s\n<%s>",
-        httr::status_code(res),
+        httr2::resp_status(res),
         parsed$error,
         parsed$message
       ),
@@ -759,8 +780,8 @@ api_request <- function(query_url, ua, query, api_key = oa_apikey(), parse = TRU
     )
   }
 
-  if (httr::status_code(res) != 429 & httr::status_code(res) != 200) {
-    message("HTTP status ", httr::status_code(res))
+  if (httr2::resp_status(res) != 429 & httr2::resp_status(res) != 200) {
+    message("HTTP status ", httr2::resp_status(res))
     return(empty_res)
   }
 }

@@ -13,7 +13,8 @@ oa_request(
   mailto = oa_email(),
   api_key = oa_apikey(),
   parse = TRUE,
-  verbose = FALSE
+  verbose = FALSE,
+  timeout = 30
 )
 }
 \arguments{
@@ -50,6 +51,11 @@ If FALSE, returns the raw JSON response as string.}
 
 \item{verbose}{Logical.
 If TRUE, print information about the querying process. Defaults to TRUE.}
+
+\item{timeout}{Numeric.
+Maximum number of seconds to wait.
+An error will be thrown if the request does not complete in the time limit.
+Defaults to 30.}
 }
 \value{
 a data.frame or a list of bibliographic records.
