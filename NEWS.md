@@ -1,4 +1,4 @@
-# openalexR (development version)
+# openalexR 2.0.0
 
 # openalexR 2.0.0
 * Breaking changes in column names in the output of `oa_fetch`:
