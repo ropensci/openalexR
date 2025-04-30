@@ -20,7 +20,8 @@ oa_fetch(
   count_only = FALSE,
   mailto = oa_email(),
   api_key = oa_apikey(),
-  verbose = FALSE
+  verbose = FALSE,
+  timeout = 30
 )
 }
 \arguments{
@@ -110,6 +111,11 @@ Your OpenAlex Premium API key, if available.}
 Default to \code{verbose = FALSE}.
 To shorten the printed query URL, set the environment variable openalexR.print
 to the number of characters to print: \code{Sys.setenv(openalexR.print = 70)}.}
+
+\item{timeout}{Numeric.
+Maximum number of seconds to wait.
+An error will be thrown if the request does not complete in the time limit.
+Defaults to 30.}
 }
 \value{
 A data.frame or a list. Result of the query.
