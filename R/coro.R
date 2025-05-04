@@ -19,6 +19,7 @@ the <- new.env()
 #' See `oa_request` for details on these arguments.
 #'
 #' @examples
+#' \dontrun{
 #' if (require("coro")) {
 #'   # Example 1: basic usage getting one record at a time
 #'   query_url <- "https://api.openalex.org/works?filter=cites%3AW1160808132"
@@ -60,6 +61,7 @@ the <- new.env()
 #'   # using `while (!coro::is_exhausted(record_i))`.
 #'   # More details at https://coro.r-lib.org/articles/generator.html.
 #'
+#' }
 #' }
 #'
 #' @export
