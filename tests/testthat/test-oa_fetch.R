@@ -491,3 +491,23 @@ test_that("output=raw works", {
     )
   )
 })
+
+test_that("oa_fetch returns list when count_only is TRUE", {
+  x <- oa_fetch(
+    "works",
+    corresponding_institution_ids = "i18014758",
+    type = c("types/article", "types/review"),
+    primary_location.source.type = "source-types/journal",
+    options = list(
+      sort = "cited_by_count:desc",
+      apc_sum = TRUE,
+      cited_by_count_sum = TRUE
+    ),
+    count_only = TRUE
+  )
+  expect_type(x, "list")
+  expect_gt(length(x), 7) # 8 but groups_count = NULL
+  expect_true("apc_list_sum_usd" %in% names(x))
+  expect_true("apc_paid_sum_usd" %in% names(x))
+  expect_true("cited_by_count_sum" %in% names(x))
+})
