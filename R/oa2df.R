@@ -223,8 +223,9 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
     }
 
     so_info <- paper$primary_location
-    venue <- so_info[names(so_info) != "source"]
-    names(venue)[names(venue) == "id"] <- "venue_id"
+    venue <- so_info[!names(so_info) %in% c("source", "id")]
+    # ignore venue_id for now, will implement in Walden once this becomes default
+    # names(venue)[names(venue) == "id"] <- "venue_id"
     source <- so_info$source
     if (!is.null(source)){
       source <- setNames(source[so_cols], names(so_cols))
@@ -840,6 +841,7 @@ topics2df <- function(data, verbose = TRUE,
     "identical", "works_count",
     "identical", "cited_by_count",
     "identical", "updated_date",
+    "identical", "works_api_url",
     "identical", "created_date",
     "rbind_df", "siblings",
     "flat", "keywords"
@@ -869,7 +871,7 @@ topics2df <- function(data, verbose = TRUE,
     "id", "display_name", "description", "keywords", "ids",
     "subfield_id", "subfield_display_name", "field_id", "field_display_name",
     "domain_id", "domain_display_name", "siblings", "relevance_score",
-    "works_count", "cited_by_count", "updated_date", "created_date"
+    "works_count", "cited_by_count", "updated_date", "works_api_url", "created_date"
   )
 
   out_df <- rbind_oa_ls(list_df)
