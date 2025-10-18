@@ -224,6 +224,7 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
 
     so_info <- paper$primary_location
     venue <- so_info[names(so_info) != "source"]
+    names(venue)[names(venue) == "id"] <- "venue_id"
     source <- so_info$source
     if (!is.null(source)){
       source <- setNames(source[so_cols], names(so_cols))
