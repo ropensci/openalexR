@@ -24,10 +24,10 @@ However, we expect that you'll likely write your own function to
 simplify the result however you want.
 }
 \examples{
-
+\dontrun{
 show_works(oa_fetch(
   identifier = c("W2741809807", "W2755950973"),
   verbose = TRUE
 ))
-
+}
 }

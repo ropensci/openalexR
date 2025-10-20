@@ -17,12 +17,12 @@
 #' @export
 #'
 #' @examples
-#'
+#' \dontrun{
 #' show_authors(oa_fetch(
 #'   identifier = c("A5023888391", "A5014077037"),
 #'   verbose = TRUE
 #' ))
-#'
+#' }
 show_authors <- function(x, simp_func = utils::head) {
   x$id <- vapply(x$id, shorten_oaid, character(1), USE.NAMES = FALSE)
 
@@ -37,16 +37,18 @@ show_authors <- function(x, simp_func = utils::head) {
         return(NA_character_)
       }
       top_subfields <- y[y$type == "subfield", ]
-      paste(utils::head(top_subfields, 3)$display_name,
-            collapse = ", "
-      )
+      paste(utils::head(top_subfields, 3)$display_name, collapse = ", ")
     },
     character(1)
   )
 
   simp_func(x[, c(
-    "id", "display_name", "orcid", "works_count",
-    "cited_by_count", "top_concepts"
+    "id",
+    "display_name",
+    "orcid",
+    "works_count",
+    "cited_by_count",
+    "top_concepts"
   )])
 }
 
@@ -69,20 +71,24 @@ show_authors <- function(x, simp_func = utils::head) {
 #' @export
 #'
 #' @examples
-#'
+#' \dontrun{
 #' show_works(oa_fetch(
 #'   identifier = c("W2741809807", "W2755950973"),
 #'   verbose = TRUE
 #' ))
-#'
+#' }
 show_works <- function(x, simp_func = utils::head) {
   x$id <- vapply(x$id, shorten_oaid, character(1), USE.NAMES = FALSE)
   x$first_author <- vapply(
-    x$authorships, get_auth_position, character(1),
+    x$authorships,
+    get_auth_position,
+    character(1),
     position = "first"
   )
   x$last_author <- vapply(
-    x$authorships, get_auth_position, character(1),
+    x$authorships,
+    get_auth_position,
+    character(1),
     position = "last"
   )
 
@@ -93,7 +99,8 @@ show_works <- function(x, simp_func = utils::head) {
         return(NA_character_)
       }
       op_level <- min(2, max(y$level))
-      paste(utils::head(y[y$level == op_level, "display_name"], 3),
+      paste(
+        utils::head(y[y$level == op_level, "display_name"], 3),
         collapse = ", "
       )
     },
@@ -102,8 +109,15 @@ show_works <- function(x, simp_func = utils::head) {
 
   simp_cols <- intersect(
     c(
-      "id", "display_name", "first_author", "last_author",
-      "so", "url", "is_oa", "top_concepts", "role"
+      "id",
+      "display_name",
+      "first_author",
+      "last_author",
+      "so",
+      "url",
+      "is_oa",
+      "top_concepts",
+      "role"
     ),
     names(x)
   )
