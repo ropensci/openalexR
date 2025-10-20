@@ -76,10 +76,12 @@ oa_generate <- function(...) {
 
   if (is.null(the$oa_generate)) {
     the$oa_generate <- coro::generator(
-      function(query_url,
-               mailto = oa_email(),
-               api_key = oa_apikey(),
-               verbose = FALSE) {
+      function(
+        query_url,
+        mailto = oa_email(),
+        api_key = oa_apikey(),
+        verbose = FALSE
+      ) {
         ua <- httr::user_agent("https://github.com/ropensci/openalexR/")
         query_ls <- list("per-page" = 200)
         if (!is.null(mailto)) {
@@ -114,7 +116,9 @@ oa_generate <- function(...) {
           while (!is.null(next_page) && (j <= groups_count)) {
             i <- i + 1
             j <- (i - 1) %% 200 + 1
-            if (verbose) message(mssg(i))
+            if (verbose) {
+              message(mssg(i))
+            }
             coro::yield(res[[result_name]][[j]])
             if (j == 200) {
               next_page <- get_next_page(paging, 0, res)
@@ -125,11 +129,15 @@ oa_generate <- function(...) {
           }
         } else {
           result_name <- "results"
-          mssg <- function(i) sprintf("Getting record %s of %s records...", i, n_items)
+          mssg <- function(i) {
+            sprintf("Getting record %s of %s records...", i, n_items)
+          }
 
-          for (i in seq.int(n_items)){
+          for (i in seq.int(n_items)) {
             j <- (i - 1) %% 200 + 1
-            if (verbose) message(mssg(i))
+            if (verbose) {
+              message(mssg(i))
+            }
             coro::yield(res[[result_name]][[j]])
             if (j == 200) {
               next_page <- get_next_page(paging, 0, res)

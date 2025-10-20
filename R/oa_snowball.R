@@ -42,14 +42,16 @@
 #' )
 #'
 #' }
-oa_snowball <- function(identifier = NULL,
-                        ...,
-                        id_type = c("short", "original"),
-                        mailto = oa_email(),
-                        endpoint = "https://api.openalex.org",
-                        verbose = FALSE,
-                        citing_params = list(),
-                        cited_by_params = list()) {
+oa_snowball <- function(
+  identifier = NULL,
+  ...,
+  id_type = c("short", "original"),
+  mailto = oa_email(),
+  endpoint = "https://api.openalex.org",
+  verbose = FALSE,
+  citing_params = list(),
+  cited_by_params = list()
+) {
   id_type <- match.arg(id_type)
   base_args <- list(
     entity = "works",
@@ -67,7 +69,9 @@ oa_snowball <- function(identifier = NULL,
 
   # fetching documents citing the target papers
   identifier <- shorten_oaid(paper$id)
-  if (verbose) message("Collecting all documents citing the target papers...")
+  if (verbose) {
+    message("Collecting all documents citing the target papers...")
+  }
   citing <- suppressWarnings(
     fetch_snow(
       c(base_args, list(cites = identifier)),
@@ -76,7 +80,9 @@ oa_snowball <- function(identifier = NULL,
   )
 
   # fetching documents cited by the target papers
-  if (verbose) message("Collecting all documents cited by the target papers...")
+  if (verbose) {
+    message("Collecting all documents cited by the target papers...")
+  }
   cited <- suppressWarnings(
     fetch_snow(
       c(base_args, list(cited_by = identifier)),
@@ -136,10 +142,13 @@ oa_snowball <- function(identifier = NULL,
 }
 
 
-fetch_snow <- function(args, filt){
-  if (!is.null(filt$options$select)){
+fetch_snow <- function(args, filt) {
+  if (!is.null(filt$options$select)) {
     # id and referenced_works is needed to find citing papers
-    filt$options$select <- union(filt$options$select, c("id", "referenced_works"))
+    filt$options$select <- union(
+      filt$options$select,
+      c("id", "referenced_works")
+    )
   }
 
   # collecting records about the target papers

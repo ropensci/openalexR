@@ -1,4 +1,3 @@
-
 `%||%` <- function(x, y) if (is.null(x)) y else x
 
 replace_w_na <- function(x, y = NA) {
@@ -14,7 +13,8 @@ subs_na <- function(x, type, prefix = NULL) {
     return(x)
   }
 
-  out <- switch(type,
+  out <- switch(
+    type,
     row_df = as.data.frame(replace_w_na(x)),
     flat = unlist(x),
     rbind_df = do.call(rbind.data.frame, lapply(x, replace_w_na))
@@ -36,15 +36,31 @@ empty_list <- function(vars) {
   setNames(as.list(rep(NA, length(vars))), vars)
 }
 
-empty_df <- function(column_names = c("id", "display_name", "ror", "country_code", "type", "lineage")) {
-  setNames(data.frame(
-    lapply(column_names, function(x) character(0)),
-    stringsAsFactors = FALSE
-  ), column_names)
+empty_df <- function(
+  column_names = c(
+    "id",
+    "display_name",
+    "ror",
+    "country_code",
+    "type",
+    "lineage"
+  )
+) {
+  setNames(
+    data.frame(
+      lapply(column_names, function(x) character(0)),
+      stringsAsFactors = FALSE
+    ),
+    column_names
+  )
 }
 
 isValidEmail <- function(x) {
-  grepl("\\<[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}\\>", as.character(x), ignore.case = TRUE)
+  grepl(
+    "\\<[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}\\>",
+    as.character(x),
+    ignore.case = TRUE
+  )
 }
 
 append_flt <- function(x, pre = "from_publication_date", collapse = "|") {
@@ -52,12 +68,15 @@ append_flt <- function(x, pre = "from_publication_date", collapse = "|") {
     return(NULL)
   }
 
-  if (length(x) > 1) x <- paste(x, collapse = collapse)
+  if (length(x) > 1) {
+    x <- paste(x, collapse = collapse)
+  }
   paste0(pre, ":", x)
 }
 
 id_type <- function(identifier) {
-  switch(toupper(substr(identifier, 1, 1)),
+  switch(
+    toupper(substr(identifier, 1, 1)),
     W = "works",
     A = "authors",
     I = "institutions",
@@ -81,7 +100,9 @@ oa_print <- function() {
 oa_progress <- function(n, text = "converting") {
   progress::progress_bar$new(
     format = paste(" ", text, "[:bar] :percent eta: :eta"),
-    total = n, clear = FALSE, width = 60
+    total = n,
+    clear = FALSE,
+    width = 60
   )
 }
 
@@ -113,10 +134,13 @@ rbind_oa_ls <- function(list_df) {
     lapply(
       list_df,
       function(x) {
-        tibble::as_tibble(c(x, sapply(
-          setdiff(all_names, names(x)),
-          function(y) NA
-        )))
+        tibble::as_tibble(c(
+          x,
+          sapply(
+            setdiff(all_names, names(x)),
+            function(y) NA
+          )
+        ))
       }
     )
   )
@@ -174,7 +198,7 @@ abstract_build <- function(ab, build = TRUE) {
 #' @return List. A list of one dataframe with the processed authors:
 #' id, display_name, orcid, author_position, is_corresponding, affiliations, affiliation_raw
 #' @keywords internal
-process_paper_authors <- function(authorships){
+process_paper_authors <- function(authorships) {
   if (is.null(authorships)) {
     return(NULL)
   }
@@ -211,8 +235,8 @@ process_paper_authors <- function(authorships){
 #' @return Dataframe of with the following columns:
 #' id, display_name, ror, country_code, type, lineage
 #' @keywords internal
-process_affil <- function(l_institution){
-  if (!length(l_institution)){
+process_affil <- function(l_institution) {
+  if (!length(l_institution)) {
     return(list(empty_df()))
   }
   l_inst <- lapply(l_institution, function(x) {
