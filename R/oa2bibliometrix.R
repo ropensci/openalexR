@@ -42,13 +42,17 @@
 #' @export
 #'
 oa2bibliometrix <- function(df) {
-  .Deprecated(msg = "oa2bibliometrix() is deprecated. Please use bibliometrix::convert2df() instead.")
+  .Deprecated(
+    msg = "oa2bibliometrix() is deprecated. Please use bibliometrix::convert2df() instead."
+  )
 
   df$id_oa <- shorten_oaid(df$id)
   names(df)[names(df) == "id"] <- "id_url"
 
   if (substr(df$id_oa[1], 1, 1) != "W") {
-    warning("oa2bibliometrix accepts only OpenAlex data frames containing 'works' (entity = 'works')")
+    warning(
+      "oa2bibliometrix accepts only OpenAlex data frames containing 'works' (entity = 'works')"
+    )
     return()
   }
 
@@ -57,7 +61,7 @@ oa2bibliometrix <- function(df) {
 
   # Authors
   AU_info <- lapply(df$authorships[7], function(l) {
-    if (length(l) == 0 || (length(l) == 1 && is.na(l))){
+    if (length(l) == 0 || (length(l) == 1 && is.na(l))) {
       return(empty_list(
         c("AU", "RP", "C1", "AU_UN", "AU_CO")
       ))
@@ -66,7 +70,10 @@ oa2bibliometrix <- function(df) {
       C1 <- au_collapse(l$affiliation_raw)
       RP <- au_collapse(l$affiliation_raw[1])
       AU_UN <- au_collapse(lapply(l$affiliations, function(x) x$display_name))
-      AU_CO <- au_collapse(countrycode[unlist(lapply(l$affiliations, function(x) x$country_code)), 1])
+      AU_CO <- au_collapse(countrycode[
+        unlist(lapply(l$affiliations, function(x) x$country_code)),
+        1
+      ])
       list(AU = AU, RP = RP, C1 = C1, AU_UN = AU_UN, AU_CO = AU_CO)
     }
   })
@@ -79,9 +86,11 @@ oa2bibliometrix <- function(df) {
 
   # Keywords
   ID <- unlist(lapply(df$concepts, function(l) {
-    if (is.logical(l)) return(NA)
+    if (is.logical(l)) {
+      return(NA)
+    }
 
-    au_collapse(l$display_name[l$score>0])
+    au_collapse(l$display_name[l$score > 0])
   }))
 
   df <- cbind(AU_info, ID, df)
@@ -95,14 +104,25 @@ oa2bibliometrix <- function(df) {
   df$J9 <- df$JI
   df$PY <- df$publication_year
   df$TC <- df$cited_by_count
-  df$DI <- gsub("https://doi.org/","",df$doi)
-  df <-  df[!names(df) %in% c("display_name","ab","so","type","publication_year","cited_by_count")]
-
+  df$DI <- gsub("https://doi.org/", "", df$doi)
+  df <- df[
+    !names(df) %in%
+      c(
+        "display_name",
+        "ab",
+        "so",
+        "type",
+        "publication_year",
+        "cited_by_count"
+      )
+  ]
 
   ### SR field creation
   suppressWarnings(df <- SR(df))
   d <- duplicated(df$SR)
-  if (sum(d) > 0) cat("\nRemoved ", sum(d), "duplicated documents\n")
+  if (sum(d) > 0) {
+    cat("\nRemoved ", sum(d), "duplicated documents\n")
+  }
   df <- df[!d, ]
 
   row.names(df) <- df$SR
@@ -115,7 +135,9 @@ SR <- function(df) {
   listAU <- strsplit(as.character(df$AU), ";")
   FirstAuthor <- unlist(lapply(listAU, function(l) {
     l <- trimws(l[1])
-    if (!(length(l) > 0)) l <- "NA"
+    if (!(length(l) > 0)) {
+      l <- "NA"
+    }
     return(l)
   }))
 
@@ -135,6 +157,6 @@ SR <- function(df) {
   return(df)
 }
 
-au_collapse <- function(x){
+au_collapse <- function(x) {
   toupper(paste(x, collapse = ";"))
 }

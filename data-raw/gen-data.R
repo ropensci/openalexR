@@ -20,6 +20,7 @@
 #   "https://openalex.org/C127413603",           "Engineering",         "Eng",
 #   "https://openalex.org/C162324750",             "Economics",        "Econ"
 # )
+# fmt: skip
 concept_abbrev <- tibble::tribble(
                                ~id,                                  ~display_name, ~abbreviation,
   "https://openalex.org/fields/27",                                     "Medicine",         "Med",

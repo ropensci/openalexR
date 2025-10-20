@@ -47,8 +47,15 @@
 #' }
 #'
 #' @export
-oa2df <- function(data, entity, options = NULL, count_only = FALSE, group_by = NULL, abstract = TRUE, verbose = TRUE) {
-
+oa2df <- function(
+  data,
+  entity,
+  options = NULL,
+  count_only = FALSE,
+  group_by = NULL,
+  abstract = TRUE,
+  verbose = TRUE
+) {
   if (rlang::is_interactive()) {
     rlang::warn(
       "Note: `oa_fetch` and `oa2df` now return new names for some columns in openalexR v2.0.0.
@@ -67,7 +74,8 @@ oa2df <- function(data, entity, options = NULL, count_only = FALSE, group_by = N
     return(do.call(rbind.data.frame, data))
   }
 
-  if (count_only && length(data) < 8) { # assuming less than 8 fields in output$meta
+  if (count_only && length(data) < 8) {
+    # assuming less than 8 fields in output$meta
     return(unlist(data))
   }
 
@@ -78,7 +86,8 @@ oa2df <- function(data, entity, options = NULL, count_only = FALSE, group_by = N
     }
   }
 
-  switch(entity,
+  switch(
+    entity,
     works = works2df(data, abstract, verbose),
     authors = authors2df(data, verbose),
     institutions = institutions2df(data, verbose),
@@ -146,20 +155,59 @@ oa2df <- function(data, entity, options = NULL, count_only = FALSE, group_by = N
 #'
 #' @export
 #'
-works2df <- function(data, abstract = TRUE, verbose = TRUE,
-                     pb = if (verbose) oa_progress(length(data)) else NULL) {
+works2df <- function(
+  data,
+  abstract = TRUE,
+  verbose = TRUE,
+  pb = if (verbose) oa_progress(length(data)) else NULL
+) {
   col_order <- c(
-    "id", "title", "display_name", "authorships", "abstract", "doi",
-    "publication_date", "publication_year", "relevance_score", "fwci",
-    "cited_by_count", "counts_by_year", "cited_by_api_url", "ids", "type",
-    "is_oa", "is_oa_anywhere", "oa_status", "oa_url",
-    "any_repository_has_fulltext", "source_display_name", "source_id", "issn_l",
-    "host_organization", "host_organization_name",
-    "landing_page_url", "pdf_url", "license", "version", "referenced_works",
-    "referenced_works_count", "related_works", "concepts", "topics", "keywords",
-    "is_paratext", "is_retracted", "language", "grants", "apc",
-    "first_page", "last_page", "volume", "issue"
+    "id",
+    "title",
+    "display_name",
+    "authorships",
+    "abstract",
+    "doi",
+    "publication_date",
+    "publication_year",
+    "relevance_score",
+    "fwci",
+    "cited_by_count",
+    "counts_by_year",
+    "cited_by_api_url",
+    "ids",
+    "type",
+    "is_oa",
+    "is_oa_anywhere",
+    "oa_status",
+    "oa_url",
+    "any_repository_has_fulltext",
+    "source_display_name",
+    "source_id",
+    "issn_l",
+    "host_organization",
+    "host_organization_name",
+    "landing_page_url",
+    "pdf_url",
+    "license",
+    "version",
+    "referenced_works",
+    "referenced_works_count",
+    "related_works",
+    "concepts",
+    "topics",
+    "keywords",
+    "is_paratext",
+    "is_retracted",
+    "language",
+    "grants",
+    "apc",
+    "first_page",
+    "last_page",
+    "volume",
+    "issue"
   )
+  # fmt: skip
   works_process <- tibble::tribble(
     ~type, ~field,
     "identical", "id",
@@ -200,7 +248,9 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
   list_df <- vector(mode = "list", length = n)
 
   for (i in seq.int(n)) {
-    if (verbose) pb$tick()
+    if (verbose) {
+      pb$tick()
+    }
 
     paper <- data[[i]]
 
@@ -227,7 +277,7 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
     # ignore venue_id for now, will implement in Walden once this becomes default
     # names(venue)[names(venue) == "id"] <- "venue_id"
     source <- so_info$source
-    if (!is.null(source)){
+    if (!is.null(source)) {
       source <- setNames(source[so_cols], names(so_cols))
     }
 
@@ -235,8 +285,10 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
     apc <- NULL
     if (any(lengths(paper[c("apc_list", "apc_paid")]) > 0)) {
       apc_fields <- list(
-        value = NA_real_, currency = NA_character_,
-        value_usd = NA_real_, provenance = NA_character_
+        value = NA_real_,
+        currency = NA_character_,
+        value_usd = NA_real_,
+        provenance = NA_character_
       )
       apc_list <- paper$apc_list[lengths(paper$apc_list) != 0]
       apc_paid <- paper$apc_paid[lengths(paper$apc_paid) != 0]
@@ -246,8 +298,15 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
       ))
     }
     topics <- process_topics(paper, "score")
-    out_ls <- c(sim_fields, venue, source, open_access, paper_biblio,
-                list(authorships = authorships, abstract = ab, apc = apc), topics)
+    out_ls <- c(
+      sim_fields,
+      venue,
+      source,
+      open_access,
+      paper_biblio,
+      list(authorships = authorships, abstract = ab, apc = apc),
+      topics
+    )
     out_ls[sapply(out_ls, is.null)] <- NULL
     list_df[[i]] <- out_ls
   }
@@ -291,11 +350,14 @@ works2df <- function(data, abstract = TRUE, verbose = TRUE,
 #' }
 #'
 #' @export
-authors2df <- function(data, verbose = TRUE,
-                       pb = if (verbose) oa_progress(length(data)) else NULL) {
+authors2df <- function(
+  data,
+  verbose = TRUE,
+  pb = if (verbose) oa_progress(length(data)) else NULL
+) {
   n <- length(data)
   list_df <- vector(mode = "list", length = n)
-
+  # fmt: skip
   author_process <- tibble::tribble(
     ~type, ~field,
     "identical", "id",
@@ -311,7 +373,9 @@ authors2df <- function(data, verbose = TRUE,
   )
 
   for (i in seq.int(n)) {
-    if (verbose) pb$tick()
+    if (verbose) {
+      pb$tick()
+    }
 
     item <- data[[i]]
 
@@ -336,10 +400,21 @@ authors2df <- function(data, verbose = TRUE,
   }
 
   col_order <- c(
-    "id", "display_name", "display_name_alternatives", "relevance_score",
-    "ids", "orcid", "works_count", "cited_by_count", "counts_by_year",
-    "2yr_mean_citedness", "h_index", "i10_index",
-    "last_known_institutions", "topics", "works_api_url"
+    "id",
+    "display_name",
+    "display_name_alternatives",
+    "relevance_score",
+    "ids",
+    "orcid",
+    "works_count",
+    "cited_by_count",
+    "counts_by_year",
+    "2yr_mean_citedness",
+    "h_index",
+    "i10_index",
+    "last_known_institutions",
+    "topics",
+    "works_api_url"
   )
 
   out_df <- rbind_oa_ls(list_df)
@@ -375,11 +450,14 @@ authors2df <- function(data, verbose = TRUE,
 #' }
 #'
 #' @export
-institutions2df <- function(data, verbose = TRUE,
-                            pb = if (verbose) oa_progress(length(data)) else NULL) {
+institutions2df <- function(
+  data,
+  verbose = TRUE,
+  pb = if (verbose) oa_progress(length(data)) else NULL
+) {
   n <- length(data)
   list_df <- vector(mode = "list", length = n)
-
+  # fmt: skip
   institution_process <- tibble::tribble(
     ~type, ~field,
     "identical", "id",
@@ -406,7 +484,9 @@ institutions2df <- function(data, verbose = TRUE,
   )
 
   for (i in seq.int(n)) {
-    if (verbose) pb$tick()
+    if (verbose) {
+      pb$tick()
+    }
 
     item <- data[[i]]
     fields <- institution_process[institution_process$field %in% names(item), ]
@@ -429,14 +509,30 @@ institutions2df <- function(data, verbose = TRUE,
     list_df[[i]] <- c(sim_fields, interna, topics)
   }
 
-
   col_order <- c(
-    "id", "display_name", "display_name_alternatives", "display_name_acronyms",
-    "international_display_name", "ror", "ids", "country_code", "geo", "type",
-    "homepage_url", "image_url", "image_thumbnail_url",
-    "associated_institutions", "relevance_score", "works_count",
-    "cited_by_count", "counts_by_year", "summary_stats",
-    "works_api_url", "topics", "updated_date", "created_date"
+    "id",
+    "display_name",
+    "display_name_alternatives",
+    "display_name_acronyms",
+    "international_display_name",
+    "ror",
+    "ids",
+    "country_code",
+    "geo",
+    "type",
+    "homepage_url",
+    "image_url",
+    "image_thumbnail_url",
+    "associated_institutions",
+    "relevance_score",
+    "works_count",
+    "cited_by_count",
+    "counts_by_year",
+    "summary_stats",
+    "works_api_url",
+    "topics",
+    "updated_date",
+    "created_date"
   )
 
   out_df <- rbind_oa_ls(list_df)
@@ -474,8 +570,12 @@ institutions2df <- function(data, verbose = TRUE,
 #' }
 #'
 #' @export
-concepts2df <- function(data, verbose = TRUE,
-                        pb = if (verbose) oa_progress(length(data)) else NULL) {
+concepts2df <- function(
+  data,
+  verbose = TRUE,
+  pb = if (verbose) oa_progress(length(data)) else NULL
+) {
+  # fmt: skip
   concept_process <- tibble::tribble(
     ~type, ~field,
     "identical", "id",
@@ -499,7 +599,9 @@ concepts2df <- function(data, verbose = TRUE,
   list_df <- vector(mode = "list", length = n)
 
   for (i in seq.int(n)) {
-    if (verbose) pb$tick()
+    if (verbose) {
+      pb$tick()
+    }
 
     item <- data[[i]]
     fields <- concept_process[concept_process$field %in% names(item), ]
@@ -517,18 +619,33 @@ concepts2df <- function(data, verbose = TRUE,
         subs_na,
         type = "flat"
       )
-      names(intern_fields) <- paste(names(intern_fields), "international", sep = "_")
+      names(intern_fields) <- paste(
+        names(intern_fields),
+        "international",
+        sep = "_"
+      )
     }
 
     list_df[[i]] <- c(sim_fields, intern_fields)
   }
 
   col_order <- c(
-    "id", "display_name", "display_name_international", "description",
-    "description_international", "wikidata", "level", "ids",
-    "image_url", "image_thumbnail_url", "ancestors",
-    "related_concepts", "relevance_score", "works_count",
-    "cited_by_count", "counts_by_year",
+    "id",
+    "display_name",
+    "display_name_international",
+    "description",
+    "description_international",
+    "wikidata",
+    "level",
+    "ids",
+    "image_url",
+    "image_thumbnail_url",
+    "ancestors",
+    "related_concepts",
+    "relevance_score",
+    "works_count",
+    "cited_by_count",
+    "counts_by_year",
     "works_api_url"
   )
 
@@ -595,8 +712,12 @@ keywords2df <- function(data, verbose = TRUE) {
 #' }
 #'
 #' @export
-funders2df <- function(data, verbose = TRUE,
-                       pb = if (verbose) oa_progress(length(data)) else NULL) {
+funders2df <- function(
+  data,
+  verbose = TRUE,
+  pb = if (verbose) oa_progress(length(data)) else NULL
+) {
+  # fmt: skip
   funder_process <- tibble::tribble(
     ~type, ~field,
     "identical", "id",
@@ -622,7 +743,9 @@ funders2df <- function(data, verbose = TRUE,
   list_df <- vector(mode = "list", length = n)
 
   for (i in seq.int(n)) {
-    if (verbose) pb$tick()
+    if (verbose) {
+      pb$tick()
+    }
 
     item <- data[[i]]
     fields <- funder_process[funder_process$field %in% names(item), ]
@@ -638,7 +761,6 @@ funders2df <- function(data, verbose = TRUE,
   out_df <- rbind_oa_ls(list_df)
   out_df
 }
-
 
 
 #' Convert OpenAlex collection of sources' records from list format to data frame
@@ -668,8 +790,12 @@ funders2df <- function(data, verbose = TRUE,
 #' }
 #'
 #' @export
-sources2df <- function(data, verbose = TRUE,
-                       pb = if (verbose) oa_progress(length(data)) else NULL) {
+sources2df <- function(
+  data,
+  verbose = TRUE,
+  pb = if (verbose) oa_progress(length(data)) else NULL
+) {
+  # fmt: skip
   source_process <- tibble::tribble(
     ~type, ~field,
     "identical", "id",
@@ -705,7 +831,9 @@ sources2df <- function(data, verbose = TRUE,
   list_df <- vector(mode = "list", length = n)
 
   for (i in seq.int(n)) {
-    if (verbose) pb$tick()
+    if (verbose) {
+      pb$tick()
+    }
 
     item <- data[[i]]
     fields <- source_process[source_process$field %in% names(item), ]
@@ -722,7 +850,6 @@ sources2df <- function(data, verbose = TRUE,
   out_df <- rbind_oa_ls(list_df)
   out_df
 }
-
 
 
 #' Convert OpenAlex collection of publishers' records from list format to data frame
@@ -752,8 +879,12 @@ sources2df <- function(data, verbose = TRUE,
 #' }
 #'
 #' @export
-publishers2df <- function(data, verbose = TRUE,
-                          pb = if (verbose) oa_progress(length(data)) else NULL) {
+publishers2df <- function(
+  data,
+  verbose = TRUE,
+  pb = if (verbose) oa_progress(length(data)) else NULL
+) {
+  # fmt: skip
   publisher_process <- tibble::tribble(
     ~type, ~field,
     "identical", "id",
@@ -781,7 +912,9 @@ publishers2df <- function(data, verbose = TRUE,
   list_df <- vector(mode = "list", length = n)
 
   for (i in seq.int(n)) {
-    if (verbose) pb$tick()
+    if (verbose) {
+      pb$tick()
+    }
 
     item <- data[[i]]
     fields <- publisher_process[publisher_process$field %in% names(item), ]
@@ -829,8 +962,12 @@ publishers2df <- function(data, verbose = TRUE,
 #' }
 #'
 #' @export
-topics2df <- function(data, verbose = TRUE,
-                        pb = if (verbose) oa_progress(length(data)) else NULL) {
+topics2df <- function(
+  data,
+  verbose = TRUE,
+  pb = if (verbose) oa_progress(length(data)) else NULL
+) {
+  # fmt: skip
   topic_process <- tibble::tribble(
     ~type, ~field,
     "identical", "id",
@@ -851,7 +988,9 @@ topics2df <- function(data, verbose = TRUE,
   list_df <- vector(mode = "list", length = n)
 
   for (i in seq.int(n)) {
-    if (verbose) pb$tick()
+    if (verbose) {
+      pb$tick()
+    }
 
     item <- data[[i]]
     fields <- topic_process[topic_process$field %in% names(item), ]
@@ -868,16 +1007,29 @@ topics2df <- function(data, verbose = TRUE,
   }
 
   col_order <- c(
-    "id", "display_name", "description", "keywords", "ids",
-    "subfield_id", "subfield_display_name", "field_id", "field_display_name",
-    "domain_id", "domain_display_name", "siblings", "relevance_score",
-    "works_count", "cited_by_count", "updated_date", "works_api_url", "created_date"
+    "id",
+    "display_name",
+    "description",
+    "keywords",
+    "ids",
+    "subfield_id",
+    "subfield_display_name",
+    "field_id",
+    "field_display_name",
+    "domain_id",
+    "domain_display_name",
+    "siblings",
+    "relevance_score",
+    "works_count",
+    "cited_by_count",
+    "updated_date",
+    "works_api_url",
+    "created_date"
   )
 
   out_df <- rbind_oa_ls(list_df)
   out_df[, intersect(col_order, names(out_df))]
 }
-
 
 
 #' Flatten snowball result
@@ -915,29 +1067,39 @@ snowball2df <- function(data, verbose = FALSE) {
   ids <- nodes$id[nodes$oa_input]
   edges_df <- data$edges
 
-  citing <- do.call(rbind.data.frame, by(
-    edges_df, list(edges_df$from),
-    function(x) {
-      list(
-        id = unique(x$from),
-        citing = paste(x$to, collapse = ";"),
-        backward_count = nrow(x)
-      )
-    }
-  ))
+  citing <- do.call(
+    rbind.data.frame,
+    by(
+      edges_df,
+      list(edges_df$from),
+      function(x) {
+        list(
+          id = unique(x$from),
+          citing = paste(x$to, collapse = ";"),
+          backward_count = nrow(x)
+        )
+      }
+    )
+  )
 
-  cited_by <- do.call(rbind.data.frame, by(
-    edges_df, list(edges_df$to),
-    function(x) {
-      list(
-        id = unique(x$to),
-        cited_by = paste(x$from, collapse = ";"),
-        forward_count = nrow(x)
-      )
-    }
-  ))
+  cited_by <- do.call(
+    rbind.data.frame,
+    by(
+      edges_df,
+      list(edges_df$to),
+      function(x) {
+        list(
+          id = unique(x$to),
+          cited_by = paste(x$from, collapse = ";"),
+          forward_count = nrow(x)
+        )
+      }
+    )
+  )
 
-  if (verbose) message("Appending new columns...")
+  if (verbose) {
+    message("Appending new columns...")
+  }
 
   nodes_augmented <- merge(
     merge(nodes, citing, all.x = TRUE),
@@ -946,7 +1108,8 @@ snowball2df <- function(data, verbose = FALSE) {
   )
 
   nodes_augmented$connection <- apply(
-    nodes_augmented[, c("citing", "cited_by")], 1,
+    nodes_augmented[, c("citing", "cited_by")],
+    1,
     function(x) paste(x[!is.na(x)], collapse = ";")
   )
 

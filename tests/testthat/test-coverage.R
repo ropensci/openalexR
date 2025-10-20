@@ -5,8 +5,8 @@ test_that("field coverage information is up to date", {
   main_s <- function(s) {
     sort(unique(sapply(strsplit(s, "\\."), \(x) x[[1]]))) |>
       setdiff(c("relevance_score"))
-      # Additional fields from the parent Search entity
-      # `fulltext_origin` only available for works with `has_fulltext:true`
+    # Additional fields from the parent Search entity
+    # `fulltext_origin` only available for works with `has_fulltext:true`
   }
 
   cols <- lapply(get_coverage(), function(x) {
@@ -70,5 +70,4 @@ test_that("field coverage information is up to date", {
   # out <- oa2df(out_list, "concepts")
   # expect_equal(main_s(names(out_list)), main_s(oris$concepts))
   # expect_equal(main_s(colnames(out)), main_s(cols$concepts))
-
 })

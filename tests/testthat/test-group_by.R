@@ -1,5 +1,5 @@
-
 test_that("search and group_by works", {
+  skip_on_cran()
   # https://github.com/ropensci/openalexR/issues/327
   g1 <- oa_fetch(
     title_and_abstract.search = "nature",
@@ -7,10 +7,10 @@ test_that("search and group_by works", {
   )
   expect_s3_class(g1, "data.frame")
   expect_equal(colnames(g1), c("key", "key_display_name", "count"))
-
 })
 
 test_that("group_by works", {
+  skip_on_cran()
   # https://github.com/ropensci/openalexR/issues/327
 
   # grouping by the boolean "is_oa" should return 2 rows
@@ -19,4 +19,3 @@ test_that("group_by works", {
   expect_equal(nrow(g2), 2)
   expect_equal(colnames(g2), c("key", "key_display_name", "count"))
 })
-

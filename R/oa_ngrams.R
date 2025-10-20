@@ -2,8 +2,13 @@
 #'
 #' @keywords internal
 ngram2df <- function(ngram) {
-  if (is.null(ngram$meta$doi)) ngram$meta$doi <- NA_character_
-  ngram_df <- as.data.frame.list(rev(ngram$meta), col.names = c("id", "doi", "count"))
+  if (is.null(ngram$meta$doi)) {
+    ngram$meta$doi <- NA_character_
+  }
+  ngram_df <- as.data.frame.list(
+    rev(ngram$meta),
+    col.names = c("id", "doi", "count")
+  )
   ngram_df$ngrams <- if (length(ngram$ngrams) == 0) {
     list(NULL)
   } else {
@@ -45,11 +50,18 @@ ngram2df <- function(ngram) {
 #' # Missing N-grams are `NULL` in the `ngrams` list-column
 #' oa_ngrams("https://openalex.org/W2284876136")
 #' }
-oa_ngrams <- function(works_identifier, ...,
-                      endpoint = "https://api.openalex.org",
-                      verbose = FALSE) {
-
-  ngrams_failed_template <- data.frame(id = NA, doi = NA, count = NA, ngrams = I(list(NULL)))
+oa_ngrams <- function(
+  works_identifier,
+  ...,
+  endpoint = "https://api.openalex.org",
+  verbose = FALSE
+) {
+  ngrams_failed_template <- data.frame(
+    id = NA,
+    doi = NA,
+    count = NA,
+    ngrams = I(list(NULL))
+  )
 
   out <- tryCatch(
     {
@@ -74,11 +86,21 @@ oa_ngrams <- function(works_identifier, ...,
       # Fetch
       if (utils::packageVersion("curl") >= "5") {
         # Parallel fetch
-        ngrams_files <- asNamespace("curl")$multi_download(query_urls, file.path(tempdir(), normalized_id), progress = verbose)
-        ngrams_success <- ifelse(ngrams_files$success, ngrams_files$destfile, NA)
+        ngrams_files <- asNamespace("curl")$multi_download(
+          query_urls,
+          file.path(tempdir(), normalized_id),
+          progress = verbose
+        )
+        ngrams_success <- ifelse(
+          ngrams_files$success,
+          ngrams_files$destfile,
+          NA
+        )
         # Convert
         ngrams_dfs <- lapply(ngrams_success, function(x) {
-          if (verbose) pb$tick()
+          if (verbose) {
+            pb$tick()
+          }
           if (is.na(x)) {
             ngrams_failed_template
           } else {
@@ -89,7 +111,9 @@ oa_ngrams <- function(works_identifier, ...,
       } else {
         # One-time message
         if (getOption("oa_ngrams.message.curlv5", TRUE)) {
-          message("Use `{curl}` >= v5.0.0 for a faster implementation of `oa_ngrams`")
+          message(
+            "Use `{curl}` >= v5.0.0 for a faster implementation of `oa_ngrams`"
+          )
           options("oa_ngrams.message.curlv5" = FALSE)
         }
         # Serial fetch
@@ -99,7 +123,9 @@ oa_ngrams <- function(works_identifier, ...,
 
         ngrams_list <- vector("list", n)
         for (i in seq_len(n)) {
-          if (verbose) pb_dl$tick()
+          if (verbose) {
+            pb_dl$tick()
+          }
           ngrams_list[[i]] <- tryCatch(
             jsonlite::fromJSON(query_urls[i]),
             error = function(...) ngrams_failed_template
@@ -108,16 +134,18 @@ oa_ngrams <- function(works_identifier, ...,
         # Convert
         ngrams_dfs <- vector("list", n)
         for (i in seq_len(n)) {
-          if (verbose) pb$tick()
+          if (verbose) {
+            pb$tick()
+          }
           ngrams_dfs[[i]] <- ngram2df(ngrams_list[[i]])
         }
       }
 
       tibble::as_tibble(do.call(rbind.data.frame, ngrams_dfs))
     },
-    error=function(cond) {
+    error = function(cond) {
       message("ngrams not available for this work")
-     # message(cond)
+      # message(cond)
       # Choose a return value in case of error
       return(ngrams_failed_template)
     }

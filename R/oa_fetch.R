@@ -76,8 +76,11 @@ oa_entities <- function() {
 #' )
 #' }
 oa_fetch <- function(
-  entity = if (is.null(identifier)) NULL else
-    id_type(shorten_oaid(identifier[[1]])),
+  entity = if (is.null(identifier)) {
+    NULL
+  } else {
+    id_type(shorten_oaid(identifier[[1]]))
+  },
   identifier = NULL,
   ...,
   options = NULL,
@@ -97,12 +100,16 @@ oa_fetch <- function(
   output <- match.arg(output)
   entity <- match.arg(entity, oa_entities())
 
-  if (output == "dataframe") output <- "tibble"
+  if (output == "dataframe") {
+    output <- "tibble"
+  }
   filter <- list(...)
 
   # if multiple identifiers are provided, use openalex or doi as a filter attribute
   multiple_id <- length(identifier) > 1
-  if (multiple_id) filter <- c(filter, list(openalex = identifier))
+  if (multiple_id) {
+    filter <- c(filter, list(openalex = identifier))
+  }
 
   # overcome OA limitation of combining 50 values (OR) for a filter at a time
   # https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/filter-entity-lists#addition-or
@@ -390,9 +397,13 @@ oa_request <- function(
     res <- NULL
     i <- 1
     next_page <- get_next_page("cursor", i, res)
-    if (verbose) cat("\nDownloading groups...\n|")
+    if (verbose) {
+      cat("\nDownloading groups...\n|")
+    }
     while (!is.null(next_page)) {
-      if (verbose) cat("=")
+      if (verbose) {
+        cat("=")
+      }
       Sys.sleep(1 / 10)
       query_ls[[paging]] <- next_page
       res <- api_request(query_url, ua, query = query_ls)
@@ -447,7 +458,9 @@ oa_request <- function(
   data <- vector("list", length = n_pages)
   res <- NULL
   for (i in pages) {
-    if (verbose) pb$tick()
+    if (verbose) {
+      pb$tick()
+    }
     Sys.sleep(1 / 10)
     next_page <- get_next_page(paging, i, res)
     query_ls[[paging]] <- next_page
@@ -463,7 +476,9 @@ oa_request <- function(
   data <- unlist(data, recursive = FALSE)
 
   # `output = "raw"` early exit
-  if (!parse) return(data)
+  if (!parse) {
+    return(data)
+  }
 
   if (grepl("filter", query_url) && grepl("works", query_url)) {
     truncated <- unlist(truncated_authors(data))
@@ -717,7 +732,9 @@ oa_query <- function(
     url_display <- paste0(substr(query_url, 1, oa_print()), query_url_more)
   }
 
-  if (verbose) message("Requesting url: ", url_display)
+  if (verbose) {
+    message("Requesting url: ", url_display)
+  }
 
   query_url
 }
@@ -742,7 +759,9 @@ oa_random <- function(
 ) {
   output <- match.arg(output)
   entity <- match.arg(entity, oa_entities())
-  if (output == "dataframe") output <- "tibble"
+  if (output == "dataframe") {
+    output <- "tibble"
+  }
 
   query_url <- paste(endpoint, entity, "random", sep = "/")
   res <- oa_request(query_url)

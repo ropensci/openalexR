@@ -24,10 +24,10 @@ However, we expect that you'll likely write your own function to
 simplify the result however you want.
 }
 \examples{
-
+\dontrun{
 show_authors(oa_fetch(
   identifier = c("A5023888391", "A5014077037"),
   verbose = TRUE
 ))
-
+}
 }
