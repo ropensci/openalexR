@@ -12,6 +12,16 @@ test_that("OA query works", {
       "journal.pone.0266781%7C10.1371%2Fjournal.pone.0267149"
     )
   )
+
+})
+
+test_that("OA query works with multiple identifiers", {
+  expect_equal(
+    oa_query(
+      identifier = c("W2162348455", "W2746723710")
+    ),
+    "https://api.openalex.org/works?filter=openalex%3AW2162348455%7CW2746723710"
+  )
 })
 
 test_that("oa_query returns NULL when no identifier or filter is supplied", {

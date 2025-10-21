@@ -654,7 +654,7 @@ get_next_page <- function(paging, i, res = NULL) {
 
 oa_query <- function(
   filter = NULL,
-  multiple_id = FALSE,
+  multiple_id = length(identifier) > 1,
   identifier = NULL,
   entity = if (is.null(identifier)) NULL else id_type(identifier[[1]]),
   options = NULL,
@@ -675,6 +675,10 @@ oa_query <- function(
       paste(names(empty_filters), collapse = ", "),
       call. = FALSE
     )
+  }
+
+  if (length(filter) == 0 && multiple_id){
+    filter <- list(openalex = identifier)
   }
 
   if (length(filter) > 0 || multiple_id) {

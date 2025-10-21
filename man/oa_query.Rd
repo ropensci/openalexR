@@ -6,7 +6,7 @@
 \usage{
 oa_query(
   filter = NULL,
-  multiple_id = FALSE,
+  multiple_id = length(identifier) > 1,
   identifier = NULL,
   entity = if (is.null(identifier)) NULL else id_type(identifier[[1]]),
   options = NULL,
