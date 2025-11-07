@@ -1,8 +1,9 @@
-# openalexR 2.0.1
+# openalexR (development version)
+* Bug fixes
+* Prepare for Walden `data-version=2`
 
-# openalexR 2.0.0
-
-# openalexR 2.0.0
+# openalexR 2.0.2
+* Fix CRAN R CMD check issues
 
 # openalexR 2.0.0
 * Breaking changes in column names in the output of `oa_fetch`:
