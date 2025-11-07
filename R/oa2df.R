@@ -613,7 +613,7 @@ concepts2df <- function(
     )
 
     intern_fields <- NULL
-    if (!is.null(item$international)) {
+    if (!is.null(item$international) && length(item$international)) {
       intern_fields <- lapply(
         item$international[c("display_name", "description")],
         subs_na,
