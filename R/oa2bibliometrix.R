@@ -4,7 +4,7 @@
 #' bibliometrix data frame (\href{https://bibliometrix.org/}{https://bibliometrix.org/})
 #' Column names follow https://images.webofknowledge.com/images/help/WOS/hs_wos_fieldtags.html.
 #'
-#' @param df is bibliographic collection of works donwloaded from OpenALex.
+#' @param df is bibliographic collection of works downloaded from OpenAlex.
 #' @return a data.frame with class "bibliometrix".
 #' @details Use \code{bibliometrix::convert2df()} (bibliometrix R package) instead.
 #'
