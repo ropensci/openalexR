@@ -49,9 +49,11 @@ test_that("oa_fetch works for multiple works", {
 
   expect_true("affiliation_raw" %in% names(multi_works$authorships[[1]]))
 
-  Sys.sleep(1 / 10)
   # warn about truncated authors
-  expect_warning(oa_fetch(identifier = c("W4381194940", "W4386241859")))
+  # TODO Ignore for now
+  # is_authors_truncated is no longer an exported field in the returned json
+  # Sys.sleep(1 / 10)
+  # expect_warning(oa_fetch(identifier = c("W4381194940", "W4386241859")))
 
   Sys.sleep(1 / 10)
   filtered_works <- oa_fetch(
@@ -221,6 +223,23 @@ test_that("oa_fetch can combine (OR) more than 50 DOIs in a filter", {
   )
 
   expect_true(nrow(many_doi_results) >= length(valid_dois) - 5)
+
+  # We don't do more requests than intended. Here, we are between 50 and 100, so
+  # we expect 2 requests.
+  hits <- 0L
+  with_mocked_bindings(
+    oa_request = function(...) {
+      hits <<- hits + 1L
+      # Returning list() allows us to benefit from the early return in oa_fetch
+      # and avoid errors in post-processing since we don't care about the actual
+      # data here.
+      return(list())
+    },
+    {
+      oa_fetch(entity = "works", doi = valid_dois)
+    }
+  )
+  expect_identical(hits, 2L)
 })
 
 test_that("oa_fetch can combine (OR) more than 50 ORCIDs in a filter", {
