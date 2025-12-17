@@ -199,6 +199,7 @@ works2df <- function(
     "is_paratext",
     "is_retracted",
     "language",
+    "sustainable_development_goals",
     "awards",
     "funders",
     "apc",
@@ -230,6 +231,7 @@ works2df <- function(
     "rbind_df", "keywords",
     "rbind_df", "counts_by_year",
     "rbind_df", "concepts",
+    "rbind_df", "sustainable_development_goals",
     "rbind_df", "funders",
     "flat", "ids"
   )
