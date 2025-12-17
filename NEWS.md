@@ -1,4 +1,4 @@
-# openalexR (development version)
+# openalexR 3.0.0
 * Bug fixes
 * Prepare for Walden `data-version=2`
 
