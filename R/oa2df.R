@@ -270,7 +270,8 @@ works2df <- function(
       names(open_access)[[1]] <- "is_oa_anywhere"
     }
 
-    so_info <- paper$primary_location
+    so_info <- replace_w_na(paper$primary_location)
+
     venue <- so_info[!names(so_info) %in% c("source", "id")]
     # ignore venue_id for now, will implement in Walden once this becomes default
     # names(venue)[names(venue) == "id"] <- "venue_id"
