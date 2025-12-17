@@ -51,6 +51,7 @@ open_access.any_repository_has_fulltext,any_repository_has_fulltext,
 open_access.is_oa,is_oa_anywhere,see PR #135
 open_access.oa_status,oa_status,
 open_access.oa_url,oa_url,
+primary_location.id,NA,
 primary_location.is_accepted,NA,
 primary_location.is_oa,is_oa,
 primary_location.is_published,NA,

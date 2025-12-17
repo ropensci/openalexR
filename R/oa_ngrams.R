@@ -68,10 +68,10 @@ oa_ngrams <- function(
       # Check if input is ID of Works entity
       normalized_id <- shorten_oaid(works_identifier)
       if (!all(grepl("^W", normalized_id))) {
-        stop(
-          "Invalid OpenAlex Work entity ID(s) at `works_identifier`: ",
-          paste(which(!grepl("^W", normalized_id)), sep = ", ")
-        )
+        cli::cli_abort(c(
+          "x" = "Invalid OpenAlex Work entity ID(s) at {.arg works_identifier}:",
+          "!" = "Position{?s}: {.val {which(!grepl('^W', normalized_id))}}"
+        ))
       }
 
       # Setup for querying
@@ -111,9 +111,9 @@ oa_ngrams <- function(
       } else {
         # One-time message
         if (getOption("oa_ngrams.message.curlv5", TRUE)) {
-          message(
-            "Use `{curl}` >= v5.0.0 for a faster implementation of `oa_ngrams`"
-          )
+          cli::cli_inform(c(
+            "i" = "Use {.pkg curl} >= v5.0.0 for a faster implementation of {.fn oa_ngrams}"
+          ))
           options("oa_ngrams.message.curlv5" = FALSE)
         }
         # Serial fetch
@@ -144,9 +144,7 @@ oa_ngrams <- function(
       tibble::as_tibble(do.call(rbind.data.frame, ngrams_dfs))
     },
     error = function(cond) {
-      message("ngrams not available for this work")
-      # message(cond)
-      # Choose a return value in case of error
+      cli::cli_inform("ngrams not available for this work")
       return(ngrams_failed_template)
     }
   )

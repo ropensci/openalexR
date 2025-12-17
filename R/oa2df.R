@@ -57,10 +57,12 @@ oa2df <- function(
   verbose = TRUE
 ) {
   if (rlang::is_interactive()) {
-    rlang::warn(
-      "Note: `oa_fetch` and `oa2df` now return new names for some columns in openalexR v2.0.0.
-      See NEWS.md for the list of changes.
-      Call `get_coverage()` to view the all updated columns and their original names in OpenAlex.",
+    cli::cli_warn(
+      c(
+        "!" = "{.fn oa_fetch} and {.fn oa2df} now return new names for some columns in openalexR v2.0.0.",
+        "i" = "See NEWS.md for the list of changes.",
+        "i" = "Call {.fn get_coverage} to view all updated columns and their original names in OpenAlex."
+      ),
       .frequency = "regularly",
       .frequency_id = "oa2df_column_change"
     )
@@ -109,8 +111,6 @@ oa2df <- function(
 #'
 #' @param abstract Logical. If TRUE, the function returns also the abstract of each item.
 #' Defaults to TRUE.
-#' @param pb Progress bar object. If verbose, computed from `oa_progress`.
-#' NULL otherwise.
 #' @inheritParams oa2df
 #'
 #' @return a data.frame.
@@ -158,8 +158,7 @@ oa2df <- function(
 works2df <- function(
   data,
   abstract = TRUE,
-  verbose = TRUE,
-  pb = if (verbose) oa_progress(length(data)) else NULL
+  verbose = TRUE
 ) {
   col_order <- c(
     "id",
@@ -247,9 +246,17 @@ works2df <- function(
   n <- length(data)
   list_df <- vector(mode = "list", length = n)
 
+  if (verbose) {
+    cli::cli_progress_bar(
+      format = "{cli::pb_spin} Converting [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
+      total = n,
+      clear = FALSE
+    )
+  }
+
   for (i in seq.int(n)) {
     if (verbose) {
-      pb$tick()
+      cli::cli_progress_update()
     }
 
     paper <- data[[i]]
@@ -285,8 +292,6 @@ works2df <- function(
     so_info <- replace_w_na(paper$primary_location)
 
     venue <- so_info[!names(so_info) %in% c("source", "id")]
-    # ignore venue_id for now, will implement in Walden once this becomes default
-    # names(venue)[names(venue) == "id"] <- "venue_id"
     source <- so_info$source
     if (!is.null(source)) {
       source <- setNames(source[so_cols], names(so_cols))
@@ -320,6 +325,9 @@ works2df <- function(
     )
     out_ls[sapply(out_ls, is.null)] <- NULL
     list_df[[i]] <- out_ls
+  }
+  if (verbose) {
+    cli::cli_progress_done()
   }
 
   out_df <- rbind_oa_ls(list_df)
@@ -363,8 +371,7 @@ works2df <- function(
 #' @export
 authors2df <- function(
   data,
-  verbose = TRUE,
-  pb = if (verbose) oa_progress(length(data)) else NULL
+  verbose = TRUE
 ) {
   n <- length(data)
   list_df <- vector(mode = "list", length = n)
@@ -383,9 +390,17 @@ authors2df <- function(
     "flat", "ids"
   )
 
+  if (verbose) {
+    cli::cli_progress_bar(
+      format = "{cli::pb_spin} Converting [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
+      total = n,
+      clear = FALSE
+    )
+  }
+
   for (i in seq.int(n)) {
     if (verbose) {
-      pb$tick()
+      cli::cli_progress_update()
     }
 
     item <- data[[i]]
@@ -408,6 +423,9 @@ authors2df <- function(
 
     topics <- process_topics(item, "count")
     list_df[[i]] <- c(sim_fields, affs, item$summary_stats, topics)
+  }
+  if (verbose) {
+    cli::cli_progress_done()
   }
 
   col_order <- c(
@@ -463,8 +481,7 @@ authors2df <- function(
 #' @export
 institutions2df <- function(
   data,
-  verbose = TRUE,
-  pb = if (verbose) oa_progress(length(data)) else NULL
+  verbose = TRUE
 ) {
   n <- length(data)
   list_df <- vector(mode = "list", length = n)
@@ -494,9 +511,17 @@ institutions2df <- function(
     "flat", "ids"
   )
 
+  if (verbose) {
+    cli::cli_progress_bar(
+      format = "{cli::pb_spin} Converting [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
+      total = n,
+      clear = FALSE
+    )
+  }
+
   for (i in seq.int(n)) {
     if (verbose) {
-      pb$tick()
+      cli::cli_progress_update()
     }
 
     item <- data[[i]]
@@ -518,6 +543,9 @@ institutions2df <- function(
     }
     topics <- process_topics(item, "count")
     list_df[[i]] <- c(sim_fields, interna, topics)
+  }
+  if (verbose) {
+    cli::cli_progress_done()
   }
 
   col_order <- c(
@@ -583,8 +611,7 @@ institutions2df <- function(
 #' @export
 concepts2df <- function(
   data,
-  verbose = TRUE,
-  pb = if (verbose) oa_progress(length(data)) else NULL
+  verbose = TRUE
 ) {
   # fmt: skip
   concept_process <- tibble::tribble(
@@ -609,9 +636,17 @@ concepts2df <- function(
   n <- length(data)
   list_df <- vector(mode = "list", length = n)
 
+  if (verbose) {
+    cli::cli_progress_bar(
+      format = "{cli::pb_spin} Converting [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
+      total = n,
+      clear = FALSE
+    )
+  }
+
   for (i in seq.int(n)) {
     if (verbose) {
-      pb$tick()
+      cli::cli_progress_update()
     }
 
     item <- data[[i]]
@@ -638,6 +673,9 @@ concepts2df <- function(
     }
 
     list_df[[i]] <- c(sim_fields, intern_fields)
+  }
+  if (verbose) {
+    cli::cli_progress_done()
   }
 
   col_order <- c(
@@ -725,8 +763,7 @@ keywords2df <- function(data, verbose = TRUE) {
 #' @export
 funders2df <- function(
   data,
-  verbose = TRUE,
-  pb = if (verbose) oa_progress(length(data)) else NULL
+  verbose = TRUE
 ) {
   # fmt: skip
   funder_process <- tibble::tribble(
@@ -753,9 +790,17 @@ funders2df <- function(
   n <- length(data)
   list_df <- vector(mode = "list", length = n)
 
+  if (verbose) {
+    cli::cli_progress_bar(
+      format = "{cli::pb_spin} Converting [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
+      total = n,
+      clear = FALSE
+    )
+  }
+
   for (i in seq.int(n)) {
     if (verbose) {
-      pb$tick()
+      cli::cli_progress_update()
     }
 
     item <- data[[i]]
@@ -767,6 +812,9 @@ funders2df <- function(
       SIMPLIFY = FALSE
     )
     list_df[[i]] <- sim_fields
+  }
+  if (verbose) {
+    cli::cli_progress_done()
   }
 
   out_df <- rbind_oa_ls(list_df)
@@ -803,8 +851,7 @@ funders2df <- function(
 #' @export
 sources2df <- function(
   data,
-  verbose = TRUE,
-  pb = if (verbose) oa_progress(length(data)) else NULL
+  verbose = TRUE
 ) {
   # fmt: skip
   source_process <- tibble::tribble(
@@ -848,9 +895,17 @@ sources2df <- function(
   n <- length(data)
   list_df <- vector(mode = "list", length = n)
 
+  if (verbose) {
+    cli::cli_progress_bar(
+      format = "{cli::pb_spin} Converting [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
+      total = n,
+      clear = FALSE
+    )
+  }
+
   for (i in seq.int(n)) {
     if (verbose) {
-      pb$tick()
+      cli::cli_progress_update()
     }
 
     item <- data[[i]]
@@ -863,6 +918,9 @@ sources2df <- function(
     )
     topics <- process_topics(item, "count")
     list_df[[i]] <- c(sim_fields, topics)
+  }
+  if (verbose) {
+    cli::cli_progress_done()
   }
 
   out_df <- rbind_oa_ls(list_df)
@@ -899,8 +957,7 @@ sources2df <- function(
 #' @export
 publishers2df <- function(
   data,
-  verbose = TRUE,
-  pb = if (verbose) oa_progress(length(data)) else NULL
+  verbose = TRUE
 ) {
   # fmt: skip
   publisher_process <- tibble::tribble(
@@ -926,9 +983,17 @@ publishers2df <- function(
   n <- length(data)
   list_df <- vector(mode = "list", length = n)
 
+  if (verbose) {
+    cli::cli_progress_bar(
+      format = "{cli::pb_spin} Converting [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
+      total = n,
+      clear = FALSE
+    )
+  }
+
   for (i in seq.int(n)) {
     if (verbose) {
-      pb$tick()
+      cli::cli_progress_update()
     }
 
     item <- replace_w_na(data[[i]])
@@ -940,6 +1005,9 @@ publishers2df <- function(
       SIMPLIFY = FALSE
     )
     list_df[[i]] <- sim_fields
+  }
+  if (verbose) {
+    cli::cli_progress_done()
   }
 
   out_df <- rbind_oa_ls(list_df)
@@ -979,8 +1047,7 @@ publishers2df <- function(
 #' @export
 topics2df <- function(
   data,
-  verbose = TRUE,
-  pb = if (verbose) oa_progress(length(data)) else NULL
+  verbose = TRUE
 ) {
   # fmt: skip
   topic_process <- tibble::tribble(
@@ -1002,9 +1069,17 @@ topics2df <- function(
   n <- length(data)
   list_df <- vector(mode = "list", length = n)
 
+  if (verbose) {
+    cli::cli_progress_bar(
+      format = "{cli::pb_spin} Converting [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
+      total = n,
+      clear = FALSE
+    )
+  }
+
   for (i in seq.int(n)) {
     if (verbose) {
-      pb$tick()
+      cli::cli_progress_update()
     }
 
     item <- data[[i]]
@@ -1019,6 +1094,9 @@ topics2df <- function(
     domains <- as.data.frame(do.call(cbind, domains))
     names(domains) <- gsub("\\.", "_", names(domains))
     list_df[[i]] <- c(sim_fields, domains)
+  }
+  if (verbose) {
+    cli::cli_progress_done()
   }
 
   col_order <- c(
@@ -1113,7 +1191,7 @@ snowball2df <- function(data, verbose = FALSE) {
   )
 
   if (verbose) {
-    message("Appending new columns...")
+    cli::cli_inform("Appending new columns...")
   }
 
   nodes_augmented <- merge(

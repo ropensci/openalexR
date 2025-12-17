@@ -1,6 +1,6 @@
 # openalexR 3.0.0
-* Bug fixes
-* Prepare for Walden `data-version=2`
+* Updates for new OpenAlex Walden `data-version=2`
+* Add cli to Imports
 
 # openalexR 2.0.2
 * Fix CRAN R CMD check issues

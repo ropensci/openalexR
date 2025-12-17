@@ -357,7 +357,7 @@ oa_request <- function(
     if (isValidEmail(mailto)) {
       query_ls[["mailto"]] <- mailto
     } else {
-      message(mailto, " is not a valid email address")
+      cli::cli_inform("{.email {mailto}} is not a valid email address")
     }
   }
 
@@ -398,7 +398,7 @@ oa_request <- function(
     i <- 1
     next_page <- get_next_page("cursor", i, res)
     if (verbose) {
-      cat("\nDownloading groups...\n|")
+      cli::cli_inform("Downloading groups...")
     }
     while (!is.null(next_page)) {
       if (verbose) {
@@ -430,27 +430,21 @@ oa_request <- function(
       n_items - per_page * (utils::tail(pages, 1) - n_pages),
       per_page * n_pages
     )
-    message("Using basic paging...")
+    cli::cli_inform("Using basic paging...")
     paging <- "page"
   }
 
   if (n_items <= 0 || n_pages <= 0) {
-    warning("No records found!")
+    cli::cli_warn("No records found!")
     return(list())
   }
 
   pg_plural <- if (n_pages > 1) " pages" else " page"
 
   if (verbose) {
-    message(
-      "Getting ",
-      n_pages,
-      pg_plural,
-      " of results",
-      " with a total of ",
-      n_items,
-      " records..."
-    )
+    cli::cli_inform(c(
+      "i" = "Getting {n_pages} page{?s} of results with a total of {n_items} record{?s}..."
+    ))
     pb <- oa_progress(n = n_pages, text = "OpenAlex downloading")
   }
 
@@ -459,7 +453,7 @@ oa_request <- function(
   res <- NULL
   for (i in pages) {
     if (verbose) {
-      pb$tick()
+      cli::cli_progress_update(id = pb)
     }
     Sys.sleep(1 / 10)
     next_page <- get_next_page(paging, i, res)
@@ -473,6 +467,9 @@ oa_request <- function(
       data[[i]] <- raw
     }
   }
+  if (verbose) {
+    cli::cli_progress_done(id = pb)
+  }
   data <- unlist(data, recursive = FALSE)
 
   # `output = "raw"` early exit
@@ -484,18 +481,12 @@ oa_request <- function(
     truncated <- unlist(truncated_authors(data))
     if (length(truncated)) {
       truncated <- shorten_oaid(truncated)
-      warning(
-        "\nThe following work(s) have truncated lists of authors: ",
-        paste(truncated, collapse = ", "),
-        ".\nQuery each work separately by its identifier to get full list of authors.\n",
-        "For example:\n  ",
-        paste0(
-          "lapply(c(\"",
-          paste(utils::head(truncated, 2), collapse = "\", \""),
-          "\"), \\(x) oa_fetch(identifier = x))"
-        ),
-        "\nDetails at https://docs.openalex.org/api-entities/authors/limitations."
-      )
+      cli::cli_warn(c(
+        "!" = "The following work{?s} {?has/have} truncated lists of authors: {.val {truncated}}.",
+        "i" = "Query each work separately by its identifier to get full list of authors.",
+        "i" = "For example: {.code lapply(c(\"{paste(utils::head(truncated, 2), collapse = '\", \"')}\"), \\(x) oa_fetch(identifier = x))}",
+        "i" = "Details at {.url https://docs.openalex.org/api-entities/authors/limitations}."
+      ))
     }
   }
 
@@ -670,14 +661,10 @@ oa_query <- function(
   empty_filters <- which(lengths(filter) == 0)
   if (length(empty_filters) > 0) {
     filter <- filter[-empty_filters]
-    stop(
-      "Filters must have a value: ",
-      paste(names(empty_filters), collapse = ", "),
-      call. = FALSE
-    )
+    cli::cli_abort("Filters must have a value: {.val {names(empty_filters)}}")
   }
 
-  if (length(filter) == 0 && multiple_id){
+  if (length(filter) == 0 && multiple_id) {
     filter <- list(openalex = identifier)
   }
 
@@ -702,7 +689,7 @@ oa_query <- function(
         is.null(group_by) &&
         is.null(options$sample)
     ) {
-      message(
+      cli::cli_inform(
         "Identifier is missing, please specify filter or search argument."
       )
       return()
@@ -737,7 +724,7 @@ oa_query <- function(
   }
 
   if (verbose) {
-    message("Requesting url: ", url_display)
+    cli::cli_inform("Requesting url: {.url {url_display}}")
   }
 
   query_url
@@ -792,11 +779,11 @@ api_request <- function(
   empty_res <- if (parse) list() else "{}"
 
   if (httr::status_code(res) == 400) {
-    stop("HTTP status 400 Request Line is too large")
+    cli::cli_abort("HTTP status 400 Request Line is too large")
   }
 
   if (httr::status_code(res) == 429) {
-    message("HTTP status 429 Too Many Requests")
+    cli::cli_inform("HTTP status 429 Too Many Requests")
     return(empty_res)
   }
 
@@ -810,7 +797,10 @@ api_request <- function(
       m,
       regexpr("(?<=<title>).*?(?=<\\/title>)", m, perl = TRUE)
     )
-    message(mssg, ". Please try setting `per_page = 25` in your function call!")
+    cli::cli_inform(c(
+      "x" = "{mssg}",
+      "i" = "Please try setting {.code per_page = 25} in your function call!"
+    ))
     return(empty_res)
   }
 
@@ -823,19 +813,15 @@ api_request <- function(
 
   if (httr::http_error(res)) {
     parsed <- jsonlite::fromJSON(m, simplifyVector = FALSE)
-    stop(
-      sprintf(
-        "OpenAlex API request failed [%s]\n%s\n<%s>",
-        httr::status_code(res),
-        parsed$error,
-        parsed$message
-      ),
-      call. = FALSE
-    )
+    cli::cli_abort(c(
+      "x" = "OpenAlex API request failed [{httr::status_code(res)}]",
+      "!" = parsed$error,
+      "i" = parsed$message
+    ))
   }
 
   if (httr::status_code(res) != 429 & httr::status_code(res) != 200) {
-    message("HTTP status ", httr::status_code(res))
+    cli::cli_inform("HTTP status {httr::status_code(res)}")
     return(empty_res)
   }
 }

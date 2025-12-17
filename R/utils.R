@@ -97,12 +97,12 @@ oa_print <- function() {
   p
 }
 
-oa_progress <- function(n, text = "converting") {
-  progress::progress_bar$new(
-    format = paste(" ", text, "[:bar] :percent eta: :eta"),
+oa_progress <- function(n, text = "Converting") {
+  cli::cli_progress_bar(
+    format = "{cli::pb_spin} {text} [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
     total = n,
     clear = FALSE,
-    width = 60
+    .envir = parent.frame()
   )
 }
 
