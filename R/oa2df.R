@@ -235,7 +235,7 @@ works2df <- function(
     "rbind_df", "funders",
     "flat", "ids"
   )
-
+  sustainable_cols <- c("id", "display_name", "score")
   so_cols <- c(
     source_id = "id",
     source_display_name = "display_name",
@@ -261,6 +261,16 @@ works2df <- function(
       fields$type,
       SIMPLIFY = FALSE
     )
+
+    # Ensure consistent column order for sustainable_development_goals
+    sdg <- sim_fields$sustainable_development_goals
+
+    if (!is.null(sdg) && !is.na(sdg)) {
+      sim_fields$sustainable_development_goals <- list(
+        sdg[[1]][, sustainable_cols, drop = FALSE]
+      )
+    }
+
     if (!is.null(sim_fields$publication_date)) {
       sim_fields$publication_date <- as.Date(sim_fields$publication_date)
     }
