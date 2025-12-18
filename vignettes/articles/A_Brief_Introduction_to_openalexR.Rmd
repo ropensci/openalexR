@@ -261,7 +261,7 @@ dplyr::glimpse(do.call(oa_fetch, italian_insts))
 ```{r}
 popular_keywords <- list(
   entity = "keywords",
-  works_count = ">1000",
+  works_count = ">1000000",
   verbose = TRUE
 )
 
