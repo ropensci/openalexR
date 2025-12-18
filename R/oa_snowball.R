@@ -70,7 +70,7 @@ oa_snowball <- function(
   # fetching documents citing the target papers
   identifier <- shorten_oaid(paper$id)
   if (verbose) {
-    message("Collecting all documents citing the target papers...")
+    cli::cli_inform("Collecting all documents citing the target papers...")
   }
   citing <- suppressWarnings(
     fetch_snow(
@@ -81,7 +81,7 @@ oa_snowball <- function(
 
   # fetching documents cited by the target papers
   if (verbose) {
-    message("Collecting all documents cited by the target papers...")
+    cli::cli_inform("Collecting all documents cited by the target papers...")
   }
   cited <- suppressWarnings(
     fetch_snow(
@@ -121,7 +121,7 @@ oa_snowball <- function(
   # relationships/edges
   edges <- rbind(citing_rel, cited_rel)
   if (is.null(edges)) {
-    message("No citations and no references for ", identifier)
+    cli::cli_inform("No citations and no references for {.val {identifier}}")
     edges <- tibble::tibble(from = character(0), to = character(0))
     return(list(nodes = nodes, edges = edges))
   }

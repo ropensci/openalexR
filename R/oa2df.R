@@ -57,10 +57,12 @@ oa2df <- function(
   verbose = TRUE
 ) {
   if (rlang::is_interactive()) {
-    rlang::warn(
-      "Note: `oa_fetch` and `oa2df` now return new names for some columns in openalexR v2.0.0.
-      See NEWS.md for the list of changes.
-      Call `get_coverage()` to view the all updated columns and their original names in OpenAlex.",
+    cli::cli_warn(
+      c(
+        "!" = "{.fn oa_fetch} and {.fn oa2df} now return new names for some columns in openalexR v2.0.0.",
+        "i" = "See NEWS.md for the list of changes.",
+        "i" = "Call {.fn get_coverage} to view all updated columns and their original names in OpenAlex."
+      ),
       .frequency = "regularly",
       .frequency_id = "oa2df_column_change"
     )
@@ -109,8 +111,6 @@ oa2df <- function(
 #'
 #' @param abstract Logical. If TRUE, the function returns also the abstract of each item.
 #' Defaults to TRUE.
-#' @param pb Progress bar object. If verbose, computed from `oa_progress`.
-#' NULL otherwise.
 #' @inheritParams oa2df
 #'
 #' @return a data.frame.
@@ -158,8 +158,7 @@ oa2df <- function(
 works2df <- function(
   data,
   abstract = TRUE,
-  verbose = TRUE,
-  pb = if (verbose) oa_progress(length(data)) else NULL
+  verbose = TRUE
 ) {
   col_order <- c(
     "id",
@@ -174,7 +173,6 @@ works2df <- function(
     "fwci",
     "cited_by_count",
     "counts_by_year",
-    "cited_by_api_url",
     "ids",
     "type",
     "is_oa",
@@ -200,7 +198,9 @@ works2df <- function(
     "is_paratext",
     "is_retracted",
     "language",
-    "grants",
+    "sustainable_development_goals",
+    "awards",
+    "funders",
     "apc",
     "first_page",
     "last_page",
@@ -218,24 +218,23 @@ works2df <- function(
     "identical", "type",
     "identical", "cited_by_count",
     "identical", "publication_year",
-    "identical", "cited_by_api_url",
     "identical", "is_paratext",
     "identical", "is_retracted",
     "identical", "relevance_score",
     "identical", "language",
     "identical", "fwci",
     "identical", "referenced_works_count",
-    "flat", "grants",
+    "flat", "awards",
     "flat", "referenced_works",
     "flat", "related_works",
     "rbind_df", "keywords",
     "rbind_df", "counts_by_year",
     "rbind_df", "concepts",
-    "flat", "apc_list",
-    "flat", "apc_paid",
+    "rbind_df", "sustainable_development_goals",
+    "rbind_df", "funders",
     "flat", "ids"
   )
-
+  sustainable_cols <- c("id", "display_name", "score")
   so_cols <- c(
     source_id = "id",
     source_display_name = "display_name",
@@ -247,9 +246,17 @@ works2df <- function(
   n <- length(data)
   list_df <- vector(mode = "list", length = n)
 
+  if (verbose) {
+    cli::cli_progress_bar(
+      format = "{cli::pb_spin} Converting [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
+      total = n,
+      clear = FALSE
+    )
+  }
+
   for (i in seq.int(n)) {
     if (verbose) {
-      pb$tick()
+      cli::cli_progress_update()
     }
 
     paper <- data[[i]]
@@ -261,6 +268,16 @@ works2df <- function(
       fields$type,
       SIMPLIFY = FALSE
     )
+
+    # Ensure consistent column order for sustainable_development_goals
+    sdg <- sim_fields$sustainable_development_goals
+
+    if (!is.null(sdg) && !is.na(sdg)) {
+      sim_fields$sustainable_development_goals <- list(
+        sdg[[1]][, sustainable_cols, drop = FALSE]
+      )
+    }
+
     if (!is.null(sim_fields$publication_date)) {
       sim_fields$publication_date <- as.Date(sim_fields$publication_date)
     }
@@ -272,10 +289,9 @@ works2df <- function(
       names(open_access)[[1]] <- "is_oa_anywhere"
     }
 
-    so_info <- paper$primary_location
+    so_info <- replace_w_na(paper$primary_location)
+
     venue <- so_info[!names(so_info) %in% c("source", "id")]
-    # ignore venue_id for now, will implement in Walden once this becomes default
-    # names(venue)[names(venue) == "id"] <- "venue_id"
     source <- so_info$source
     if (!is.null(source)) {
       source <- setNames(source[so_cols], names(so_cols))
@@ -309,6 +325,9 @@ works2df <- function(
     )
     out_ls[sapply(out_ls, is.null)] <- NULL
     list_df[[i]] <- out_ls
+  }
+  if (verbose) {
+    cli::cli_progress_done()
   }
 
   out_df <- rbind_oa_ls(list_df)
@@ -352,8 +371,7 @@ works2df <- function(
 #' @export
 authors2df <- function(
   data,
-  verbose = TRUE,
-  pb = if (verbose) oa_progress(length(data)) else NULL
+  verbose = TRUE
 ) {
   n <- length(data)
   list_df <- vector(mode = "list", length = n)
@@ -372,9 +390,17 @@ authors2df <- function(
     "flat", "ids"
   )
 
+  if (verbose) {
+    cli::cli_progress_bar(
+      format = "{cli::pb_spin} Converting [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
+      total = n,
+      clear = FALSE
+    )
+  }
+
   for (i in seq.int(n)) {
     if (verbose) {
-      pb$tick()
+      cli::cli_progress_update()
     }
 
     item <- data[[i]]
@@ -397,6 +423,9 @@ authors2df <- function(
 
     topics <- process_topics(item, "count")
     list_df[[i]] <- c(sim_fields, affs, item$summary_stats, topics)
+  }
+  if (verbose) {
+    cli::cli_progress_done()
   }
 
   col_order <- c(
@@ -452,8 +481,7 @@ authors2df <- function(
 #' @export
 institutions2df <- function(
   data,
-  verbose = TRUE,
-  pb = if (verbose) oa_progress(length(data)) else NULL
+  verbose = TRUE
 ) {
   n <- length(data)
   list_df <- vector(mode = "list", length = n)
@@ -483,9 +511,17 @@ institutions2df <- function(
     "flat", "ids"
   )
 
+  if (verbose) {
+    cli::cli_progress_bar(
+      format = "{cli::pb_spin} Converting [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
+      total = n,
+      clear = FALSE
+    )
+  }
+
   for (i in seq.int(n)) {
     if (verbose) {
-      pb$tick()
+      cli::cli_progress_update()
     }
 
     item <- data[[i]]
@@ -507,6 +543,9 @@ institutions2df <- function(
     }
     topics <- process_topics(item, "count")
     list_df[[i]] <- c(sim_fields, interna, topics)
+  }
+  if (verbose) {
+    cli::cli_progress_done()
   }
 
   col_order <- c(
@@ -572,8 +611,7 @@ institutions2df <- function(
 #' @export
 concepts2df <- function(
   data,
-  verbose = TRUE,
-  pb = if (verbose) oa_progress(length(data)) else NULL
+  verbose = TRUE
 ) {
   # fmt: skip
   concept_process <- tibble::tribble(
@@ -598,9 +636,17 @@ concepts2df <- function(
   n <- length(data)
   list_df <- vector(mode = "list", length = n)
 
+  if (verbose) {
+    cli::cli_progress_bar(
+      format = "{cli::pb_spin} Converting [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
+      total = n,
+      clear = FALSE
+    )
+  }
+
   for (i in seq.int(n)) {
     if (verbose) {
-      pb$tick()
+      cli::cli_progress_update()
     }
 
     item <- data[[i]]
@@ -627,6 +673,9 @@ concepts2df <- function(
     }
 
     list_df[[i]] <- c(sim_fields, intern_fields)
+  }
+  if (verbose) {
+    cli::cli_progress_done()
   }
 
   col_order <- c(
@@ -714,8 +763,7 @@ keywords2df <- function(data, verbose = TRUE) {
 #' @export
 funders2df <- function(
   data,
-  verbose = TRUE,
-  pb = if (verbose) oa_progress(length(data)) else NULL
+  verbose = TRUE
 ) {
   # fmt: skip
   funder_process <- tibble::tribble(
@@ -728,7 +776,7 @@ funders2df <- function(
     "identical", "homepage_url",
     "identical", "image_url",
     "identical", "image_thumbnail_url",
-    "identical", "grants_count",
+    "identical", "awards_count",
     "identical", "works_count",
     "identical", "cited_by_count",
     "flat", "summary_stats",
@@ -742,9 +790,17 @@ funders2df <- function(
   n <- length(data)
   list_df <- vector(mode = "list", length = n)
 
+  if (verbose) {
+    cli::cli_progress_bar(
+      format = "{cli::pb_spin} Converting [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
+      total = n,
+      clear = FALSE
+    )
+  }
+
   for (i in seq.int(n)) {
     if (verbose) {
-      pb$tick()
+      cli::cli_progress_update()
     }
 
     item <- data[[i]]
@@ -756,6 +812,9 @@ funders2df <- function(
       SIMPLIFY = FALSE
     )
     list_df[[i]] <- sim_fields
+  }
+  if (verbose) {
+    cli::cli_progress_done()
   }
 
   out_df <- rbind_oa_ls(list_df)
@@ -792,8 +851,7 @@ funders2df <- function(
 #' @export
 sources2df <- function(
   data,
-  verbose = TRUE,
-  pb = if (verbose) oa_progress(length(data)) else NULL
+  verbose = TRUE
 ) {
   # fmt: skip
   source_process <- tibble::tribble(
@@ -811,7 +869,15 @@ sources2df <- function(
     "flat", "summary_stats",
     "identical", "is_oa",
     "identical", "is_in_doaj",
-    "identical", "is_indexed_in_scopus",
+    "identical", "is_high_oa_rate",
+    "identical", "is_high_oa_rate_since_year",
+    "identical", "is_in_doaj_since_year",
+    "identical", "is_in_scielo",
+    "identical", "is_ojs",
+    "identical", "oa_flip_year",
+    "identical", "oa_works_count",
+    "identical", "first_publication_year",
+    "identical", "last_publication_year",
     "flat", "ids",
     "identical", "homepage_url",
     "rbind_df", "apc_prices",
@@ -819,7 +885,6 @@ sources2df <- function(
     "identical", "country_code",
     "flat", "societies",
     "flat", "alternate_titles",
-    "identical", "abbreviated_title",
     "identical", "type",
     "rbind_df", "counts_by_year",
     "identical", "works_api_url",
@@ -830,9 +895,17 @@ sources2df <- function(
   n <- length(data)
   list_df <- vector(mode = "list", length = n)
 
+  if (verbose) {
+    cli::cli_progress_bar(
+      format = "{cli::pb_spin} Converting [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
+      total = n,
+      clear = FALSE
+    )
+  }
+
   for (i in seq.int(n)) {
     if (verbose) {
-      pb$tick()
+      cli::cli_progress_update()
     }
 
     item <- data[[i]]
@@ -845,6 +918,9 @@ sources2df <- function(
     )
     topics <- process_topics(item, "count")
     list_df[[i]] <- c(sim_fields, topics)
+  }
+  if (verbose) {
+    cli::cli_progress_done()
   }
 
   out_df <- rbind_oa_ls(list_df)
@@ -881,8 +957,7 @@ sources2df <- function(
 #' @export
 publishers2df <- function(
   data,
-  verbose = TRUE,
-  pb = if (verbose) oa_progress(length(data)) else NULL
+  verbose = TRUE
 ) {
   # fmt: skip
   publisher_process <- tibble::tribble(
@@ -892,7 +967,6 @@ publishers2df <- function(
     "flat", "alternate_titles",
     "identical", "hierarchy_level",
     "flat", "parent_publisher",
-    "flat", "lineage",
     "identical", "country_codes",
     "identical", "homepage_url",
     "identical", "image_url",
@@ -902,21 +976,27 @@ publishers2df <- function(
     "flat", "summary_stats",
     "flat", "ids",
     "rbind_df", "counts_by_year",
-    "rbind_df", "roles",
     "identical", "sources_api_url",
-    "identical", "updated_date",
     "identical", "created_date"
   )
 
   n <- length(data)
   list_df <- vector(mode = "list", length = n)
 
+  if (verbose) {
+    cli::cli_progress_bar(
+      format = "{cli::pb_spin} Converting [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
+      total = n,
+      clear = FALSE
+    )
+  }
+
   for (i in seq.int(n)) {
     if (verbose) {
-      pb$tick()
+      cli::cli_progress_update()
     }
 
-    item <- data[[i]]
+    item <- replace_w_na(data[[i]])
     fields <- publisher_process[publisher_process$field %in% names(item), ]
     sim_fields <- mapply(
       function(x, y) subs_na(item[[x]], type = y),
@@ -925,6 +1005,9 @@ publishers2df <- function(
       SIMPLIFY = FALSE
     )
     list_df[[i]] <- sim_fields
+  }
+  if (verbose) {
+    cli::cli_progress_done()
   }
 
   out_df <- rbind_oa_ls(list_df)
@@ -964,8 +1047,7 @@ publishers2df <- function(
 #' @export
 topics2df <- function(
   data,
-  verbose = TRUE,
-  pb = if (verbose) oa_progress(length(data)) else NULL
+  verbose = TRUE
 ) {
   # fmt: skip
   topic_process <- tibble::tribble(
@@ -987,9 +1069,17 @@ topics2df <- function(
   n <- length(data)
   list_df <- vector(mode = "list", length = n)
 
+  if (verbose) {
+    cli::cli_progress_bar(
+      format = "{cli::pb_spin} Converting [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
+      total = n,
+      clear = FALSE
+    )
+  }
+
   for (i in seq.int(n)) {
     if (verbose) {
-      pb$tick()
+      cli::cli_progress_update()
     }
 
     item <- data[[i]]
@@ -1004,6 +1094,9 @@ topics2df <- function(
     domains <- as.data.frame(do.call(cbind, domains))
     names(domains) <- gsub("\\.", "_", names(domains))
     list_df[[i]] <- c(sim_fields, domains)
+  }
+  if (verbose) {
+    cli::cli_progress_done()
   }
 
   col_order <- c(
@@ -1098,7 +1191,7 @@ snowball2df <- function(data, verbose = FALSE) {
   )
 
   if (verbose) {
-    message("Appending new columns...")
+    cli::cli_inform("Appending new columns...")
   }
 
   nodes_augmented <- merge(

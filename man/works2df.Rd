@@ -4,12 +4,7 @@
 \alias{works2df}
 \title{Convert OpenAlex collection of works from list format to data frame}
 \usage{
-works2df(
-  data,
-  abstract = TRUE,
-  verbose = TRUE,
-  pb = if (verbose) oa_progress(length(data)) else NULL
-)
+works2df(data, abstract = TRUE, verbose = TRUE)
 }
 \arguments{
 \item{data}{List. Output of \code{oa_request}.}
@@ -20,9 +15,6 @@ Defaults to TRUE.}
 \item{verbose}{Logical.
 If TRUE, print information about the dataframe conversion process.
 Defaults to TRUE.}
-
-\item{pb}{Progress bar object. If verbose, computed from `oa_progress`.
-NULL otherwise.}
 }
 \value{
 a data.frame.

@@ -1,10 +1,12 @@
-.onAttach <- function(libname, pkgname) {
+onAttach <- function(libname, pkgname) {
   if (!grepl("suppress", Sys.getenv("openalexR.message"), ignore.case = TRUE)) {
-    packageStartupMessage(
-      "openalexR v2.0.0 introduces breaking changes.\n",
-      "See NEWS.md for details.\n\n",
-      "To suppress this message, add `openalexR.message = suppressed` ",
-      "to your .Renviron file."
+    cli::cli_inform(
+      c(
+        "!" = "openalexR v2.0.0 introduces breaking changes.",
+        "i" = "See NEWS.md for details.",
+        "i" = "To suppress this message, add {.envvar openalexR.message = suppressed} to your {.file .Renviron} file."
+      ),
+      class = "packageStartupMessage"
     )
   }
 }

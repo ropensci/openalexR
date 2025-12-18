@@ -4,11 +4,7 @@
 \alias{topics2df}
 \title{Convert OpenAlex collection of topics' records from list format to data frame}
 \usage{
-topics2df(
-  data,
-  verbose = TRUE,
-  pb = if (verbose) oa_progress(length(data)) else NULL
-)
+topics2df(data, verbose = TRUE)
 }
 \arguments{
 \item{data}{List. Output of \code{oa_request}.}
@@ -16,9 +12,6 @@ topics2df(
 \item{verbose}{Logical.
 If TRUE, print information about the dataframe conversion process.
 Defaults to TRUE.}
-
-\item{pb}{Progress bar object. If verbose, computed from `oa_progress`.
-NULL otherwise.}
 }
 \value{
 a data.frame.

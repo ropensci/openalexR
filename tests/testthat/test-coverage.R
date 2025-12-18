@@ -36,7 +36,11 @@ test_that("field coverage information is up to date", {
   expect_equal(main_s(colnames(out)), cols$topics)
 
   # Keywords
-  out_list <- oa_fetch(identifier = "diagnosis", entity = "keywords")
+  out_list <- oa_fetch(
+    identifier = "medicine",
+    entity = "keywords",
+    output = "list"
+  )
   out <- oa2df(out_list, "keywords")
   expect_equal(main_s(names(out_list)), oris$keywords)
   expect_equal(main_s(colnames(out)), cols$keywords)
@@ -54,7 +58,8 @@ test_that("field coverage information is up to date", {
   expect_equal(main_s(colnames(out)), cols$sources)
 
   # Publishers
-  out_list <- oa_fetch(identifier = "P4310311775", output = "list")
+  # out_list <- oa_fetch(identifier = "P4310311775", output = "list")
+  out_list <- oa_fetch(identifier = "P4310320990", output = "list")
   out <- oa2df(out_list, "publishers")
   expect_equal(main_s(names(out_list)), oris$publishers)
   expect_equal(main_s(colnames(out)), cols$publishers)
