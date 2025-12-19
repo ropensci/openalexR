@@ -445,14 +445,26 @@ oa_request <- function(
     cli::cli_inform(c(
       "i" = "Getting {n_pages} page{?s} of results with a total of {n_items} record{?s}..."
     ))
-    pb <- oa_progress(n = n_pages, text = "OpenAlex downloading")
+    pb <- cli::cli_progress_bar(
+      format = "{cli::pb_spin} OpenAlex downloading [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
+      total = n_pages,
+      clear = FALSE
+    )
   }
 
   # Activation of cursor pagination
   data <- vector("list", length = n_pages)
   res <- NULL
+  pb <- NULL
+  if (verbose) {
+    pb <- cli::cli_progress_bar(
+      format = "{cli::pb_spin} OpenAlex downloading [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
+      total = n_pages,
+      clear = FALSE
+    )
+  }
   for (i in pages) {
-    if (verbose) {
+    if (verbose && !is.null(pb)) {
       cli::cli_progress_update(id = pb)
     }
     Sys.sleep(1 / 10)
@@ -467,7 +479,7 @@ oa_request <- function(
       data[[i]] <- raw
     }
   }
-  if (verbose) {
+  if (verbose && !is.null(pb)) {
     cli::cli_progress_done(id = pb)
   }
   data <- unlist(data, recursive = FALSE)

@@ -97,15 +97,6 @@ oa_print <- function() {
   p
 }
 
-oa_progress <- function(n, text = "Converting") {
-  cli::cli_progress_bar(
-    format = "{cli::pb_spin} {text} [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
-    total = n,
-    clear = FALSE,
-    .envir = parent.frame()
-  )
-}
-
 asl <- function(z) {
   if (length(z) > 1) {
     return(z)

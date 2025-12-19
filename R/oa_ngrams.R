@@ -80,7 +80,11 @@ oa_ngrams <- function(
 
       #ngrams_failed_template <- data.frame(id = NA, doi = NA, count = NA, ngrams = I(list(NULL)))
       if (verbose) {
-        pb <- oa_progress(n)
+        pb <- cli::cli_progress_bar(
+          format = "{cli::pb_spin} Converting [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
+          total = n,
+          clear = FALSE
+        )
       }
 
       # Fetch
@@ -118,7 +122,11 @@ oa_ngrams <- function(
         }
         # Serial fetch
         if (verbose) {
-          pb_dl <- oa_progress(n, "OpenAlex downloading")
+          pb_dl <- cli::cli_progress_bar(
+            format = "{cli::pb_spin} OpenAlex downloading [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
+            total = n,
+            clear = FALSE
+          )
         }
 
         ngrams_list <- vector("list", n)
