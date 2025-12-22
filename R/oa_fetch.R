@@ -76,11 +76,8 @@ oa_entities <- function() {
 #' )
 #' }
 oa_fetch <- function(
-  entity = if (is.null(identifier)) {
-    NULL
-  } else {
-    id_type(shorten_oaid(identifier[[1]]))
-  },
+  entity = if (is.null(identifier)) NULL else
+    id_type(shorten_oaid(identifier[[1]])),
   identifier = NULL,
   ...,
   options = NULL,
@@ -95,7 +92,8 @@ oa_fetch <- function(
   count_only = FALSE,
   mailto = oa_email(),
   api_key = oa_apikey(),
-  verbose = FALSE
+  verbose = FALSE,
+  timeout = 30
 ) {
   output <- match.arg(output)
   entity <- match.arg(entity, oa_entities())
@@ -159,7 +157,8 @@ oa_fetch <- function(
       mailto = mailto,
       api_key = api_key,
       parse = output != "raw",
-      verbose = verbose
+      verbose = verbose,
+      timeout = timeout
     )
   }
 
@@ -222,6 +221,9 @@ oa_fetch <- function(
 #' If FALSE, returns the raw JSON response as string.
 #' @param verbose Logical.
 #' If TRUE, print information about the querying process. Defaults to TRUE.
+#' @param timeout Numeric.
+#' Number of seconds to wait for a response until giving up. Can not be less than 1 ms.
+#' Defaults to 30.
 #'
 #' @return a data.frame or a list of bibliographic records.
 #'
@@ -329,6 +331,7 @@ oa_fetch <- function(
 #' }
 #' @export
 #'
+
 oa_request <- function(
   query_url,
   per_page = 200,
@@ -338,7 +341,8 @@ oa_request <- function(
   mailto = oa_email(),
   api_key = oa_apikey(),
   parse = TRUE,
-  verbose = FALSE
+  verbose = FALSE,
+  timeout = 30
 ) {
   # https://httr.r-lib.org/articles/api-packages.html#set-a-user-agent
   ua <- httr::user_agent("https://github.com/ropensci/openalexR/")
@@ -362,12 +366,14 @@ oa_request <- function(
   }
 
   # first, download info about n. of items returned by the query
+
   res <- api_request(
     query_url,
     ua,
     query = query_ls,
     api_key = api_key,
-    parse = FALSE
+    parse = FALSE,
+    timeout = timeout
   )
   res_parsed <- jsonlite::fromJSON(res, simplifyVector = FALSE)
   res_meta <- res_parsed$meta
@@ -406,7 +412,7 @@ oa_request <- function(
       }
       Sys.sleep(1 / 10)
       query_ls[[paging]] <- next_page
-      res <- api_request(query_url, ua, query = query_ls)
+      res <- api_request(query_url, ua, query = query_ls, timeout = timeout)
       data <- c(data, res[[result_name]])
       i <- i + 1
       next_page <- get_next_page("cursor", i, res)
@@ -472,10 +478,22 @@ oa_request <- function(
     query_ls[[paging]] <- next_page
 
     if (parse) {
-      res <- api_request(query_url, ua, query = query_ls, parse = TRUE)
+      res <- api_request(
+        query_url,
+        ua,
+        query = query_ls,
+        parse = TRUE,
+        timeout = timeout
+      )
       if (!is.null(res[[result_name]])) data[[i]] <- res[[result_name]]
     } else {
-      raw <- api_request(query_url, ua, query = query_ls, parse = FALSE)
+      raw <- api_request(
+        query_url,
+        ua,
+        query = query_ls,
+        parse = FALSE,
+        timeout = timeout
+      )
       data[[i]] <- raw
     }
   }
@@ -774,18 +792,21 @@ oa_random <- function(
   final_res
 }
 
+
 api_request <- function(
   query_url,
   ua,
   query,
   api_key = oa_apikey(),
-  parse = TRUE
+  parse = TRUE,
+  timeout = 30
 ) {
   res <- httr::GET(
     query_url,
     ua,
     query = query,
-    httr::add_headers(api_key = api_key)
+    httr::add_headers(api_key = api_key),
+    httr::timeout(timeout)
   )
 
   empty_res <- if (parse) list() else "{}"
