@@ -1,3 +1,10 @@
+# openalexR 3.0.0
+* Updates for new OpenAlex Walden `data-version=2`
+* Add cli to Imports
+
+# openalexR 2.0.2
+* Fix CRAN R CMD check issues
+
 # openalexR 2.0.0
 * Breaking changes in column names in the output of `oa_fetch`:
   * Works:

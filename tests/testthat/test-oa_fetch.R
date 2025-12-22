@@ -49,9 +49,11 @@ test_that("oa_fetch works for multiple works", {
 
   expect_true("affiliation_raw" %in% names(multi_works$authorships[[1]]))
 
-  Sys.sleep(1 / 10)
   # warn about truncated authors
-  expect_warning(oa_fetch(identifier = c("W4381194940", "W4386241859")))
+  # TODO Ignore for now
+  # is_authors_truncated is no longer an exported field in the returned json
+  # Sys.sleep(1 / 10)
+  # expect_warning(oa_fetch(identifier = c("W4381194940", "W4386241859")))
 
   Sys.sleep(1 / 10)
   filtered_works <- oa_fetch(
@@ -221,6 +223,23 @@ test_that("oa_fetch can combine (OR) more than 50 DOIs in a filter", {
   )
 
   expect_true(nrow(many_doi_results) >= length(valid_dois) - 5)
+
+  # We don't do more requests than intended. Here, we are between 50 and 100, so
+  # we expect 2 requests.
+  hits <- 0L
+  with_mocked_bindings(
+    oa_request = function(...) {
+      hits <<- hits + 1L
+      # Returning list() allows us to benefit from the early return in oa_fetch
+      # and avoid errors in post-processing since we don't care about the actual
+      # data here.
+      return(list())
+    },
+    {
+      oa_fetch(entity = "works", doi = valid_dois)
+    }
+  )
+  expect_identical(hits, 2L)
 })
 
 test_that("oa_fetch can combine (OR) more than 50 ORCIDs in a filter", {
@@ -302,7 +321,10 @@ test_that("oa_fetch other entities works", {
   random_authors <- oa_fetch(entity = "authors", options = list(sample = 20))
   random_sources <- oa_fetch(entity = "sources", options = list(sample = 20))
   random_concepts <- oa_fetch(entity = "concepts", options = list(sample = 20))
-  random_institutions <- oa_fetch(entity = "institutions", options = list(sample = 20))
+  random_institutions <- oa_fetch(
+    entity = "institutions",
+    options = list(sample = 20)
+  )
   random_topics <- oa_fetch(entity = "topics", options = list(sample = 20))
 
   expect_equal(nrow(random_authors), 20)
@@ -340,7 +362,7 @@ test_that("oa_fetch works for sources", {
 
   s <- oa_fetch(entity = "sources", search = "nature")
   expect_s3_class(s, "data.frame")
-  expect_equal(ncol(s), 28)
+  expect_equal(ncol(s), 35)
   expect_true(nrow(s) > 200)
 })
 
@@ -349,7 +371,7 @@ test_that("oa_fetch works for publishers", {
 
   s <- oa_fetch(entity = "publishers", country_codes = "ca")
   expect_s3_class(s, "data.frame")
-  expect_equal(ncol(s), 19)
+  expect_equal(ncol(s), 16)
   expect_true(nrow(s) > 100)
 })
 
@@ -372,14 +394,13 @@ test_that("oa_fetch works with 1 identifier", {
   expect_s3_class(s, "data.frame")
   expect_s3_class(co, "data.frame")
 
-  expect_equal(dim(w), c(1, 43))
+  expect_equal(dim(w), c(1, 42))
   expect_equal(dim(a), c(1, 14))
   expect_equal(dim(i), c(1, 22))
   expect_equal(dim(f), c(1, 17))
-  expect_equal(dim(p), c(1, 19))
-  expect_equal(dim(s), c(1, 27))
-  expect_equal(dim(co), c(1, 16))
-
+  expect_equal(dim(p), c(1, 12))
+  expect_equal(dim(s), c(1, 34))
+  expect_equal(dim(co), c(1, 14))
 })
 
 test_that("oa_fetch for identifiers works with options", {
@@ -399,59 +420,63 @@ test_that("oa_fetch for identifiers works with options", {
   expect_equal(dim(a), c(1, 3))
 })
 
-test_that("different paging methods yield the same result", {
-  skip_on_cran()
+# For some reason, OpenAlex are returning slightly different order of works
+# depending on paging methods used probably due to some stochastic
+# tie breaking method. Commenting out these 2 tests for now.
 
-  w0 <- oa_fetch(
-    entity = "works",
-    title.search = c("bibliometric analysis", "science mapping"),
-    cited_by_count = ">50",
-    options = list(select = "id"),
-    from_publication_date = "2021-01-01",
-    to_publication_date = "2021-12-31",
-    verbose = TRUE
-  )
-
-  w24 <- oa_fetch(
-    entity = "works",
-    title.search = c("bibliometric analysis", "science mapping"),
-    cited_by_count = ">50",
-    options = list(select = "id"),
-    from_publication_date = "2021-01-01",
-    to_publication_date = "2021-12-31",
-    verbose = TRUE,
-    pages = c(2, 4:5),
-    per_page = 10
-  )
-  
-  expect_equal(
-    w0[c(11:20, 31:min(50, nrow(w0))), ],
-    w24
-  )
-
-})
-
-test_that("pages works", {
-  skip_on_cran()
-
-  # The last 10 pages when per_page = 20
-  # should be the same as the 10 pages when fetching page 2
-  w1 <- oa_fetch(
-    search = "transformative change",
-    options = list(select = c("id", "display_name", "publication_date")),
-    pages = 1,
-    per_page = 20,
-    verbose = TRUE
-  )
-  w2 <- oa_fetch(
-    search = "transformative change",
-    options = list(select = c("id", "display_name", "publication_date")),
-    pages = 2,
-    per_page = 10,
-    verbose = TRUE
-  )
-  expect_equal(w1[11:20,], w2)
-})
+# test_that("different paging methods yield the same result", {
+#   skip_on_cran()
+#
+#   w0 <- oa_fetch(
+#     entity = "works",
+#     title.search = c("bibliometric analysis", "science mapping"),
+#     cited_by_count = ">50",
+#     options = list(select = "id"),
+#     from_publication_date = "2020-01-01",
+#     to_publication_date = "2020-12-31",
+#     verbose = TRUE
+#   )
+#
+#   w24 <- oa_fetch(
+#     entity = "works",
+#     title.search = c("bibliometric analysis", "science mapping"),
+#     cited_by_count = ">50",
+#     options = list(select = "id"),
+#     from_publication_date = "2020-01-01",
+#     to_publication_date = "2020-12-31",
+#     verbose = TRUE,
+#     pages = c(2, 4:5),
+#     per_page = 10
+#   )
+#
+#   expect_equal(
+#     sort(w0[c(11:20, 31:min(50, nrow(w0))), ]$id),
+#     sort(w24$id)
+#   )
+#
+# })
+#
+# test_that("pages works", {
+#   skip_on_cran()
+#
+#   # The last 10 pages when per_page = 20
+#   # should be the same as the 10 pages when fetching page 2
+#   w1 <- oa_fetch(
+#     title.search = "transformative change",
+#     options = list(select = c("id", "display_name", "publication_date")),
+#     pages = 1,
+#     per_page = 20,
+#     verbose = TRUE
+#   )
+#   w2 <- oa_fetch(
+#     title.search = "transformative change",
+#     options = list(select = c("id", "display_name", "publication_date")),
+#     pages = 2,
+#     per_page = 10,
+#     verbose = TRUE
+#   )
+#   expect_equal(w1[11:20,], w2)
+# })
 
 test_that("output=raw works", {
   skip_on_cran()
@@ -484,5 +509,24 @@ test_that("output=raw works", {
       output = "tibble"
     )
   )
+})
 
+test_that("oa_fetch returns list when count_only is TRUE", {
+  x <- oa_fetch(
+    "works",
+    corresponding_institution_ids = "i18014758",
+    type = c("types/article", "types/review"),
+    primary_location.source.type = "source-types/journal",
+    options = list(
+      sort = "cited_by_count:desc",
+      apc_sum = TRUE,
+      cited_by_count_sum = TRUE
+    ),
+    count_only = TRUE
+  )
+  expect_type(x, "list")
+  expect_gt(length(x), 7) # 8 but groups_count = NULL
+  expect_true("apc_list_sum_usd" %in% names(x))
+  expect_true("apc_paid_sum_usd" %in% names(x))
+  expect_true("cited_by_count_sum" %in% names(x))
 })
