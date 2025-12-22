@@ -7,7 +7,7 @@
 oa2bibliometrix(df)
 }
 \arguments{
-\item{df}{is bibliographic collection of works donwloaded from OpenALex.}
+\item{df}{is bibliographic collection of works downloaded from OpenAlex.}
 }
 \value{
 a data.frame with class "bibliometrix".
