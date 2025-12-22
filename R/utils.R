@@ -195,7 +195,7 @@ process_paper_authors <- function(authorships) {
   }
   authors_ls <- lapply(authorships, function(l) {
     l_author <- if (length(l$author)) {
-      replace_w_na(l$author)
+      replace_w_na(l$author, NA_character_)
     } else {
       empty_list(names(l$author))
     }
