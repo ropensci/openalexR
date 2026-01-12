@@ -512,6 +512,8 @@ test_that("output=raw works", {
 })
 
 test_that("oa_fetch returns list when count_only is TRUE", {
+  skip_on_cran()
+
   x <- oa_fetch(
     "works",
     corresponding_institution_ids = "i18014758",

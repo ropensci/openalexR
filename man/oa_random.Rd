@@ -38,5 +38,7 @@ use `options = list(sample = 10)` argument in `oa_fetch`.
 oa_fetch but for a random query
 }
 \examples{
+\dontrun{
 oa_random()
+}
 }

@@ -772,7 +772,9 @@ oa_query <- function(
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' oa_random()
+#' }
 oa_random <- function(
   entity = oa_entities(),
   output = c("tibble", "dataframe", "list"),
