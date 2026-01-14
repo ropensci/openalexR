@@ -118,8 +118,9 @@ works_from_dois <- oa_fetch(
   doi = c("10.1016/j.joi.2017.08.007", "https://doi.org/10.1007/s11192-013-1221-3"),
   verbose = TRUE
 )
-#> Requesting url: https://api.openalex.org/works?filter=doi%3A10.1016%2Fj.joi.2017.08.007%7Chttps%3A%2F%2Fdoi.org%2F10.1007%2Fs11192-013-1221-3
-#> Getting 1 page of results with a total of 2 records...
+#> Requesting url:
+#> <https://api.openalex.org/works?filter=doi%3A10.1016%2Fj.joi.2017.08.007%7Chttps%3A%2F%2Fdoi.org%2F10.1007%2Fs11192-013-1221-3>
+#> ℹ Getting 1 page of results with a total of 2 records...
 ```
 
 We can view the output tibble/dataframe, `works_from_dois`,
@@ -157,8 +158,9 @@ works_from_pmids <- oa_fetch(
   pmid = c("14907713", 32572199),
   verbose = TRUE
 )
-#> Requesting url: https://api.openalex.org/works?filter=pmid%3A14907713%7C32572199
-#> Getting 1 page of results with a total of 2 records...
+#> Requesting url:
+#> <https://api.openalex.org/works?filter=pmid%3A14907713%7C32572199>
+#> ℹ Getting 1 page of results with a total of 2 records...
 works_from_pmids |>
   show_works() |>
   knitr::kable()
@@ -181,14 +183,9 @@ works_from_orcids <- oa_fetch(
   author.orcid = c("0000-0001-6187-6610", "0000-0002-8517-9411"),
   verbose = TRUE
 )
-#> Requesting url: https://api.openalex.org/works?filter=author.orcid%3A0000-0001-6187-6610%7C0000-0002-8517-9411
-#> Getting 2 pages of results with a total of 281 records...
-#> Warning in oa_request(oa_query(filter = filter_i, multiple_id = multiple_id, : 
-#> The following work(s) have truncated lists of authors: W4230863633.
-#> Query each work separately by its identifier to get full list of authors.
-#> For example:
-#>   lapply(c("W4230863633"), \(x) oa_fetch(identifier = x))
-#> Details at https://docs.openalex.org/api-entities/authors/limitations.
+#> Requesting url:
+#> <https://api.openalex.org/works?filter=author.orcid%3A0000-0001-6187-6610%7C0000-0002-8517-9411>
+#> ℹ Getting 2 pages of results with a total of 287 records...
 works_from_orcids |>
   show_works() |>
   knitr::kable()
@@ -198,10 +195,10 @@ works_from_orcids |>
 |:---|:---|:---|:---|:---|:---|
 | W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis | Massimo Aria | Corrado Cuccurullo | FALSE | Workflow, Bibliometrics, Software |
 | W2741809807 | The state of OA: a large-scale analysis of the prevalence and impact of Open Access articles | Heather Piwowar | Stefanie Haustein | TRUE | Citation, License, Bibliometrics |
-| W2122130843 | Scientometrics 2.0: New metrics of scholarly impact on the social Web | Jason Priem | Bradely H. Hemminger | FALSE | Bookmarking, Altmetrics, Social media |
-| W3005144120 | Mapping the Evolution of Social Research and Data Science on 30 Years of Social Indicators Research | Massimo Aria | Maria Spano | FALSE | Human geography, Data collection, Position (finance) |
-| W1553564559 | Altmetrics in the wild: Using social media to explore scholarly impact | Jason Priem | Bradley M. Hemminger | TRUE | Altmetrics, Social media, Citation |
+| W3005144120 | Mapping the Evolution of Social Research and Data Science on 30 Years of Social Indicators Research | Massimo Aria | Maria Spano | FALSE | Human geography, Data collection, Position (finance) |
+| W2122130843 | Scientometrics 2.0: New metrics of scholarly impact on the social Web | Jason Priem | Bradely H. Hemminger | TRUE | Bookmarking, Altmetrics, Social media |
 | W2408216567 | Foundations and trends in performance management. A twenty-five years bibliometric analysis in business and public administration domains | Corrado Cuccurullo | Fabrizia Sarto | FALSE | Domain (mathematical analysis), Content analysis, Public domain |
+| W2396414759 | The Altmetrics Collection | Jason Priem | Dario Taraborelli | TRUE | Social media, Citation, Altmetrics |
 
 **Goal**: Download all works that have been cited more than 50 times,
 published between 2020 and 2021, and include the strings “bibliometric
@@ -218,8 +215,12 @@ works_search <- oa_fetch(
   options = list(sort = "cited_by_count:desc"),
   verbose = TRUE
 )
-#> Requesting url: https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc
-#> Getting 3 pages of results with a total of 455 records...
+#> Requesting url:
+#> <https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc>
+#> ℹ Getting 3 pages of results with a total of 561 records...
+#> ⠙ OpenAlex downloading [2/3] ■■■■■■■■■■■■■■■■■■■■■             67% ETA:  1s
+#> 
+#> ⠙ OpenAlex downloading [3/3] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
 works_search |>
   show_works() |>
   knitr::kable()
@@ -227,12 +228,12 @@ works_search |>
 
 | id | display_name | first_author | last_author | is_oa | top_concepts |
 |:---|:---|:---|:---|:---|:---|
-| W3160856016 | How to conduct a bibliometric analysis: An overview and guidelines | Naveen Donthu | Weng Marc Lim | TRUE | Bibliometrics, Field (mathematics), Resource (disambiguation) |
+| W3160856016 | How to conduct a bibliometric analysis: An overview and guidelines | Naveen Donthu | Weng Marc Lim | FALSE | Bibliometrics, Field (mathematics), Resource (disambiguation) |
 | W3001491100 | Software tools for conducting bibliometric analysis in science: An up-to-date review | José A. Moral-Muñoz | Manuel J. Cobo | TRUE | Bibliometrics, Visualization, Set (abstract data type) |
-| W3038273726 | Investigating the emerging COVID-19 research trends in the field of business and management: A bibliometric analysis approach | Surabhi Verma | Anders Gustafsson | TRUE | Bibliometrics, Field (mathematics), Empirical research |
+| W3038273726 | Investigating the emerging COVID-19 research trends in the field of business and management: A bibliometric analysis approach | Surabhi Verma | Anders Gustafsson | FALSE | Bibliometrics, Field (mathematics), Disease |
 | W3044902155 | Financial literacy: A systematic review and bibliometric analysis | Kirti Goyal | Satish Kumar | FALSE | Financial literacy, Citation, Content analysis |
 | W3198357836 | Artificial intelligence and machine learning in finance: Identifying foundations, themes, and research clusters from bibliometric analysis | John W. Goodell | Debidutta Pattnaik | FALSE | Scholarship, Valuation (finance), Corporate finance |
-| W3042215340 | A bibliometric analysis using VOSviewer of publications on COVID-19 | Yuetian Yu | Erzhen Chen | TRUE | Citation, Bibliometrics, China |
+| W2998021954 | Bibliometric Analysis using Bibliometrix an R Package | Hamid Derviş | NA | TRUE | Bibliometrics, Citation, Field (mathematics) |
 
 ### 🧑 Authors
 
@@ -255,8 +256,8 @@ authors_from_orcids |>
 
 | id | display_name | orcid | works_count | cited_by_count | top_concepts |
 |:---|:---|:---|---:|---:|:---|
-| A5069892096 | Massimo Aria | 0000-0002-8517-9411 | 219 | 13247 | Physiology, Pathology and Forensic Medicine, Periodontics |
-| A5023888391 | Jason Priem | 0000-0001-6187-6610 | 62 | 3873 | Statistics, Probability and Uncertainty, Information Systems, Communication |
+| A5069892096 | Massimo Aria | 0000-0002-8517-9411 | 227 | 16557 | Physiology, Pathology and Forensic Medicine, Psychiatry and Mental health |
+| A5023888391 | Jason Priem | 0000-0001-6187-6610 | 61 | 4196 | Statistics, Probability and Uncertainty, Information Systems, Communication |
 
 **Goal**: Acquire information on the authors of this package.
 
@@ -275,8 +276,8 @@ authors_from_names |>
 
 | id | display_name | orcid | works_count | cited_by_count | top_concepts |
 |:---|:---|:---|---:|---:|:---|
-| A5069892096 | Massimo Aria | 0000-0002-8517-9411 | 219 | 13247 | Physiology, Pathology and Forensic Medicine, Periodontics |
-| A5023888391 | Jason Priem | 0000-0001-6187-6610 | 62 | 3873 | Statistics, Probability and Uncertainty, Information Systems, Communication |
+| A5069892096 | Massimo Aria | 0000-0002-8517-9411 | 227 | 16557 | Physiology, Pathology and Forensic Medicine, Psychiatry and Mental health |
+| A5023888391 | Jason Priem | 0000-0001-6187-6610 | 61 | 4196 | Statistics, Probability and Uncertainty, Information Systems, Communication |
 
 **Goal**: Download all authors’ records of scholars who work at the
 [University of Naples Federico
@@ -294,8 +295,20 @@ my_arguments <- list(
   works_count = ">499"
 )
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
-#>      count db_response_time_ms page per_page
-#> [1,]    51                 147    1        1
+#> $count
+#> [1] 88
+#> 
+#> $db_response_time_ms
+#> [1] 50
+#> 
+#> $page
+#> [1] 1
+#> 
+#> $per_page
+#> [1] 1
+#> 
+#> $groups_count
+#> NULL
 
 if (do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))[1]>0){
 do.call(oa_fetch, my_arguments) |>
@@ -306,12 +319,12 @@ do.call(oa_fetch, my_arguments) |>
 
 | id | display_name | orcid | works_count | cited_by_count | top_concepts |
 |:---|:---|:---|---:|---:|:---|
-| A5114377868 | L. Lista | 0000-0001-6471-5492 | 2930 | 136091 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
-| A5106552509 | C. Sciacca | 0000-0002-8412-4072 | 2759 | 100394 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
-| A5106315809 | M. Merola | 0000-0002-7082-8108 | 1355 | 73380 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
-| A5003544129 | Annamaria Colao | 0000-0001-6986-266X | 1325 | 46516 | Endocrinology, Diabetes and Metabolism, Endocrinology, Diabetes and Metabolism, Surgery |
-| A5076706548 | Salvatore Capozziello | 0000-0003-4886-2024 | 1058 | 39315 | Astronomy and Astrophysics, Nuclear and High Energy Physics, Astronomy and Astrophysics |
-| A5017818032 | Salvatore Panico | 0000-0002-5498-8312 | 1002 | 63070 | Public Health, Environmental and Occupational Health, Oncology, Cancer Research |
+| A5034359289 | E. Rossi | 0000-0002-2146-677X | 4112 | 225222 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5114377868 | L. Lista | 0000-0001-6471-5492 | 2701 | 136057 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5106552509 | C. Sciacca | 0000-0002-8412-4072 | 2503 | 101360 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5106315436 | S. Ragazzi | 0000-0001-8219-2074 | 2116 | 113665 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5058925624 | Arnon Nagler | 0000-0002-0763-1265 | 2103 | 70732 | Hematology, Hematology, Public Health, Environmental and Occupational Health |
+| A5066300938 | S. D’Auria | 0000-0003-3393-6318 | 2084 | 122832 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
 
 ## 🍒 Example analyses
 
@@ -329,8 +342,9 @@ italy_insts <- oa_fetch(
   type = "education",
   verbose = TRUE
 )
-#> Requesting url: https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation
-#> Getting 1 page of results with a total of 150 records...
+#> Requesting url:
+#> <https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation>
+#> ℹ Getting 2 pages of results with a total of 236 records...
 italy_insts |>
   slice_max(cited_by_count, n = 8) |>
   mutate(display_name = forcats::fct_reorder(display_name, cited_by_count)) |>
@@ -470,14 +484,25 @@ snowball_docs <- oa_snowball(
   identifier = c("W1964141474", "W1963991285"),
   verbose = TRUE
 )
-#> Requesting url: https://api.openalex.org/works?filter=openalex%3AW1964141474%7CW1963991285
-#> Getting 1 page of results with a total of 2 records...
+#> Requesting url:
+#> <https://api.openalex.org/works?filter=openalex%3AW1964141474%7CW1963991285>
+#> ℹ Getting 1 page of results with a total of 2 records...
 #> Collecting all documents citing the target papers...
-#> Requesting url: https://api.openalex.org/works?filter=cites%3AW1963991285%7CW1964141474
-#> Getting 4 pages of results with a total of 621 records...
+#> Requesting url:
+#> <https://api.openalex.org/works?filter=cites%3AW1963991285%7CW1964141474>
+#> ℹ Getting 4 pages of results with a total of 658 records...
+#> ⠙ OpenAlex downloading [2/4] ■■■■■■■■■■■■■■■■                  50% ETA:  2s
+#> 
+#> ⠹ OpenAlex downloading [3/4] ■■■■■■■■■■■■■■■■■■■■■■■           75% ETA:  2s
+#> 
+#> ⠹ OpenAlex downloading [4/4] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
+#> 
+#> 
+#> 
 #> Collecting all documents cited by the target papers...
-#> Requesting url: https://api.openalex.org/works?filter=cited_by%3AW1963991285%7CW1964141474
-#> Getting 1 page of results with a total of 94 records...
+#> Requesting url:
+#> <https://api.openalex.org/works?filter=cited_by%3AW1963991285%7CW1964141474>
+#> ℹ Getting 1 page of results with a total of 93 records...
 ggraph(graph = as_tbl_graph(snowball_docs), layout = "stress") +
   geom_edge_link(aes(alpha = after_stat(index)), show.legend = FALSE) +
   geom_node_point(aes(fill = oa_input, size = cited_by_count), shape = 21, color = "white") +

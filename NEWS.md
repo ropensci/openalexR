@@ -1,3 +1,8 @@
+# openalexR (development version)
+
+# openalexR 3.0.1
+* Fix CRAN R CMD check issues
+
 # openalexR 3.0.0
 * Updates for new OpenAlex Walden `data-version=2`
 * Add cli to Imports

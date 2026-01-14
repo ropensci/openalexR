@@ -2,7 +2,7 @@ Type: Package
 Package: openalexR
 Title: Getting Bibliographic Records from 'OpenAlex' Database Using 'DSL'
     API
-Version: 3.0.0
+Version: 3.0.1.9000
 Authors@R: c(
     person(given = "Massimo",
            family = "Aria",
