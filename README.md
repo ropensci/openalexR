@@ -72,23 +72,31 @@ You can install the released version of openalexR from
 install.packages("openalexR")
 ```
 
-Before we go any further, we highly recommend you set `openalexR.mailto`
-option so that your requests go to [the polite
-pool](https://docs.openalex.org/how-to-use-the-api/rate-limits-and-authentication#the-polite-pool)
-for faster response times. If you have OpenAlex Premium, you can add
-your API key to the `openalexR.apikey` option as well. These lines best
-go into `.Rprofile` with `file.edit("~/.Rprofile")`.
+### 🔑 API Key (Required)
+
+**As of February 13, 2025, the OpenAlex API requires an API key.**
+Without a key, you are limited to 100 credits per day (for testing
+only). With a free API key, you get 100,000 credits per day.
+
+See the [OpenAlex API access
+documentation](https://docs.openalex.org/#access) for details.
+
+**To get your API key:**
+
+1.  Create a free account at [openalex.org](https://openalex.org)
+2.  Copy your API key from <https://openalex.org/settings/api>
+
+**To use your API key with openalexR**, add it to your `.Rprofile` with
+`file.edit("~/.Rprofile")`:
 
 ``` r
-options(openalexR.mailto = "example@email.com")
-options(openalexR.apikey = "EXAMPLE_APIKEY")
+options(openalexR.apikey = "YOUR_API_KEY")
 ```
 
 Alternatively, you can open `.Renviron` with `file.edit("~/.Renviron")`
 and add:
 
-    openalexR.mailto = example@email.com
-    openalexR.apikey = EXAMPLE_APIKEY
+    openalexR.apikey = YOUR_API_KEY
 
 ``` r
 library(openalexR)
@@ -219,8 +227,13 @@ works_search <- oa_fetch(
 #> <https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc>
 #> ℹ Getting 3 pages of results with a total of 561 records...
 #> ⠙ OpenAlex downloading [2/3] ■■■■■■■■■■■■■■■■■■■■■             67% ETA:  1s
-#> 
 #> ⠙ OpenAlex downloading [3/3] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
+#> 
+#> 
+#> ⠙ Converting [259/561] ■■■■■■■■■■■■■■■                   46% ETA:  1s
+#> ⠹ Converting [513/561] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      91% ETA:  0s
+#> ⠸ Converting [554/561] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   99% ETA:  0s
+#> ⠸ Converting [561/561] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
 works_search |>
   show_works() |>
   knitr::kable()
@@ -299,7 +312,7 @@ do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #> [1] 88
 #> 
 #> $db_response_time_ms
-#> [1] 50
+#> [1] 28
 #> 
 #> $page
 #> [1] 1
@@ -491,12 +504,18 @@ snowball_docs <- oa_snowball(
 #> Requesting url:
 #> <https://api.openalex.org/works?filter=cites%3AW1963991285%7CW1964141474>
 #> ℹ Getting 4 pages of results with a total of 658 records...
-#> ⠙ OpenAlex downloading [2/4] ■■■■■■■■■■■■■■■■                  50% ETA:  2s
-#> 
+#> ⠙ OpenAlex downloading [2/4] ■■■■■■■■■■■■■■■■                  50% ETA:  3s
 #> ⠹ OpenAlex downloading [3/4] ■■■■■■■■■■■■■■■■■■■■■■■           75% ETA:  2s
-#> 
 #> ⠹ OpenAlex downloading [4/4] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
 #> 
+#> 
+#> ⠙ Converting [221/658] ■■■■■■■■■■■                       34% ETA:  2s
+#> ⠹ Converting [266/658] ■■■■■■■■■■■■■                     40% ETA:  2s
+#> ⠸ Converting [313/658] ■■■■■■■■■■■■■■■                   48% ETA:  2s
+#> ⠼ Converting [476/658] ■■■■■■■■■■■■■■■■■■■■■■■           72% ETA:  1s
+#> ⠴ Converting [533/658] ■■■■■■■■■■■■■■■■■■■■■■■■■         81% ETA:  1s
+#> ⠦ Converting [596/658] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      91% ETA:  0s
+#> ⠦ Converting [658/658] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
 #> 
 #> 
 #> Collecting all documents cited by the target papers...
