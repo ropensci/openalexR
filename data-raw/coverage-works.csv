@@ -19,6 +19,7 @@ citation_normalized_percentile,NA,
 cited_by_count,cited_by_count,
 cited_by_percentile_year,NA,
 concepts,concepts,
+content_urls,NA,
 corresponding_author_ids,NA,reconstructable from `author$is_corresponding`
 corresponding_institution_ids,NA,reconstructable from `author$is_corresponding`
 countries_distinct_count,NA,reconstructable from `author$institution_country_code`

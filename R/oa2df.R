@@ -967,6 +967,7 @@ publishers2df <- function(
     "flat", "alternate_titles",
     "identical", "hierarchy_level",
     "flat", "parent_publisher",
+    "flat", "lineage",
     "identical", "country_codes",
     "identical", "homepage_url",
     "identical", "image_url",
@@ -976,7 +977,9 @@ publishers2df <- function(
     "flat", "summary_stats",
     "flat", "ids",
     "rbind_df", "counts_by_year",
+    "rbind_df", "roles",
     "identical", "sources_api_url",
+    "identical", "updated_date",
     "identical", "created_date"
   )
 
