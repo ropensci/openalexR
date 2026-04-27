@@ -5,7 +5,12 @@
 \title{Fetching records}
 \usage{
 oa_fetch(
-  entity = if (is.null(identifier)) NULL else id_type(shorten_oaid(identifier[[1]])),
+  entity = if (is.null(identifier)) {
+     NULL
+ } else {
+    
+    id_type(shorten_oaid(identifier[[1]]))
+ },
   identifier = NULL,
   ...,
   options = NULL,

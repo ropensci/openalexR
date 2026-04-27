@@ -379,7 +379,7 @@ test_that("oa_fetch works with 1 identifier", {
   skip_on_cran()
 
   w <- oa_fetch(identifier = "W3127908559") # Work
-  a <- oa_fetch(identifier = "A5023888391") # Author
+  a <- oa_fetch(identifier = "A5103423779") # Author
   i <- oa_fetch(identifier = "I4200000001") # Institution
   f <- oa_fetch(identifier = "F4320332161") # Funder
   p <- oa_fetch(identifier = "P4310315671") # Publisher
@@ -394,9 +394,9 @@ test_that("oa_fetch works with 1 identifier", {
   expect_s3_class(s, "data.frame")
   expect_s3_class(co, "data.frame")
 
-  expect_equal(dim(w), c(1, 42))
-  expect_equal(dim(a), c(1, 14))
-  expect_equal(dim(i), c(1, 22))
+  expect_equal(dim(w), c(1, 43))
+  expect_equal(dim(a), c(1, 15))
+  expect_equal(dim(i), c(1, 23))
   expect_equal(dim(f), c(1, 17))
   expect_equal(dim(p), c(1, 19))
   expect_equal(dim(s), c(1, 34))
@@ -531,4 +531,28 @@ test_that("oa_fetch returns list when count_only is TRUE", {
   expect_true("apc_list_sum_usd" %in% names(x))
   expect_true("apc_paid_sum_usd" %in% names(x))
   expect_true("cited_by_count_sum" %in% names(x))
+})
+
+test_that("api_request handles request line too large error (400)", {
+  mock_response <- list()
+  class(mock_response) <- "response"
+
+  with_mocked_bindings(
+    "GET" = function(...) mock_response,
+    "status_code" = function(res) 400,
+    "content" = function(res, ...) {
+      stop("Request line is too large")
+    },
+    .package = "httr",
+    {
+      expect_error(
+        openalexR:::api_request(
+          "https://api.openalex.org/works",
+          httr::user_agent("test"),
+          list()
+        ),
+        "HTTP status 400 Request Line is too large"
+      )
+    }
+  )
 })

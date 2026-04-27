@@ -24,7 +24,7 @@ test_that("field coverage information is up to date", {
   expect_equal(main_s(colnames(out)), cols$works)
 
   # Authors
-  out_list <- oa_fetch(identifier = "A5023888391", output = "list")
+  out_list <- oa_fetch(identifier = "A5103423779", output = "list")
   out <- oa2df(out_list, "authors")
   expect_equal(main_s(names(out_list)), oris$authors)
   expect_equal(main_s(colnames(out)), cols$authors)
