@@ -76,8 +76,11 @@ oa_entities <- function() {
 #' )
 #' }
 oa_fetch <- function(
-  entity = if (is.null(identifier)) NULL else
-    id_type(shorten_oaid(identifier[[1]])),
+  entity = if (is.null(identifier)) {
+    NULL
+  } else {
+    id_type(shorten_oaid(identifier[[1]]))
+  },
   identifier = NULL,
   ...,
   options = NULL,
@@ -813,16 +816,23 @@ api_request <- function(
 
   empty_res <- if (parse) list() else "{}"
 
-  if (httr::status_code(res) == 400) {
-    cli::cli_abort("HTTP status 400 Request Line is too large")
-  }
-
   if (httr::status_code(res) == 429) {
     cli::cli_inform("HTTP status 429 Too Many Requests")
     return(empty_res)
   }
 
-  m <- httr::content(res, "text", encoding = "UTF-8")
+  # Try to extract content, handle cases where request line is too large
+  m <- tryCatch(
+    httr::content(res, "text", encoding = "UTF-8"),
+    error = function(e) {
+      if (httr::status_code(res) == 400) {
+        cli::cli_abort("HTTP status 400 Request Line is too large")
+      } else {
+        stop(e)
+      }
+    }
+  )
+
   if (parse) {
     m <- jsonlite::fromJSON(m, simplifyVector = FALSE)
   }
