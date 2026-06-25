@@ -13,6 +13,7 @@ reference:
   - oa_snowball
   - oa_ngrams
   - oa_random
+  - oa_options
 
 - title: Utility functions
 - contents:
