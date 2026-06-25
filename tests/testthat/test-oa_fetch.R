@@ -278,6 +278,17 @@ test_that("oa_fetch can combine (OR) more than 50 DOIs in a filter", {
   expect_identical(hits, 2L)
 })
 
+test_that("oa_fetch errors when more than one filter has over 50 values", {
+  expect_error(
+    oa_fetch(
+      entity = "works",
+      doi = paste0("10.1234/", seq_len(51)),
+      openalex = paste0("W", seq_len(51))
+    ),
+    "Only one filter can have more than 50 values"
+  )
+})
+
 test_that("oa_fetch can combine (OR) more than 50 ORCIDs in a filter", {
   skip_on_cran()
 

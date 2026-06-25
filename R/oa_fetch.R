@@ -134,8 +134,17 @@ oa_fetch <- function(
 
   # overcome OA limitation of combining 50 values (OR) for a filter at a time
   # https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/filter-entity-lists#addition-or
-  # here, we assume there is only ONE "large" filter
+  # We can only chunk ONE filter at a time; more than one would require a
+  # combinatorial set of requests, so we ask the user to split the call instead.
   large_filter <- which(lengths(filter) > 50)
+  if (length(large_filter) > 1) {
+    cli::cli_abort(c(
+      "x" = "Only one filter can have more than 50 values at a time.",
+      "!" = "These filters each have more than 50 values: \\
+             {.arg {names(filter)[large_filter]}}.",
+      "i" = "Split the query so that at most one filter exceeds 50 values."
+    ))
+  }
   if (length(large_filter) == 0) {
     list_id <- list(`1` = NULL)
   } else {
