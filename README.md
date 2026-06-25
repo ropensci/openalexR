@@ -193,7 +193,7 @@ works_from_orcids <- oa_fetch(
 )
 #> Requesting url:
 #> <https://api.openalex.org/works?filter=author.orcid%3A0000-0001-6187-6610%7C0000-0002-8517-9411>
-#> ℹ Getting 2 pages of results with a total of 287 records...
+#> ℹ Getting 2 pages of results with a total of 304 records...
 works_from_orcids |>
   show_works() |>
   knitr::kable()
@@ -204,9 +204,9 @@ works_from_orcids |>
 | W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis | Massimo Aria | Corrado Cuccurullo | FALSE | Workflow, Bibliometrics, Software |
 | W2741809807 | The state of OA: a large-scale analysis of the prevalence and impact of Open Access articles | Heather Piwowar | Stefanie Haustein | TRUE | Citation, License, Bibliometrics |
 | W3005144120 | Mapping the Evolution of Social Research and Data Science on 30 Years of Social Indicators Research | Massimo Aria | Maria Spano | FALSE | Human geography, Data collection, Position (finance) |
-| W2122130843 | Scientometrics 2.0: New metrics of scholarly impact on the social Web | Jason Priem | Bradely H. Hemminger | TRUE | Bookmarking, Altmetrics, Social media |
+| W2122130843 | Scientometrics 2.0: New metrics of scholarly impact on the social Web | Jason R Priem | Bradely H. Hemminger | TRUE | Bookmarking, Altmetrics, Social media |
 | W2408216567 | Foundations and trends in performance management. A twenty-five years bibliometric analysis in business and public administration domains | Corrado Cuccurullo | Fabrizia Sarto | FALSE | Domain (mathematical analysis), Content analysis, Public domain |
-| W2396414759 | The Altmetrics Collection | Jason Priem | Dario Taraborelli | TRUE | Social media, Citation, Altmetrics |
+| W2396414759 | The Altmetrics Collection | Jason R Priem | Dario Taraborelli | TRUE | Social media, Citation, Altmetrics |
 
 **Goal**: Download all works that have been cited more than 50 times,
 published between 2020 and 2021, and include the strings “bibliometric
@@ -220,20 +220,22 @@ works_search <- oa_fetch(
   cited_by_count = ">50",
   from_publication_date = "2020-01-01",
   to_publication_date = "2021-12-31",
-  options = list(sort = "cited_by_count:desc"),
+  options = oa_options(sort = "cited_by_count:desc"),
   verbose = TRUE
 )
 #> Requesting url:
 #> <https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc>
-#> ℹ Getting 3 pages of results with a total of 561 records...
-#> ⠙ OpenAlex downloading [2/3] ■■■■■■■■■■■■■■■■■■■■■             67% ETA:  1s
-#> ⠙ OpenAlex downloading [3/3] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
+#> ℹ Getting 4 pages of results with a total of 601 records...
+#> ⠙ OpenAlex downloading [2/4] ■■■■■■■■■■■■■■■■                  50% ETA:  2s
+#> ⠹ OpenAlex downloading [3/4] ■■■■■■■■■■■■■■■■■■■■■■■           75% ETA:  1s
+#> ⠹ OpenAlex downloading [4/4] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
 #> 
 #> 
-#> ⠙ Converting [259/561] ■■■■■■■■■■■■■■■                   46% ETA:  1s
-#> ⠹ Converting [513/561] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      91% ETA:  0s
-#> ⠸ Converting [554/561] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■   99% ETA:  0s
-#> ⠸ Converting [561/561] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
+#> ⠙ Converting [262/601] ■■■■■■■■■■■■■■                    44% ETA:  1s
+#> ⠹ Converting [268/601] ■■■■■■■■■■■■■■                    45% ETA:  1s
+#> ⠸ Converting [553/601] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     92% ETA:  0s
+#> ⠼ Converting [566/601] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     94% ETA:  0s
+#> ⠼ Converting [601/601] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
 works_search |>
   show_works() |>
   knitr::kable()
@@ -243,8 +245,8 @@ works_search |>
 |:---|:---|:---|:---|:---|:---|
 | W3160856016 | How to conduct a bibliometric analysis: An overview and guidelines | Naveen Donthu | Weng Marc Lim | FALSE | Bibliometrics, Field (mathematics), Resource (disambiguation) |
 | W3001491100 | Software tools for conducting bibliometric analysis in science: An up-to-date review | José A. Moral-Muñoz | Manuel J. Cobo | TRUE | Bibliometrics, Visualization, Set (abstract data type) |
-| W3038273726 | Investigating the emerging COVID-19 research trends in the field of business and management: A bibliometric analysis approach | Surabhi Verma | Anders Gustafsson | FALSE | Bibliometrics, Field (mathematics), Disease |
 | W3044902155 | Financial literacy: A systematic review and bibliometric analysis | Kirti Goyal | Satish Kumar | FALSE | Financial literacy, Citation, Content analysis |
+| W3038273726 | Investigating the emerging COVID-19 research trends in the field of business and management: A bibliometric analysis approach | Surabhi Verma | Anders Gustafsson | FALSE | Bibliometrics, Field (mathematics), Disease |
 | W3198357836 | Artificial intelligence and machine learning in finance: Identifying foundations, themes, and research clusters from bibliometric analysis | John W. Goodell | Debidutta Pattnaik | FALSE | Scholarship, Valuation (finance), Corporate finance |
 | W2998021954 | Bibliometric Analysis using Bibliometrix an R Package | Hamid Derviş | NA | TRUE | Bibliometrics, Citation, Field (mathematics) |
 
@@ -269,8 +271,8 @@ authors_from_orcids |>
 
 | id | display_name | orcid | works_count | cited_by_count | top_concepts |
 |:---|:---|:---|---:|---:|:---|
-| A5069892096 | Massimo Aria | 0000-0002-8517-9411 | 227 | 16557 | Physiology, Pathology and Forensic Medicine, Psychiatry and Mental health |
-| A5023888391 | Jason Priem | 0000-0001-6187-6610 | 61 | 4196 | Statistics, Probability and Uncertainty, Information Systems, Communication |
+| A5069892096 | Massimo Aria | 0000-0002-8517-9411 | 238 | 19292 | Physiology, Psychiatry and Mental health, Sociology and Political Science |
+| A5023888391 | Jason R Priem | 0000-0001-6187-6610 | 65 | 4431 | Statistics, Probability and Uncertainty, Information Systems, Communication |
 
 **Goal**: Acquire information on the authors of this package.
 
@@ -289,8 +291,7 @@ authors_from_names |>
 
 | id | display_name | orcid | works_count | cited_by_count | top_concepts |
 |:---|:---|:---|---:|---:|:---|
-| A5069892096 | Massimo Aria | 0000-0002-8517-9411 | 227 | 16557 | Physiology, Pathology and Forensic Medicine, Psychiatry and Mental health |
-| A5023888391 | Jason Priem | 0000-0001-6187-6610 | 61 | 4196 | Statistics, Probability and Uncertainty, Information Systems, Communication |
+| A5069892096 | Massimo Aria | 0000-0002-8517-9411 | 238 | 19292 | Physiology, Psychiatry and Mental health, Sociology and Political Science |
 
 **Goal**: Download all authors’ records of scholars who work at the
 [University of Naples Federico
@@ -309,10 +310,10 @@ my_arguments <- list(
 )
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #> $count
-#> [1] 88
+#> [1] 62
 #> 
 #> $db_response_time_ms
-#> [1] 28
+#> [1] 37
 #> 
 #> $page
 #> [1] 1
@@ -322,6 +323,46 @@ do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #> 
 #> $groups_count
 #> NULL
+#> 
+#> $x_query
+#> $x_query$oql
+#> [1] "authors where last known institution is I71267560 and works_count > 499"
+#> 
+#> $x_query$oqo
+#> $x_query$oqo$get_rows
+#> [1] "authors"
+#> 
+#> $x_query$oqo$filter_rows
+#> $x_query$oqo$filter_rows[[1]]
+#> $x_query$oqo$filter_rows[[1]]$column_id
+#> [1] "last_known_institutions.id"
+#> 
+#> $x_query$oqo$filter_rows[[1]]$value
+#> [1] "I71267560"
+#> 
+#> 
+#> $x_query$oqo$filter_rows[[2]]
+#> $x_query$oqo$filter_rows[[2]]$column_id
+#> [1] "works_count"
+#> 
+#> $x_query$oqo$filter_rows[[2]]$value
+#> [1] 499
+#> 
+#> $x_query$oqo$filter_rows[[2]]$operator
+#> [1] ">"
+#> 
+#> 
+#> 
+#> $x_query$oqo$per_page
+#> [1] 1
+#> 
+#> 
+#> $x_query$url
+#> [1] "/authors?filter=last_known_institutions.id:I71267560,works_count:%3E499&per_page=1"
+#> 
+#> 
+#> $cost_usd
+#> [1] 1e-04
 
 if (do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))[1]>0){
 do.call(oa_fetch, my_arguments) |>
@@ -332,12 +373,12 @@ do.call(oa_fetch, my_arguments) |>
 
 | id | display_name | orcid | works_count | cited_by_count | top_concepts |
 |:---|:---|:---|---:|---:|:---|
-| A5034359289 | E. Rossi | 0000-0002-2146-677X | 4112 | 225222 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
-| A5114377868 | L. Lista | 0000-0001-6471-5492 | 2701 | 136057 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
-| A5106552509 | C. Sciacca | 0000-0002-8412-4072 | 2503 | 101360 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
-| A5106315436 | S. Ragazzi | 0000-0001-8219-2074 | 2116 | 113665 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
-| A5058925624 | Arnon Nagler | 0000-0002-0763-1265 | 2103 | 70732 | Hematology, Hematology, Public Health, Environmental and Occupational Health |
-| A5066300938 | S. D’Auria | 0000-0003-3393-6318 | 2084 | 122832 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5114377868 | L. Lista | 0000-0001-6471-5492 | 2526 | 136199 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5106552509 | C. Sciacca | 0000-0002-8412-4072 | 2278 | 100541 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5090569245 | R. Calabrese | 0000-0002-1354-5400 | 1990 | 63887 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5071532577 | V. Canale | 0000-0003-2303-9306 | 1904 | 118413 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5100627924 | N. Pastrone | 0000-0001-7291-1979 | 1886 | 108761 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5029398339 | Paolo A. Ascierto | 0000-0002-8322-475X | 1656 | 110619 | Oncology, Molecular Biology, Oncology |
 
 ## 🍒 Example analyses
 
@@ -357,7 +398,7 @@ italy_insts <- oa_fetch(
 )
 #> Requesting url:
 #> <https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation>
-#> ℹ Getting 2 pages of results with a total of 236 records...
+#> ℹ Getting 2 pages of results with a total of 244 records...
 italy_insts |>
   slice_max(cited_by_count, n = 8) |>
   mutate(display_name = forcats::fct_reorder(display_name, cited_by_count)) |>
@@ -503,19 +544,19 @@ snowball_docs <- oa_snowball(
 #> Collecting all documents citing the target papers...
 #> Requesting url:
 #> <https://api.openalex.org/works?filter=cites%3AW1963991285%7CW1964141474>
-#> ℹ Getting 4 pages of results with a total of 658 records...
+#> ℹ Getting 4 pages of results with a total of 669 records...
 #> ⠙ OpenAlex downloading [2/4] ■■■■■■■■■■■■■■■■                  50% ETA:  3s
 #> ⠹ OpenAlex downloading [3/4] ■■■■■■■■■■■■■■■■■■■■■■■           75% ETA:  2s
 #> ⠹ OpenAlex downloading [4/4] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
 #> 
 #> 
-#> ⠙ Converting [221/658] ■■■■■■■■■■■                       34% ETA:  2s
-#> ⠹ Converting [266/658] ■■■■■■■■■■■■■                     40% ETA:  2s
-#> ⠸ Converting [313/658] ■■■■■■■■■■■■■■■                   48% ETA:  2s
-#> ⠼ Converting [476/658] ■■■■■■■■■■■■■■■■■■■■■■■           72% ETA:  1s
-#> ⠴ Converting [533/658] ■■■■■■■■■■■■■■■■■■■■■■■■■         81% ETA:  1s
-#> ⠦ Converting [596/658] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      91% ETA:  0s
-#> ⠦ Converting [658/658] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
+#> ⠙ Converting [236/669] ■■■■■■■■■■■■                      35% ETA:  2s
+#> ⠹ Converting [249/669] ■■■■■■■■■■■■                      37% ETA:  2s
+#> ⠸ Converting [303/669] ■■■■■■■■■■■■■■■                   45% ETA:  2s
+#> ⠼ Converting [527/669] ■■■■■■■■■■■■■■■■■■■■■■■■■         79% ETA:  1s
+#> ⠴ Converting [551/669] ■■■■■■■■■■■■■■■■■■■■■■■■■■        82% ETA:  0s
+#> ⠦ Converting [619/669] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     93% ETA:  0s
+#> ⠦ Converting [669/669] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
 #> 
 #> 
 #> Collecting all documents cited by the target papers...
@@ -580,7 +621,7 @@ ngrams_data |>
 
 `oa_ngrams` can sometimes be slow because the N-grams data can get
 pretty big, but given that the N-grams are
-`"cached via CDN"`\](<https://docs.openalex.org/api-entities/works/get-n-grams#api-endpoint>),
+[`"cached via CDN"`](https://docs.openalex.org/api-entities/works/get-n-grams#api-endpoint),
 you may also consider parallelizing for this special case (`oa_ngrams`
 does this automatically if you have `{curl} >= v5.0.0`).
 

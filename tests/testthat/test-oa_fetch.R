@@ -83,6 +83,42 @@ test_that("oa_fetch options$select works", {
   )
 })
 
+test_that("oa_fetch accepts oa_options() equivalently to a plain list", {
+  skip_on_cran()
+
+  doi <- c("10.1371/journal.pone.0266781", "10.1371/journal.pone.0267149")
+  from_options <- oa_fetch(
+    entity = "works",
+    doi = doi,
+    options = oa_options(select = c("doi", "id", "cited_by_count", "type"))
+  )
+  Sys.sleep(1 / 10)
+  from_list <- oa_fetch(
+    entity = "works",
+    doi = doi,
+    options = list(select = c("doi", "id", "cited_by_count", "type"))
+  )
+  expect_equal(dim(from_options), dim(from_list))
+  expect_equal(sort(from_options$id), sort(from_list$id))
+})
+
+test_that("top-level paging args are deprecated but still work", {
+  skip_on_cran()
+
+  expect_warning(
+    x <- oa_fetch(
+      entity = "works",
+      doi = c(
+        "10.1371/journal.pone.0266781",
+        "10.1371/journal.pone.0267149"
+      ),
+      per_page = 50
+    ),
+    "deprecated"
+  )
+  expect_s3_class(x, "data.frame")
+})
+
 test_that("Error when input entity can't be matched", {
   skip_on_cran()
 

@@ -15,7 +15,7 @@ Optimizing the performance of such large queries benefits greatly from being int
 
 This vignette discusses three strategies for for optimizing performance of large queries:
 
--   The parameter `options = list(select = ...)` in `oa_fetch()`
+-   The parameter `options = oa_options(select = ...)` in `oa_fetch()`
 -   The argument `output = "list"` in `oa_fetch()`
 -   The function `oa_generate()`
 
@@ -26,7 +26,8 @@ library(dplyr)
 
 ## The `select` strategy
 
-The `options` argument of `oa_fetch()` specifies a list of additional parameters to add to the query, such as `select`, `sort`, `sample`, and `seed`.
+The `options` argument of `oa_fetch()` specifies additional parameters to add to the query, such as `select`, `sort`, `sample`, and `seed`.
+It is best constructed with the `oa_options()` helper, which documents and validates the available options (a plain `list()` is still accepted for backward compatibility).
 Of these, `select` can be used to specify which fields of the entities are to be returned by OpenAlex.
 By specifying only the kinds of information about entities that you care about, you can reduce the overall size of the query result, which will in turn speed up the fetching of the raw JSON and its conversion to a data frame.
 
@@ -40,13 +41,13 @@ language_development <- oa_fetch(
 language_development
 ```
 
-To sample some papers from this topic, we can use the `topics.id` [filter](https://docs.ropensci.org/openalexR/articles/Filters.html) and set `options = list(sample = 5, seed = 1)` to return a random set of five [Works](https://docs.openalex.org/api-entities/works) entities with a reproducible seed:
+To sample some papers from this topic, we can use the `topics.id` [filter](https://docs.ropensci.org/openalexR/articles/Filters.html) and set `options = oa_options(sample = 5, seed = 1)` to return a random set of five [Works](https://docs.openalex.org/api-entities/works) entities with a reproducible seed:
 
 ```{r}
 oa_fetch(
   entity = "works",
   topics.id = language_development$id,
-  options = list(sample = 5, seed = 1)
+  options = oa_options(sample = 5, seed = 1)
 ) %>% 
   show_works()
 ```
@@ -61,7 +62,7 @@ If we only cared about the above three fields from our sample of papers, we can 
 oa_fetch(
   entity = "works",
   topics.id = language_development$id,
-  options = list(sample = 5, seed = 1,
+  options = oa_options(sample = 5, seed = 1,
                  select = c("id", "display_name", "authorships"))
 )
 ```
@@ -85,7 +86,7 @@ To do so in `oa_fetch()`, you can set `output = "list"`, which will simply retur
 output_list <- oa_fetch(
   entity = "works",
   topics.id = language_development$id,
-  options = list(sample = 5, seed = 1),
+  options = oa_options(sample = 5, seed = 1),
   output = "list"
 )
 str(output_list, max.level = 1)
@@ -113,7 +114,7 @@ For example, if you know that you are only selecting scalar fields, you can very
 oa_fetch(
   entity = "works",
   topics.id = language_development$id,
-  options = list(sample = 5, seed = 1,
+  options = oa_options(sample = 5, seed = 1,
                  select = c("id", "display_name", "cited_by_count")),
   output = "list"
 ) %>% 
