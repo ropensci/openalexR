@@ -846,7 +846,7 @@ api_request <- function(
       if (httr::status_code(res) == 400) {
         cli::cli_abort("HTTP status 400 Request Line is too large")
       } else {
-        stop(e)
+        cli::cli_abort("Could not read the API response.", parent = e)
       }
     }
   )
@@ -869,7 +869,7 @@ api_request <- function(
 
   if (httr::status_code(res) == 200) {
     if (httr::http_type(res) != "application/json") {
-      stop("API did not return json", call. = FALSE)
+      cli::cli_abort("API did not return JSON.")
     }
     return(m) # Depending on `parse`, results can be raw JSON or parsed R list
   }
