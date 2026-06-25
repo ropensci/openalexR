@@ -108,7 +108,7 @@ We show a few examples below.
 
 ### 📚 Works
 
-**Goal**: Download all information about a givens set of publications (known DOIs).
+**Goal**: Download all information about a given set of publications (known DOIs).
 
 Use `doi` as a [works filter](https://ropensci.github.io/openalexR/articles/Filters.html#works):
 
@@ -236,7 +236,7 @@ do.call(oa_fetch, my_arguments) |>
 
 **Goal**: Rank institutions in Italy by total number of citations.
 
-We want download all records regarding Italian institutions (country_code:it) that are classified as educational (type:education). Again, we check how many records match the query then download the collection:
+We want to download all records regarding Italian institutions (country_code:it) that are classified as educational (type:education). Again, we check how many records match the query then download the collection:
 
 ```{r italy-insts, fig.height=3.5, fig.width=7}
 italy_insts <- oa_fetch(

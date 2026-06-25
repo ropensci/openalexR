@@ -10,7 +10,7 @@ topics2df(data, verbose = TRUE)
 \item{data}{List. Output of \code{oa_request}.}
 
 \item{verbose}{Logical.
-If TRUE, print information about the dataframe conversion process.
+If TRUE, print information about the data frame conversion process.
 Defaults to TRUE.}
 }
 \value{

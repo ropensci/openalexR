@@ -8,7 +8,7 @@ show_authors(x, simp_func = utils::head)
 }
 \arguments{
 \item{x}{Dataframe/tibble. Result of the OpenAlex query for authors
-already converted to dataframe/tibble.}
+already converted to data frame/tibble.}
 
 \item{simp_func}{R function to simplify the result. Default to `head`.
 If you want the entire table, set `simp_fun = identity`}

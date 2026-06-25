@@ -6,7 +6,7 @@
 #' simplify the result however you want.
 #'
 #' @param x Dataframe/tibble. Result of the OpenAlex query for authors
-#' already converted to dataframe/tibble.
+#' already converted to data frame/tibble.
 #' @param simp_func R function to simplify the result. Default to `head`.
 #' If you want the entire table, set `simp_fun = identity`
 #'
@@ -61,7 +61,7 @@ show_authors <- function(x, simp_func = utils::head) {
 #' simplify the result however you want.
 #'
 #' @param x Dataframe/tibble. Result of the OpenAlex query for authors
-#' already converted to dataframe/tibble.
+#' already converted to data frame/tibble.
 #' @param simp_func R function to simplify the result. Default to `head`.
 #' If you want the entire table, set `simp_fun = identity`.
 #'

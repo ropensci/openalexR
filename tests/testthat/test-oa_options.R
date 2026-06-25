@@ -28,7 +28,7 @@ test_that("oa_options() warns on seed without sample and drops it", {
 
 test_that("oa_options() validates paging and per_page", {
   expect_error(oa_options(paging = "bogus"))
-  expect_warning(oa_options(per_page = 500), "200")
+  expect_error(oa_options(per_page = 500), "200")
 })
 
 test_that("oa_options() warns on unknown options but still forwards them", {

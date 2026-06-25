@@ -94,7 +94,7 @@ To shorten the printed query URL, set the environment variable openalexR.print
 to the number of characters to print: \code{Sys.setenv(openalexR.print = 70)}.}
 
 \item{timeout}{Numeric.
-Number of seconds to wait for a response until giving up. Can not be less than 1 ms.
+Number of seconds to wait for a response until giving up. Cannot be less than 1 ms.
 Defaults to 30.}
 }
 \value{

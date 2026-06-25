@@ -186,7 +186,7 @@ abstract_build <- function(ab, build = TRUE) {
 #'
 #' @param authorships List. Authorships element of paper.
 #'
-#' @return List. A list of one dataframe with the processed authors:
+#' @return List. A list of one data frame with the processed authors:
 #' id, display_name, orcid, author_position, is_corresponding, affiliations, affiliation_raw
 #' @keywords internal
 process_paper_authors <- function(authorships) {

@@ -23,7 +23,7 @@ library(rentrez)
 
 Suppose you're interested in finding publications that explore the links between the **BRAF** gene and **melanoma**.
 
-With the **rentrez** package, we can use the `entrez_search` function retrieves up to 10 records matching the search query from the PubMed database.
+With the **rentrez** package, we can use the `entrez_search` function, which retrieves up to 10 records matching the search query from the PubMed database.
 
 ```{r}
 braf_pubmed <- entrez_search(db = "pubmed", term = "BRAF and melanoma", retmax = 10)

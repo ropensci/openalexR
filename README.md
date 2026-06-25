@@ -114,7 +114,7 @@ show a few examples below.
 
 ### 📚 Works
 
-**Goal**: Download all information about a givens set of publications
+**Goal**: Download all information about a given set of publications
 (known DOIs).
 
 Use `doi` as a [works
@@ -231,10 +231,10 @@ works_search <- oa_fetch(
 #> ⠹ OpenAlex downloading [4/4] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
 #> 
 #> 
-#> ⠙ Converting [262/601] ■■■■■■■■■■■■■■                    44% ETA:  1s
-#> ⠹ Converting [268/601] ■■■■■■■■■■■■■■                    45% ETA:  1s
-#> ⠸ Converting [553/601] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     92% ETA:  0s
-#> ⠼ Converting [566/601] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     94% ETA:  0s
+#> ⠙ Converting [236/601] ■■■■■■■■■■■■■                     39% ETA:  2s
+#> ⠹ Converting [261/601] ■■■■■■■■■■■■■■                    43% ETA:  1s
+#> ⠸ Converting [515/601] ■■■■■■■■■■■■■■■■■■■■■■■■■■■       86% ETA:  0s
+#> ⠼ Converting [549/601] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      91% ETA:  0s
 #> ⠼ Converting [601/601] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
 works_search |>
   show_works() |>
@@ -313,7 +313,7 @@ do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #> [1] 62
 #> 
 #> $db_response_time_ms
-#> [1] 37
+#> [1] 55
 #> 
 #> $page
 #> [1] 1
@@ -384,7 +384,7 @@ do.call(oa_fetch, my_arguments) |>
 
 **Goal**: Rank institutions in Italy by total number of citations.
 
-We want download all records regarding Italian institutions
+We want to download all records regarding Italian institutions
 (country_code:it) that are classified as educational (type:education).
 Again, we check how many records match the query then download the
 collection:
@@ -550,13 +550,12 @@ snowball_docs <- oa_snowball(
 #> ⠹ OpenAlex downloading [4/4] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
 #> 
 #> 
-#> ⠙ Converting [236/669] ■■■■■■■■■■■■                      35% ETA:  2s
-#> ⠹ Converting [249/669] ■■■■■■■■■■■■                      37% ETA:  2s
-#> ⠸ Converting [303/669] ■■■■■■■■■■■■■■■                   45% ETA:  2s
-#> ⠼ Converting [527/669] ■■■■■■■■■■■■■■■■■■■■■■■■■         79% ETA:  1s
-#> ⠴ Converting [551/669] ■■■■■■■■■■■■■■■■■■■■■■■■■■        82% ETA:  0s
-#> ⠦ Converting [619/669] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     93% ETA:  0s
-#> ⠦ Converting [669/669] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
+#> ⠙ Converting [263/669] ■■■■■■■■■■■■■                     39% ETA:  2s
+#> ⠹ Converting [313/669] ■■■■■■■■■■■■■■■                   47% ETA:  1s
+#> ⠸ Converting [545/669] ■■■■■■■■■■■■■■■■■■■■■■■■■         81% ETA:  0s
+#> ⠼ Converting [552/669] ■■■■■■■■■■■■■■■■■■■■■■■■■■        83% ETA:  0s
+#> ⠴ Converting [619/669] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     93% ETA:  0s
+#> ⠴ Converting [669/669] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
 #> 
 #> 
 #> Collecting all documents cited by the target papers...

@@ -82,7 +82,7 @@ query_auth <- oa_query(identifier = "A5069892096", verbose = TRUE)
 
 ### EXAMPLE 1: Full record about an entity.
 
-# Query to obtain allinformation about a particular work/author/institution/etc.:
+# Query to obtain all information about a particular work/author/institution/etc.:
 
 #  The following paper is associated to the OpenAlex-id W2755950973.
 

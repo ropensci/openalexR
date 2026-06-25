@@ -10,12 +10,12 @@
 #' @param abstract Logical. If TRUE, the function returns also the abstract of each item.
 #' Ignored if entity is different from "works". Defaults to TRUE.
 #' @param verbose Logical.
-#' If TRUE, print information about the dataframe conversion process.
+#' If TRUE, print information about the data frame conversion process.
 #' Defaults to TRUE.
 #'
 #' @inheritParams oa_query
 #' @inheritParams oa_request
-#' @return A tibble/dataframe result of the original OpenAlex result list.
+#' @return A tibble/data frame result of the original OpenAlex result list.
 #'
 #' @examples
 #' \dontrun{

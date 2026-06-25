@@ -13,7 +13,7 @@ works2df(data, abstract = TRUE, verbose = TRUE)
 Defaults to TRUE.}
 
 \item{verbose}{Logical.
-If TRUE, print information about the dataframe conversion process.
+If TRUE, print information about the data frame conversion process.
 Defaults to TRUE.}
 }
 \value{

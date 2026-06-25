@@ -3,7 +3,7 @@
 \docType{data}
 \name{countrycode}
 \alias{countrycode}
-\title{Index of Countries and their alpha-2 and aplha-3 codes.}
+\title{Index of Countries and their alpha-2 and alpha-3 codes.}
 \format{
 A data frame with 250 rows and 3 variables:
  \describe{
@@ -17,6 +17,6 @@ countrycode
 }
 \description{
 Data frame contains the list of countries and their alpha-2 and
-aplha-3 codes.\cr
+alpha-3 codes.\cr
 }
 \keyword{datasets}

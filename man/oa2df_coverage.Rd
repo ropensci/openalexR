@@ -5,10 +5,10 @@
 \alias{oa2df_coverage}
 \title{Coverage of OpenAlex entity fields after converting to data frame.}
 \format{
-Each element is a dataframe with 3 columns
+Each element is a data frame with 3 columns
  \describe{
     \item{original}{original field name from OpenAlex}
-    \item{oa2df}{new column name in output dataframe from oa2df}
+    \item{oa2df}{new column name in output data frame from oa2df}
     \item{comment}{additional notes}
     }
 }

@@ -16,3 +16,6 @@
 ^man/figures$
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
+^\.DS_Store$
+^\.Rhistory$
+^\.Rprofile$

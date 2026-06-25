@@ -86,8 +86,8 @@ oa_options <- function(select = NULL,
   if (!is.null(per_page)) {
     per_page <- as.integer(per_page)
     if (is.na(per_page) || per_page < 1 || per_page > 200) {
-      cli::cli_warn(
-        "{.arg per_page} should be between 1 and 200, not {.val {per_page}}."
+      cli::cli_abort(
+        "{.arg per_page} must be between 1 and 200, not {.val {per_page}}."
       )
     }
   }

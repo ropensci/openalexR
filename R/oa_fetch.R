@@ -245,7 +245,7 @@ oa_fetch <- function(
 #' @param verbose Logical.
 #' If TRUE, print information about the querying process. Defaults to TRUE.
 #' @param timeout Numeric.
-#' Number of seconds to wait for a response until giving up. Can not be less than 1 ms.
+#' Number of seconds to wait for a response until giving up. Cannot be less than 1 ms.
 #' Defaults to 30.
 #'
 #' @return a data.frame or a list of bibliographic records.
@@ -625,7 +625,7 @@ get_next_page <- function(paging, i, res = NULL) {
 #'
 #' ### EXAMPLE 1: Full record about an entity.
 #'
-#' # Query to obtain allinformation about a particular work/author/institution/etc.:
+#' # Query to obtain all information about a particular work/author/institution/etc.:
 #'
 #' #  The following paper is associated to the OpenAlex-id W2755950973.
 #'

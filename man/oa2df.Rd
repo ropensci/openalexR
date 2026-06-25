@@ -40,11 +40,11 @@ See more at <https://docs.openalex.org/how-to-use-the-api/get-groups-of-entities
 Ignored if entity is different from "works". Defaults to TRUE.}
 
 \item{verbose}{Logical.
-If TRUE, print information about the dataframe conversion process.
+If TRUE, print information about the data frame conversion process.
 Defaults to TRUE.}
 }
 \value{
-A tibble/dataframe result of the original OpenAlex result list.
+A tibble/data frame result of the original OpenAlex result list.
 }
 \description{
 It converts bibliographic collections gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.

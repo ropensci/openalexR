@@ -37,7 +37,7 @@ We will use the first ror, [00b30xv10](https://ror.org/00b30xv10), as one of the
 
 ***Alternatively***, we could go to the autocomplete endpoint at <https://explore.openalex.org/> to search for "University of Pennsylvania" and find the ror [there](https://explore.openalex.org/institutions/I79576946)!
 
-All other filters are straightforward and explained in detailed in the original jupyter notebook [tutorial](https://github.com/ourresearch/openalex-api-tutorials/blob/develop/notebooks/institutions/oa-percentage.ipynb).
+All other filters are straightforward and explained in detail in the original jupyter notebook [tutorial](https://github.com/ourresearch/openalex-api-tutorials/blob/develop/notebooks/institutions/oa-percentage.ipynb).
 The only difference here is that, instead of grouping by `is_oa`, we're interested in the "trend" over the years, so we're going to group by `publication_year`, and perform the query twice, one for `is_oa = "true"` and one for `is_oa = "false"` .
 
 ```{r}

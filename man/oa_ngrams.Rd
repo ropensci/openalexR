@@ -26,7 +26,7 @@ To shorten the printed query URL, set the environment variable openalexR.print
 to the number of characters to print: \code{Sys.setenv(openalexR.print = 70)}.}
 }
 \value{
-A dataframe of paper metadatada and a list-column of ngrams.
+A data frame of paper metadata and a list-column of ngrams.
 }
 \description{
 Some work entities in OpenAlex include N-grams (word sequences and their frequencies) of their full text.
