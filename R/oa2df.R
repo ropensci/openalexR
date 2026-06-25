@@ -104,6 +104,69 @@ oa2df <- function(
 }
 
 
+# Shared conversion skeleton for the per-entity converters.
+#
+# Walks `data` (a list of records), maps the fields listed in `process`
+# (a tibble of type/field pairs) through `subs_na`, appends any
+# entity-specific columns returned by `per_item(item)`, then row-binds the
+# records into a data frame. `prep`, if supplied, transforms each record
+# before field mapping; `col_order`, if supplied, restricts and orders the
+# output columns.
+#
+# @keywords internal
+process_records <- function(
+  data,
+  process,
+  verbose,
+  per_item = NULL,
+  prep = NULL,
+  col_order = NULL
+) {
+  n <- length(data)
+  list_df <- vector(mode = "list", length = n)
+
+  if (verbose) {
+    cli::cli_progress_bar(
+      format = "{cli::pb_spin} Converting [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
+      total = n,
+      clear = FALSE
+    )
+  }
+
+  for (i in seq.int(n)) {
+    if (verbose) {
+      cli::cli_progress_update()
+    }
+
+    item <- data[[i]]
+    if (!is.null(prep)) {
+      item <- prep(item)
+    }
+
+    fields <- process[process$field %in% names(item), ]
+    sim_fields <- mapply(
+      function(x, y) subs_na(item[[x]], type = y),
+      fields$field,
+      fields$type,
+      SIMPLIFY = FALSE
+    )
+
+    extras <- if (is.null(per_item)) NULL else per_item(item)
+    list_df[[i]] <- c(sim_fields, extras)
+  }
+  if (verbose) {
+    cli::cli_progress_done()
+  }
+
+  out_df <- rbind_oa_ls(list_df)
+  if (is.null(col_order)) {
+    out_df
+  } else {
+    out_df[, intersect(col_order, names(out_df))]
+  }
+}
+
+
 #' Convert OpenAlex collection of works from list format to data frame
 #'
 #' It converts bibliographic collection of works gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into data frame.
@@ -373,8 +436,6 @@ authors2df <- function(
   data,
   verbose = TRUE
 ) {
-  n <- length(data)
-  list_df <- vector(mode = "list", length = n)
   # fmt: skip
   author_process <- tibble::tribble(
     ~type, ~field,
@@ -390,44 +451,6 @@ authors2df <- function(
     "rbind_df", "counts_by_year",
     "flat", "ids"
   )
-
-  if (verbose) {
-    cli::cli_progress_bar(
-      format = "{cli::pb_spin} Converting [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
-      total = n,
-      clear = FALSE
-    )
-  }
-
-  for (i in seq.int(n)) {
-    if (verbose) {
-      cli::cli_progress_update()
-    }
-
-    item <- data[[i]]
-
-    fields <- author_process[author_process$field %in% names(item), ]
-    sim_fields <- mapply(
-      function(x, y) subs_na(item[[x]], type = y),
-      fields$field,
-      fields$type,
-      SIMPLIFY = FALSE
-    )
-
-    # current affiliations
-    if (!is.null(item$last_known_institutions)) {
-      l_inst <- item$last_known_institutions
-      affs <- list(last_known_institutions = process_affil(l_inst))
-    } else {
-      affs <- NULL
-    }
-
-    topics <- process_topics(item, "count")
-    list_df[[i]] <- c(sim_fields, affs, item$summary_stats, topics)
-  }
-  if (verbose) {
-    cli::cli_progress_done()
-  }
 
   col_order <- c(
     "id",
@@ -448,8 +471,19 @@ authors2df <- function(
     "works_api_url"
   )
 
-  out_df <- rbind_oa_ls(list_df)
-  out_df[, intersect(col_order, names(out_df))]
+  process_records(
+    data,
+    author_process,
+    verbose,
+    per_item = function(item) {
+      # current affiliations
+      affs <- if (!is.null(item$last_known_institutions)) {
+        list(last_known_institutions = process_affil(item$last_known_institutions))
+      }
+      c(affs, item$summary_stats, process_topics(item, "count"))
+    },
+    col_order = col_order
+  )
 }
 
 
@@ -485,8 +519,6 @@ institutions2df <- function(
   data,
   verbose = TRUE
 ) {
-  n <- length(data)
-  list_df <- vector(mode = "list", length = n)
   # fmt: skip
   institution_process <- tibble::tribble(
     ~type, ~field,
@@ -513,43 +545,6 @@ institutions2df <- function(
     "rbind_df", "associated_institutions",
     "flat", "ids"
   )
-
-  if (verbose) {
-    cli::cli_progress_bar(
-      format = "{cli::pb_spin} Converting [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
-      total = n,
-      clear = FALSE
-    )
-  }
-
-  for (i in seq.int(n)) {
-    if (verbose) {
-      cli::cli_progress_update()
-    }
-
-    item <- data[[i]]
-    fields <- institution_process[institution_process$field %in% names(item), ]
-    sim_fields <- mapply(
-      function(x, y) subs_na(item[[x]], type = y),
-      fields$field,
-      fields$type,
-      SIMPLIFY = FALSE
-    )
-    interna <- NULL
-    if (!is.null(item$international)) {
-      interna <- list(
-        international_display_name = subs_na(
-          item$international$display_name,
-          type = "flat"
-        )
-      )
-    }
-    topics <- process_topics(item, "count")
-    list_df[[i]] <- c(sim_fields, interna, topics)
-  }
-  if (verbose) {
-    cli::cli_progress_done()
-  }
 
   col_order <- c(
     "id",
@@ -578,8 +573,23 @@ institutions2df <- function(
     "created_date"
   )
 
-  out_df <- rbind_oa_ls(list_df)
-  out_df[, intersect(col_order, names(out_df))]
+  process_records(
+    data,
+    institution_process,
+    verbose,
+    per_item = function(item) {
+      interna <- if (!is.null(item$international)) {
+        list(
+          international_display_name = subs_na(
+            item$international$display_name,
+            type = "flat"
+          )
+        )
+      }
+      c(interna, process_topics(item, "count"))
+    },
+    col_order = col_order
+  )
 }
 
 
@@ -637,51 +647,6 @@ concepts2df <- function(
     "flat", "ids"
   )
 
-  n <- length(data)
-  list_df <- vector(mode = "list", length = n)
-
-  if (verbose) {
-    cli::cli_progress_bar(
-      format = "{cli::pb_spin} Converting [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
-      total = n,
-      clear = FALSE
-    )
-  }
-
-  for (i in seq.int(n)) {
-    if (verbose) {
-      cli::cli_progress_update()
-    }
-
-    item <- data[[i]]
-    fields <- concept_process[concept_process$field %in% names(item), ]
-    sim_fields <- mapply(
-      function(x, y) subs_na(item[[x]], type = y),
-      fields$field,
-      fields$type,
-      SIMPLIFY = FALSE
-    )
-
-    intern_fields <- NULL
-    if (!is.null(item$international) && length(item$international)) {
-      intern_fields <- lapply(
-        item$international[c("display_name", "description")],
-        subs_na,
-        type = "flat"
-      )
-      names(intern_fields) <- paste(
-        names(intern_fields),
-        "international",
-        sep = "_"
-      )
-    }
-
-    list_df[[i]] <- c(sim_fields, intern_fields)
-  }
-  if (verbose) {
-    cli::cli_progress_done()
-  }
-
   col_order <- c(
     "id",
     "display_name",
@@ -702,8 +667,27 @@ concepts2df <- function(
     "works_api_url"
   )
 
-  out_df <- rbind_oa_ls(list_df)
-  out_df[, intersect(col_order, names(out_df))]
+  process_records(
+    data,
+    concept_process,
+    verbose,
+    per_item = function(item) {
+      if (!is.null(item$international) && length(item$international)) {
+        intern_fields <- lapply(
+          item$international[c("display_name", "description")],
+          subs_na,
+          type = "flat"
+        )
+        names(intern_fields) <- paste(
+          names(intern_fields),
+          "international",
+          sep = "_"
+        )
+        intern_fields
+      }
+    },
+    col_order = col_order
+  )
 }
 
 
@@ -791,38 +775,7 @@ funders2df <- function(
     "identical", "created_date"
   )
 
-  n <- length(data)
-  list_df <- vector(mode = "list", length = n)
-
-  if (verbose) {
-    cli::cli_progress_bar(
-      format = "{cli::pb_spin} Converting [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
-      total = n,
-      clear = FALSE
-    )
-  }
-
-  for (i in seq.int(n)) {
-    if (verbose) {
-      cli::cli_progress_update()
-    }
-
-    item <- data[[i]]
-    fields <- funder_process[funder_process$field %in% names(item), ]
-    sim_fields <- mapply(
-      function(x, y) subs_na(item[[x]], type = y),
-      fields$field,
-      fields$type,
-      SIMPLIFY = FALSE
-    )
-    list_df[[i]] <- sim_fields
-  }
-  if (verbose) {
-    cli::cli_progress_done()
-  }
-
-  out_df <- rbind_oa_ls(list_df)
-  out_df
+  process_records(data, funder_process, verbose)
 }
 
 
@@ -896,39 +849,12 @@ sources2df <- function(
     "identical", "created_date"
   )
 
-  n <- length(data)
-  list_df <- vector(mode = "list", length = n)
-
-  if (verbose) {
-    cli::cli_progress_bar(
-      format = "{cli::pb_spin} Converting [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
-      total = n,
-      clear = FALSE
-    )
-  }
-
-  for (i in seq.int(n)) {
-    if (verbose) {
-      cli::cli_progress_update()
-    }
-
-    item <- data[[i]]
-    fields <- source_process[source_process$field %in% names(item), ]
-    sim_fields <- mapply(
-      function(x, y) subs_na(item[[x]], type = y),
-      fields$field,
-      fields$type,
-      SIMPLIFY = FALSE
-    )
-    topics <- process_topics(item, "count")
-    list_df[[i]] <- c(sim_fields, topics)
-  }
-  if (verbose) {
-    cli::cli_progress_done()
-  }
-
-  out_df <- rbind_oa_ls(list_df)
-  out_df
+  process_records(
+    data,
+    source_process,
+    verbose,
+    per_item = function(item) process_topics(item, "count")
+  )
 }
 
 
@@ -987,38 +913,7 @@ publishers2df <- function(
     "identical", "created_date"
   )
 
-  n <- length(data)
-  list_df <- vector(mode = "list", length = n)
-
-  if (verbose) {
-    cli::cli_progress_bar(
-      format = "{cli::pb_spin} Converting [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
-      total = n,
-      clear = FALSE
-    )
-  }
-
-  for (i in seq.int(n)) {
-    if (verbose) {
-      cli::cli_progress_update()
-    }
-
-    item <- replace_w_na(data[[i]])
-    fields <- publisher_process[publisher_process$field %in% names(item), ]
-    sim_fields <- mapply(
-      function(x, y) subs_na(item[[x]], type = y),
-      fields$field,
-      fields$type,
-      SIMPLIFY = FALSE
-    )
-    list_df[[i]] <- sim_fields
-  }
-  if (verbose) {
-    cli::cli_progress_done()
-  }
-
-  out_df <- rbind_oa_ls(list_df)
-  out_df
+  process_records(data, publisher_process, verbose, prep = replace_w_na)
 }
 
 
@@ -1073,39 +968,6 @@ topics2df <- function(
     "flat", "keywords"
   )
 
-  n <- length(data)
-  list_df <- vector(mode = "list", length = n)
-
-  if (verbose) {
-    cli::cli_progress_bar(
-      format = "{cli::pb_spin} Converting [{cli::pb_current}/{cli::pb_total}] {cli::pb_bar} {cli::pb_percent} ETA: {cli::pb_eta}",
-      total = n,
-      clear = FALSE
-    )
-  }
-
-  for (i in seq.int(n)) {
-    if (verbose) {
-      cli::cli_progress_update()
-    }
-
-    item <- data[[i]]
-    fields <- topic_process[topic_process$field %in% names(item), ]
-    sim_fields <- mapply(
-      function(x, y) subs_na(item[[x]], type = y),
-      fields$field,
-      fields$type,
-      SIMPLIFY = FALSE
-    )
-    domains <- unlist(item[c("subfield", "field", "domain")], recursive = FALSE)
-    domains <- as.data.frame(do.call(cbind, domains))
-    names(domains) <- gsub("\\.", "_", names(domains))
-    list_df[[i]] <- c(sim_fields, domains)
-  }
-  if (verbose) {
-    cli::cli_progress_done()
-  }
-
   col_order <- c(
     "id",
     "display_name",
@@ -1127,8 +989,21 @@ topics2df <- function(
     "created_date"
   )
 
-  out_df <- rbind_oa_ls(list_df)
-  out_df[, intersect(col_order, names(out_df))]
+  process_records(
+    data,
+    topic_process,
+    verbose,
+    per_item = function(item) {
+      domains <- unlist(
+        item[c("subfield", "field", "domain")],
+        recursive = FALSE
+      )
+      domains <- as.data.frame(do.call(cbind, domains))
+      names(domains) <- gsub("\\.", "_", names(domains))
+      domains
+    },
+    col_order = col_order
+  )
 }
 
 
