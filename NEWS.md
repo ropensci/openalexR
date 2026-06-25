@@ -1,4 +1,4 @@
-# openalexR (development version)
+# openalexR 3.1.0
 * New `oa_options()` constructor for building the `options` argument of
   `oa_fetch()` and `oa_query()`. It provides argument autocompletion, defaults,
   and validation (e.g. catches misspelled options and out-of-range
@@ -7,6 +7,8 @@
 * Paging parameters `per_page`, `paging`, and `pages` are now set through
   `options = oa_options(...)`. Passing them as top-level arguments to
   `oa_fetch()` is deprecated but still works (with a warning).
+* `oa_fetch()` now errors when more than one filter has over 50 values, since
+  only one such filter can be chunked per call.
 
 # openalexR 3.0.1
 * Fix CRAN R CMD check issues
