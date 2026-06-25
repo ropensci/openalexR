@@ -603,3 +603,96 @@ test_that("api_request handles request line too large error (400)", {
     }
   )
 })
+
+test_that("api_request reports 429 Too Many Requests and returns empty", {
+  mock_response <- structure(list(), class = "response")
+
+  with_mocked_bindings(
+    "GET" = function(...) mock_response,
+    "status_code" = function(res) 429,
+    .package = "httr",
+    {
+      expect_message(
+        res <- openalexR:::api_request(
+          "https://api.openalex.org/works",
+          httr::user_agent("test"),
+          list()
+        ),
+        "429 Too Many Requests"
+      )
+      expect_identical(res, list())
+    }
+  )
+})
+
+test_that("api_request reports 503 Service Unavailable and suggests per_page", {
+  mock_response <- structure(list(), class = "response")
+
+  with_mocked_bindings(
+    "GET" = function(...) mock_response,
+    "status_code" = function(res) 503,
+    "content" = function(res, ...) {
+      "<html><head><title>503 Service Temporarily Unavailable</title></head></html>"
+    },
+    .package = "httr",
+    {
+      expect_message(
+        res <- openalexR:::api_request(
+          "https://api.openalex.org/works",
+          httr::user_agent("test"),
+          list(),
+          parse = FALSE
+        ),
+        "per_page = 25"
+      )
+      expect_identical(res, "{}")
+    }
+  )
+})
+
+test_that("api_request aborts on a generic API error", {
+  mock_response <- structure(list(), class = "response")
+
+  with_mocked_bindings(
+    "GET" = function(...) mock_response,
+    "status_code" = function(res) 500L,
+    "content" = function(res, ...) {
+      '{"error":"Internal Server Error","message":"something broke"}'
+    },
+    .package = "httr",
+    {
+      expect_error(
+        openalexR:::api_request(
+          "https://api.openalex.org/works",
+          httr::user_agent("test"),
+          list(),
+          parse = FALSE
+        ),
+        "request failed"
+      )
+    }
+  )
+})
+
+test_that("api_request errors when a 200 response is not JSON", {
+  mock_response <- structure(list(), class = "response")
+
+  with_mocked_bindings(
+    "GET" = function(...) mock_response,
+    "status_code" = function(res) 200L,
+    "content" = function(res, ...) "<html></html>",
+    "http_type" = function(res) "text/html",
+    .package = "httr",
+    {
+      expect_error(
+        openalexR:::api_request(
+          "https://api.openalex.org/works",
+          httr::user_agent("test"),
+          list(),
+          parse = FALSE
+        ),
+        "did not return JSON"
+      )
+    }
+  )
+})
