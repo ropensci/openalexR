@@ -227,15 +227,10 @@ works_search <- oa_fetch(
 #> <https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc>
 #> ℹ Getting 4 pages of results with a total of 601 records...
 #> ⠙ OpenAlex downloading [2/4] ■■■■■■■■■■■■■■■■                  50% ETA:  2s
-#> ⠹ OpenAlex downloading [3/4] ■■■■■■■■■■■■■■■■■■■■■■■           75% ETA:  1s
+#> 
+#> ⠹ OpenAlex downloading [3/4] ■■■■■■■■■■■■■■■■■■■■■■■           75% ETA:  2s
+#> 
 #> ⠹ OpenAlex downloading [4/4] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
-#> 
-#> 
-#> ⠙ Converting [236/601] ■■■■■■■■■■■■■                     39% ETA:  2s
-#> ⠹ Converting [261/601] ■■■■■■■■■■■■■■                    43% ETA:  1s
-#> ⠸ Converting [515/601] ■■■■■■■■■■■■■■■■■■■■■■■■■■■       86% ETA:  0s
-#> ⠼ Converting [549/601] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      91% ETA:  0s
-#> ⠼ Converting [601/601] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
 works_search |>
   show_works() |>
   knitr::kable()
@@ -271,8 +266,8 @@ authors_from_orcids |>
 
 | id | display_name | orcid | works_count | cited_by_count | top_concepts |
 |:---|:---|:---|---:|---:|:---|
-| A5069892096 | Massimo Aria | 0000-0002-8517-9411 | 238 | 19292 | Physiology, Psychiatry and Mental health, Sociology and Political Science |
-| A5023888391 | Jason R Priem | 0000-0001-6187-6610 | 65 | 4431 | Statistics, Probability and Uncertainty, Information Systems, Communication |
+| A5069892096 | Massimo Aria | 0000-0002-8517-9411 | 238 | 19449 | Physiology, Psychiatry and Mental health, Sociology and Political Science |
+| A5023888391 | Jason R Priem | 0000-0001-6187-6610 | 65 | 4437 | Statistics, Probability and Uncertainty, Information Systems, Communication |
 
 **Goal**: Acquire information on the authors of this package.
 
@@ -291,7 +286,7 @@ authors_from_names |>
 
 | id | display_name | orcid | works_count | cited_by_count | top_concepts |
 |:---|:---|:---|---:|---:|:---|
-| A5069892096 | Massimo Aria | 0000-0002-8517-9411 | 238 | 19292 | Physiology, Psychiatry and Mental health, Sociology and Political Science |
+| A5069892096 | Massimo Aria | 0000-0002-8517-9411 | 238 | 19449 | Physiology, Psychiatry and Mental health, Sociology and Political Science |
 
 **Goal**: Download all authors’ records of scholars who work at the
 [University of Naples Federico
@@ -313,7 +308,7 @@ do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #> [1] 62
 #> 
 #> $db_response_time_ms
-#> [1] 55
+#> [1] 30
 #> 
 #> $page
 #> [1] 1
@@ -373,12 +368,12 @@ do.call(oa_fetch, my_arguments) |>
 
 | id | display_name | orcid | works_count | cited_by_count | top_concepts |
 |:---|:---|:---|---:|---:|:---|
-| A5114377868 | L. Lista | 0000-0001-6471-5492 | 2526 | 136199 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
-| A5106552509 | C. Sciacca | 0000-0002-8412-4072 | 2278 | 100541 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
-| A5090569245 | R. Calabrese | 0000-0002-1354-5400 | 1990 | 63887 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
-| A5071532577 | V. Canale | 0000-0003-2303-9306 | 1904 | 118413 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
-| A5100627924 | N. Pastrone | 0000-0001-7291-1979 | 1886 | 108761 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
-| A5029398339 | Paolo A. Ascierto | 0000-0002-8322-475X | 1656 | 110619 | Oncology, Molecular Biology, Oncology |
+| A5114377868 | L. Lista | 0000-0001-6471-5492 | 2534 | 136228 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5106552509 | C. Sciacca | 0000-0002-8412-4072 | 2275 | 100574 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5090569245 | R. Calabrese | 0000-0002-1354-5400 | 1990 | 63652 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5071532577 | V. Canale | 0000-0003-2303-9306 | 1908 | 116126 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5100627924 | N. Pastrone | 0000-0001-7291-1979 | 1889 | 108789 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5029398339 | Paolo A. Ascierto | 0000-0002-8322-475X | 1658 | 110824 | Oncology, Molecular Biology, Oncology |
 
 ## 🍒 Example analyses
 
@@ -414,7 +409,7 @@ italy_insts |>
   coord_cartesian(expand = FALSE)
 ```
 
-<img src="man/figures/README-italy-insts-1.png" width="100%" />
+<img src="man/figures/README-italy-insts-1.png" alt="" width="100%" />
 
 And what do they publish on?
 
@@ -438,7 +433,7 @@ wordcloud::wordcloud(
 )
 ```
 
-<img src="man/figures/README-concept-cloud-1.png" width="100%" />
+<img src="man/figures/README-concept-cloud-1.png" alt="" width="100%" />
 
 **Goal**: Visualize big journals’ topics.
 
@@ -511,7 +506,7 @@ jours |>
   labs(y = NULL, x = NULL, title = "Journal clocks")
 ```
 
-<img src="man/figures/README-big-journals-1.png" width="100%" />
+<img src="man/figures/README-big-journals-1.png" alt="" width="100%" />
 
 ## ❄️ Snowball search
 
@@ -529,8 +524,8 @@ cited by this core set.
 library(ggraph)
 library(tidygraph)
 #> 
-#> Attaching package: 'tidygraph'
-#> The following object is masked from 'package:stats':
+#> Caricamento pacchetto: 'tidygraph'
+#> Il seguente oggetto è mascherato da 'package:stats':
 #> 
 #>     filter
 
@@ -544,18 +539,19 @@ snowball_docs <- oa_snowball(
 #> Collecting all documents citing the target papers...
 #> Requesting url:
 #> <https://api.openalex.org/works?filter=cites%3AW1963991285%7CW1964141474>
-#> ℹ Getting 4 pages of results with a total of 669 records...
+#> ℹ Getting 4 pages of results with a total of 671 records...
 #> ⠙ OpenAlex downloading [2/4] ■■■■■■■■■■■■■■■■                  50% ETA:  3s
+#> 
 #> ⠹ OpenAlex downloading [3/4] ■■■■■■■■■■■■■■■■■■■■■■■           75% ETA:  2s
+#> 
 #> ⠹ OpenAlex downloading [4/4] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
 #> 
 #> 
-#> ⠙ Converting [263/669] ■■■■■■■■■■■■■                     39% ETA:  2s
-#> ⠹ Converting [313/669] ■■■■■■■■■■■■■■■                   47% ETA:  1s
-#> ⠸ Converting [545/669] ■■■■■■■■■■■■■■■■■■■■■■■■■         81% ETA:  0s
-#> ⠼ Converting [552/669] ■■■■■■■■■■■■■■■■■■■■■■■■■■        83% ETA:  0s
-#> ⠴ Converting [619/669] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     93% ETA:  0s
-#> ⠴ Converting [669/669] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
+#> 
+#> ⠙ Converting [331/671] ■■■■■■■■■■■■■■■■                  49% ETA:  1s
+#> 
+#> ⠙ Converting [671/671] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
+#> 
 #> 
 #> 
 #> Collecting all documents cited by the target papers...
@@ -578,7 +574,7 @@ ggraph(graph = as_tbl_graph(snowball_docs), layout = "stress") +
   guides(fill = "none")
 ```
 
-<img src="man/figures/README-snowballing-1.png" width="100%" />
+<img src="man/figures/README-snowballing-1.png" alt="" width="100%" />
 
 ## 🌾 N-grams
 

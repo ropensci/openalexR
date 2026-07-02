@@ -24,6 +24,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Massimo Aria \email{aria@unina.it} (\href{https://orcid.org/0000-0002-8517-9411}{ORCID}) [copyright holder]
   \item Trang Le \email{grixor@gmail.com} (\href{https://orcid.org/0000-0003-3737-6565}{ORCID})
   \item June Choe \email{jchoe001@gmail.com} (\href{https://orcid.org/0000-0002-0701-921X}{ORCID})
 }
