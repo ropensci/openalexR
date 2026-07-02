@@ -36,7 +36,7 @@ c("works", "authors", "institutions", "keywords", "funders", "sources", "publish
 If not provided, `entity` is guessed from `identifier`.}
 
 \item{identifier}{Character. OpenAlex ID(s) as item identifier(s).
-See more at <https://docs.openalex.org/how-to-use-the-api/get-single-entities#the-openalex-id>.}
+See more at <https://developers.openalex.org/guides/get>.}
 
 \item{...}{Additional filter arguments.}
 
@@ -56,7 +56,7 @@ To filter using search, append .search to the end of the attribute you're filter
 
 \item{group_by}{Character. Attribute to group by.
 For example: "oa_status" for works.
-See more at <https://docs.openalex.org/how-to-use-the-api/get-groups-of-entities>.}
+See more at <https://developers.openalex.org/guides/grouping>.}
 
 \item{output}{Character.
 Type of output, one of `"tibble"`, `"dataframe"`, `"list"`, or `"raw"`.

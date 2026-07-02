@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-A set of tools to extract bibliographic content from 'OpenAlex' database using API \url{https://docs.openalex.org}.
+A set of tools to extract bibliographic content from 'OpenAlex' database using API \url{https://developers.openalex.org/}.
 }
 \seealso{
 Useful links:

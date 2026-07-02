@@ -16,7 +16,7 @@ Defaults to TRUE.}
 \value{
 a data.frame.
 
-For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
+For more extensive information about OpenAlex API, please visit: <https://developers.openalex.org/>
 }
 \description{
 It converts collection of topics' records gathered from the OpenAlex database.

@@ -62,7 +62,7 @@ An R-tool for comprehensive science mapping analysis.
 Journal of informetrics, 11(4), 959-975.
 ```
 
-is associated to the [OpenAlex-id](https://docs.openalex.org/api-entities/works/work-object#id) **W2755950973**. If you know your paper's OpenAlex ID, all you need to do is passing `identifier = <openalex id>` as an argument in `oa_fetch()`:
+is associated to the [OpenAlex-id](https://developers.openalex.org/api-reference/works) **W2755950973**. If you know your paper's OpenAlex ID, all you need to do is passing `identifier = <openalex id>` as an argument in `oa_fetch()`:
 
 ```{r}
 paper_id <- oa_fetch(
@@ -83,7 +83,7 @@ paper_id %>%
 
 ### External id formats
 
-OpenAlex endpoint accepts OpenAlex IDs and other [external IDs](https://docs.openalex.org/how-to-use-the-api/get-single-entities#id-formats) (*e.g.*, DOI, ISSN) in several formats, including Digital Object Identifier (DOI) and Persistent Identifiers (PIDs).
+OpenAlex endpoint accepts OpenAlex IDs and other [external IDs](https://developers.openalex.org/guides/get) (*e.g.*, DOI, ISSN) in several formats, including Digital Object Identifier (DOI) and Persistent Identifiers (PIDs).
 
 ```{r}
 oa_fetch(
@@ -302,7 +302,7 @@ oa_fetch(
 
 ## Convert an OpenAlex data frame to a bibliometrix object
 
-The bibliometrix R-package (<https://www.bibliometrix.org>) provides a set of tools for quantitative research in bibliometrics and scientometrics. Today it represents one of the most used science mapping software in the world. In a recent survey on bibliometric analysis tools, Moral-Muñoz et al. (2020) wrote: "At this moment, maybe Bibliometrix and its Shiny platform contain the more extensive set of techniques implemented, and together with the easiness of its interface, could be a great software for practitioners".
+The bibliometrix R-package (<https://www.bibliometrix.org/>) provides a set of tools for quantitative research in bibliometrics and scientometrics. Today it represents one of the most used science mapping software in the world. In a recent survey on bibliometric analysis tools, Moral-Muñoz et al. (2020) wrote: "At this moment, maybe Bibliometrix and its Shiny platform contain the more extensive set of techniques implemented, and together with the easiness of its interface, could be a great software for practitioners".
 
 The function **oa2bibliometrix** converts a bibliographic data frame of works into a bibliometrix object. This object can be used as input collection of a science mapping workflow.
 

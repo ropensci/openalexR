@@ -31,7 +31,7 @@ Either "cursor" for cursor paging or "page" for basic paging.
 When used with `options$sample` and or `pages`,
 paging is also automatically set to basic paging: `paging = "page"`
 to avoid duplicates and get the right page.
-See https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/paging.}
+See https://developers.openalex.org/guides/page-through-results.}
 
 \item{pages}{Integer vector.
 The range of pages to return. If NULL, return all pages.}
@@ -60,7 +60,7 @@ Defaults to 30.}
 a data.frame or a list of bibliographic records.
 
 For more extensive information about OpenAlex API, please visit:
-<https://docs.openalex.org>
+<https://developers.openalex.org/>
 }
 \description{
 `oa_request` makes a request and downloads bibliographic records from
