@@ -79,7 +79,7 @@ Without a key, you are limited to 100 credits per day (for testing
 only). With a free API key, you get 100,000 credits per day.
 
 See the [OpenAlex API access
-documentation](https://docs.openalex.org/#access) for details.
+documentation](https://developers.openalex.org/guides/authentication) for details.
 
 **To get your API key:**
 
@@ -109,7 +109,7 @@ library(ggplot2)
 There are different
 [filters](https://ropensci.github.io/openalexR/articles/Filters)/arguments
 you can use in `oa_fetch`, depending on which
-[entity](https://docs.openalex.org/#data) you’re interested in: . We
+[entity](https://developers.openalex.org/guides/key-concepts) you’re interested in: . We
 show a few examples below.
 
 ### 📚 Works
@@ -579,11 +579,11 @@ ggraph(graph = as_tbl_graph(snowball_docs), layout = "stress") +
 ## 🌾 N-grams
 
 **Update 2024-09-15**: The n-gram API endpoint is [not currently in
-service](https://docs.openalex.org/api-entities/works/get-n-grams#api-endpoint).
+service](https://developers.openalex.org/guides/deprecations).
 The following code chunk is not evaluated.
 
 OpenAlex offers (limited) support for [fulltext
-N-grams](https://docs.openalex.org/api-entities/works/get-n-grams#fulltext-coverage)
+N-grams](https://developers.openalex.org/guides/deprecations)
 of Work entities (these have IDs starting with `"W"`). Given a vector of
 work IDs, `oa_ngrams` returns a dataframe of N-gram data (in the
 `ngrams` list-column) for each work.
@@ -616,7 +616,7 @@ ngrams_data |>
 
 `oa_ngrams` can sometimes be slow because the N-grams data can get
 pretty big, but given that the N-grams are
-[`"cached via CDN"`](https://docs.openalex.org/api-entities/works/get-n-grams#api-endpoint),
+[`"cached via CDN"`](https://developers.openalex.org/guides/deprecations),
 you may also consider parallelizing for this special case (`oa_ngrams`
 does this automatically if you have `{curl} >= v5.0.0`).
 

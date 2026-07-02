@@ -1,7 +1,7 @@
 #' Convert OpenAlex collection from data frame to bibliometrix object
 #'
 #' It converts bibliographic collections gathered from OpenAlex database \href{https://openalex.org/}{https://openalex.org/} into a
-#' bibliometrix data frame (\href{https://bibliometrix.org/}{https://bibliometrix.org/})
+#' bibliometrix data frame (\href{https://www.bibliometrix.org/}{https://www.bibliometrix.org/})
 #' Column names follow https://images.webofknowledge.com/images/help/WOS/hs_wos_fieldtags.html.
 #'
 #' @param df is bibliographic collection of works downloaded from OpenAlex.

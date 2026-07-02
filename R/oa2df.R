@@ -178,7 +178,7 @@ process_records <- function(
 #'
 #' @return a data.frame.
 #'
-#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
+#' For more extensive information about OpenAlex API, please visit: <https://developers.openalex.org/>
 #'
 #' @importFrom stats setNames
 #'
@@ -407,7 +407,7 @@ works2df <- function(
 #'
 #' @return a data.frame.
 #'
-#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
+#' For more extensive information about OpenAlex API, please visit: <https://developers.openalex.org/>
 #'
 #'
 #' @examples
@@ -496,7 +496,7 @@ authors2df <- function(
 #'
 #' @return a data.frame.
 #'
-#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
+#' For more extensive information about OpenAlex API, please visit: <https://developers.openalex.org/>
 #'
 #'
 #' @examples
@@ -602,7 +602,7 @@ institutions2df <- function(
 #'
 #' @return a data.frame.
 #'
-#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
+#' For more extensive information about OpenAlex API, please visit: <https://developers.openalex.org/>
 #'
 #'
 #' @examples
@@ -731,7 +731,7 @@ keywords2df <- function(data, verbose = TRUE) {
 #'
 #' @return a data.frame.
 #'
-#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
+#' For more extensive information about OpenAlex API, please visit: <https://developers.openalex.org/>
 #'
 #'
 #' @examples
@@ -788,7 +788,7 @@ funders2df <- function(
 #'
 #' @return a data.frame.
 #'
-#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
+#' For more extensive information about OpenAlex API, please visit: <https://developers.openalex.org/>
 #'
 #'
 #' @examples
@@ -867,7 +867,7 @@ sources2df <- function(
 #'
 #' @return a data.frame.
 #'
-#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
+#' For more extensive information about OpenAlex API, please visit: <https://developers.openalex.org/>
 #'
 #'
 #' @examples
@@ -926,7 +926,7 @@ publishers2df <- function(
 #'
 #' @return a data.frame.
 #'
-#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
+#' For more extensive information about OpenAlex API, please visit: <https://developers.openalex.org/>
 #'
 #'
 #' @examples
