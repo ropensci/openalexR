@@ -1,4 +1,14 @@
-# openalexR (development version)
+# openalexR 3.1.0
+* New `oa_options()` constructor for building the `options` argument of
+  `oa_fetch()` and `oa_query()`. It provides argument autocompletion, defaults,
+  and validation (e.g. catches misspelled options and out-of-range
+  `sample`/`per_page`),
+  while a plain `list()` is still accepted for backward compatibility (#182).
+* Paging parameters `per_page`, `paging`, and `pages` are now set through
+  `options = oa_options(...)`. Passing them as top-level arguments to
+  `oa_fetch()` is deprecated but still works (with a warning).
+* `oa_fetch()` now errors when more than one filter has over 50 values, since
+  only one such filter can be chunked per call.
 
 # openalexR 3.0.1
 * Fix CRAN R CMD check issues
@@ -51,11 +61,10 @@ and returns one record at a time.
 `oa_fetch` or `oa_request`.
 * Improve `oa_snowball` performance.
 * Allowed the use of `options$sample` with `search`.
-* "venues"" is no longer a valid value for `entity`. Use "sources" instead.
+* "venues" is no longer a valid value for `entity`. Use "sources" instead.
 
 # openalexR 1.2.2
 * solved issue with CRAN test
-* 
 
 # openalexR 1.2.1
 * many improvements in bibliometrix support
@@ -64,7 +73,7 @@ and returns one record at a time.
 # openalexR 1.2.0
 * many improvements in oa_snowball
 * added new openalex entities
-* solved CRAN issue about  packageVersion() 
+* solved CRAN issue about packageVersion()
 
 # openalexR 1.1.0
 * Basic paging is applied when using options$sample

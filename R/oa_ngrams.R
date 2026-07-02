@@ -31,7 +31,7 @@ ngram2df <- function(ngram) {
 #' @param ... Unused.
 #' @inheritParams oa_query
 #'
-#' @return A dataframe of paper metadatada and a list-column of ngrams.
+#' @return A data frame of paper metadata and a list-column of ngrams.
 #' @export
 #'
 #' @examples

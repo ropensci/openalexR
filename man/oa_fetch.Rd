@@ -19,7 +19,7 @@ oa_fetch(
   output = c("tibble", "dataframe", "list", "raw"),
   abstract = TRUE,
   endpoint = "https://api.openalex.org",
-  per_page = 200,
+  per_page = NULL,
   paging = NULL,
   pages = NULL,
   count_only = FALSE,
@@ -40,26 +40,12 @@ See more at <https://docs.openalex.org/how-to-use-the-api/get-single-entities#th
 
 \item{...}{Additional filter arguments.}
 
-\item{options}{List. Additional parameters to add in the query. For example:
-
-- `select` Character vector. Top-level fields to show in output.
-Defaults to NULL, which returns all fields.
-https://docs.openalex.org/how-to-use-the-api/get-single-entities/select-fields
-
-- `sort` Character. Attribute to sort by.
-For example: "display_name" for sources or "cited_by_count:desc" for works.
-See more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sort-entity-lists>.
-
-- `sample` Integer. Number of (random) records to return.
-Should be no larger than 10,000.
-Defaults to NULL, which returns all records satisfying the query.
-Read more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sample-entity-lists>.
-
-- `seed` Integer.
-A seed value in order to retrieve the same set of random records in
-the same order when used multiple times with `sample`.
-IMPORTANT NOTE: Depending on your query, random results with a seed value may change over time due to new records coming into OpenAlex.
-This argument is likely only useful when queries happen close together (within a day).}
+\item{options}{List or `oa_options()` object. Additional parameters to add to
+the query, such as `select`, `sort`, `sample`, `seed`, and the paging
+controls (`per_page`, `paging`, `pages`).
+See [oa_options()] for the full list of options, their defaults, and details.
+A plain named list (e.g. `list(sort = "cited_by_count:desc")`) is also
+accepted for backward compatibility.}
 
 \item{search}{Character. Search is just another kind of filter, one that all five endpoints support.
 But unlike the other filters, search does NOT require an exact match.
@@ -88,19 +74,9 @@ The argument is ignored if entity is different from "works".}
 \item{endpoint}{Character. URL of the OpenAlex Endpoint API server.
 Defaults to endpoint = "https://api.openalex.org".}
 
-\item{per_page}{Numeric. Number of items to download per page.
-The per-page argument can assume any number between 1 and 200.
-Defaults to 200.}
-
-\item{paging}{Character.
-Either "cursor" for cursor paging or "page" for basic paging.
-When used with `options$sample` and or `pages`,
-paging is also automatically set to basic paging: `paging = "page"`
-to avoid duplicates and get the right page.
-See https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/paging.}
-
-\item{pages}{Integer vector.
-The range of pages to return. If NULL, return all pages.}
+\item{per_page, paging, pages}{Deprecated as top-level arguments. Pass them
+through `options = oa_options(...)` instead. If supplied here, they are
+forwarded to `options` with a deprecation warning.}
 
 \item{count_only}{Logical.
 If TRUE, the function returns only the number of item matching the query.
@@ -118,7 +94,7 @@ To shorten the printed query URL, set the environment variable openalexR.print
 to the number of characters to print: \code{Sys.setenv(openalexR.print = 70)}.}
 
 \item{timeout}{Numeric.
-Number of seconds to wait for a response until giving up. Can not be less than 1 ms.
+Number of seconds to wait for a response until giving up. Cannot be less than 1 ms.
 Defaults to 30.}
 }
 \value{
@@ -155,7 +131,7 @@ oa_fetch(
     "10.1371/journal.pone.0266781",
     "10.1371/journal.pone.0267149"
   ),
-  options = list(select = c("doi", "id", "cited_by_count", "type")),
+  options = oa_options(select = c("doi", "id", "cited_by_count", "type")),
   verbose = TRUE
 )
 
@@ -164,4 +140,7 @@ oa_fetch(
   verbose = TRUE
 )
 }
+}
+\seealso{
+[oa_options()]
 }

@@ -83,6 +83,42 @@ test_that("oa_fetch options$select works", {
   )
 })
 
+test_that("oa_fetch accepts oa_options() equivalently to a plain list", {
+  skip_on_cran()
+
+  doi <- c("10.1371/journal.pone.0266781", "10.1371/journal.pone.0267149")
+  from_options <- oa_fetch(
+    entity = "works",
+    doi = doi,
+    options = oa_options(select = c("doi", "id", "cited_by_count", "type"))
+  )
+  Sys.sleep(1 / 10)
+  from_list <- oa_fetch(
+    entity = "works",
+    doi = doi,
+    options = list(select = c("doi", "id", "cited_by_count", "type"))
+  )
+  expect_equal(dim(from_options), dim(from_list))
+  expect_equal(sort(from_options$id), sort(from_list$id))
+})
+
+test_that("top-level paging args are deprecated but still work", {
+  skip_on_cran()
+
+  expect_warning(
+    x <- oa_fetch(
+      entity = "works",
+      doi = c(
+        "10.1371/journal.pone.0266781",
+        "10.1371/journal.pone.0267149"
+      ),
+      per_page = 50
+    ),
+    "deprecated"
+  )
+  expect_s3_class(x, "data.frame")
+})
+
 test_that("Error when input entity can't be matched", {
   skip_on_cran()
 
@@ -240,6 +276,17 @@ test_that("oa_fetch can combine (OR) more than 50 DOIs in a filter", {
     }
   )
   expect_identical(hits, 2L)
+})
+
+test_that("oa_fetch errors when more than one filter has over 50 values", {
+  expect_error(
+    oa_fetch(
+      entity = "works",
+      doi = paste0("10.1234/", seq_len(51)),
+      openalex = paste0("W", seq_len(51))
+    ),
+    "Only one filter can have more than 50 values"
+  )
 })
 
 test_that("oa_fetch can combine (OR) more than 50 ORCIDs in a filter", {
@@ -552,6 +599,99 @@ test_that("api_request handles request line too large error (400)", {
           list()
         ),
         "HTTP status 400 Request Line is too large"
+      )
+    }
+  )
+})
+
+test_that("api_request reports 429 Too Many Requests and returns empty", {
+  mock_response <- structure(list(), class = "response")
+
+  with_mocked_bindings(
+    "GET" = function(...) mock_response,
+    "status_code" = function(res) 429,
+    .package = "httr",
+    {
+      expect_message(
+        res <- openalexR:::api_request(
+          "https://api.openalex.org/works",
+          httr::user_agent("test"),
+          list()
+        ),
+        "429 Too Many Requests"
+      )
+      expect_identical(res, list())
+    }
+  )
+})
+
+test_that("api_request reports 503 Service Unavailable and suggests per_page", {
+  mock_response <- structure(list(), class = "response")
+
+  with_mocked_bindings(
+    "GET" = function(...) mock_response,
+    "status_code" = function(res) 503,
+    "content" = function(res, ...) {
+      "<html><head><title>503 Service Temporarily Unavailable</title></head></html>"
+    },
+    .package = "httr",
+    {
+      expect_message(
+        res <- openalexR:::api_request(
+          "https://api.openalex.org/works",
+          httr::user_agent("test"),
+          list(),
+          parse = FALSE
+        ),
+        "per_page = 25"
+      )
+      expect_identical(res, "{}")
+    }
+  )
+})
+
+test_that("api_request aborts on a generic API error", {
+  mock_response <- structure(list(), class = "response")
+
+  with_mocked_bindings(
+    "GET" = function(...) mock_response,
+    "status_code" = function(res) 500L,
+    "content" = function(res, ...) {
+      '{"error":"Internal Server Error","message":"something broke"}'
+    },
+    .package = "httr",
+    {
+      expect_error(
+        openalexR:::api_request(
+          "https://api.openalex.org/works",
+          httr::user_agent("test"),
+          list(),
+          parse = FALSE
+        ),
+        "request failed"
+      )
+    }
+  )
+})
+
+test_that("api_request errors when a 200 response is not JSON", {
+  mock_response <- structure(list(), class = "response")
+
+  with_mocked_bindings(
+    "GET" = function(...) mock_response,
+    "status_code" = function(res) 200L,
+    "content" = function(res, ...) "<html></html>",
+    "http_type" = function(res) "text/html",
+    .package = "httr",
+    {
+      expect_error(
+        openalexR:::api_request(
+          "https://api.openalex.org/works",
+          httr::user_agent("test"),
+          list(),
+          parse = FALSE
+        ),
+        "did not return JSON"
       )
     }
   )

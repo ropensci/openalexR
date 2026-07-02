@@ -45,10 +45,10 @@ to the number of characters to print: \code{Sys.setenv(openalexR.print = 70)}.}
 }
 \value{
 A list containing 2 elements:
-- nodes: dataframe with publication records.
+- nodes: data frame with publication records.
 The last column `oa_input` indicates whether the work was
 one of the input `identifier`(s).
-- edges: publication link dataframe of 2 columns `from, to`
+- edges: publication link data frame of 2 columns `from, to`
 such that a row `A, B` means A -> B means A cites B.
 In bibliometrics, the "citation action" comes from A to B.
 }

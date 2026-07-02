@@ -8,10 +8,10 @@
 #'
 "concept_abbrev"
 
-#' Index of Countries and their alpha-2 and aplha-3 codes.
+#' Index of Countries and their alpha-2 and alpha-3 codes.
 #'
 #' Data frame contains the list of countries and their alpha-2 and
-#' aplha-3 codes.\cr
+#' alpha-3 codes.\cr
 #'
 #' @format A data frame with 250 rows and 3 variables:
 #'  \describe{
@@ -26,10 +26,10 @@
 #'
 #' List with 8 elements associated with 8 OpenAlex entities.
 #'
-#' @format Each element is a dataframe with 3 columns
+#' @format Each element is a data frame with 3 columns
 #'  \describe{
 #'     \item{original}{original field name from OpenAlex}
-#'     \item{oa2df}{new column name in output dataframe from oa2df}
+#'     \item{oa2df}{new column name in output data frame from oa2df}
 #'     \item{comment}{additional notes}
 #'     }
 #'

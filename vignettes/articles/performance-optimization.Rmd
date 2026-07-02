@@ -13,9 +13,9 @@ While `oa_fetch()` offers a convenient and flexible way of retrieving results fr
 
 Optimizing the performance of such large queries benefits greatly from being intentional and specific about what kinds of information you care about, and making assumptions that let you safely take shortcuts around the defaults.
 
-This vignette discusses three strategies for for optimizing performance of large queries:
+This vignette discusses three strategies for optimizing performance of large queries:
 
--   The parameter `options = list(select = ...)` in `oa_fetch()`
+-   The parameter `options = oa_options(select = ...)` in `oa_fetch()`
 -   The argument `output = "list"` in `oa_fetch()`
 -   The function `oa_generate()`
 
@@ -26,7 +26,8 @@ library(dplyr)
 
 ## The `select` strategy
 
-The `options` argument of `oa_fetch()` specifies a list of additional parameters to add to the query, such as `select`, `sort`, `sample`, and `seed`.
+The `options` argument of `oa_fetch()` specifies additional parameters to add to the query, such as `select`, `sort`, `sample`, and `seed`.
+It is best constructed with the `oa_options()` helper, which documents and validates the available options (a plain `list()` is still accepted for backward compatibility).
 Of these, `select` can be used to specify which fields of the entities are to be returned by OpenAlex.
 By specifying only the kinds of information about entities that you care about, you can reduce the overall size of the query result, which will in turn speed up the fetching of the raw JSON and its conversion to a data frame.
 
@@ -40,13 +41,13 @@ language_development <- oa_fetch(
 language_development
 ```
 
-To sample some papers from this topic, we can use the `topics.id` [filter](https://docs.ropensci.org/openalexR/articles/Filters.html) and set `options = list(sample = 5, seed = 1)` to return a random set of five [Works](https://docs.openalex.org/api-entities/works) entities with a reproducible seed:
+To sample some papers from this topic, we can use the `topics.id` [filter](https://docs.ropensci.org/openalexR/articles/Filters.html) and set `options = oa_options(sample = 5, seed = 1)` to return a random set of five [Works](https://docs.openalex.org/api-entities/works) entities with a reproducible seed:
 
 ```{r}
 oa_fetch(
   entity = "works",
   topics.id = language_development$id,
-  options = list(sample = 5, seed = 1)
+  options = oa_options(sample = 5, seed = 1)
 ) %>% 
   show_works()
 ```
@@ -55,13 +56,13 @@ In OpenAlex, entities have a set of **fields** which represent various informati
 These are typically returned as data frame columns by `oa_fetch()`, and the full list of fields can be found in the API documentation for each entity.
 For example, [the fields in a Works object](https://docs.openalex.org/api-entities/works/work-object) contain information such as `id`, `display_name`, `authorships`, and so on.
 
-If we only cared about the above three fields from our sample of papers, we can simplify specify those fields in the `select` parameters of the `options` list of arguments:
+If we only cared about the above three fields from our sample of papers, we can simply specify those fields in the `select` parameters of the `options` list of arguments:
 
 ```{r}
 oa_fetch(
   entity = "works",
   topics.id = language_development$id,
-  options = list(sample = 5, seed = 1,
+  options = oa_options(sample = 5, seed = 1,
                  select = c("id", "display_name", "authorships"))
 )
 ```
@@ -85,7 +86,7 @@ To do so in `oa_fetch()`, you can set `output = "list"`, which will simply retur
 output_list <- oa_fetch(
   entity = "works",
   topics.id = language_development$id,
-  options = list(sample = 5, seed = 1),
+  options = oa_options(sample = 5, seed = 1),
   output = "list"
 )
 str(output_list, max.level = 1)
@@ -107,13 +108,13 @@ works2df(output_list) %>%
 Additionally, opting out of the data frame conversion also means that you can use your own preferred implementation for converting the list output.
 This can be a very powerful optimization strategy when combined with the `select` option.
 
-For example, if you know that you are only selecting scalar fields, you can very quickly convert the list output into a tidy data using more powerful tools like `data.table::rbindlist()` or even just `rbind()`:
+For example, if you know that you are only selecting scalar fields, you can very quickly convert the list output into tidy data using more powerful tools like `data.table::rbindlist()` or even just `rbind()`:
 
 ```{r}
 oa_fetch(
   entity = "works",
   topics.id = language_development$id,
-  options = list(sample = 5, seed = 1,
+  options = oa_options(sample = 5, seed = 1,
                  select = c("id", "display_name", "cited_by_count")),
   output = "list"
 ) %>% 

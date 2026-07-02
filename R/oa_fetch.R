@@ -35,8 +35,12 @@ oa_entities <- function() {
 ##'  \item{list}{a list of parsed JSON contents}
 ##'  \item{raw}{a list of raw JSON strings (length depends on query)}
 ##' }
+#' @param per_page,paging,pages Deprecated as top-level arguments. Pass them
+#' through `options = oa_options(...)` instead. If supplied here, they are
+#' forwarded to `options` with a deprecation warning.
 #'
 #' @return A data.frame or a list. Result of the query.
+#' @seealso [oa_options()]
 #' @export
 #'
 #' @examples
@@ -66,7 +70,7 @@ oa_entities <- function() {
 #'     "10.1371/journal.pone.0266781",
 #'     "10.1371/journal.pone.0267149"
 #'   ),
-#'   options = list(select = c("doi", "id", "cited_by_count", "type")),
+#'   options = oa_options(select = c("doi", "id", "cited_by_count", "type")),
 #'   verbose = TRUE
 #' )
 #'
@@ -89,7 +93,7 @@ oa_fetch <- function(
   output = c("tibble", "dataframe", "list", "raw"),
   abstract = TRUE,
   endpoint = "https://api.openalex.org",
-  per_page = 200,
+  per_page = NULL,
   paging = NULL,
   pages = NULL,
   count_only = FALSE,
@@ -106,6 +110,22 @@ oa_fetch <- function(
   }
   filter <- list(...)
 
+  # Normalize options and fold deprecated top-level paging args into them.
+  options <- as_oa_options(options)
+  deprecated <- list(per_page = per_page, paging = paging, pages = pages)
+  deprecated <- deprecated[!vapply(deprecated, is.null, logical(1))]
+  if (length(deprecated) > 0) {
+    cli::cli_warn(
+      c(
+        "!" = "{length(deprecated)} top-level paging argument{?s} of \\
+               {.fn oa_fetch} {?is/are} deprecated: {.arg {names(deprecated)}}.",
+        "i" = "Set them via {.code options = oa_options(...)} instead."
+      ),
+      .frequency = "regularly",
+      .frequency_id = "oa_fetch_paging_deprecated"
+    )
+    for (nm in names(deprecated)) options[[nm]] <- deprecated[[nm]]
+  }
   # if multiple identifiers are provided, use openalex or doi as a filter attribute
   multiple_id <- length(identifier) > 1
   if (multiple_id) {
@@ -114,8 +134,17 @@ oa_fetch <- function(
 
   # overcome OA limitation of combining 50 values (OR) for a filter at a time
   # https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/filter-entity-lists#addition-or
-  # here, we assume there is only ONE "large" filter
+  # We can only chunk ONE filter at a time; more than one would require a
+  # combinatorial set of requests, so we ask the user to split the call instead.
   large_filter <- which(lengths(filter) > 50)
+  if (length(large_filter) > 1) {
+    cli::cli_abort(c(
+      "x" = "Only one filter can have more than 50 values at a time.",
+      "!" = "These filters each have more than 50 values: \\
+             {.arg {names(filter)[large_filter]}}.",
+      "i" = "Split the query so that at most one filter exceeds 50 values."
+    ))
+  }
   if (length(large_filter) == 0) {
     list_id <- list(`1` = NULL)
   } else {
@@ -125,13 +154,13 @@ oa_fetch <- function(
     )
   }
 
-  if (!is.null(options$sample) && (options$sample > per_page)) {
-    paging <- "page"
-  } else if (!is.null(options$page)) {
-    paging <- "page"
-  } else if (is.null(paging)) {
-    paging <- "cursor"
+  if (!is.null(options$sample) && (options$sample > options$per_page)) {
+    options$paging <- "page"
   }
+
+  # Split paging controls (routed to oa_request) from query options (sent to the
+  # URL by oa_query) so paging fields never leak into the query URL.
+  query_options <- options[setdiff(names(options), oa_paging_fields())]
 
   final_res <- list()
   for (i in seq_along(list_id)) {
@@ -148,14 +177,14 @@ oa_fetch <- function(
         identifier = identifier,
         entity = entity,
         search = search,
-        options = options,
+        options = query_options,
         group_by = group_by,
         endpoint = endpoint,
         verbose = verbose
       ),
-      per_page = per_page,
-      paging = paging,
-      pages = pages,
+      per_page = options$per_page,
+      paging = options$paging,
+      pages = options$pages,
       count_only = count_only,
       mailto = mailto,
       api_key = api_key,
@@ -225,7 +254,7 @@ oa_fetch <- function(
 #' @param verbose Logical.
 #' If TRUE, print information about the querying process. Defaults to TRUE.
 #' @param timeout Numeric.
-#' Number of seconds to wait for a response until giving up. Can not be less than 1 ms.
+#' Number of seconds to wait for a response until giving up. Cannot be less than 1 ms.
 #' Defaults to 30.
 #'
 #' @return a data.frame or a list of bibliographic records.
@@ -568,26 +597,12 @@ get_next_page <- function(paging, i, res = NULL) {
 #' The argument can be one of
 #' c("works", "authors", "institutions", "keywords", "funders", "sources", "publishers", "topics").
 #' If not provided, `entity` is guessed from `identifier`.
-#' @param options List. Additional parameters to add in the query. For example:
-#'
-#' - `select` Character vector. Top-level fields to show in output.
-#' Defaults to NULL, which returns all fields.
-#' https://docs.openalex.org/how-to-use-the-api/get-single-entities/select-fields
-#'
-#' - `sort` Character. Attribute to sort by.
-#' For example: "display_name" for sources or "cited_by_count:desc" for works.
-#' See more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sort-entity-lists>.
-#'
-#' - `sample` Integer. Number of (random) records to return.
-#' Should be no larger than 10,000.
-#' Defaults to NULL, which returns all records satisfying the query.
-#' Read more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sample-entity-lists>.
-#'
-#' - `seed` Integer.
-#' A seed value in order to retrieve the same set of random records in
-#' the same order when used multiple times with `sample`.
-#' IMPORTANT NOTE: Depending on your query, random results with a seed value may change over time due to new records coming into OpenAlex.
-#' This argument is likely only useful when queries happen close together (within a day).
+#' @param options List or `oa_options()` object. Additional parameters to add to
+#' the query, such as `select`, `sort`, `sample`, `seed`, and the paging
+#' controls (`per_page`, `paging`, `pages`).
+#' See [oa_options()] for the full list of options, their defaults, and details.
+#' A plain named list (e.g. `list(sort = "cited_by_count:desc")`) is also
+#' accepted for backward compatibility.
 #'
 #' @param search Character. Search is just another kind of filter, one that all five endpoints support.
 #' But unlike the other filters, search does NOT require an exact match.
@@ -619,7 +634,7 @@ get_next_page <- function(paging, i, res = NULL) {
 #'
 #' ### EXAMPLE 1: Full record about an entity.
 #'
-#' # Query to obtain allinformation about a particular work/author/institution/etc.:
+#' # Query to obtain all information about a particular work/author/institution/etc.:
 #'
 #' #  The following paper is associated to the OpenAlex-id W2755950973.
 #'
@@ -710,6 +725,9 @@ oa_query <- function(
   } else {
     flt_ready <- list()
   }
+
+  # Paging controls are handled by oa_request(), not encoded in the query URL.
+  options <- options[setdiff(names(options), oa_paging_fields())]
 
   if (!is.null(options$select)) {
     options$select <- paste(options$select, collapse = ",")
@@ -828,7 +846,7 @@ api_request <- function(
       if (httr::status_code(res) == 400) {
         cli::cli_abort("HTTP status 400 Request Line is too large")
       } else {
-        stop(e)
+        cli::cli_abort("Could not read the API response.", parent = e)
       }
     }
   )
@@ -851,7 +869,7 @@ api_request <- function(
 
   if (httr::status_code(res) == 200) {
     if (httr::http_type(res) != "application/json") {
-      stop("API did not return json", call. = FALSE)
+      cli::cli_abort("API did not return JSON.")
     }
     return(m) # Depending on `parse`, results can be raw JSON or parsed R list
   }

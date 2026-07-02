@@ -53,7 +53,7 @@ If FALSE, returns the raw JSON response as string.}
 If TRUE, print information about the querying process. Defaults to TRUE.}
 
 \item{timeout}{Numeric.
-Number of seconds to wait for a response until giving up. Can not be less than 1 ms.
+Number of seconds to wait for a response until giving up. Cannot be less than 1 ms.
 Defaults to 30.}
 }
 \value{

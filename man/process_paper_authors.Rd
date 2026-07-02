@@ -10,7 +10,7 @@ process_paper_authors(authorships)
 \item{authorships}{List. Authorships element of paper.}
 }
 \value{
-List. A list of one dataframe with the processed authors:
+List. A list of one data frame with the processed authors:
 id, display_name, orcid, author_position, is_corresponding, affiliations, affiliation_raw
 }
 \description{

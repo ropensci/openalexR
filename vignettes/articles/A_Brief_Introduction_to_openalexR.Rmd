@@ -35,7 +35,7 @@ email [aria\@unina.it](mailto:aria@unina.it){.email}
 
 # An R-package to gather bibliographic data from OpenAlex
 
-**openalexR** helps you interface with the [OpenAlex](https://openalex.org) API to retrieve bibliographic infomation about publications, authors, institutions, sources, funders, publishers, topics and concepts with 5 main functions:
+**openalexR** helps you interface with the [OpenAlex](https://openalex.org) API to retrieve bibliographic information about publications, authors, institutions, sources, funders, publishers, topics and concepts with 5 main functions:
 
 -   `oa_query()`: generates a valid query, written following the OpenAlex API syntax, from a set of arguments provided by the user.
 
@@ -95,7 +95,7 @@ oa_fetch(
   knitr::kable()
 ```
 
-### More than one publications/authors
+### More than one publication/author
 
 [https://api.openalex.org/authors/https://orcid.org/](https://api.openalex.org/authors/https://orcid.org/0000-0003-1613-5981)
 
@@ -113,7 +113,7 @@ oa_fetch(
 
 ```
 
-However, if you only know their external identifies, say, DOIs, you would need to use `doi` as a filter (either the canonical form with <https://doi.org/> or without should work):
+However, if you only know their external identifiers, say, DOIs, you would need to use `doi` as a filter (either the canonical form with <https://doi.org/> or without should work):
 
 ```{r}
 oa_fetch(
@@ -163,7 +163,7 @@ oa_fetch(
   cited_by_count = ">50", 
   from_publication_date = "2020-01-01",
   to_publication_date = "2021-12-31",
-  options = list(sort = "cited_by_count:desc"),
+  options = oa_options(sort = "cited_by_count:desc"),
   count_only = TRUE,
   verbose = TRUE
 )
@@ -178,7 +178,7 @@ oa_fetch(
   cited_by_count = ">50", 
   from_publication_date = "2020-01-01",
   to_publication_date = "2021-12-31",
-  options = list(sort = "cited_by_count:desc"),
+  options = oa_options(sort = "cited_by_count:desc"),
   count_only = FALSE
 ) %>%
   show_works() %>%
@@ -202,7 +202,7 @@ oa_fetch(
   knitr::kable()
 ```
 
-**Example**: We want download all authors' records of scholars who work at the University of Naples Federico II (OpenAlex ID: I71267560) and who have published more than 499 works.
+**Example**: We want to download all authors' records of scholars who work at the University of Naples Federico II (OpenAlex ID: I71267560) and who have published more than 499 works.
 
 Let's first check how many records match the query, then set `count_only = FALSE` to download the entire collection. We can do this by first defining a list of arguments, then adding `count_only` (default `FALSE`) to this list:
 
@@ -240,7 +240,7 @@ oa_fetch(
 
 ## Institutions
 
-**Example**: We want download all records regarding Italian institutions (country_code:it) that are classified as educational (type:education). Again, we check how many records match the query then download the collection:
+**Example**: We want to download all records regarding Italian institutions (country_code:it) that are classified as educational (type:education). Again, we check how many records match the query then download the collection:
 
 ```{r}
 italian_insts <- list(
