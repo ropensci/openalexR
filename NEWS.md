@@ -1,3 +1,5 @@
+# openalexR (development version)
+
 # openalexR 3.1.0
 * New `oa_options()` constructor for building the `options` argument of
   `oa_fetch()` and `oa_query()`. It provides argument autocompletion, defaults,
