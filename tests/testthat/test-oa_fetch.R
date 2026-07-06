@@ -532,7 +532,7 @@ test_that("output=raw works", {
     entity = "works",
     search = "language",
     per_page = 2,
-    options = list(sample = 5, seed = 1),
+    options = list(sample = 5, seed = 1, per_page = 2),
     output = "raw"
   )
 
