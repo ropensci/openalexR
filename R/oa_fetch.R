@@ -133,7 +133,7 @@ oa_fetch <- function(
   }
 
   # overcome OA limitation of combining 50 values (OR) for a filter at a time
-  # https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/filter-entity-lists#addition-or
+  # https://developers.openalex.org/guides/filtering
   # We can only chunk ONE filter at a time; more than one would require a
   # combinatorial set of requests, so we ask the user to split the call instead.
   large_filter <- which(lengths(filter) > 50)
@@ -239,7 +239,7 @@ oa_fetch <- function(
 #' When used with `options$sample` and or `pages`,
 #' paging is also automatically set to basic paging: `paging = "page"`
 #' to avoid duplicates and get the right page.
-#' See https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/paging.
+#' See https://developers.openalex.org/guides/page-through-results.
 #' @param pages Integer vector.
 #' The range of pages to return. If NULL, return all pages.
 #' @param count_only Logical.
@@ -260,7 +260,7 @@ oa_fetch <- function(
 #' @return a data.frame or a list of bibliographic records.
 #'
 #' For more extensive information about OpenAlex API, please visit:
-#' <https://docs.openalex.org>
+#' <https://developers.openalex.org/>
 #'
 #'
 #' @examples
@@ -547,7 +547,7 @@ oa_request <- function(
         "!" = "The following work{?s} {?has/have} truncated lists of authors: {.val {truncated}}.",
         "i" = "Query each work separately by its identifier to get full list of authors.",
         "i" = "For example: {.code lapply(c(\"{paste(utils::head(truncated, 2), collapse = '\", \"')}\"), \\(x) oa_fetch(identifier = x))}",
-        "i" = "Details at {.url https://docs.openalex.org/api-entities/authors/limitations}."
+        "i" = "Details at {.url https://developers.openalex.org/api-reference/authors}."
       ))
     }
   }
@@ -586,13 +586,13 @@ get_next_page <- function(paging, i, res = NULL) {
 #' condition--specifically, a particular value for a particular attribute.
 #' Filters are formatted as attribute = value.
 #' The complete list of filter attributes for each entity can be found at
-#' <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/filter-entity-lists>.
+#' <https://developers.openalex.org/guides/filtering>.
 #' For example, `cited_by_count = ">100"`,
 #' `title.search = c("bibliometric analysis", "science mapping")`,
 #' or `to_publication_date = "2021-12-31"`.
 #' @param multiple_id Logical. Whether there are multiple identifiers.
 #' @param identifier Character. OpenAlex ID(s) as item identifier(s).
-#' See more at <https://docs.openalex.org/how-to-use-the-api/get-single-entities#the-openalex-id>.
+#' See more at <https://developers.openalex.org/guides/get>.
 #' @param entity Character. Scholarly entity of the search.
 #' The argument can be one of
 #' c("works", "authors", "institutions", "keywords", "funders", "sources", "publishers", "topics").
@@ -612,7 +612,7 @@ get_next_page <- function(paging, i, res = NULL) {
 #' To filter using search, append .search to the end of the attribute you're filtering for.
 #' @param group_by Character. Attribute to group by.
 #' For example: "oa_status" for works.
-#' See more at <https://docs.openalex.org/how-to-use-the-api/get-groups-of-entities>.
+#' See more at <https://developers.openalex.org/guides/grouping>.
 #' @param endpoint Character. URL of the OpenAlex Endpoint API server.
 #' Defaults to endpoint = "https://api.openalex.org".
 #' @param verbose Logical. If TRUE, print information on querying process.
@@ -624,7 +624,7 @@ get_next_page <- function(paging, i, res = NULL) {
 #' @return a character containing the query in OpenAlex format.
 #'
 #' For more extensive information about OpenAlex API, please visit:
-#' <https://docs.openalex.org>.
+#' <https://developers.openalex.org/>.
 #'
 #'
 #' @examples

@@ -18,16 +18,16 @@ oa_options(
 \arguments{
 \item{select}{Character vector. Top-level fields to show in output.
 Defaults to NULL, which returns all fields.
-<https://docs.openalex.org/how-to-use-the-api/get-single-entities/select-fields>}
+<https://developers.openalex.org/guides/selecting-fields>}
 
 \item{sort}{Character. Attribute to sort by.
 For example: "display_name" for sources or "cited_by_count:desc" for works.
-See more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sort-entity-lists>.}
+See more at <https://developers.openalex.org/guides/sort>.}
 
 \item{sample}{Integer. Number of (random) records to return.
 Should be no larger than 10,000.
 Defaults to NULL, which returns all records satisfying the query.
-Read more at <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/sample-entity-lists>.}
+Read more at <https://developers.openalex.org/api-reference/works/list-works>.}
 
 \item{seed}{Integer.
 A seed value in order to retrieve the same set of random records in
@@ -45,7 +45,7 @@ Defaults to 200.}
 Either "cursor" for cursor paging or "page" for basic paging.
 When used with `sample` and/or `pages`, paging is automatically set to
 basic paging (`paging = "page"`) to avoid duplicates and get the right page.
-See <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/paging>.}
+See <https://developers.openalex.org/guides/page-through-results>.}
 
 \item{pages}{Integer vector.
 The range of pages to return. If NULL, return all pages.}

@@ -178,7 +178,7 @@ process_records <- function(
 #'
 #' @return a data.frame.
 #'
-#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
+#' For more extensive information about OpenAlex API, please visit: <https://developers.openalex.org/>
 #'
 #' @importFrom stats setNames
 #'
@@ -407,7 +407,7 @@ works2df <- function(
 #'
 #' @return a data.frame.
 #'
-#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
+#' For more extensive information about OpenAlex API, please visit: <https://developers.openalex.org/>
 #'
 #'
 #' @examples
@@ -496,7 +496,7 @@ authors2df <- function(
 #'
 #' @return a data.frame.
 #'
-#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
+#' For more extensive information about OpenAlex API, please visit: <https://developers.openalex.org/>
 #'
 #'
 #' @examples
@@ -602,7 +602,7 @@ institutions2df <- function(
 #'
 #' @return a data.frame.
 #'
-#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
+#' For more extensive information about OpenAlex API, please visit: <https://developers.openalex.org/>
 #'
 #'
 #' @examples
@@ -731,7 +731,7 @@ keywords2df <- function(data, verbose = TRUE) {
 #'
 #' @return a data.frame.
 #'
-#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
+#' For more extensive information about OpenAlex API, please visit: <https://developers.openalex.org/>
 #'
 #'
 #' @examples
@@ -788,7 +788,7 @@ funders2df <- function(
 #'
 #' @return a data.frame.
 #'
-#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
+#' For more extensive information about OpenAlex API, please visit: <https://developers.openalex.org/>
 #'
 #'
 #' @examples
@@ -831,6 +831,7 @@ sources2df <- function(
     "identical", "is_in_doaj_since_year",
     "identical", "is_in_scielo",
     "identical", "is_ojs",
+    "identical", "is_preprint_repository",
     "identical", "oa_flip_year",
     "identical", "oa_works_count",
     "identical", "first_publication_year",
@@ -867,7 +868,7 @@ sources2df <- function(
 #'
 #' @return a data.frame.
 #'
-#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
+#' For more extensive information about OpenAlex API, please visit: <https://developers.openalex.org/>
 #'
 #'
 #' @examples
@@ -926,7 +927,7 @@ publishers2df <- function(
 #'
 #' @return a data.frame.
 #'
-#' For more extensive information about OpenAlex API, please visit: <https://docs.openalex.org>
+#' For more extensive information about OpenAlex API, please visit: <https://developers.openalex.org/>
 #'
 #'
 #' @examples

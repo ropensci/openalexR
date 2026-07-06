@@ -31,7 +31,7 @@ It is best constructed with the `oa_options()` helper, which documents and valid
 Of these, `select` can be used to specify which fields of the entities are to be returned by OpenAlex.
 By specifying only the kinds of information about entities that you care about, you can reduce the overall size of the query result, which will in turn speed up the fetching of the raw JSON and its conversion to a data frame.
 
-For example, suppose that we are looking for a sample of works from the [Topic](https://docs.openalex.org/api-entities/topics) of [Language Development and Acquisition in Children](https://openalex.org/topics/T10730) (`"T10730"`).
+For example, suppose that we are looking for a sample of works from the [Topic](https://developers.openalex.org/api-reference/topics) of [Language Development and Acquisition in Children](https://openalex.org/topics/T10730) (`"T10730"`).
 
 ```{r}
 language_development <- oa_fetch(
@@ -41,7 +41,7 @@ language_development <- oa_fetch(
 language_development
 ```
 
-To sample some papers from this topic, we can use the `topics.id` [filter](https://docs.ropensci.org/openalexR/articles/Filters.html) and set `options = oa_options(sample = 5, seed = 1)` to return a random set of five [Works](https://docs.openalex.org/api-entities/works) entities with a reproducible seed:
+To sample some papers from this topic, we can use the `topics.id` [filter](https://docs.ropensci.org/openalexR/articles/Filters.html) and set `options = oa_options(sample = 5, seed = 1)` to return a random set of five [Works](https://developers.openalex.org/api-reference/works) entities with a reproducible seed:
 
 ```{r}
 oa_fetch(
@@ -54,7 +54,7 @@ oa_fetch(
 
 In OpenAlex, entities have a set of **fields** which represent various information about them.
 These are typically returned as data frame columns by `oa_fetch()`, and the full list of fields can be found in the API documentation for each entity.
-For example, [the fields in a Works object](https://docs.openalex.org/api-entities/works/work-object) contain information such as `id`, `display_name`, `authorships`, and so on.
+For example, [the fields in a Works object](https://developers.openalex.org/api-reference/works) contain information such as `id`, `display_name`, `authorships`, and so on.
 
 If we only cared about the above three fields from our sample of papers, we can simply specify those fields in the `select` parameters of the `options` list of arguments:
 
@@ -176,7 +176,7 @@ dir(tempdir(), pattern = "rec-\\d.rds$")
 
 ### Tips on generating the query URL to the OpenAlex API
 
-To build your query, you can use `oa_query()` and carefully read the [API documentation](https://docs.openalex.org/) to see what fields/filters are available.
+To build your query, you can use `oa_query()` and carefully read the [API documentation](https://developers.openalex.org/) to see what fields/filters are available.
 For example, I know `cites` is a filter we can use:
 
 ```{r}

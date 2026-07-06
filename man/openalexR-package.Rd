@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-A set of tools to extract bibliographic content from 'OpenAlex' database using API \url{https://docs.openalex.org}.
+A set of tools to extract bibliographic content from 'OpenAlex' database using API \url{https://developers.openalex.org/}.
 }
 \seealso{
 Useful links:
@@ -24,6 +24,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Massimo Aria \email{aria@unina.it} (\href{https://orcid.org/0000-0002-8517-9411}{ORCID}) [copyright holder]
   \item Trang Le \email{grixor@gmail.com} (\href{https://orcid.org/0000-0003-3737-6565}{ORCID})
   \item June Choe \email{jchoe001@gmail.com} (\href{https://orcid.org/0000-0002-0701-921X}{ORCID})
 }

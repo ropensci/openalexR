@@ -15,7 +15,7 @@ Available arguments/filters for each entity and associated example values are in
 
 **Note**: `x_concepts.id` are being deprecated and will be removed soon!
 
-See the [OpenAlex documentation](https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/filter-entity-lists) for the latest list of valid filters. 
+See the [OpenAlex documentation](https://developers.openalex.org/guides/filtering) for the latest list of valid filters. 
 
 ## Available arguments by entity
 

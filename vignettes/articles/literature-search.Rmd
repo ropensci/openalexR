@@ -86,5 +86,5 @@ In cases where large datasets are involved, it's useful to limit the number of r
 
 We encourage users to explore further options provided by `openalexR` to refine their search and retrieve the specific data they need for their research projects:
 
--   <https://docs.openalex.org/api-entities/works/search-works>
--   <https://docs.openalex.org/how-to-use-the-api/get-lists-of-entities/search-entities>
+-   <https://developers.openalex.org/guides/searching>
+-   <https://developers.openalex.org/guides/searching>

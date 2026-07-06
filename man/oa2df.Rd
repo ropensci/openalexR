@@ -34,7 +34,7 @@ Defaults to FALSE.}
 
 \item{group_by}{Character. Attribute to group by.
 For example: "oa_status" for works.
-See more at <https://docs.openalex.org/how-to-use-the-api/get-groups-of-entities>.}
+See more at <https://developers.openalex.org/guides/grouping>.}
 
 \item{abstract}{Logical. If TRUE, the function returns also the abstract of each item.
 Ignored if entity is different from "works". Defaults to TRUE.}
