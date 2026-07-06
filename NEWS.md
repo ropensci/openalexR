@@ -1,4 +1,6 @@
 # openalexR (development version)
+* `sources2df()` now includes the new `is_preprint_repository` field returned by
+  the OpenAlex sources endpoint.
 
 # openalexR 3.1.0
 * New `oa_options()` constructor for building the `options` argument of

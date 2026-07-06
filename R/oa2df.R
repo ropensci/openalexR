@@ -831,6 +831,7 @@ sources2df <- function(
     "identical", "is_in_doaj_since_year",
     "identical", "is_in_scielo",
     "identical", "is_ojs",
+    "identical", "is_preprint_repository",
     "identical", "oa_flip_year",
     "identical", "oa_works_count",
     "identical", "first_publication_year",
