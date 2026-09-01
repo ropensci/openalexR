@@ -40,6 +40,8 @@ oa_entities <- function() {
 #' forwarded to `options` with a deprecation warning.
 #'
 #' @return A data.frame or a list. Result of the query.
+#' Returns `NULL` when the query matched no records or when the API request
+#' failed; both cases emit a warning.
 #' @seealso [oa_options()]
 #' @export
 #'
@@ -97,7 +99,7 @@ oa_fetch <- function(
   paging = NULL,
   pages = NULL,
   count_only = FALSE,
-  mailto = oa_email(),
+  mailto = NULL,
   api_key = oa_apikey(),
   verbose = FALSE,
   timeout = 30
@@ -194,8 +196,10 @@ oa_fetch <- function(
     )
   }
 
-  if (length(final_res[[1]]) == 0) {
-    # || is.null(final_res[[1]][[1]]$id)
+  # Drop chunks that came back empty (no records, or a failed request) so one
+  # bad chunk does not discard the results of the others.
+  final_res <- final_res[lengths(final_res) > 0]
+  if (length(final_res) == 0) {
     return(NULL)
   }
   final_res <- unlist(final_res, recursive = FALSE)
@@ -245,8 +249,9 @@ oa_fetch <- function(
 #' @param count_only Logical.
 #' If TRUE, the function returns only the number of item matching the query.
 #' Defaults to FALSE.
-#' @param mailto Character string.
-#' Gives OpenAlex an email to enter the polite pool.
+#' @param mailto Deprecated and ignored.
+#' OpenAlex retired the polite pool in February 2026 and now ignores the
+#' `mailto` parameter. Use `api_key` instead.
 #' @param api_key Character string.
 #' Your OpenAlex Premium API key, if available.
 #' @param parse Logical.
@@ -370,7 +375,7 @@ oa_request <- function(
   paging = "cursor",
   pages = NULL,
   count_only = FALSE,
-  mailto = oa_email(),
+  mailto = NULL,
   api_key = oa_apikey(),
   parse = TRUE,
   verbose = FALSE,
@@ -389,13 +394,7 @@ oa_request <- function(
     query_ls <- list("per-page" = 1)
   }
 
-  if (!is.null(mailto)) {
-    if (isValidEmail(mailto)) {
-      query_ls[["mailto"]] <- mailto
-    } else {
-      cli::cli_inform("{.email {mailto}} is not a valid email address")
-    }
-  }
+  warn_mailto_deprecated(mailto)
 
   # first, download info about n. of items returned by the query
 
@@ -413,13 +412,27 @@ oa_request <- function(
     res <- res_parsed
   }
 
-  if (!is.null(res_meta)) {
-    ## return only item counting
-    if (count_only) {
-      return(res_meta)
+  if (is.null(res_meta)) {
+    # Single-entity endpoints (e.g. /works/W2755950973, and oa_random()) have no
+    # `meta` and are legitimate. An *empty* body, on the other hand, only comes
+    # from our own empty result on a failed request, so warn rather than let the
+    # caller silently receive NULL.
+    if (length(res_parsed) == 0) {
+      cli::cli_warn(
+        c(
+          "!" = "The OpenAlex API returned an empty response for this query.",
+          "i" = "See the warning above for the HTTP status;
+                 the result will be empty."
+        ),
+        class = "openalexR_empty_response"
+      )
     }
-  } else {
     return(res)
+  }
+
+  ## return only item counting
+  if (count_only) {
+    return(res_meta)
   }
 
   # Setting items per page
@@ -822,28 +835,56 @@ api_request <- function(
   query,
   api_key = oa_apikey(),
   parse = TRUE,
-  timeout = 30
+  timeout = 30,
+  max_tries = oa_max_tries()
 ) {
-  res <- httr::GET(
-    query_url,
-    ua,
-    query = query,
-    httr::add_headers(api_key = api_key),
-    httr::timeout(timeout)
-  )
-
   empty_res <- if (parse) list() else "{}"
+  # Rate limiting and gateway errors are worth another attempt; 500 is not.
+  transient <- c(429L, 502L, 503L, 504L)
 
-  if (httr::status_code(res) == 429) {
-    cli::cli_inform("HTTP status 429 Too Many Requests")
+  for (try in seq_len(max_tries)) {
+    res <- httr::GET(
+      query_url,
+      ua,
+      query = query,
+      httr::add_headers(api_key = api_key),
+      httr::timeout(timeout)
+    )
+    code <- httr::status_code(res)
+    if (!code %in% transient || try == max_tries) {
+      break
+    }
+    wait <- oa_backoff(try, res)
+    cli::cli_inform(
+      c(
+        "i" = "OpenAlex API returned HTTP {code}; retrying in {round(wait, 1)}s
+               (attempt {try + 1} of {max_tries})."
+      ),
+      class = "openalexR_retry"
+    )
+    oa_sleep(wait)
+  }
+
+  if (code == 429) {
+    cli::cli_warn(
+      c(
+        "x" = "HTTP status 429 Too Many Requests",
+        "i" = "Gave up after {max_tries} attempt{?s}; returning an empty result.",
+        "i" = "Set an API key with {.code options(openalexR.apikey = )} for a
+               larger budget, or raise {.code options(openalexR.max_tries = )}."
+      ),
+      class = c("openalexR_429", "openalexR_http_warning")
+    )
     return(empty_res)
   }
 
-  # Try to extract content, handle cases where request line is too large
-  m <- tryCatch(
+  # Keep the raw text around and parse only where R objects are actually
+  # needed. Parsing eagerly breaks the 503 and http_error branches when
+  # `parse = TRUE`, since they operate on the response body as a string.
+  txt <- tryCatch(
     httr::content(res, "text", encoding = "UTF-8"),
     error = function(e) {
-      if (httr::status_code(res) == 400) {
+      if (code == 400) {
         cli::cli_abort("HTTP status 400 Request Line is too large")
       } else {
         cli::cli_abort("Could not read the API response.", parent = e)
@@ -851,40 +892,50 @@ api_request <- function(
     }
   )
 
-  if (parse) {
-    m <- jsonlite::fromJSON(m, simplifyVector = FALSE)
-  }
-
-  if (httr::status_code(res) == 503) {
-    mssg <- regmatches(
-      m,
-      regexpr("(?<=<title>).*?(?=<\\/title>)", m, perl = TRUE)
-    )
-    cli::cli_inform(c(
-      "x" = "{mssg}",
-      "i" = "Please try setting {.code per_page = 25} in your function call!"
-    ))
-    return(empty_res)
-  }
-
-  if (httr::status_code(res) == 200) {
+  if (code == 200) {
     if (httr::http_type(res) != "application/json") {
       cli::cli_abort("API did not return JSON.")
     }
-    return(m) # Depending on `parse`, results can be raw JSON or parsed R list
+    # Depending on `parse`, results can be raw JSON or a parsed R list
+    if (parse) {
+      return(jsonlite::fromJSON(txt, simplifyVector = FALSE))
+    }
+    return(txt)
+  }
+
+  if (code == 503) {
+    mssg <- regmatches(
+      txt,
+      regexpr("(?<=<title>).*?(?=<\\/title>)", txt, perl = TRUE)
+    )
+    if (!length(mssg)) {
+      mssg <- "HTTP status 503 Service Unavailable"
+    }
+    cli::cli_warn(
+      c(
+        "x" = "{mssg}",
+        "i" = "Please try setting {.code per_page = 25} in your function call!"
+      ),
+      class = c("openalexR_503", "openalexR_http_warning")
+    )
+    return(empty_res)
   }
 
   if (httr::http_error(res)) {
-    parsed <- jsonlite::fromJSON(m, simplifyVector = FALSE)
+    parsed <- tryCatch(
+      jsonlite::fromJSON(txt, simplifyVector = FALSE),
+      error = function(e) list()
+    )
     cli::cli_abort(c(
-      "x" = "OpenAlex API request failed [{httr::status_code(res)}]",
+      "x" = "OpenAlex API request failed [{code}]",
       "!" = parsed$error,
       "i" = parsed$message
     ))
   }
 
-  if (httr::status_code(res) != 429 & httr::status_code(res) != 200) {
-    cli::cli_inform("HTTP status {httr::status_code(res)}")
-    return(empty_res)
-  }
+  cli::cli_warn(
+    "HTTP status {code}",
+    class = c("openalexR_http_status", "openalexR_http_warning")
+  )
+  empty_res
 }

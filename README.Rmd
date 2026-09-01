@@ -61,7 +61,7 @@ install.packages("openalexR")
 
 ### 🔑 API Key (Required)
 
-**As of February 13, 2025, the OpenAlex API requires an API key.**
+**As of February 13, 2026, the OpenAlex API requires an API key.**
 Without a key, you are limited to 100 credits per day (for testing only).
 With a free API key, you get 100,000 credits per day.
 

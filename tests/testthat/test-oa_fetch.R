@@ -29,7 +29,25 @@ test_that("oa_request gives messages for unexpected input", {
     "filter=openalex%3AA5048491430%7CA5023888391"
   )
   expect_message(oa_request(query_url, verbose = TRUE))
-  expect_message(oa_request(query_url, mailto = 123))
+})
+
+test_that("the deprecated mailto argument warns and is not sent", {
+  sent <- NULL
+  local_mocked_bindings(
+    api_request = function(query_url, ua, query, ..., parse = TRUE) {
+      sent <<- query
+      if (parse) list() else "{}"
+    }
+  )
+
+  expect_warning(
+    suppressWarnings(
+      oa_request("https://api.openalex.org/works", mailto = "a@b.com"),
+      classes = "openalexR_empty_response"
+    ),
+    class = "openalexR_mailto_deprecated"
+  )
+  expect_false("mailto" %in% names(sent))
 })
 
 test_that("oa_fetch works for multiple works", {
@@ -38,8 +56,7 @@ test_that("oa_fetch works for multiple works", {
   work_ids <- c("W2741809807", "W3046863325")
   multi_works <- oa_fetch(
     identifier = work_ids,
-    output = "dataframe",
-    mailto = "example@email.com"
+    output = "dataframe"
   )
 
   expect_equal(
@@ -612,13 +629,14 @@ test_that("api_request reports 429 Too Many Requests and returns empty", {
     "status_code" = function(res) 429,
     .package = "httr",
     {
-      expect_message(
+      expect_warning(
         res <- openalexR:::api_request(
           "https://api.openalex.org/works",
           httr::user_agent("test"),
-          list()
+          list(),
+          max_tries = 1L
         ),
-        "429 Too Many Requests"
+        class = "openalexR_429"
       )
       expect_identical(res, list())
     }
@@ -636,14 +654,15 @@ test_that("api_request reports 503 Service Unavailable and suggests per_page", {
     },
     .package = "httr",
     {
-      expect_message(
+      expect_warning(
         res <- openalexR:::api_request(
           "https://api.openalex.org/works",
           httr::user_agent("test"),
           list(),
-          parse = FALSE
+          parse = FALSE,
+          max_tries = 1L
         ),
-        "per_page = 25"
+        class = "openalexR_503"
       )
       expect_identical(res, "{}")
     }
@@ -695,4 +714,204 @@ test_that("api_request errors when a 200 response is not JSON", {
       )
     }
   )
+})
+
+test_that("api_request extracts the 503 title when parse = TRUE", {
+  mock_response <- structure(list(), class = "response")
+
+  with_mocked_bindings(
+    "GET" = function(...) mock_response,
+    "status_code" = function(res) 503,
+    "headers" = function(res) list(),
+    "content" = function(res, ...) {
+      "<html><head><title>503 Service Temporarily Unavailable</title></head></html>"
+    },
+    .package = "httr",
+    {
+      expect_warning(
+        res <- openalexR:::api_request(
+          "https://api.openalex.org/works",
+          httr::user_agent("test"),
+          list(),
+          max_tries = 1L
+        ),
+        "Service Temporarily Unavailable"
+      )
+      expect_identical(res, list())
+    }
+  )
+})
+
+test_that("api_request retries a transient status and then succeeds", {
+  mock_response <- structure(list(), class = "response")
+  gets <- 0L
+  sleeps <- numeric(0)
+
+  local_mocked_bindings(
+    oa_sleep = function(seconds) {
+      sleeps <<- c(sleeps, seconds)
+      invisible(NULL)
+    }
+  )
+
+  with_mocked_bindings(
+    "GET" = function(...) {
+      gets <<- gets + 1L
+      mock_response
+    },
+    "status_code" = function(res) if (gets < 2L) 429L else 200L,
+    "headers" = function(res) list(),
+    "content" = function(res, ...) '{"meta":{"count":0},"results":[]}',
+    "http_type" = function(res) "application/json",
+    .package = "httr",
+    {
+      res <- openalexR:::api_request(
+        "https://api.openalex.org/works",
+        httr::user_agent("test"),
+        list()
+      )
+      expect_identical(res$meta$count, 0L)
+    }
+  )
+
+  expect_identical(gets, 2L)
+  expect_equal(sleeps, 1)
+})
+
+test_that("api_request gives up after max_tries and warns", {
+  mock_response <- structure(list(), class = "response")
+  gets <- 0L
+  sleeps <- numeric(0)
+
+  local_mocked_bindings(
+    oa_sleep = function(seconds) {
+      sleeps <<- c(sleeps, seconds)
+      invisible(NULL)
+    }
+  )
+
+  with_mocked_bindings(
+    "GET" = function(...) {
+      gets <<- gets + 1L
+      mock_response
+    },
+    "status_code" = function(res) 429L,
+    "headers" = function(res) list(),
+    "content" = function(res, ...) "{}",
+    .package = "httr",
+    {
+      expect_warning(
+        res <- openalexR:::api_request(
+          "https://api.openalex.org/works",
+          httr::user_agent("test"),
+          list(),
+          max_tries = 3L
+        ),
+        class = "openalexR_http_warning"
+      )
+      expect_identical(res, list())
+    }
+  )
+
+  expect_identical(gets, 3L)
+  expect_equal(sleeps, c(1, 2))
+})
+
+test_that("api_request honors Retry-After, capped by openalexR.max_wait", {
+  mock_response <- structure(list(), class = "response")
+  sleeps <- numeric(0)
+
+  local_mocked_bindings(
+    oa_sleep = function(seconds) {
+      sleeps <<- c(sleeps, seconds)
+      invisible(NULL)
+    }
+  )
+
+  retry_after <- function(value) {
+    sleeps <<- numeric(0)
+    with_mocked_bindings(
+      "GET" = function(...) mock_response,
+      "status_code" = function(res) 429L,
+      "headers" = function(res) list("retry-after" = value),
+      "content" = function(res, ...) "{}",
+      .package = "httr",
+      {
+        suppressWarnings(openalexR:::api_request(
+          "https://api.openalex.org/works",
+          httr::user_agent("test"),
+          list(),
+          max_tries = 2L
+        ))
+      }
+    )
+    sleeps
+  }
+
+  expect_equal(retry_after("5"), 5)
+
+  old <- options(openalexR.max_wait = 2)
+  on.exit(options(old), add = TRUE)
+  expect_equal(retry_after("9999"), 2)
+})
+
+test_that("oa_max_tries() and oa_max_wait() resolve env var, then option", {
+  old <- options(openalexR.max_tries = 7L, openalexR.max_wait = 12)
+  on.exit(options(old), add = TRUE)
+
+  expect_identical(openalexR:::oa_max_tries(), 7L)
+  expect_equal(openalexR:::oa_max_wait(), 12)
+
+  Sys.setenv(openalexR.max_tries = "2", openalexR.max_wait = "3")
+  on.exit(
+    Sys.unsetenv(c("openalexR.max_tries", "openalexR.max_wait")),
+    add = TRUE
+  )
+  expect_identical(openalexR:::oa_max_tries(), 2L)
+  expect_equal(openalexR:::oa_max_wait(), 3)
+
+  # Nonsense values fall back to the defaults, and max_tries is clamped.
+  Sys.setenv(openalexR.max_tries = "abc", openalexR.max_wait = "-1")
+  expect_identical(openalexR:::oa_max_tries(), 3L)
+  expect_equal(openalexR:::oa_max_wait(), 30)
+
+  Sys.setenv(openalexR.max_tries = "99")
+  expect_identical(openalexR:::oa_max_tries(), 10L)
+})
+
+test_that("a single-entity response with no `meta` does not warn", {
+  one_work <- '{"id":"https://openalex.org/W2741809807","display_name":"x"}'
+
+  local_mocked_bindings(
+    api_request = function(..., parse = TRUE) {
+      if (parse) jsonlite::fromJSON(one_work, simplifyVector = FALSE) else
+        one_work
+    }
+  )
+
+  expect_no_warning(
+    res <- openalexR:::oa_request("https://api.openalex.org/works/W2741809807")
+  )
+  expect_identical(res$id, "https://openalex.org/W2741809807")
+})
+
+test_that("oa_fetch keeps later chunks when an earlier chunk is empty", {
+  calls <- 0L
+
+  with_mocked_bindings(
+    oa_request = function(...) {
+      calls <<- calls + 1L
+      if (calls == 1L) list() else list(list(id = "https://openalex.org/W1"))
+    },
+    {
+      res <- oa_fetch(
+        entity = "works",
+        doi = paste0("10.1234/", seq_len(60)),
+        output = "list"
+      )
+    }
+  )
+
+  expect_identical(calls, 2L)
+  expect_length(res, 1L)
 })

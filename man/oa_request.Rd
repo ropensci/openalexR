@@ -10,7 +10,7 @@ oa_request(
   paging = "cursor",
   pages = NULL,
   count_only = FALSE,
-  mailto = oa_email(),
+  mailto = NULL,
   api_key = oa_apikey(),
   parse = TRUE,
   verbose = FALSE,
@@ -40,8 +40,9 @@ The range of pages to return. If NULL, return all pages.}
 If TRUE, the function returns only the number of item matching the query.
 Defaults to FALSE.}
 
-\item{mailto}{Character string.
-Gives OpenAlex an email to enter the polite pool.}
+\item{mailto}{Deprecated and ignored.
+OpenAlex retired the polite pool in February 2026 and now ignores the
+\code{mailto} parameter. Use \code{api_key} instead.}
 
 \item{api_key}{Character string.
 Your OpenAlex Premium API key, if available.}

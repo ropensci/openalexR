@@ -8,7 +8,7 @@ oa_generate(...)
 }
 \arguments{
 \item{...}{arguments passed to the generator including
-`query_url`, `mailto`, `api_key`, and `verbose`.
+`query_url`, `api_key`, and `verbose`.
 See `oa_request` for details on these arguments.}
 }
 \value{

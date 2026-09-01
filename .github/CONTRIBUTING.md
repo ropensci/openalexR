@@ -47,3 +47,32 @@ If you’ve found a bug, please file an issue that illustrates the bug with a mi
 Please note that the openalexR project is released with a
 [Contributor Code of Conduct](https://ropensci.org/code-of-conduct/). 
 By contributing to this project you agree to abide by its terms.
+
+## Editing the pkgdown articles
+
+The articles under `vignettes/articles/` are **precomputed**. Each one is
+generated from a `.Rmd.orig` source, and both files are committed.
+
+This is because <https://docs.ropensci.org/openalexR> is built by r-universe,
+which cannot hold per-package secrets and therefore has no OpenAlex API key.
+Live `oa_fetch()` calls there get rate-limited (HTTP 429), which used to break
+the whole docs build (ropensci/openalexR#368).
+
+So: **never edit `vignettes/articles/*.Rmd` directly.** Edit the matching
+`.Rmd.orig`, then regenerate:
+
+```sh
+Rscript data-raw/precompute-articles.R                 # all articles
+Rscript data-raw/precompute-articles.R institution     # just one
+```
+
+You need `openalexR.apikey` set (the script refuses to run otherwise, so that
+rate-limited output never gets committed).
+
+The canonical renderer is the `precompute-articles` GitHub Action, which runs
+monthly and on `workflow_dispatch` and opens a PR when the output changes.
+Prefer it for anything touching `institution.Rmd`, since PNGs rendered on macOS
+and on Linux differ even when the data is identical.
+
+Chunks that produce figures should be **named**, so the generated filename under
+`vignettes/articles/figure/` is stable.

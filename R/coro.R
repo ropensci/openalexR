@@ -15,7 +15,7 @@ the <- new.env()
 #' With group_by, unfortunately we don't have a way to know the total until we query until exhausted.
 #'
 #' @param ... arguments passed to the generator including
-#' `query_url`, `mailto`, `api_key`, and `verbose`.
+#' `query_url`, `api_key`, and `verbose`.
 #' See `oa_request` for details on these arguments.
 #'
 #' @examples
@@ -78,19 +78,11 @@ oa_generate <- function(...) {
     the$oa_generate <- coro::generator(
       function(
         query_url,
-        mailto = oa_email(),
         api_key = oa_apikey(),
         verbose = FALSE
       ) {
         ua <- httr::user_agent("https://github.com/ropensci/openalexR/")
         query_ls <- list("per-page" = 200)
-        if (!is.null(mailto)) {
-          if (isValidEmail(mailto)) {
-            query_ls[["mailto"]] <- mailto
-          } else {
-            message(mailto, " is not a valid email address")
-          }
-        }
         paging <- "cursor"
         next_page <- "*"
         query_ls[[paging]] <- next_page

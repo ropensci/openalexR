@@ -23,7 +23,7 @@ oa_fetch(
   paging = NULL,
   pages = NULL,
   count_only = FALSE,
-  mailto = oa_email(),
+  mailto = NULL,
   api_key = oa_apikey(),
   verbose = FALSE,
   timeout = 30
@@ -82,8 +82,9 @@ forwarded to `options` with a deprecation warning.}
 If TRUE, the function returns only the number of item matching the query.
 Defaults to FALSE.}
 
-\item{mailto}{Character string.
-Gives OpenAlex an email to enter the polite pool.}
+\item{mailto}{Deprecated and ignored.
+OpenAlex retired the polite pool in February 2026 and now ignores the
+\code{mailto} parameter. Use \code{api_key} instead.}
 
 \item{api_key}{Character string.
 Your OpenAlex Premium API key, if available.}
@@ -99,6 +100,8 @@ Defaults to 30.}
 }
 \value{
 A data.frame or a list. Result of the query.
+Returns `NULL` when the query matched no records or when the API request
+failed; both cases emit a warning.
 }
 \description{
 A composition function to perform query building, requesting,

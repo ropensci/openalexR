@@ -9,7 +9,7 @@ oa_snowball(
   identifier = NULL,
   ...,
   id_type = c("short", "original"),
-  mailto = oa_email(),
+  mailto = NULL,
   endpoint = "https://api.openalex.org",
   verbose = FALSE,
   citing_params = list(),
@@ -28,8 +28,9 @@ for example, W2755950973.
 If "original", the OpenAlex IDs are kept as are,
 for example, https://openalex.org/W2755950973}
 
-\item{mailto}{Character string.
-Gives OpenAlex an email to enter the polite pool.}
+\item{mailto}{Deprecated and ignored.
+OpenAlex retired the polite pool in February 2026 and now ignores the
+\code{mailto} parameter. Use \code{api_key} instead.}
 
 \item{endpoint}{Character. URL of the OpenAlex Endpoint API server.
 Defaults to endpoint = "https://api.openalex.org".}

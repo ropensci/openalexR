@@ -46,7 +46,7 @@ oa_snowball <- function(
   identifier = NULL,
   ...,
   id_type = c("short", "original"),
-  mailto = oa_email(),
+  mailto = NULL,
   endpoint = "https://api.openalex.org",
   verbose = FALSE,
   citing_params = list(),

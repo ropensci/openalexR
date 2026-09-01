@@ -8,22 +8,48 @@ on:
 
 name: check-pkgdown
 
+permissions: read-all
+
 jobs:
     check_pkgdown:
-      runs-on: ubuntu-22.04
+      runs-on: ubuntu-latest
 
       env:
         GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
       steps:
-        - uses: actions/checkout@v3
+        - uses: actions/checkout@v4
+        - uses: r-lib/actions/setup-pandoc@v2
         - uses: r-lib/actions/setup-r@v2
           with:
             r-version: 'release'
+            use-public-rspm: true
         - uses: r-lib/actions/setup-r-dependencies@v2
           with:
-            extra-packages: any::devtools, any::pkgdown
+            extra-packages: any::devtools, any::pkgdown, local::.
 
-        - name: Check pkgdown
+        # Articles are generated from .Rmd.orig and must contain no live chunks,
+        # otherwise the r-universe docs build (which has no API key) hits
+        # OpenAlex and 429s. See ropensci/openalexR#368.
+        - name: Articles must be precomputed
+          run: |
+            if grep -rnE '^[[:space:]]*```[{]' vignettes/articles/*.Rmd; then
+              echo "::error::vignettes/articles/*.Rmd must be generated. Edit the .Rmd.orig and run data-raw/precompute-articles.R (or the precompute-articles workflow)."
+              exit 1
+            fi
+            for orig in vignettes/articles/*.Rmd.orig; do
+              [ -f "${orig%.orig}" ] || { echo "::error::missing generated ${orig%.orig}"; exit 1; }
+            done
+            for rmd in vignettes/articles/*.Rmd; do
+              [ -f "$rmd.orig" ] || { echo "::error::$rmd has no .Rmd.orig source"; exit 1; }
+            done
+
+        - name: Check pkgdown config
           run: pkgdown::check_pkgdown()
+          shell: Rscript {0}
+
+        # No API key here on purpose: this is the same condition as the
+        # r-universe docs builder, so a green run proves that build works.
+        - name: Build pkgdown site
+          run: pkgdown::build_site(preview = FALSE, install = FALSE, new_process = FALSE)
           shell: Rscript {0}

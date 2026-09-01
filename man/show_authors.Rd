@@ -16,6 +16,9 @@ If you want the entire table, set `simp_fun = identity`}
 \value{
 Simplified tibble to display.
 The first column, `id` is the short-form OpenAlex ID of the authors.
+If `x` is `NULL` (which is what \code{\link[=oa_fetch]{oa_fetch()}} returns when a query matched no
+records or the API request failed) or has zero rows, a zero-row tibble with
+these columns is returned, with a warning in the `NULL` case.
 }
 \description{
 This function is mostly for the package's internal use,

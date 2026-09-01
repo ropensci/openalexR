@@ -55,14 +55,6 @@ empty_df <- function(
   )
 }
 
-isValidEmail <- function(x) {
-  grepl(
-    "\\<[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}\\>",
-    as.character(x),
-    ignore.case = TRUE
-  )
-}
-
 append_flt <- function(x, pre = "from_publication_date", collapse = "|") {
   if (is.null(x)) {
     return(NULL)
@@ -137,18 +129,6 @@ rbind_oa_ls <- function(list_df) {
   )
 }
 
-#' Get email from options
-#' @return Character string. Email of the requester.
-#' @keywords internal
-#' @export
-oa_email <- function() {
-  email <- Sys.getenv("openalexR.mailto")
-  if (email == "") {
-    email <- getOption("openalexR.mailto", default = NULL)
-  }
-  email
-}
-
 #' Get apikey from options
 #' @return Character string. API key of the requester.
 #' @keywords internal
@@ -159,6 +139,61 @@ oa_apikey <- function() {
     apikey <- getOption("openalexR.apikey", default = NULL)
   }
   apikey
+}
+
+# Sleep, factored out so tests can mock it: testthat refuses to mock functions
+# in base packages, so the retry loop must not call Sys.sleep() directly.
+oa_sleep <- function(seconds) {
+  if (is.finite(seconds) && seconds > 0) {
+    Sys.sleep(seconds)
+  }
+  invisible(NULL)
+}
+
+# Total attempts (not retries) for a transient failure.
+oa_max_tries <- function() {
+  n <- Sys.getenv("openalexR.max_tries")
+  if (n == "") {
+    n <- getOption("openalexR.max_tries", default = 3L)
+  }
+  n <- suppressWarnings(as.integer(n))
+  if (is.na(n) || n < 1L) {
+    return(3L)
+  }
+  min(n, 10L)
+}
+
+# Hard cap on any single backoff sleep, in seconds.
+oa_max_wait <- function() {
+  w <- Sys.getenv("openalexR.max_wait")
+  if (w == "") {
+    w <- getOption("openalexR.max_wait", default = 30)
+  }
+  w <- suppressWarnings(as.numeric(w))
+  if (is.na(w) || w < 0) {
+    return(30)
+  }
+  w
+}
+
+# Seconds to wait before attempt `try + 1`. Honors `Retry-After` when the API
+# sends a usable value, otherwise deterministic exponential backoff
+# (1s, 2s, 4s, ...). Always capped by `max_wait`.
+oa_backoff <- function(try, res = NULL, max_wait = oa_max_wait()) {
+  wait <- NA_real_
+  if (!is.null(res)) {
+    ra <- httr::headers(res)[["retry-after"]]
+    if (!is.null(ra)) {
+      ra <- suppressWarnings(as.numeric(ra))
+      if (!is.na(ra) && ra >= 0) {
+        wait <- ra
+      }
+    }
+  }
+  if (is.na(wait)) {
+    wait <- 2^(try - 1)
+  }
+  min(wait, max_wait)
 }
 
 
@@ -265,4 +300,25 @@ process_topics <- function(entity, extra) {
   })
   topics_df <- do.call(rbind.data.frame, topics_ls)
   list(topics = list(tibble::as_tibble(topics_df)))
+}
+
+# OpenAlex retired the polite pool in February 2026 and now ignores `mailto`.
+# The argument is kept (rather than removed) because `oa_fetch()` collects
+# filters through `...`, so dropping it would silently turn `mailto = ` into a
+# bogus filter instead of an error.
+warn_mailto_deprecated <- function(mailto) {
+  if (is.null(mailto)) {
+    return(invisible(NULL))
+  }
+  cli::cli_warn(
+    c(
+      "!" = "The {.arg mailto} argument is deprecated and ignored.",
+      "i" = "OpenAlex retired the polite pool in February 2026 and now requires
+             an API key. Set one with {.code options(openalexR.apikey = )}."
+    ),
+    class = "openalexR_mailto_deprecated",
+    .frequency = "regularly",
+    .frequency_id = "openalexR_mailto_deprecated"
+  )
+  invisible(NULL)
 }

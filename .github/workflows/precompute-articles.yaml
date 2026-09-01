@@ -1,0 +1,101 @@
+# Re-knit the precomputed pkgdown articles against the live OpenAlex API and
+# open a PR if anything changed.
+#
+# The docs site (https://docs.ropensci.org/openalexR) is built by r-universe,
+# which cannot hold per-package secrets, so it has no OpenAlex API key. All
+# articles under vignettes/articles/ are therefore precomputed here, where
+# secrets.OPENALEXR_APIKEY is available, and committed. See ropensci/openalexR#368.
+name: precompute-articles
+
+on:
+  schedule:
+    - cron: '0 4 1 * *'   # 04:00 UTC on the 1st of each month
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: precompute-articles
+  cancel-in-progress: false
+
+jobs:
+  precompute:
+    runs-on: ubuntu-latest
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+      NO_COLOR: '1'
+      # Dotted names are injected into the process environment directly, so
+      # Sys.getenv() sees them. Same pattern as R-CMD-check.yaml.
+      openalexR.apikey: ${{ secrets.OPENALEXR_APIKEY }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-pandoc@v2
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: |
+            any::knitr
+            any::rmarkdown
+            any::dplyr
+            any::tidyr
+            any::purrr
+            any::ggplot2
+            any::ragg
+            any::coro
+            any::rentrez
+            any::rrapply
+            any::pkgdown
+            local::.
+
+      - name: Re-knit articles from .Rmd.orig
+        run: Rscript data-raw/precompute-articles.R
+
+      # Catches broken figure paths, bad YAML and missing images. Must make zero
+      # API calls, since every article is now static.
+      - name: Smoke-test the pkgdown site
+        run: pkgdown::build_site(preview = FALSE, install = FALSE, new_process = FALSE)
+        shell: Rscript {0}
+
+      - name: Summarise the diff
+        run: git --no-pager diff --stat -- vignettes/articles | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Open a pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          # A PR opened with GITHUB_TOKEN does not trigger `on: pull_request`
+          # workflows. Set OPENALEXR_PAT if you want the full CI matrix to run.
+          token: ${{ secrets.OPENALEXR_PAT || secrets.GITHUB_TOKEN }}
+          add-paths: |
+            vignettes/articles/**
+          branch: precompute-articles
+          delete-branch: true
+          commit-message: 'docs: refresh precomputed pkgdown articles'
+          title: 'docs: refresh precomputed pkgdown articles'
+          labels: documentation
+          body: |
+            Automated re-knit of `vignettes/articles/*.Rmd.orig` against the
+            live OpenAlex API (with an API key, which the r-universe docs
+            builder does not have).
+
+            **Review checklist**
+            - [ ] `git diff --stat` looks proportionate (small numeric /
+                  citation-count drift is expected; wholesale disappearance of
+                  output is not)
+            - [ ] No `Error`, `NULL`, or `429` text crept into any article
+            - [ ] Figures under `vignettes/articles/figure/` still render
+            - [ ] Prose that quotes hard-coded record counts still matches
+                  the rendered output
+
+            Do not edit the generated `.Rmd` files in this PR -- edit the
+            `.Rmd.orig` and re-run the workflow.

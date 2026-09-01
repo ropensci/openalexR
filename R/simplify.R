@@ -1,3 +1,80 @@
+# Columns each show_*() helper needs from the `oa_fetch()` output.
+show_required_cols <- function(entity) {
+  switch(
+    entity,
+    works = c("id", "authorships", "concepts"),
+    authors = c("id", "orcid", "topics")
+  )
+}
+
+# Zero-row prototype returned when there is nothing to show.
+show_prototype <- function(entity) {
+  cols <- switch(
+    entity,
+    works = list(
+      id = character(0),
+      display_name = character(0),
+      first_author = character(0),
+      last_author = character(0),
+      top_concepts = character(0)
+    ),
+    authors = list(
+      id = character(0),
+      display_name = character(0),
+      orcid = character(0),
+      works_count = integer(0),
+      cited_by_count = integer(0),
+      top_concepts = character(0)
+    )
+  )
+  tibble::as_tibble(cols)
+}
+
+# Shared input check for show_works()/show_authors(). Returns NULL when the
+# caller should carry on as usual, or a zero-row tibble to return instead.
+check_show_input <- function(x, entity, arg = "x", call = rlang::caller_env()) {
+  if (is.null(x)) {
+    cli::cli_warn(
+      c(
+        "!" = "{.arg {arg}} is {.code NULL}; returning a zero-row tibble.",
+        "i" = "{.fn oa_fetch} returns {.code NULL} when the query matched no
+               records or when the API request failed.",
+        "i" = "Re-run the query with {.code verbose = TRUE} to see what happened."
+      ),
+      class = "openalexR_empty_show",
+      call = call
+    )
+    return(show_prototype(entity))
+  }
+
+  if (!is.data.frame(x)) {
+    cli::cli_abort(
+      "{.arg {arg}} must be a data frame returned by {.fn oa_fetch}, not
+       {.cls {class(x)[[1]]}}.",
+      call = call
+    )
+  }
+
+  if (nrow(x) == 0) {
+    return(show_prototype(entity))
+  }
+
+  missing_cols <- setdiff(show_required_cols(entity), names(x))
+  if (length(missing_cols)) {
+    cli::cli_abort(
+      c(
+        "x" = "{.arg {arg}} is missing {cli::qty(missing_cols)}required
+               column{?s}: {.val {missing_cols}}.",
+        "i" = "Did you call {.code oa_fetch(entity = \"{entity}\")}?",
+        "i" = "Columns dropped by {.code oa_options(select = )} cannot be shown."
+      ),
+      call = call
+    )
+  }
+
+  NULL
+}
+
 #' Simplify the OpenAlex authors result
 #'
 #' This function is mostly for the package's internal use,
@@ -13,6 +90,9 @@
 #'
 #' @return Simplified tibble to display.
 #' The first column, `id` is the short-form OpenAlex ID of the authors.
+#' If `x` is `NULL` (which is what [oa_fetch()] returns when a query matched no
+#' records or the API request failed) or has zero rows, a zero-row tibble with
+#' these columns is returned, with a warning in the `NULL` case.
 #'
 #' @export
 #'
@@ -24,6 +104,11 @@
 #' ))
 #' }
 show_authors <- function(x, simp_func = utils::head) {
+  empty <- check_show_input(x, entity = "authors")
+  if (!is.null(empty)) {
+    return(simp_func(empty))
+  }
+
   x$id <- vapply(x$id, shorten_oaid, character(1), USE.NAMES = FALSE)
 
   if (any(!is.na(x$orcid))) {
@@ -66,7 +151,10 @@ show_authors <- function(x, simp_func = utils::head) {
 #' If you want the entire table, set `simp_fun = identity`.
 #'
 #' @return Simplified tibble to display.
-#' The first column, `id` is the short-form OpenAlex ID of the works
+#' The first column, `id` is the short-form OpenAlex ID of the works.
+#' If `x` is `NULL` (which is what [oa_fetch()] returns when a query matched no
+#' records or the API request failed) or has zero rows, a zero-row tibble with
+#' these columns is returned, with a warning in the `NULL` case.
 #'
 #' @export
 #'
@@ -78,6 +166,11 @@ show_authors <- function(x, simp_func = utils::head) {
 #' ))
 #' }
 show_works <- function(x, simp_func = utils::head) {
+  empty <- check_show_input(x, entity = "works")
+  if (!is.null(empty)) {
+    return(simp_func(empty))
+  }
+
   x$id <- vapply(x$id, shorten_oaid, character(1), USE.NAMES = FALSE)
   x$first_author <- vapply(
     x$authorships,

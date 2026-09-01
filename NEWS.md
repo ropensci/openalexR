@@ -1,4 +1,38 @@
 # openalexR (development version)
+* Dropped support for the `mailto` polite pool, which OpenAlex retired in
+  February 2026 and now ignores. `oa_email()` and the `openalexR.mailto`
+  option are gone, and `mailto` is no longer sent to the API. The `mailto`
+  argument of `oa_fetch()`, `oa_request()` and `oa_snowball()` is kept as a
+  deprecated no-op that warns -- removing it outright would turn `mailto = `
+  into a silent, bogus filter, since `oa_fetch()` collects filters via `...`.
+  Use `options(openalexR.apikey = )` instead.
+* `show_works()` and `show_authors()` no longer fail with
+  `incorrect number of dimensions` when given `NULL` -- which is what
+  `oa_fetch()` returns when a query matches no records or a request fails. They
+  now warn and return a zero-row tibble, and give an informative error for input
+  that is not a data frame or is missing required columns (#368).
+* `oa_fetch()` and friends now retry transient HTTP responses -- 429 (Too Many
+  Requests) and the 502/503/504 gateway errors -- with exponential backoff,
+  honoring the `Retry-After` header when the API sends one. Configure with
+  `options(openalexR.max_tries = )` (default 3, max 10) and
+  `options(openalexR.max_wait = )` (default 30 seconds), or the equivalent
+  `openalexR.max_tries` / `openalexR.max_wait` environment variables. Set
+  `openalexR.max_tries = 1` to disable retrying (#368).
+* Failed HTTP requests (429, 503, and other non-200 statuses) now emit a
+  **warning** rather than a message, so they are no longer easy to miss in
+  scripts, reports, and knitted documents. If you relied on `suppressMessages()`
+  to quiet these, use `suppressWarnings()` instead (#368).
+* `oa_request()` now warns when the API returns an empty body instead of quietly
+  returning an empty list (#368).
+* Fixed HTTP error handling for paged requests: a 4xx/5xx or 503 response during
+  paging previously raised an internal `jsonlite` error instead of the intended
+  OpenAlex error message.
+* Fixed `oa_fetch()` discarding results when the *first* chunk of a filter with
+  more than 50 values came back empty.
+* The pkgdown articles are now precomputed from `.Rmd.orig` sources, so building
+  the documentation site no longer calls the OpenAlex API. Run
+  `Rscript data-raw/precompute-articles.R` (or the `precompute-articles` GitHub
+  Action) after editing an article (#368).
 * `sources2df()` now includes the new `is_preprint_repository` field returned by
   the OpenAlex sources endpoint.
 
