@@ -30,7 +30,7 @@ for example, https://openalex.org/W2755950973}
 
 \item{mailto}{Deprecated and ignored.
 OpenAlex retired the polite pool in February 2026 and now ignores the
-\code{mailto} parameter. Use \code{api_key} instead.}
+`mailto` parameter. Use `api_key` instead.}
 
 \item{endpoint}{Character. URL of the OpenAlex Endpoint API server.
 Defaults to endpoint = "https://api.openalex.org".}

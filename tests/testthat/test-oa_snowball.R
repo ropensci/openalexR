@@ -65,6 +65,10 @@ test_that("oa_snowball works for author orcids", {
   # find publications by these two authors this year
   snowball_orcid <- oa_snowball(
     author.orcid = orcids,
+    # OpenAlex truncates `authorships` to the first 100 entries on list
+    # endpoints, so an author further down a consortium paper's byline
+    # would not appear in the node at all.
+    authors_count = "<100",
     from_publication_date = "2022-10-01",
     to_publication_date = "2022-12-31",
     citing_params = list(from_publication_date = "2022-10-01"),

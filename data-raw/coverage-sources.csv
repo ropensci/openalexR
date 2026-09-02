@@ -2,6 +2,7 @@
 alternate_titles,alternate_titles,
 apc_prices,"apc_prices.currency, apc_prices.price",
 apc_usd,apc_usd,
+apc_usd_by_year,NA,
 cited_by_count,cited_by_count,
 counts_by_year,counts_by_year,
 country_code,country_code,

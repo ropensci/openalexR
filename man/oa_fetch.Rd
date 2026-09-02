@@ -84,7 +84,7 @@ Defaults to FALSE.}
 
 \item{mailto}{Deprecated and ignored.
 OpenAlex retired the polite pool in February 2026 and now ignores the
-\code{mailto} parameter. Use \code{api_key} instead.}
+`mailto` parameter. Use `api_key` instead.}
 
 \item{api_key}{Character string.
 Your OpenAlex Premium API key, if available.}

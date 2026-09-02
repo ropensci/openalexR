@@ -1,4 +1,7 @@
 # openalexR (development version)
+* Recorded OpenAlex's new `apc_usd_by_year` field for the `sources` entity in
+  `oa2df_coverage`. It is listed as a known field that `oa2df()` does not
+  surface, so `get_coverage("sources")` no longer under-reports the API.
 * Dropped support for the `mailto` polite pool, which OpenAlex retired in
   February 2026 and now ignores. `oa_email()` and the `openalexR.mailto`
   option are gone, and `mailto` is no longer sent to the API. The `mailto`
