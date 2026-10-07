@@ -20,6 +20,28 @@ test_that("show_works works", {
   expect_type(work_simplified$top_concepts, "character")
 })
 
+test_that("show_works() handles multiple authors at the same position", {
+  works <- tibble::tibble(
+    id = paste0("https://openalex.org/W", 1:3),
+    display_name = c("Multiple authors", "Single author", "Missing authors"),
+    authorships = list(
+      data.frame(
+        author_position = c("first", "first", "last", "last"),
+        display_name = c("Alice", "Bob", "Carol", "Dan")
+      ),
+      data.frame(author_position = "first", display_name = "Eve"),
+      NA
+    ),
+    concepts = list(NA, NA, NA)
+  )
+
+  shown <- show_works(works, simp_func = identity)
+
+  expect_equal(shown$first_author, c("Alice, Bob", "Eve", NA_character_))
+  expect_equal(shown$last_author, c("Carol, Dan", NA_character_, NA_character_))
+  expect_equal(nrow(shown), 3L)
+})
+
 test_that("show_works() and show_authors() handle NULL input", {
   expect_warning(
     work_empty <- show_works(NULL),

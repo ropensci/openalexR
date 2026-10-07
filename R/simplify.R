@@ -226,5 +226,5 @@ get_auth_position <- function(y, position = "first") {
   if (length(last) == 0) {
     return(NA_character_)
   }
-  last
+  paste(last, collapse = ", ")
 }
