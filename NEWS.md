@@ -1,4 +1,11 @@
 # openalexR (development version)
+* Updated field coverage for works (`study_designs` and
+  `sustainable_development_goals_aurora`), authors (`observed_orcids`), and
+  topics (`legacy_keywords`), and sources (`listed_in`). These fields are recorded as known API fields
+  that `oa2df()` does not surface.
+* Keyword conversion now preserves nested fields (`ids`, `primary_topic`,
+  `topics`, and `display_name_alternatives`) as list columns, keeping one row
+  per keyword with the current OpenAlex response format.
 * Recorded OpenAlex's new `apc_usd_by_year` field for the `sources` entity in
   `oa2df_coverage`. It is listed as a known field that `oa2df()` does not
   surface, so `get_coverage("sources")` no longer under-reports the API.

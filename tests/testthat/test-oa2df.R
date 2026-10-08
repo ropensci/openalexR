@@ -54,6 +54,48 @@ test_that("oa2df returns NULL for empty input", {
   expect_null(suppressWarnings(oa2df(list(), entity = "works", verbose = FALSE)))
 })
 
+test_that("oa2df preserves nested keyword fields in one row per record", {
+  topic <- list(
+    id = "https://openalex.org/T14475",
+    display_name = "History of Science and Medicine",
+    score = 0.1061,
+    subfield = list(id = "https://openalex.org/subfields/1207")
+  )
+  keyword <- list(
+    id = "https://openalex.org/keywords/medicine",
+    display_name = "medicine",
+    description = "Medical research",
+    display_name_alternatives = list(),
+    ids = list(openalex = "https://openalex.org/keywords/medicine",
+               wikidata = "https://www.wikidata.org/wiki/Q11190"),
+    primary_topic = NULL,
+    topics = list(topic, topic),
+    works_count = 22021L
+  )
+  other <- keyword
+  other$id <- "https://openalex.org/keywords/biology"
+  other$display_name <- "biology"
+  other$display_name_alternatives <- list("Biology", "Biological science")
+  other$primary_topic <- topic
+  other$topics <- list()
+  other$description <- NULL
+
+  df <- oa2df(list(keyword, other), entity = "keywords", verbose = FALSE)
+  expect_equal(nrow(df), 2L)
+  expect_equal(df$display_name, c("medicine", "biology"))
+  expect_equal(df$works_count, c(22021L, 22021L))
+  expect_equal(df$description, c("Medical research", NA_character_))
+  expect_identical(df$topics, list(keyword$topics, other$topics))
+  expect_identical(df$ids[[1]], keyword$ids)
+  expect_identical(df$primary_topic, list(NA, topic))
+  expect_identical(df$display_name_alternatives,
+                   list(list(), other$display_name_alternatives))
+
+  single <- oa2df(keyword, entity = "keywords", verbose = FALSE)
+  expect_equal(nrow(single), 1L)
+  expect_identical(single$topics[[1]], keyword$topics)
+})
+
 test_that("oa2df works", {
   skip_on_cran()
 
@@ -69,7 +111,7 @@ test_that("oa2df works", {
   expect_s3_class(nejm, "tbl")
 
   medicine <- oa_fetch(identifier = "medicine", entity = "keywords")
-  expect_equal(medicine$display_name, "Medicine")
+  expect_equal(tolower(medicine$display_name), "medicine")
   expect_s3_class(medicine, "data.frame")
   expect_s3_class(medicine, "tbl")
 })
