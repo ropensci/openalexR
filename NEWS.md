@@ -1,8 +1,10 @@
-# openalexR (development version)
+# openalexR 3.1.1
+* `show_works()` now combines multiple first or last author names into one
+  string instead of failing during simplification.
 * Updated field coverage for works (`study_designs` and
   `sustainable_development_goals_aurora`), authors (`observed_orcids`), and
-  topics (`legacy_keywords`), and sources (`listed_in`). These fields are recorded as known API fields
-  that `oa2df()` does not surface.
+  topics (`legacy_keywords`), and sources (`listed_in`). These fields are
+  recorded as known API fields that `oa2df()` does not surface.
 * Keyword conversion now preserves nested fields (`ids`, `primary_topic`,
   `topics`, and `display_name_alternatives`) as list columns, keeping one row
   per keyword with the current OpenAlex response format.
