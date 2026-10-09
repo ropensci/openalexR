@@ -79,7 +79,8 @@ Without a key, you are limited to 100 credits per day (for testing
 only). With a free API key, you get 100,000 credits per day.
 
 See the [OpenAlex API access
-documentation](https://developers.openalex.org/guides/authentication) for details.
+documentation](https://developers.openalex.org/guides/authentication)
+for details.
 
 **To get your API key:**
 
@@ -109,8 +110,8 @@ library(ggplot2)
 There are different
 [filters](https://ropensci.github.io/openalexR/articles/Filters)/arguments
 you can use in `oa_fetch`, depending on which
-[entity](https://developers.openalex.org/guides/key-concepts) you’re interested in: . We
-show a few examples below.
+[entity](https://developers.openalex.org/guides/key-concepts) you’re
+interested in: . We show a few examples below.
 
 ### 📚 Works
 
@@ -154,7 +155,7 @@ works_from_dois |>
 | id | display_name | first_author | last_author | is_oa | top_concepts |
 |:---|:---|:---|:---|:---|:---|
 | W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis | Massimo Aria | Corrado Cuccurullo | FALSE | Workflow, Bibliometrics, Software |
-| W2038196424 | Coverage and adoption of altmetrics sources in the bibliometric community | Stefanie Haustein | Jens Terliesner | FALSE | Altmetrics, Bookmarking, Social media |
+| W2038196424 | Coverage and adoption of altmetrics sources in the bibliometric community | Stefanie Haustein | NA | FALSE | Altmetrics, Bookmarking, Social media |
 
 **Goal**: Download all works given their PMIDs.
 
@@ -176,8 +177,8 @@ works_from_pmids |>
 
 | id | display_name | first_author | last_author | is_oa | top_concepts |
 |:---|:---|:---|:---|:---|:---|
-| W1775749144 | PROTEIN MEASUREMENT WITH THE FOLIN PHENOL REAGENT | OliverH. Lowry | RoseJ. Randall | TRUE | Reagent, Phenol |
-| W3036882247 | Integrating spatial gene expression and breast tumour morphology via deep learning | Bryan He | James Zou | FALSE | Histopathology, Gene, Cancer |
+| W1775749144 | PROTEIN MEASUREMENT WITH THE FOLIN PHENOL REAGENT | NA | NA | TRUE | Reagent, Phenol |
+| W3036882247 | Integrating spatial gene expression and breast tumour morphology via deep learning | Bryan D. He | James Zou | FALSE | Histopathology, Gene, Cancer |
 
 **Goal**: Download all works published by a set of authors (known
 ORCIDs).
@@ -193,7 +194,7 @@ works_from_orcids <- oa_fetch(
 )
 #> Requesting url:
 #> <https://api.openalex.org/works?filter=author.orcid%3A0000-0001-6187-6610%7C0000-0002-8517-9411>
-#> ℹ Getting 2 pages of results with a total of 304 records...
+#> ℹ Getting 2 pages of results with a total of 297 records...
 works_from_orcids |>
   show_works() |>
   knitr::kable()
@@ -203,8 +204,8 @@ works_from_orcids |>
 |:---|:---|:---|:---|:---|:---|
 | W2755950973 | bibliometrix : An R-tool for comprehensive science mapping analysis | Massimo Aria | Corrado Cuccurullo | FALSE | Workflow, Bibliometrics, Software |
 | W2741809807 | The state of OA: a large-scale analysis of the prevalence and impact of Open Access articles | Heather Piwowar | Stefanie Haustein | TRUE | Citation, License, Bibliometrics |
-| W3005144120 | Mapping the Evolution of Social Research and Data Science on 30 Years of Social Indicators Research | Massimo Aria | Maria Spano | FALSE | Human geography, Data collection, Position (finance) |
-| W2122130843 | Scientometrics 2.0: New metrics of scholarly impact on the social Web | Jason R Priem | Bradely H. Hemminger | TRUE | Bookmarking, Altmetrics, Social media |
+| W3005144120 | Mapping the Evolution of Social Research and Data Science on 30 Years of Social Indicators Research | Massimo Aria | Maria Spano | FALSE | Human geography, Data collection, Position (finance) |
+| W2122130843 | Scientometrics 2.0: New metrics of scholarly impact on the social Web | Jason R Priem | NA | TRUE | Bookmarking, Altmetrics, Social media |
 | W2408216567 | Foundations and trends in performance management. A twenty-five years bibliometric analysis in business and public administration domains | Corrado Cuccurullo | Fabrizia Sarto | FALSE | Domain (mathematical analysis), Content analysis, Public domain |
 | W2396414759 | The Altmetrics Collection | Jason R Priem | Dario Taraborelli | TRUE | Social media, Citation, Altmetrics |
 
@@ -225,7 +226,7 @@ works_search <- oa_fetch(
 )
 #> Requesting url:
 #> <https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc>
-#> ℹ Getting 4 pages of results with a total of 601 records...
+#> ℹ Getting 4 pages of results with a total of 624 records...
 #> ⠙ OpenAlex downloading [2/4] ■■■■■■■■■■■■■■■■                  50% ETA:  2s
 #> 
 #> ⠹ OpenAlex downloading [3/4] ■■■■■■■■■■■■■■■■■■■■■■■           75% ETA:  2s
@@ -240,7 +241,7 @@ works_search |>
 |:---|:---|:---|:---|:---|:---|
 | W3160856016 | How to conduct a bibliometric analysis: An overview and guidelines | Naveen Donthu | Weng Marc Lim | FALSE | Bibliometrics, Field (mathematics), Resource (disambiguation) |
 | W3001491100 | Software tools for conducting bibliometric analysis in science: An up-to-date review | José A. Moral-Muñoz | Manuel J. Cobo | TRUE | Bibliometrics, Visualization, Set (abstract data type) |
-| W3044902155 | Financial literacy: A systematic review and bibliometric analysis | Kirti Goyal | Satish Kumar | FALSE | Financial literacy, Citation, Content analysis |
+| W3044902155 | Financial literacy: A systematic review and bibliometric analysis | Kirti Goyal | Satish Kumar, Satish Kumar | FALSE | Financial literacy, Citation, Content analysis |
 | W3038273726 | Investigating the emerging COVID-19 research trends in the field of business and management: A bibliometric analysis approach | Surabhi Verma | Anders Gustafsson | FALSE | Bibliometrics, Field (mathematics), Disease |
 | W3198357836 | Artificial intelligence and machine learning in finance: Identifying foundations, themes, and research clusters from bibliometric analysis | John W. Goodell | Debidutta Pattnaik | FALSE | Scholarship, Valuation (finance), Corporate finance |
 | W2998021954 | Bibliometric Analysis using Bibliometrix an R Package | Hamid Derviş | NA | TRUE | Bibliometrics, Citation, Field (mathematics) |
@@ -266,8 +267,8 @@ authors_from_orcids |>
 
 | id | display_name | orcid | works_count | cited_by_count | top_concepts |
 |:---|:---|:---|---:|---:|:---|
-| A5069892096 | Massimo Aria | 0000-0002-8517-9411 | 238 | 19449 | Physiology, Psychiatry and Mental health, Sociology and Political Science |
-| A5023888391 | Jason R Priem | 0000-0001-6187-6610 | 65 | 4437 | Statistics, Probability and Uncertainty, Information Systems, Communication |
+| A5069892096 | Massimo Aria | 0000-0002-8517-9411 | 242 | 21398 | Periodontics, Statistics, Probability and Uncertainty, Information Systems |
+| A5023888391 | Jason R Priem | 0000-0001-6187-6610 | 70 | 4512 | Statistics, Probability and Uncertainty, Information Systems and Management, Information Systems |
 
 **Goal**: Acquire information on the authors of this package.
 
@@ -286,7 +287,7 @@ authors_from_names |>
 
 | id | display_name | orcid | works_count | cited_by_count | top_concepts |
 |:---|:---|:---|---:|---:|:---|
-| A5069892096 | Massimo Aria | 0000-0002-8517-9411 | 238 | 19449 | Physiology, Psychiatry and Mental health, Sociology and Political Science |
+| A5069892096 | Massimo Aria | 0000-0002-8517-9411 | 242 | 21398 | Periodontics, Statistics, Probability and Uncertainty, Information Systems |
 
 **Goal**: Download all authors’ records of scholars who work at the
 [University of Naples Federico
@@ -305,10 +306,10 @@ my_arguments <- list(
 )
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #> $count
-#> [1] 62
+#> [1] 105
 #> 
 #> $db_response_time_ms
-#> [1] 30
+#> [1] 18
 #> 
 #> $page
 #> [1] 1
@@ -321,7 +322,7 @@ do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #> 
 #> $x_query
 #> $x_query$oql
-#> [1] "authors where last known institution is I71267560 and works_count > 499"
+#> [1] "get authors where last known institution is (I71267560) and works count > (499)"
 #> 
 #> $x_query$oqo
 #> $x_query$oqo$get_rows
@@ -348,9 +349,6 @@ do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #> 
 #> 
 #> 
-#> $x_query$oqo$per_page
-#> [1] 1
-#> 
 #> 
 #> $x_query$url
 #> [1] "/authors?filter=last_known_institutions.id:I71267560,works_count:%3E499&per_page=1"
@@ -368,12 +366,12 @@ do.call(oa_fetch, my_arguments) |>
 
 | id | display_name | orcid | works_count | cited_by_count | top_concepts |
 |:---|:---|:---|---:|---:|:---|
-| A5114377868 | L. Lista | 0000-0001-6471-5492 | 2534 | 136228 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
-| A5106552509 | C. Sciacca | 0000-0002-8412-4072 | 2275 | 100574 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
-| A5090569245 | R. Calabrese | 0000-0002-1354-5400 | 1990 | 63652 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
-| A5071532577 | V. Canale | 0000-0003-2303-9306 | 1908 | 116126 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
-| A5100627924 | N. Pastrone | 0000-0001-7291-1979 | 1889 | 108789 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
-| A5029398339 | Paolo A. Ascierto | 0000-0002-8322-475X | 1658 | 110824 | Oncology, Molecular Biology, Oncology |
+| A5107859359 | P. Paolucci | 0000-0002-8773-4781 | 3164 | 126499 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5034359289 | E. Rossi | 0000-0002-2146-677X | 2963 | 204634 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5114377868 | L. Lista | 0000-0001-6471-5492 | 2686 | 137187 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5106552509 | C. Sciacca | 0000-0002-8412-4072 | 2392 | 101601 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5015333172 | M. G. Alviggi | 0000-0003-0026-982X | 2022 | 118148 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5071532577 | V. Canale | 0000-0003-2303-9306 | 1926 | 117908 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
 
 ## 🍒 Example analyses
 
@@ -393,7 +391,7 @@ italy_insts <- oa_fetch(
 )
 #> Requesting url:
 #> <https://api.openalex.org/institutions?filter=country_code%3Ait%2Ctype%3Aeducation>
-#> ℹ Getting 2 pages of results with a total of 244 records...
+#> ℹ Getting 2 pages of results with a total of 248 records...
 italy_insts |>
   slice_max(cited_by_count, n = 8) |>
   mutate(display_name = forcats::fct_reorder(display_name, cited_by_count)) |>
@@ -524,8 +522,8 @@ cited by this core set.
 library(ggraph)
 library(tidygraph)
 #> 
-#> Caricamento pacchetto: 'tidygraph'
-#> Il seguente oggetto è mascherato da 'package:stats':
+#> Attaching package: 'tidygraph'
+#> The following object is masked from 'package:stats':
 #> 
 #>     filter
 
@@ -539,7 +537,7 @@ snowball_docs <- oa_snowball(
 #> Collecting all documents citing the target papers...
 #> Requesting url:
 #> <https://api.openalex.org/works?filter=cites%3AW1963991285%7CW1964141474>
-#> ℹ Getting 4 pages of results with a total of 671 records...
+#> ℹ Getting 4 pages of results with a total of 675 records...
 #> ⠙ OpenAlex downloading [2/4] ■■■■■■■■■■■■■■■■                  50% ETA:  3s
 #> 
 #> ⠹ OpenAlex downloading [3/4] ■■■■■■■■■■■■■■■■■■■■■■■           75% ETA:  2s
@@ -548,9 +546,9 @@ snowball_docs <- oa_snowball(
 #> 
 #> 
 #> 
-#> ⠙ Converting [331/671] ■■■■■■■■■■■■■■■■                  49% ETA:  1s
+#> ⠙ Converting [330/675] ■■■■■■■■■■■■■■■■                  49% ETA:  1s
 #> 
-#> ⠙ Converting [671/671] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
+#> ⠙ Converting [675/675] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
 #> 
 #> 
 #> 
@@ -579,14 +577,14 @@ ggraph(graph = as_tbl_graph(snowball_docs), layout = "stress") +
 ## 🌾 N-grams
 
 **Update 2024-09-15**: The n-gram API endpoint is [not currently in
-service](https://developers.openalex.org/guides/deprecations).
-The following code chunk is not evaluated.
+service](https://developers.openalex.org/guides/deprecations). The
+following code chunk is not evaluated.
 
 OpenAlex offers (limited) support for [fulltext
-N-grams](https://developers.openalex.org/guides/deprecations)
-of Work entities (these have IDs starting with `"W"`). Given a vector of
-work IDs, `oa_ngrams` returns a dataframe of N-gram data (in the
-`ngrams` list-column) for each work.
+N-grams](https://developers.openalex.org/guides/deprecations) of Work
+entities (these have IDs starting with `"W"`). Given a vector of work
+IDs, `oa_ngrams` returns a dataframe of N-gram data (in the `ngrams`
+list-column) for each work.
 
 ``` r
 ngrams_data <- oa_ngrams(
