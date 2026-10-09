@@ -229,9 +229,7 @@ works_search <- oa_fetch(
 #> ℹ Getting 4 pages of results with a total of 624 records...
 #> ⠙ OpenAlex downloading [2/4] ■■■■■■■■■■■■■■■■                  50% ETA:  2s
 #> 
-#> ⠹ OpenAlex downloading [3/4] ■■■■■■■■■■■■■■■■■■■■■■■           75% ETA:  2s
-#> 
-#> ⠹ OpenAlex downloading [4/4] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
+#> ⠙ OpenAlex downloading [4/4] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
 works_search |>
   show_works() |>
   knitr::kable()
@@ -291,7 +289,7 @@ authors_from_names |>
 
 **Goal**: Download all authors’ records of scholars who work at the
 [University of Naples Federico
-II](https://explore.openalex.org/institutions/I71267560) (OpenAlex ID:
+II](https://openalex.org/institutions/I71267560) (OpenAlex ID:
 I71267560) and have published at least 500 publications.
 
 Let’s first check how many records match the query, then download the
@@ -309,7 +307,7 @@ do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #> [1] 105
 #> 
 #> $db_response_time_ms
-#> [1] 18
+#> [1] 30
 #> 
 #> $page
 #> [1] 1
@@ -538,17 +536,11 @@ snowball_docs <- oa_snowball(
 #> Requesting url:
 #> <https://api.openalex.org/works?filter=cites%3AW1963991285%7CW1964141474>
 #> ℹ Getting 4 pages of results with a total of 675 records...
-#> ⠙ OpenAlex downloading [2/4] ■■■■■■■■■■■■■■■■                  50% ETA:  3s
+#> ⠙ OpenAlex downloading [2/4] ■■■■■■■■■■■■■■■■                  50% ETA:  2s
 #> 
 #> ⠹ OpenAlex downloading [3/4] ■■■■■■■■■■■■■■■■■■■■■■■           75% ETA:  2s
 #> 
 #> ⠹ OpenAlex downloading [4/4] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
-#> 
-#> 
-#> 
-#> ⠙ Converting [330/675] ■■■■■■■■■■■■■■■■                  49% ETA:  1s
-#> 
-#> ⠙ Converting [675/675] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
 #> 
 #> 
 #> 
