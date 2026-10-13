@@ -1,3 +1,13 @@
+# openalexR 3.1.2
+* Fixed `oa2df()` failing with "Column name `doi` must not be duplicated"
+  after OpenAlex added `doi` (and other fields) to location objects. Only the
+  known location fields are now kept from `primary_location` (#372).
+* Updated field coverage for works (`primary_location.doi`,
+  `primary_location.raw_source_name`, `primary_location.raw_type`,
+  `primary_location.source.listed_in`, and top-level `volume`) and authors
+  (`ids.observed_orcids`). These are recorded as known API fields that
+  `oa2df()` does not surface.
+
 # openalexR 3.1.1
 * `show_works()` now combines multiple first or last author names into one
   string instead of failing during simplification.

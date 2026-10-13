@@ -12,7 +12,11 @@ test_that("oa2df converts every entity type offline", {
 
 test_that("oa2df builds derived columns for works", {
   samples <- readRDS(test_path("fixtures", "entity_list_samples.rds"))
-  works <- suppressWarnings(oa2df(samples$works, entity = "works", verbose = FALSE))
+  works <- suppressWarnings(oa2df(
+    samples$works,
+    entity = "works",
+    verbose = FALSE
+  ))
 
   # abstract reconstructed from the inverted index
   expect_type(works$abstract, "character")
@@ -32,7 +36,11 @@ test_that("oa2df builds derived columns for works", {
 test_that("oa2df hoists nested fields for authors, institutions and topics", {
   samples <- readRDS(test_path("fixtures", "entity_list_samples.rds"))
 
-  authors <- suppressWarnings(oa2df(samples$authors, entity = "authors", verbose = FALSE))
+  authors <- suppressWarnings(oa2df(
+    samples$authors,
+    entity = "authors",
+    verbose = FALSE
+  ))
   # summary_stats are spread into their own columns
   expect_true(all(c("h_index", "i10_index") %in% names(authors)))
   expect_type(authors$last_known_institutions, "list")
@@ -43,15 +51,37 @@ test_that("oa2df hoists nested fields for authors, institutions and topics", {
   expect_true("geo" %in% names(institutions))
   expect_type(institutions$topics, "list")
 
-  topics <- suppressWarnings(oa2df(samples$topics, entity = "topics", verbose = FALSE))
+  topics <- suppressWarnings(oa2df(
+    samples$topics,
+    entity = "topics",
+    verbose = FALSE
+  ))
   # subfield/field/domain are flattened to *_id / *_display_name columns
   expect_true(all(
     c("subfield_id", "field_display_name", "domain_id") %in% names(topics)
   ))
 })
 
+test_that("oa2df ignores new location fields that clash with work columns (#372)", {
+  samples <- readRDS(test_path("fixtures", "entity_list_samples.rds"))
+  work <- samples$works[[1]]
+  work$doi <- "https://doi.org/10.1111/2041-210x.14099"
+  work$primary_location$doi <- "https://doi.org/10.9999/location-doi"
+  work$primary_location$license_id <- "https://openalex.org/licenses/cc-by"
+  work$primary_location$raw_type <- "journal-article"
+
+  df <- suppressWarnings(oa2df(list(work), entity = "works", verbose = FALSE))
+  expect_equal(sum(names(df) == "doi"), 1L)
+  expect_equal(df$doi, work$doi)
+  expect_false(any(c("license_id", "raw_type") %in% names(df)))
+})
+
 test_that("oa2df returns NULL for empty input", {
-  expect_null(suppressWarnings(oa2df(list(), entity = "works", verbose = FALSE)))
+  expect_null(suppressWarnings(oa2df(
+    list(),
+    entity = "works",
+    verbose = FALSE
+  )))
 })
 
 test_that("oa2df preserves nested keyword fields in one row per record", {
@@ -66,8 +96,10 @@ test_that("oa2df preserves nested keyword fields in one row per record", {
     display_name = "medicine",
     description = "Medical research",
     display_name_alternatives = list(),
-    ids = list(openalex = "https://openalex.org/keywords/medicine",
-               wikidata = "https://www.wikidata.org/wiki/Q11190"),
+    ids = list(
+      openalex = "https://openalex.org/keywords/medicine",
+      wikidata = "https://www.wikidata.org/wiki/Q11190"
+    ),
     primary_topic = NULL,
     topics = list(topic, topic),
     works_count = 22021L
@@ -88,8 +120,10 @@ test_that("oa2df preserves nested keyword fields in one row per record", {
   expect_identical(df$topics, list(keyword$topics, other$topics))
   expect_identical(df$ids[[1]], keyword$ids)
   expect_identical(df$primary_topic, list(NA, topic))
-  expect_identical(df$display_name_alternatives,
-                   list(list(), other$display_name_alternatives))
+  expect_identical(
+    df$display_name_alternatives,
+    list(list(), other$display_name_alternatives)
+  )
 
   single <- oa2df(keyword, entity = "keywords", verbose = FALSE)
   expect_equal(nrow(single), 1L)
