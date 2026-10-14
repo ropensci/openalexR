@@ -305,6 +305,9 @@ works2df <- function(
     host_organization = "host_organization",
     host_organization_name = "host_organization_name"
   )
+  # Allow-list of location fields to keep, so new API fields (e.g. `doi`)
+  # cannot collide with top-level work columns (#372)
+  venue_cols <- c("is_oa", "landing_page_url", "pdf_url", "license", "version")
 
   n <- length(data)
   list_df <- vector(mode = "list", length = n)
@@ -354,7 +357,7 @@ works2df <- function(
 
     so_info <- replace_w_na(paper$primary_location)
 
-    venue <- so_info[!names(so_info) %in% c("source", "id")]
+    venue <- so_info[intersect(venue_cols, names(so_info))]
     source <- so_info$source
     if (!is.null(source)) {
       source <- setNames(source[so_cols], names(so_cols))
@@ -478,7 +481,9 @@ authors2df <- function(
     per_item = function(item) {
       # current affiliations
       affs <- if (!is.null(item$last_known_institutions)) {
-        list(last_known_institutions = process_affil(item$last_known_institutions))
+        list(
+          last_known_institutions = process_affil(item$last_known_institutions)
+        )
       }
       c(affs, item$summary_stats, process_topics(item, "count"))
     },
@@ -720,7 +725,12 @@ concepts2df <- function(
 keywords2df <- function(data, verbose = TRUE) {
   # Keep nested objects and arrays in list columns so each keyword stays on
   # one row, even when its topics or alternative names have different lengths.
-  nested_fields <- c("display_name_alternatives", "ids", "primary_topic", "topics")
+  nested_fields <- c(
+    "display_name_alternatives",
+    "ids",
+    "primary_topic",
+    "topics"
+  )
   rbind_oa_ls(lapply(data, function(item) {
     lapply(setNames(names(item), names(item)), function(field) {
       value <- item[[field]] %||% NA
