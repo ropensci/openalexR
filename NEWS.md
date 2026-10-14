@@ -1,4 +1,6 @@
-# openalexR 3.1.3
+# openalexR (development version)
+
+
 
 # openalexR 3.1.2
 * Fixed `oa2df()` failing with "Column name `doi` must not be duplicated"
