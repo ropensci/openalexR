@@ -1,15 +1,10 @@
-## Resubmission
+## Submission
 
-This is a resubmission of version 3.1.0. It fixes the (possibly) invalid
-URLs reported by the CRAN incoming pretest:
-
-* All links to the OpenAlex documentation (`https://docs.openalex.org/...`)
-  were updated to the new documentation site
-  (`https://developers.openalex.org/...`), as the old site now permanently
-  redirects there.
-* `https://bibliometrix.org/` was updated to `https://www.bibliometrix.org/`.
-
-* Small patch to use string for package version comparison
+This is an urgent patch release submitted shortly after the previous version (3.1.1). 
+A recent change in the OpenAlex API added `doi` (and other fields) to location objects, 
+which causes `oa2df()` in 3.1.1 to fail with "Column name `doi` must not be duplicated". 
+This release fixes the issue by keeping only the known location fields from `primary_location`, 
+restoring correct functionality for users.
 
 ## R CMD check results
 

@@ -194,7 +194,7 @@ works_from_orcids <- oa_fetch(
 )
 #> Requesting url:
 #> <https://api.openalex.org/works?filter=author.orcid%3A0000-0001-6187-6610%7C0000-0002-8517-9411>
-#> ℹ Getting 2 pages of results with a total of 297 records...
+#> ℹ Getting 2 pages of results with a total of 293 records...
 works_from_orcids |>
   show_works() |>
   knitr::kable()
@@ -226,10 +226,12 @@ works_search <- oa_fetch(
 )
 #> Requesting url:
 #> <https://api.openalex.org/works?filter=title.search%3Abibliometric%20analysis%7Cscience%20mapping%2Ccited_by_count%3A%3E50%2Cfrom_publication_date%3A2020-01-01%2Cto_publication_date%3A2021-12-31&sort=cited_by_count%3Adesc>
-#> ℹ Getting 4 pages of results with a total of 624 records...
+#> ℹ Getting 4 pages of results with a total of 622 records...
 #> ⠙ OpenAlex downloading [2/4] ■■■■■■■■■■■■■■■■                  50% ETA:  2s
 #> 
-#> ⠙ OpenAlex downloading [4/4] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
+#> ⠹ OpenAlex downloading [3/4] ■■■■■■■■■■■■■■■■■■■■■■■           75% ETA:  2s
+#> 
+#> ⠹ OpenAlex downloading [4/4] ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■  100% ETA:  0s
 works_search |>
   show_works() |>
   knitr::kable()
@@ -265,8 +267,8 @@ authors_from_orcids |>
 
 | id | display_name | orcid | works_count | cited_by_count | top_concepts |
 |:---|:---|:---|---:|---:|:---|
-| A5069892096 | Massimo Aria | 0000-0002-8517-9411 | 242 | 21398 | Periodontics, Statistics, Probability and Uncertainty, Information Systems |
-| A5023888391 | Jason R Priem | 0000-0001-6187-6610 | 70 | 4512 | Statistics, Probability and Uncertainty, Information Systems and Management, Information Systems |
+| A5069892096 | Massimo Aria | 0000-0002-8517-9411 | 241 | 21204 | Periodontics, Statistics, Probability and Uncertainty, Information Systems |
+| A5023888391 | Jason R Priem | 0000-0001-6187-6610 | 54 | 4337 | Statistics, Probability and Uncertainty, Information Systems and Management, Information Systems |
 
 **Goal**: Acquire information on the authors of this package.
 
@@ -285,7 +287,7 @@ authors_from_names |>
 
 | id | display_name | orcid | works_count | cited_by_count | top_concepts |
 |:---|:---|:---|---:|---:|:---|
-| A5069892096 | Massimo Aria | 0000-0002-8517-9411 | 242 | 21398 | Periodontics, Statistics, Probability and Uncertainty, Information Systems |
+| A5069892096 | Massimo Aria | 0000-0002-8517-9411 | 241 | 21204 | Periodontics, Statistics, Probability and Uncertainty, Information Systems |
 
 **Goal**: Download all authors’ records of scholars who work at the
 [University of Naples Federico
@@ -304,10 +306,10 @@ my_arguments <- list(
 )
 do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #> $count
-#> [1] 105
+#> [1] 109
 #> 
 #> $db_response_time_ms
-#> [1] 30
+#> [1] 10
 #> 
 #> $page
 #> [1] 1
@@ -320,7 +322,10 @@ do.call(oa_fetch, c(my_arguments, list(count_only = TRUE)))
 #> 
 #> $x_query
 #> $x_query$oql
-#> [1] "get authors where last known institution is (I71267560) and works count > (499)"
+#> [1] "get authors where last known institution is (I71267560)\n  and works count is above 499"
+#> 
+#> $x_query$x_new_oql
+#> [1] "get authors with a works count above 499 where last known institution is (I71267560)"
 #> 
 #> $x_query$oqo
 #> $x_query$oqo$get_rows
@@ -364,12 +369,12 @@ do.call(oa_fetch, my_arguments) |>
 
 | id | display_name | orcid | works_count | cited_by_count | top_concepts |
 |:---|:---|:---|---:|---:|:---|
-| A5107859359 | P. Paolucci | 0000-0002-8773-4781 | 3164 | 126499 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
-| A5034359289 | E. Rossi | 0000-0002-2146-677X | 2963 | 204634 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
-| A5114377868 | L. Lista | 0000-0001-6471-5492 | 2686 | 137187 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
-| A5106552509 | C. Sciacca | 0000-0002-8412-4072 | 2392 | 101601 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
-| A5015333172 | M. G. Alviggi | 0000-0003-0026-982X | 2022 | 118148 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
-| A5071532577 | V. Canale | 0000-0003-2303-9306 | 1926 | 117908 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5007830528 | Bogdan Guster | 0000-0003-1305-1862 | 22020 | 298 | Condensed Matter Physics, Materials Chemistry, Atomic and Molecular Physics, and Optics |
+| A5114377868 | L. Lista | 0000-0001-6471-5492 | 6305 | 140123 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5107859359 | P. Paolucci | 0000-0002-8773-4781 | 6115 | 132138 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5106552509 | C. Sciacca | 0000-0002-8412-4072 | 5259 | 99421 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5107872327 | F. Anulli | 0000-0003-2734-130X | 4024 | 138842 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
+| A5034359289 | E. Rossi | 0000-0003-3104-7971 | 3383 | 113391 | Nuclear and High Energy Physics, Nuclear and High Energy Physics, Nuclear and High Energy Physics |
 
 ## 🍒 Example analyses
 
@@ -535,8 +540,8 @@ snowball_docs <- oa_snowball(
 #> Collecting all documents citing the target papers...
 #> Requesting url:
 #> <https://api.openalex.org/works?filter=cites%3AW1963991285%7CW1964141474>
-#> ℹ Getting 4 pages of results with a total of 675 records...
-#> ⠙ OpenAlex downloading [2/4] ■■■■■■■■■■■■■■■■                  50% ETA:  2s
+#> ℹ Getting 4 pages of results with a total of 671 records...
+#> ⠙ OpenAlex downloading [2/4] ■■■■■■■■■■■■■■■■                  50% ETA:  4s
 #> 
 #> ⠹ OpenAlex downloading [3/4] ■■■■■■■■■■■■■■■■■■■■■■■           75% ETA:  2s
 #> 
