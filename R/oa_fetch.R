@@ -457,7 +457,9 @@ oa_request <- function(
       }
       Sys.sleep(1 / 10)
       query_ls[[paging]] <- next_page
-      res <- api_request(query_url, ua, query = query_ls, timeout = timeout)
+      res <- api_request(
+        query_url, ua, query = query_ls, api_key = api_key, timeout = timeout
+      )
       data <- c(data, res[[result_name]])
       i <- i + 1
       next_page <- get_next_page("cursor", i, res)
@@ -527,6 +529,7 @@ oa_request <- function(
         query_url,
         ua,
         query = query_ls,
+        api_key = api_key,
         parse = TRUE,
         timeout = timeout
       )
@@ -536,6 +539,7 @@ oa_request <- function(
         query_url,
         ua,
         query = query_ls,
+        api_key = api_key,
         parse = FALSE,
         timeout = timeout
       )
@@ -847,7 +851,13 @@ api_request <- function(
       query_url,
       ua,
       query = query,
-      httr::add_headers(api_key = api_key),
+      httr::add_headers(
+        Authorization = if (!is.null(api_key) && nzchar(api_key)) {
+          paste("Bearer", api_key)
+        } else {
+          NULL
+        }
+      ),
       httr::timeout(timeout)
     )
     code <- httr::status_code(res)
