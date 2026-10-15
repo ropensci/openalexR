@@ -213,7 +213,7 @@ authors_from_names |>
   knitr::kable()
 ```
 
-**Goal**: Download all authors' records of scholars who work at the [University of Naples Federico II](https://explore.openalex.org/institutions/I71267560) (OpenAlex ID: I71267560) and have published at least 500 publications.
+**Goal**: Download all authors' records of scholars who work at the [University of Naples Federico II](https://openalex.org/institutions/I71267560) (OpenAlex ID: I71267560) and have published at least 500 publications.
 
 Let's first check how many records match the query, then download the entire collection. We can do this by first defining a list of arguments, then adding `count_only` (default `FALSE`) to this list:
 
