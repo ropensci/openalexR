@@ -59,11 +59,11 @@ oa_fetch(
 #> # A tibble: 5 × 6
 #>   id          display_name           first_author last_author is_oa top_concepts
 #>   <chr>       <chr>                  <chr>        <chr>       <lgl> <chr>       
-#> 1 W2270738576 Issues for acquisition Eve V. Clark <NA>        FALSE Computer sc…
-#> 2 W2539738643 Shame and guilt. The … Luce Bolomey Judith Hoh… FALSE Shame, Feel…
-#> 3 W7204471660 Working memory, updat… Fatbardha Q… Elma Beris… FALSE Association…
-#> 4 W4390202566 Narrative Microstruct… Mohyeddin T… Katayoon R… TRUE  Narrative, …
-#> 5 W3192646676 Parent Language Input… Ö. Ece Demi… Susan Gold… TRUE  Cognition, …
+#> 1 W2481464134 The Speaker, the List… <NA>         <NA>        FALSE Linguistics…
+#> 2 W4246735816 Let There Be Words: T… <NA>         <NA>        FALSE Linguistics…
+#> 3 W2591497523 Синтаксические остров… <NA>         <NA>        FALSE Computer sc…
+#> 4 W2971685249 The Optimal Age of th… Budi Setiaw… <NA>        TRUE  Indonesian,…
+#> 5 W2891738477 Indonesian Word Aware… <NA>         <NA>        TRUE  Pronunciati…
 ```
 
 In OpenAlex, entities have a set of **fields** which represent various information about them.
@@ -83,11 +83,11 @@ oa_fetch(
 #> # A tibble: 5 × 3
 #>   id                               display_name                      authorships
 #>   <chr>                            <chr>                             <list>     
-#> 1 https://openalex.org/W2270738576 Issues for acquisition            <tibble>   
-#> 2 https://openalex.org/W2539738643 Shame and guilt. The birth of a … <tibble>   
-#> 3 https://openalex.org/W7204471660 Working memory, updating and voc… <tibble>   
-#> 4 https://openalex.org/W4390202566 Narrative Microstructure and Mac… <tibble>   
-#> 5 https://openalex.org/W3192646676 Parent Language Input Prior to S… <tibble>
+#> 1 https://openalex.org/W2481464134 The Speaker, the Listener, and t… <df>       
+#> 2 https://openalex.org/W4246735816 Let There Be Words: The Origin o… <df>       
+#> 3 https://openalex.org/W2591497523 Синтаксические острова и относит… <tibble>   
+#> 4 https://openalex.org/W2971685249 The Optimal Age of the Second-Fi… <tibble>   
+#> 5 https://openalex.org/W2891738477 Indonesian Word Awareness in Chi… <tibble>
 ```
 
 This returns the scalar fields `id` and `display_name` in their appropriate data types (character) in the dataframe.
@@ -115,11 +115,11 @@ output_list <- oa_fetch(
 )
 str(output_list, max.level = 1)
 #> List of 5
-#>  $ :List of 50
-#>  $ :List of 50
-#>  $ :List of 50
-#>  $ :List of 50
-#>  $ :List of 50
+#>  $ :List of 53
+#>  $ :List of 53
+#>  $ :List of 53
+#>  $ :List of 53
+#>  $ :List of 53
 ```
 
 The list output can get quite unruly — each record contains dozens of fields, some of which may be multiply nested.
@@ -137,11 +137,11 @@ works2df(output_list) %>%
 #> # A tibble: 5 × 6
 #>   id          display_name           first_author last_author is_oa top_concepts
 #>   <chr>       <chr>                  <chr>        <chr>       <lgl> <chr>       
-#> 1 W2270738576 Issues for acquisition Eve V. Clark <NA>        FALSE Computer sc…
-#> 2 W2539738643 Shame and guilt. The … Luce Bolomey Judith Hoh… FALSE Shame, Feel…
-#> 3 W7204471660 Working memory, updat… Fatbardha Q… Elma Beris… FALSE Association…
-#> 4 W4390202566 Narrative Microstruct… Mohyeddin T… Katayoon R… TRUE  Narrative, …
-#> 5 W3192646676 Parent Language Input… Ö. Ece Demi… Susan Gold… TRUE  Cognition, …
+#> 1 W2481464134 The Speaker, the List… <NA>         <NA>        FALSE Linguistics…
+#> 2 W4246735816 Let There Be Words: T… <NA>         <NA>        FALSE Linguistics…
+#> 3 W2591497523 Синтаксические остров… <NA>         <NA>        FALSE Computer sc…
+#> 4 W2971685249 The Optimal Age of th… Budi Setiaw… <NA>        TRUE  Indonesian,…
+#> 5 W2891738477 Indonesian Word Aware… <NA>         <NA>        TRUE  Pronunciati…
 ```
 
 Additionally, opting out of the data frame conversion also means that you can use your own preferred implementation for converting the list output.
@@ -163,11 +163,11 @@ oa_fetch(
 #> # A tibble: 5 × 3
 #>   id                               display_name                   cited_by_count
 #>   <chr>                            <chr>                                   <int>
-#> 1 https://openalex.org/W2270738576 Issues for acquisition                      1
-#> 2 https://openalex.org/W2539738643 Shame and guilt. The birth of…              0
-#> 3 https://openalex.org/W7204471660 Working memory, updating and …              0
-#> 4 https://openalex.org/W4390202566 Narrative Microstructure and …              2
-#> 5 https://openalex.org/W3192646676 Parent Language Input Prior t…              7
+#> 1 https://openalex.org/W2481464134 The Speaker, the Listener, an…              0
+#> 2 https://openalex.org/W4246735816 Let There Be Words: The Origi…              0
+#> 3 https://openalex.org/W2591497523 Синтаксические острова и отно…              0
+#> 4 https://openalex.org/W2971685249 The Optimal Age of the Second…              1
+#> 5 https://openalex.org/W2891738477 Indonesian Word Awareness in …              0
 ```
 
 ## The `oa_generate()` strategy
@@ -193,11 +193,11 @@ In the example below, we show how `oa_generate()` works when we want to find all
 query_url <- "https://api.openalex.org/works?filter=cites%3AW1160808132"
 oar <- oa_generate(query_url, verbose = TRUE)
 p1 <- oar() # record 1
-#> Getting record 1 of 574 records...
+#> Getting record 1 of 572 records...
 p2 <- oar() # record 2
-#> Getting record 2 of 574 records...
+#> Getting record 2 of 572 records...
 p3 <- oar() # record 3
-#> Getting record 3 of 574 records...
+#> Getting record 3 of 572 records...
 head(p1)
 #> $id
 #> [1] "https://openalex.org/W2766937672"
