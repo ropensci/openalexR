@@ -1,5 +1,8 @@
 # openalexR (development version)
 
+* Fixed work conversion dropping authors with empty `observed_orcids` or
+  duplicating authors with multiple values. The field is now preserved as a
+  list-column with one row per authorship (#379).
 
 
 # openalexR 3.1.2

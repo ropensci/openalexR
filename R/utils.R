@@ -229,6 +229,10 @@ process_paper_authors <- function(authorships) {
     return(NULL)
   }
   authors_ls <- lapply(authorships, function(l) {
+    # Keep one row per authorship regardless of the number of observed ORCIDs.
+    if ("observed_orcids" %in% names(l$author)) {
+      l$author$observed_orcids <- list(l$author$observed_orcids)
+    }
     l_author <- if (length(l$author)) {
       replace_w_na(l$author, NA_character_)
     } else {

@@ -33,6 +33,31 @@ test_that("oa2df builds derived columns for works", {
   expect_false("abstract" %in% names(no_ab))
 })
 
+test_that("oa2df preserves authorships with zero or multiple observed ORCIDs (#379)", {
+  samples <- readRDS(test_path("fixtures", "entity_list_samples.rds"))
+  work <- samples$works[[1]]
+  observed <- list(list("orcid-1"), list(), list("orcid-2", "orcid-3"))
+  work$authorships <- lapply(seq_len(4), function(i) {
+    authorship <- work$authorships[[1]]
+    authorship$author$id <- paste0("https://openalex.org/A", i)
+    authorship$author$display_name <- paste("Author", i)
+    authorship$author$observed_orcids <- if (i <= 3) observed[[i]] else NULL
+    authorship
+  })
+
+  df <- suppressWarnings(oa2df(list(work), entity = "works", verbose = FALSE))
+  authors <- df$authorships[[1]]
+  expect_equal(nrow(authors), 4L)
+  expect_equal(authors$id, paste0("https://openalex.org/A", seq_len(4)))
+  expect_equal(authors$display_name, paste("Author", seq_len(4)))
+  expect_identical(authors$observed_orcids[1:3], observed)
+  expect_identical(authors$observed_orcids[[4]], NA)
+  expect_equal(authors$author_position, vapply(
+    work$authorships, function(x) x$author_position, character(1)
+  ))
+  expect_equal(length(authors$affiliations), 4L)
+})
+
 test_that("oa2df hoists nested fields for authors, institutions and topics", {
   samples <- readRDS(test_path("fixtures", "entity_list_samples.rds"))
 
