@@ -48,7 +48,11 @@ test_that("oa_snowball works for DOIs", {
     "https://doi.org/10.1038/s41586-022-05258-z"
   )
   Sys.sleep(1 / 10)
-  snowball_doi <- oa_snowball(doi = work_dois)
+  snowball_doi <- oa_snowball(
+    doi = work_dois,
+    citing_params = list(options = oa_options(paging = "page")),
+    cited_by_params = list(options = oa_options(paging = "page"))
+  )
   doi_nodes <- snowball_doi$nodes
   dois_in <- doi_nodes$doi[doi_nodes$oa_input]
 

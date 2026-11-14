@@ -3,7 +3,7 @@ test_that("search and group_by works", {
   # https://github.com/ropensci/openalexR/issues/327
   g1 <- oa_fetch(
     title_and_abstract.search = "nature",
-    group_by = "topics.subfield.id"
+    group_by = "topics.field.id"
   )
   expect_s3_class(g1, "data.frame")
   expect_equal(colnames(g1), c("key", "key_display_name", "count"))
