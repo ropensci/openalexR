@@ -424,7 +424,10 @@ test_that("oa_fetch works for funders", {
 test_that("oa_fetch works for sources", {
   skip_on_cran()
 
-  s <- oa_fetch(entity = "sources", search = "nature")
+  s <- oa_fetch(
+    entity = "sources", search = "nature",
+    options = oa_options(paging = "page")
+  )
   expect_s3_class(s, "data.frame")
   expect_equal(ncol(s), 36)
   expect_true(nrow(s) > 200)
