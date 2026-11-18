@@ -1,5 +1,9 @@
 # openalexR (development version)
 
+* Updated work field coverage for `alternate_titles`, `cited_by_api_url`,
+  and `is_pulled`, which are known API fields not surfaced by `oa2df()`.
+* Added `oa_options(corpus = "all")` to include core and expansion works.
+  The `corpus` option also accepts "core" and "expansion" (#378).
 * Fixed work conversion dropping authors with empty `observed_orcids` or
   duplicating authors with multiple values. The field is now preserved as a
   list-column with one row per authorship (#379).

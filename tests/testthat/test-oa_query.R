@@ -29,6 +29,19 @@ test_that("oa_query returns NULL when no identifier or filter is supplied", {
   expect_message(oa_query())
 })
 
+test_that("oa_query sends corpus as a query parameter alongside filters", {
+  for (corpus in c("core", "expansion", "all")) {
+    url <- oa_query(
+      entity = "works",
+      publication_year = 2025,
+      options = oa_options(corpus = corpus)
+    )
+    query <- httr::parse_url(url)$query
+    expect_identical(query$corpus, corpus)
+    expect_identical(query$filter, "publication_year:2025")
+  }
+})
+
 test_that("oa_query accepts oa_options() and keeps paging out of the URL", {
   url <- oa_query(
     entity = "works",
