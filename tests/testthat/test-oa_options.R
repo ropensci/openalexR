@@ -20,6 +20,18 @@ test_that("oa_options() validates sample", {
   expect_equal(oa_options(sample = 50)$sample, 50L)
 })
 
+test_that("oa_options() validates the works corpus", {
+  expect_false("corpus" %in% names(oa_options()))
+  for (corpus in c("core", "expansion", "all")) {
+    expect_no_warning(o <- oa_options(corpus = corpus))
+    expect_identical(o$corpus, corpus)
+  }
+  for (corpus in list("invalid", "ALL", "a", NA_character_, TRUE,
+                      character(), c("core", "all"))) {
+    expect_error(oa_options(corpus = corpus), "corpus.*must be one of")
+  }
+})
+
 test_that("oa_options() warns on seed without sample and drops it", {
   expect_warning(o <- oa_options(seed = 1), "sample")
   expect_false("seed" %in% names(o))
