@@ -12,6 +12,7 @@ oa_options(
   per_page = 200,
   paging = c("cursor", "page"),
   pages = NULL,
+  corpus = NULL,
   ...
 )
 }
@@ -50,6 +51,12 @@ See <https://developers.openalex.org/guides/page-through-results>.}
 \item{pages}{Integer vector.
 The range of pages to return. If NULL, return all pages.}
 
+\item{corpus}{Character. Works corpus: "core", "expansion", or "all".
+Defaults to NULL, which uses the API default ("core"). Use "all" to
+include both core and expansion works. Only supported for works requests.
+Do not combine with the legacy `include_xpac` option or `is_xpac` filter.
+See <https://help.openalex.org/data/works/corpus/>.}
+
 \item{...}{Additional query parameters forwarded to the OpenAlex API
 verbatim. Unknown parameters trigger a warning, since they are most often
 typos; supply them here only if you intend to use a parameter not yet wrapped
@@ -76,4 +83,6 @@ you about unknown keys instead.
 oa_options(select = c("id", "doi"), sort = "cited_by_count:desc")
 oa_options(sample = 50, seed = 1)
 oa_options(per_page = 50)
+oa_query(entity = "works", search = "biodiversity",
+         options = oa_options(corpus = "all"))
 }

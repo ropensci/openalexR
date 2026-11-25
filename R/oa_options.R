@@ -39,6 +39,11 @@
 #' See <https://developers.openalex.org/guides/page-through-results>.
 #' @param pages Integer vector.
 #' The range of pages to return. If NULL, return all pages.
+#' @param corpus Character. Works corpus: "core", "expansion", or "all".
+#' Defaults to NULL, which uses the API default ("core"). Use "all" to
+#' include both core and expansion works. Only supported for works requests.
+#' Do not combine with the legacy `include_xpac` option or `is_xpac` filter.
+#' See <https://help.openalex.org/data/works/corpus/>.
 #' @param ... Additional query parameters forwarded to the OpenAlex API
 #' verbatim. Unknown parameters trigger a warning, since they are most often
 #' typos; supply them here only if you intend to use a parameter not yet wrapped
@@ -51,6 +56,8 @@
 #' oa_options(select = c("id", "doi"), sort = "cited_by_count:desc")
 #' oa_options(sample = 50, seed = 1)
 #' oa_options(per_page = 50)
+#' oa_query(entity = "works", search = "biodiversity",
+#'          options = oa_options(corpus = "all"))
 oa_options <- function(select = NULL,
                        sort = NULL,
                        sample = NULL,
@@ -58,8 +65,18 @@ oa_options <- function(select = NULL,
                        per_page = 200,
                        paging = c("cursor", "page"),
                        pages = NULL,
+                       corpus = NULL,
                        ...) {
   paging <- match.arg(paging)
+
+  if (!is.null(corpus)) {
+    if (!is.character(corpus) || length(corpus) != 1L ||
+        is.na(corpus) || !corpus %in% c("core", "expansion", "all")) {
+      cli::cli_abort(
+        '{.arg corpus} must be one of "core", "expansion", or "all".'
+      )
+    }
+  }
 
   if (!is.null(sample)) {
     sample <- as.integer(sample)
@@ -114,7 +131,8 @@ oa_options <- function(select = NULL,
       seed = seed,
       per_page = per_page,
       paging = paging,
-      pages = pages
+      pages = pages,
+      corpus = corpus
     ),
     extras
   )
