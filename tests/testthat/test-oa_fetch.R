@@ -76,7 +76,8 @@ test_that("oa_fetch works for multiple works", {
   filtered_works <- oa_fetch(
     entity = "w",
     publication_date = "2020-08-01",
-    cited_by_count = ">1000"
+    cited_by_count = ">1000",
+    options = oa_options(paging = "page", pages = 1)
   )
   expect_s3_class(filtered_works, "data.frame")
 
@@ -436,7 +437,11 @@ test_that("oa_fetch works for sources", {
 test_that("oa_fetch works for publishers", {
   skip_on_cran()
 
-  s <- oa_fetch(entity = "publishers", country_codes = "ca")
+  s <- oa_fetch(
+    entity = "publishers",
+    country_codes = "ca",
+    options = oa_options(paging = "page", pages = 1, per_page = 200)
+  )
   expect_s3_class(s, "data.frame")
   expect_equal(ncol(s), 19)
   expect_true(nrow(s) > 100)
@@ -679,7 +684,7 @@ test_that("api_request aborts on a generic API error", {
     "GET" = function(...) mock_response,
     "status_code" = function(res) 500L,
     "content" = function(res, ...) {
-      '{"error":"Internal Server Error","message":"something broke"}'
+      '{"error":"Internal Server Error","message":"Response contains {missing_variable}"}'
     },
     .package = "httr",
     {
@@ -690,7 +695,8 @@ test_that("api_request aborts on a generic API error", {
           list(),
           parse = FALSE
         ),
-        "request failed"
+        "Response contains {missing_variable}",
+        fixed = TRUE
       )
     }
   )

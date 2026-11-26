@@ -938,8 +938,8 @@ api_request <- function(
     )
     cli::cli_abort(c(
       "x" = "OpenAlex API request failed [{code}]",
-      "!" = parsed$error,
-      "i" = parsed$message
+      "!" = if (length(parsed$error)) "{parsed$error}",
+      "i" = if (length(parsed$message)) "{parsed$message}"
     ))
   }
 
