@@ -250,7 +250,14 @@ process_paper_authors <- function(authorships) {
       affiliation_raw = affiliation_raw
     )
 
-    c(l_author, l[c("author_position", "is_corresponding")], affs)
+    c(
+      l_author,
+      list(
+        author_position = l$author_position %||% NA_character_,
+        is_corresponding = l$is_corresponding %||% NA
+      ),
+      affs
+    )
   })
 
   list(rbind_oa_ls(authors_ls))

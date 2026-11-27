@@ -222,7 +222,7 @@ get_auth_position <- function(y, position = "first") {
   if (length(y) == 1 && is.na(y)) {
     return(NA_character_)
   }
-  last <- y[y$author_position == position, "display_name", drop = TRUE]
+  last <- y[which(y$author_position == position), "display_name", drop = TRUE]
   if (length(last) == 0) {
     return(NA_character_)
   }
