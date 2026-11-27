@@ -1,5 +1,8 @@
 # openalexR (development version)
 
+* Fixed `oa2df()` failing when an authorship has a `NULL` `author_position`
+  (such as non-author contributors) or `is_corresponding`, replacing `NULL`
+  with `NA`, and updated `show_works()` to ignore `NA` positions (#382).
 * Updated work field coverage for `alternate_titles`, `cited_by_api_url`,
   and `is_pulled`, which are known API fields not surfaced by `oa2df()`.
 * Added `oa_options(corpus = "all")` to include core and expansion works.

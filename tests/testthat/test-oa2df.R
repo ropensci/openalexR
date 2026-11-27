@@ -58,6 +58,42 @@ test_that("oa2df preserves authorships with zero or multiple observed ORCIDs (#3
   expect_equal(length(authors$affiliations), 4L)
 })
 
+test_that("oa2df preserves authorships with NULL author_position (#382)", {
+  samples <- readRDS(test_path("fixtures", "entity_list_samples.rds"))
+  work <- samples$works[[1]]
+
+  first_author <- work$authorships[[1]]
+  first_author$author$id <- "https://openalex.org/A1"
+  first_author$author$display_name <- "Shelly Newstead"
+  first_author$author_position <- "first"
+  first_author$is_corresponding <- TRUE
+
+  translator <- work$authorships[[1]]
+  translator$author$id <- "https://openalex.org/A2"
+  translator$author$display_name <- "Baptiste Besse-Patin"
+  translator["author_position"] <- list(NULL)
+  translator["is_corresponding"] <- list(NULL)
+  translator$institutions <- list()
+  translator$raw_affiliation_strings <- list()
+
+  work$authorships <- list(first_author, translator)
+
+  df <- suppressWarnings(oa2df(list(work), entity = "works", verbose = FALSE))
+  authors <- df$authorships[[1]]
+  expect_equal(nrow(authors), 2L)
+  expect_equal(authors$display_name, c("Shelly Newstead", "Baptiste Besse-Patin"))
+  expect_identical(authors$author_position, c("first", NA_character_))
+  expect_identical(authors$is_corresponding, c(TRUE, NA))
+
+  work_all_null <- work
+  work_all_null$authorships <- list(translator)
+  df_null <- suppressWarnings(
+    oa2df(list(work_all_null), entity = "works", verbose = FALSE)
+  )
+  expect_identical(df_null$authorships[[1]]$author_position, NA_character_)
+  expect_identical(df_null$authorships[[1]]$is_corresponding, NA)
+})
+
 test_that("oa2df hoists nested fields for authors, institutions and topics", {
   samples <- readRDS(test_path("fixtures", "entity_list_samples.rds"))
 

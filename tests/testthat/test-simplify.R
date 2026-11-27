@@ -42,6 +42,31 @@ test_that("show_works() handles multiple authors at the same position", {
   expect_equal(nrow(shown), 3L)
 })
 
+test_that("show_works() ignores NA author_position values (#382)", {
+  works <- tibble::tibble(
+    id = paste0("https://openalex.org/W", 1:2),
+    display_name = c("With translator", "Only translator"),
+    authorships = list(
+      data.frame(
+        author_position = c("first", NA_character_, NA_character_),
+        display_name = c("Shelly Newstead", "Baptiste Besse-Patin", "Nathalie Roucous"),
+        stringsAsFactors = FALSE
+      ),
+      data.frame(
+        author_position = NA_character_,
+        display_name = "Baptiste Besse-Patin",
+        stringsAsFactors = FALSE
+      )
+    ),
+    concepts = list(NA, NA)
+  )
+
+  shown <- show_works(works, simp_func = identity)
+
+  expect_identical(shown$first_author, c("Shelly Newstead", NA_character_))
+  expect_identical(shown$last_author, c(NA_character_, NA_character_))
+})
+
 test_that("show_works() and show_authors() handle NULL input", {
   expect_warning(
     work_empty <- show_works(NULL),
